@@ -101,3 +101,12 @@ PROBE usage cannot be inferred from that list. Missing legacy reuse counters sta
 Other imported episode helpers are unchanged. New train assessment families enter the existing
 train-only allowlist automatically. Simulator v2 student/reward settings and training configs are
 not used by the live engine; its rules config and checkpoint loading remain unchanged.
+
+## 2026-11-02 — Benchmark v1 merged; Qwen3.8-27B blocked on a payment method
+
+**Source:** the benchmark agent's final report in the Tuturing topic session; results in `experiments/response/benchmark_v1/`.
+
+**Facts:** `gpt-6.1-sol` ran on 107 cases at `reasoning_effort: low` for $0.212; the model rejects `temperature: 0`, so the run is not deterministic. Qwen3.8-27B needs a dedicated Fireworks deployment (1x H100, $8.00 per GPU hour list) and the free dry run returned "payment method is required", so nothing was created and GPU spend is $0. Fireworks reports the model as `supportsServerlessTraining: false`, which contradicts D10's serverless training claim and needs checking before any SFT plan relies on it.
+
+**Assistant note:** the automated checks over-report on dialogue data (numbers from the learner's own message count as unsupported math; answer fingerprints already in the stem count as disclosure). Whether to relax the validator is a Person A decision for Xueming; the blinded human review measures the gap meanwhile.
+
