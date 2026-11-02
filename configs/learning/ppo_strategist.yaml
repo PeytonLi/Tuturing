@@ -12,3 +12,4 @@ gamma: 0.99
 lam: 0.95
 split: train
 run_name: ppo_strategist
+simulator_config: configs/learning/simulator_proto_v2.yaml

@@ -36,6 +36,7 @@ from packages.simulator.reward import (
 )
 from packages.simulator.scenarios import ROOT, load_scenarios
 from packages.simulator.student import (
+    DEFAULT_SIMULATOR_CONFIG,
     PrivateStudentState,
     StudentOutcome,
     apply_teaching_effect,
@@ -101,6 +102,7 @@ class EpisodeResult:
     private_diagnostics: list[dict]
     terminal_components: dict[str, float]
     final_beliefs: dict[str, ConceptBelief] = field(repr=False)
+    assessment_family_reuse_count: int = 0
 
     @property
     def transitions(self) -> list[dict]:
@@ -287,7 +289,8 @@ def _next_item(
     episode_seed: int,
     turn: int,
     bank: EventRandomBank,
-    used_assessment_families: set[str],
+    assessment_family_uses: Counter[str],
+    assessment_family_reuse_counts: Counter[str],
     used_teaching_families: set[str],
 ) -> tuple[TemplateFamily, dict, str]:
     allowlist = set(scenario["template_family_allowlist"])
@@ -298,21 +301,26 @@ def _next_item(
             family
             for family in families_for(concept_id, role="assessment", split=assessment_split)
             if family.template_family_id in allowlist
-            and (
-                move != "CHECK_MASTERY" or family.template_family_id not in used_assessment_families
-            )
         ]
         if not families:
-            families = [
-                family
-                for family in families_for(concept_id, role="assessment", split=assessment_split)
-                if family.template_family_id in allowlist
-            ]
-        if not families:
             raise ValueError(f"assessment family exhausted for {concept_id} ({scenario['split']})")
-        selected = sorted(families, key=lambda family: family.template_family_id)[0]
-        if move == "CHECK_MASTERY":
-            used_assessment_families.add(selected.template_family_id)
+        unused_families = [
+            family
+            for family in families
+            if assessment_family_uses[family.template_family_id] == 0
+        ]
+        if unused_families:
+            selected = min(unused_families, key=lambda family: family.template_family_id)
+        else:
+            selected = min(
+                families,
+                key=lambda family: (
+                    assessment_family_uses[family.template_family_id],
+                    family.template_family_id,
+                ),
+            )
+            assessment_family_reuse_counts[concept_id] += 1
+        assessment_family_uses[selected.template_family_id] += 1
     else:
         selected = None
         families = [
@@ -561,15 +569,19 @@ def run_episode(
     strategist: object | None = None,
     horizon: int = HORIZON,
     bank: EventRandomBank | None = None,
+    simulator_config: str | Path = DEFAULT_SIMULATOR_CONFIG,
 ) -> EpisodeResult:
     if not 1 <= horizon <= HORIZON:
         raise ValueError("episode horizon must be between one and sixteen turns")
     random_bank = bank or EventRandomBank()
     graph = load_graph()
     sim_config = yaml.safe_load(
-        (ROOT / "configs/learning/simulator_proto_v1.yaml").read_text(encoding="utf-8")
+        (ROOT / simulator_config).read_text(encoding="utf-8")
     )
-    private = sample_student(scenario, episode_seed, bank=random_bank)
+    environment_bundle_id = Path(simulator_config).stem
+    private = sample_student(
+        scenario, episode_seed, config_path=simulator_config, bank=random_bank
+    )
     beliefs = {f"C{index:02d}": ConceptBelief() for index in range(1, 16)}
     requests = _scenario_requests(scenario)
     if requests["goal"] in ENABLED_CONCEPTS:
@@ -588,7 +600,8 @@ def run_episode(
     no_diagnostic_yet = True
     skip_deadline: int | None = None
     skip_diagnostic_done = False
-    used_assessment_families: set[str] = set()
+    assessment_family_uses: Counter[str] = Counter()
+    assessment_family_reuse_counts: Counter[str] = Counter()
     used_teaching_families: set[str] = set()
     repeated_pattern_evidence: dict[tuple[str, ...], int] = {}
     learner_evidence_count = 0
@@ -603,7 +616,9 @@ def run_episode(
             raise ValueError(f"unknown strategist policy {strategist_name}")
     navigator = RulesNavigator()
     episode_id = f"{scenario['scenario_id']}-seed-{episode_seed}"
-    pre_score = expected_score(private, goal, scenario["split"])
+    pre_score = expected_score(
+        private, goal, scenario["split"], config_path=simulator_config
+    )
     initial_public = _public_state(
         beliefs,
         current=current,
@@ -705,7 +720,9 @@ def run_episode(
             if beliefs[goal].certified
             else "policy_stop"
         )
-        pre_score_post = expected_score(private, goal, scenario["split"])
+        pre_score_post = expected_score(
+            private, goal, scenario["split"], config_path=simulator_config
+        )
         terminal_reward_components = terminal_components(pre_score, pre_score_post)
         navigator_transitions.append(
             _make_navigator_transition(
@@ -722,7 +739,7 @@ def run_episode(
                 terminated=True,
                 truncated=False,
                 boundary=["session_start"],
-                environment_bundle_id="simulator_proto_v1",
+                environment_bundle_id=environment_bundle_id,
             )
         )
         terminal_added = True
@@ -788,7 +805,8 @@ def run_episode(
                 episode_seed,
                 turn,
                 random_bank,
-                used_assessment_families,
+                assessment_family_uses,
+                assessment_family_reuse_counts,
                 used_teaching_families,
             )
             active_item = {
@@ -1031,7 +1049,9 @@ def run_episode(
         )
         next_observation = build_features(public_after)
         if terminal:
-            post_score = expected_score(private, goal, scenario["split"])
+            post_score = expected_score(
+                private, goal, scenario["split"], config_path=simulator_config
+            )
             terminal_reward_components = terminal_components(pre_score, post_score, dropout=dropout)
             for key, value in terminal_reward_components.to_dict().items():
                 setattr(turn_reward, key, getattr(turn_reward, key) + value)
@@ -1060,7 +1080,7 @@ def run_episode(
                 "actor_eligible": actor_eligible,
                 "collector_cut": False,
                 "policy_version": getattr(strategist, "policy_version", "policy_v1"),
-                "environment_bundle_id": "simulator_proto_v1",
+                "environment_bundle_id": environment_bundle_id,
             }
         )
         diagnostics.append(
@@ -1121,7 +1141,7 @@ def run_episode(
                     terminated=True,
                     truncated=False,
                     boundary=boundary,
-                    environment_bundle_id="simulator_proto_v1",
+                    environment_bundle_id=environment_bundle_id,
                 )
             )
             break
@@ -1159,7 +1179,7 @@ def run_episode(
                 terminated=False,
                 truncated=False,
                 boundary=boundary,
-                environment_bundle_id="simulator_proto_v1",
+                environment_bundle_id=environment_bundle_id,
             )
         )
         boundary_success_streak = success_streak
@@ -1238,7 +1258,9 @@ def run_episode(
                 if beliefs[goal].certified
                 else "policy_stop"
             )
-            post_score = expected_score(private, goal, scenario["split"])
+            post_score = expected_score(
+                private, goal, scenario["split"], config_path=simulator_config
+            )
             terminal_reward_components = terminal_components(pre_score, post_score)
             terminal_added = True
             navigator_transitions.append(
@@ -1256,7 +1278,7 @@ def run_episode(
                     terminated=True,
                     truncated=False,
                     boundary=boundary,
-                    environment_bundle_id="simulator_proto_v1",
+                    environment_bundle_id=environment_bundle_id,
                 )
             )
             break
@@ -1264,7 +1286,9 @@ def run_episode(
 
     if not terminal_added:
         raise AssertionError("episode ended without its single terminal reward")
-    post_score = expected_score(private, goal, scenario["split"])
+    post_score = expected_score(
+        private, goal, scenario["split"], config_path=simulator_config
+    )
     gain = post_score - pre_score
     return EpisodeResult(
         episode_id=episode_id,
@@ -1283,6 +1307,7 @@ def run_episode(
         private_diagnostics=diagnostics,
         terminal_components=terminal_reward_components.to_dict(),
         final_beliefs=beliefs,
+        assessment_family_reuse_count=sum(assessment_family_reuse_counts.values()),
     )
 
 
@@ -1295,6 +1320,7 @@ def simulate_episodes(
     strategist: object | None = None,
     scenarios: list[dict] | None = None,
     run_id: str = "local",
+    simulator_config: str | Path = DEFAULT_SIMULATOR_CONFIG,
 ) -> list[EpisodeResult]:
     if episodes < 1:
         raise ValueError("episodes must be positive")
@@ -1314,6 +1340,7 @@ def simulate_episodes(
                 strategist_name=strategist_name,
                 strategist=strategist,
                 horizon=min(int(scenario["teaching_horizon"]), HORIZON),
+                simulator_config=simulator_config,
             )
         )
     return results
@@ -1370,6 +1397,9 @@ def write_run(results: list[EpisodeResult], output_dir: str | Path, *, manifest:
         "mean_gain": sum(result.gain for result in results) / len(results),
         "mean_turns": sum(result.turns for result in results) / len(results),
         "dropout_rate": sum(result.dropout for result in results) / len(results),
+        "assessment_family_reuse_count": sum(
+            result.assessment_family_reuse_count for result in results
+        ),
         "move_histogram": dict(sorted(moves.items())),
         "end_reason_counts": dict(sorted(Counter(result.end_reason for result in results).items())),
         "profile_summaries": profile_summaries,

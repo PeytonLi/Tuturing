@@ -10,6 +10,7 @@ import yaml
 
 from packages.learning.episode import load_scenarios, simulate_episodes
 from packages.policies.network import NetworkStrategist
+from packages.simulator.student import DEFAULT_SIMULATOR_CONFIG
 from tools.learning.train_ppo import episode_reward
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -30,6 +31,11 @@ def bootstrap_mean_interval(values: list[float], seed: int, resamples: int = 100
 def summarize(results, seed: int) -> dict:
     gains = [result.gain for result in results]
     transitions = [item for result in results for item in result.strategist_transitions]
+    move_counts = {}
+    for result in results:
+        for move, count in result.move_histogram.items():
+            move_counts[move] = move_counts.get(move, 0) + count
+    total_moves = sum(move_counts.values())
     disclosure = sum(
         item["reward_components"]["disclosure_penalty"] < 0 for item in transitions
     ) / max(1, len(transitions))
@@ -41,6 +47,9 @@ def summarize(results, seed: int) -> dict:
         "disclosure_rate": disclosure,
         "dropout_rate": sum(result.dropout for result in results) / max(1, len(results)),
         "mean_turns": sum(result.turns for result in results) / max(1, len(results)),
+        "move_frequency": {
+            move: move_counts[move] / max(1, total_moves) for move in sorted(move_counts)
+        },
         "mean_total_reward": sum(episode_reward(result) for result in results)
         / max(1, len(results)),
     }
@@ -68,6 +77,7 @@ def main() -> None:
     parser.add_argument("--unseal-test", action="store_true")
     args = parser.parse_args()
     config = yaml.safe_load((ROOT / args.config).read_text(encoding="utf-8"))
+    simulator_config = config.get("simulator_config", DEFAULT_SIMULATOR_CONFIG)
     seed = int(args.seed if args.seed is not None else config.get("seed", 20250115))
     if args.split == "test" and not args.unseal_test:
         parser.error("test split is sealed; pass --unseal-test to run it")
@@ -83,6 +93,7 @@ def main() -> None:
         "split": args.split,
         "seed": seed,
         "episodes_per_scenario": args.episodes_per_scenario,
+        "simulator_config": simulator_config,
         "policies": {},
     }
     for policy_index, name in enumerate(policies):
@@ -95,6 +106,7 @@ def main() -> None:
             strategist_name=strategist_name,
             strategist=strategist,
             run_id=f"evaluation-{args.split}-{policy_index}",
+            simulator_config=simulator_config,
         )
         policy_report = {
             "label": "simulated",
