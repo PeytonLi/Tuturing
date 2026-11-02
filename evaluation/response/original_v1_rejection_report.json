@@ -1,0 +1,16 @@
+{
+  "accepted": 30,
+  "dataset_id": "original_v1",
+  "deduplication": {
+    "mathdial": {
+      "status": "skipped"
+    },
+    "method": "exact reply match; normalized match after casefolding, masking numbers and stripping punctuation; near-duplicate when word 3-gram Jaccard is at least 0.85; earlier example_id wins",
+    "nearest_neighbour_buckets": {}
+  },
+  "generator": "tools.response.build_original_sft v1",
+  "records_total": 30,
+  "rejected": 0,
+  "rejected_by_reason": {},
+  "rejections": []
+}

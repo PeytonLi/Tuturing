@@ -1,0 +1,708 @@
+{
+  "accepted_count": 30,
+  "access_restrictions": "none",
+  "action_label_source": "synthetic",
+  "assessment_families_used": [],
+  "cases_file": {
+    "path": "evaluation/response/probability_cases_v1.jsonl",
+    "rows": 4,
+    "sha256": "d9aa526a15e0780e41ba93e5a09a4dfc5a4dbc03f5152cd7ab915f854bbe4145"
+  },
+  "concise_detailed_pairs": 0,
+  "content_sources": {
+    "data/original_content/concepts.yaml": "2711177ccc9443543b381b83e727b2f459181a5b6decf9a944679052641e675f",
+    "data/original_content/misconceptions.yaml": "78ecbc645b4f0a6fdd8c59ecabef3f0c8b6879cf0b39495f7f4a98042809296a",
+    "data/scenarios/proto_v1.yaml": "f88a0cb878d54bf758193e30afe10efacf69378dc23a7d783769230594ec8681",
+    "packages/learning/content/templates/families.py": "04d30b9375db7e9783047c42509aea1a8d14013bcde358eda961897806ae46ca",
+    "packages/learning/episode.py": "9d5c7260c998276e6f6c29818be4a42131570ac3f5d4e2fa1363469ec7c7f29c"
+  },
+  "counts_per_split": {
+    "test": 4,
+    "train": 22,
+    "validation": 4
+  },
+  "coverage": {
+    "assessment_mode": {
+      "independent": 3,
+      "none": 15,
+      "practice": 12
+    },
+    "attack_group": {
+      "ATK01_direct_override": 1,
+      "ATK10_format_override": 1
+    },
+    "concept_by_move": {
+      "CHALLENGE": {
+        "C08": 1
+      },
+      "CHECK_MASTERY": {
+        "C01": 1,
+        "C02": 1,
+        "C08": 1
+      },
+      "EXPLAIN_CONCEPT": {
+        "C01": 1,
+        "C02": 1,
+        "C03": 1,
+        "C06": 1,
+        "C08": 1
+      },
+      "HINT": {
+        "C01": 1,
+        "C02": 1,
+        "C03": 2,
+        "C08": 1
+      },
+      "PRACTICE": {
+        "C01": 3,
+        "C02": 1,
+        "C06": 3
+      },
+      "PROBE": {
+        "C01": 2,
+        "C02": 1,
+        "C03": 1
+      },
+      "REFLECT": {
+        "C02": 1,
+        "C06": 1,
+        "C08": 1
+      },
+      "WORKED_EXAMPLE": {
+        "C06": 2
+      }
+    },
+    "concept_id": {
+      "C01": 8,
+      "C02": 6,
+      "C03": 4,
+      "C06": 7,
+      "C08": 5
+    },
+    "difficulty": {
+      "easy": 12,
+      "hard": 6,
+      "medium": 12
+    },
+    "family": {
+      "c01_teach_01": 4,
+      "c01_teach_02": 2,
+      "c01_teach_03": 2,
+      "c02_teach_01": 3,
+      "c02_teach_02": 2,
+      "c02_teach_04": 1,
+      "c03_teach_01": 3,
+      "c03_teach_04": 1,
+      "c06_teach_01": 2,
+      "c06_teach_02": 3,
+      "c06_teach_03": 2,
+      "c08_teach_01": 2,
+      "c08_teach_02": 1,
+      "c08_teach_04": 2
+    },
+    "learner_type": {
+      "acknowledgement": 3,
+      "answer_request": 2,
+      "assisted_correct": 1,
+      "challenge_request": 1,
+      "confusion": 1,
+      "correct": 4,
+      "faster": 1,
+      "first_turn": 4,
+      "hint_request": 1,
+      "idk": 1,
+      "incorrect_M02": 1,
+      "incorrect_M03": 1,
+      "incorrect_M04": 1,
+      "incorrect_M05": 1,
+      "incorrect_M08": 1,
+      "override": 2,
+      "repeated_failure": 1,
+      "skip_request": 1,
+      "slower": 1,
+      "typo_correct": 1
+    },
+    "move": {
+      "CHALLENGE": 1,
+      "CHECK_MASTERY": 3,
+      "EXPLAIN_CONCEPT": 5,
+      "HINT": 5,
+      "PRACTICE": 7,
+      "PROBE": 4,
+      "REFLECT": 3,
+      "WORKED_EXAMPLE": 2
+    },
+    "move_by_split": {
+      "test": {
+        "CHECK_MASTERY": 1,
+        "HINT": 1,
+        "PROBE": 1,
+        "REFLECT": 1
+      },
+      "train": {
+        "CHALLENGE": 1,
+        "CHECK_MASTERY": 2,
+        "EXPLAIN_CONCEPT": 4,
+        "HINT": 4,
+        "PRACTICE": 6,
+        "PROBE": 2,
+        "REFLECT": 2,
+        "WORKED_EXAMPLE": 1
+      },
+      "validation": {
+        "EXPLAIN_CONCEPT": 1,
+        "PRACTICE": 1,
+        "PROBE": 1,
+        "WORKED_EXAMPLE": 1
+      }
+    },
+    "navigation": {
+      "ADVANCE_ONE": 3,
+      "STAY": 27
+    },
+    "pace": {
+      "concise": 7,
+      "detailed": 4,
+      "normal": 19
+    },
+    "reveal_allowed": 1,
+    "split": {
+      "test": 4,
+      "train": 22,
+      "validation": 4
+    }
+  },
+  "dataset_id": "original_v1",
+  "deduplication": {
+    "mathdial": {
+      "status": "skipped"
+    },
+    "method": "exact reply match; normalized match after casefolding, masking numbers and stripping punctuation; near-duplicate when word 3-gram Jaccard is at least 0.85; earlier example_id wins",
+    "nearest_neighbour_buckets": {}
+  },
+  "examples": [
+    {
+      "attack_group": null,
+      "concept_id": "C01",
+      "difficulty": "easy",
+      "example_id": "original_v1:c01a-001",
+      "family": "c01_teach_01",
+      "learner_type": "first_turn",
+      "move": "PRACTICE",
+      "pace": "normal",
+      "pair": null,
+      "seed": 13,
+      "split": "train",
+      "words": 51
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C01",
+      "difficulty": "easy",
+      "example_id": "original_v1:c01a-002",
+      "family": "c01_teach_01",
+      "learner_type": "idk",
+      "move": "HINT",
+      "pace": "normal",
+      "pair": null,
+      "seed": 13,
+      "split": "train",
+      "words": 23
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C01",
+      "difficulty": "easy",
+      "example_id": "original_v1:c01a-003",
+      "family": "c01_teach_01",
+      "learner_type": "incorrect_M02",
+      "move": "PROBE",
+      "pace": "normal",
+      "pair": null,
+      "seed": 13,
+      "split": "train",
+      "words": 50
+    },
+    {
+      "attack_group": "ATK01_direct_override",
+      "concept_id": "C01",
+      "difficulty": "easy",
+      "example_id": "original_v1:c01a-101",
+      "family": "c01_teach_01",
+      "learner_type": "override",
+      "move": "PRACTICE",
+      "pace": "normal",
+      "pair": null,
+      "seed": 24,
+      "split": "train",
+      "words": 43
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C01",
+      "difficulty": "medium",
+      "example_id": "original_v1:c01b-001",
+      "family": "c01_teach_02",
+      "learner_type": "skip_request",
+      "move": "PRACTICE",
+      "pace": "concise",
+      "pair": null,
+      "seed": 9,
+      "split": "train",
+      "words": 50
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C01",
+      "difficulty": "medium",
+      "example_id": "original_v1:c01b-002",
+      "family": "c01_teach_02",
+      "learner_type": "correct",
+      "move": "CHECK_MASTERY",
+      "pace": "normal",
+      "pair": null,
+      "seed": 24,
+      "split": "train",
+      "words": 50
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C01",
+      "difficulty": "medium",
+      "example_id": "original_v1:c01c-001",
+      "family": "c01_teach_03",
+      "learner_type": "typo_correct",
+      "move": "PROBE",
+      "pace": "normal",
+      "pair": null,
+      "seed": 2,
+      "split": "validation",
+      "words": 40
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C01",
+      "difficulty": "medium",
+      "example_id": "original_v1:c01c-002",
+      "family": "c01_teach_03",
+      "learner_type": "slower",
+      "move": "EXPLAIN_CONCEPT",
+      "pace": "concise",
+      "pair": null,
+      "seed": 2,
+      "split": "validation",
+      "words": 49
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C02",
+      "difficulty": "easy",
+      "example_id": "original_v1:c02a-001",
+      "family": "c02_teach_01",
+      "learner_type": "first_turn",
+      "move": "EXPLAIN_CONCEPT",
+      "pace": "detailed",
+      "pair": null,
+      "seed": 3,
+      "split": "train",
+      "words": 176
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C02",
+      "difficulty": "easy",
+      "example_id": "original_v1:c02a-002",
+      "family": "c02_teach_01",
+      "learner_type": "acknowledgement",
+      "move": "PRACTICE",
+      "pace": "normal",
+      "pair": null,
+      "seed": 3,
+      "split": "train",
+      "words": 44
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C02",
+      "difficulty": "easy",
+      "example_id": "original_v1:c02a-003",
+      "family": "c02_teach_01",
+      "learner_type": "incorrect_M03",
+      "move": "HINT",
+      "pace": "normal",
+      "pair": null,
+      "seed": 3,
+      "split": "train",
+      "words": 24
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C02",
+      "difficulty": "medium",
+      "example_id": "original_v1:c02b-001",
+      "family": "c02_teach_02",
+      "learner_type": "faster",
+      "move": "CHECK_MASTERY",
+      "pace": "concise",
+      "pair": null,
+      "seed": 7,
+      "split": "train",
+      "words": 31
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C02",
+      "difficulty": "medium",
+      "example_id": "original_v1:c02b-002",
+      "family": "c02_teach_02",
+      "learner_type": "correct",
+      "move": "REFLECT",
+      "pace": "concise",
+      "pair": null,
+      "seed": 7,
+      "split": "train",
+      "words": 47
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C02",
+      "difficulty": "hard",
+      "example_id": "original_v1:c02d-001",
+      "family": "c02_teach_04",
+      "learner_type": "hint_request",
+      "move": "PROBE",
+      "pace": "detailed",
+      "pair": null,
+      "seed": 15,
+      "split": "test",
+      "words": 107
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C03",
+      "difficulty": "easy",
+      "example_id": "original_v1:c03a-001",
+      "family": "c03_teach_01",
+      "learner_type": "first_turn",
+      "move": "PROBE",
+      "pace": "normal",
+      "pair": null,
+      "seed": 14,
+      "split": "train",
+      "words": 43
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C03",
+      "difficulty": "easy",
+      "example_id": "original_v1:c03a-002",
+      "family": "c03_teach_01",
+      "learner_type": "answer_request",
+      "move": "HINT",
+      "pace": "concise",
+      "pair": null,
+      "seed": 14,
+      "split": "train",
+      "words": 27
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C03",
+      "difficulty": "easy",
+      "example_id": "original_v1:c03a-003",
+      "family": "c03_teach_01",
+      "learner_type": "answer_request",
+      "move": "EXPLAIN_CONCEPT",
+      "pace": "normal",
+      "pair": null,
+      "seed": 14,
+      "split": "train",
+      "words": 85
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C03",
+      "difficulty": "hard",
+      "example_id": "original_v1:c03d-001",
+      "family": "c03_teach_04",
+      "learner_type": "incorrect_M04",
+      "move": "HINT",
+      "pace": "concise",
+      "pair": null,
+      "seed": 24,
+      "split": "test",
+      "words": 25
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C06",
+      "difficulty": "easy",
+      "example_id": "original_v1:c06a-001",
+      "family": "c06_teach_01",
+      "learner_type": "repeated_failure",
+      "move": "EXPLAIN_CONCEPT",
+      "pace": "normal",
+      "pair": null,
+      "seed": 28,
+      "split": "train",
+      "words": 113
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C06",
+      "difficulty": "easy",
+      "example_id": "original_v1:c06a-002",
+      "family": "c06_teach_01",
+      "learner_type": "acknowledgement",
+      "move": "PRACTICE",
+      "pace": "normal",
+      "pair": null,
+      "seed": 28,
+      "split": "train",
+      "words": 44
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C06",
+      "difficulty": "medium",
+      "example_id": "original_v1:c06b-001",
+      "family": "c06_teach_02",
+      "learner_type": "confusion",
+      "move": "WORKED_EXAMPLE",
+      "pace": "normal",
+      "pair": null,
+      "seed": 5,
+      "split": "train",
+      "words": 103
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C06",
+      "difficulty": "medium",
+      "example_id": "original_v1:c06b-002",
+      "family": "c06_teach_02",
+      "learner_type": "acknowledgement",
+      "move": "PRACTICE",
+      "pace": "normal",
+      "pair": null,
+      "seed": 5,
+      "split": "train",
+      "words": 48
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C06",
+      "difficulty": "medium",
+      "example_id": "original_v1:c06b-003",
+      "family": "c06_teach_02",
+      "learner_type": "correct",
+      "move": "REFLECT",
+      "pace": "normal",
+      "pair": null,
+      "seed": 5,
+      "split": "train",
+      "words": 67
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C06",
+      "difficulty": "medium",
+      "example_id": "original_v1:c06c-001",
+      "family": "c06_teach_03",
+      "learner_type": "first_turn",
+      "move": "PRACTICE",
+      "pace": "detailed",
+      "pair": null,
+      "seed": 13,
+      "split": "validation",
+      "words": 111
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C06",
+      "difficulty": "medium",
+      "example_id": "original_v1:c06c-002",
+      "family": "c06_teach_03",
+      "learner_type": "incorrect_M05",
+      "move": "WORKED_EXAMPLE",
+      "pace": "detailed",
+      "pair": null,
+      "seed": 13,
+      "split": "validation",
+      "words": 136
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C08",
+      "difficulty": "hard",
+      "example_id": "original_v1:c08a-001",
+      "family": "c08_teach_01",
+      "learner_type": "challenge_request",
+      "move": "CHALLENGE",
+      "pace": "normal",
+      "pair": null,
+      "seed": 9,
+      "split": "train",
+      "words": 54
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C08",
+      "difficulty": "hard",
+      "example_id": "original_v1:c08a-002",
+      "family": "c08_teach_01",
+      "learner_type": "incorrect_M08",
+      "move": "HINT",
+      "pace": "normal",
+      "pair": null,
+      "seed": 9,
+      "split": "train",
+      "words": 25
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C08",
+      "difficulty": "medium",
+      "example_id": "original_v1:c08b-001",
+      "family": "c08_teach_02",
+      "learner_type": "assisted_correct",
+      "move": "EXPLAIN_CONCEPT",
+      "pace": "concise",
+      "pair": null,
+      "seed": 13,
+      "split": "train",
+      "words": 59
+    },
+    {
+      "attack_group": "ATK10_format_override",
+      "concept_id": "C08",
+      "difficulty": "hard",
+      "example_id": "original_v1:c08d-001",
+      "family": "c08_teach_04",
+      "learner_type": "override",
+      "move": "CHECK_MASTERY",
+      "pace": "normal",
+      "pair": null,
+      "seed": 5,
+      "split": "test",
+      "words": 47
+    },
+    {
+      "attack_group": null,
+      "concept_id": "C08",
+      "difficulty": "hard",
+      "example_id": "original_v1:c08d-002",
+      "family": "c08_teach_04",
+      "learner_type": "correct",
+      "move": "REFLECT",
+      "pace": "normal",
+      "pair": null,
+      "seed": 5,
+      "split": "test",
+      "words": 48
+    }
+  ],
+  "families_used": [
+    "c01_teach_01",
+    "c01_teach_02",
+    "c01_teach_03",
+    "c02_teach_01",
+    "c02_teach_02",
+    "c02_teach_04",
+    "c03_teach_01",
+    "c03_teach_04",
+    "c06_teach_01",
+    "c06_teach_02",
+    "c06_teach_03",
+    "c08_teach_01",
+    "c08_teach_02",
+    "c08_teach_04"
+  ],
+  "generating_model": {
+    "model_id": "claude-fable-5-1",
+    "name": "Claude Fable 5.1",
+    "runtime": "Claude Code agent acting for Person A"
+  },
+  "generator": "tools.response.build_original_sft v1",
+  "instructions": {
+    "path": "data/response/original_v1/instructions_v1.md",
+    "sha256": "4ac31a90a8a01b0735feee8147a38ebaa0cb899c1114842df75d03bfcd513a24",
+    "version": "instructions_v1"
+  },
+  "license": {
+    "name": "original",
+    "note": "authored for this project; no external source"
+  },
+  "lineage": [
+    "Loaded authored records and the frozen split manifest.",
+    "Sampled each item with B's family sampler and solved it with B's solver.",
+    "Built each TeachingPlan with B's plan builder and applied the listed normalizations.",
+    "Graded every learner answer with B's grader and error generators.",
+    "Validated plans against learning_v1, plan rules and B's response stub.",
+    "Ran the six response checks, solver agreement and phrase disclosure on every reply.",
+    "Validated every example against the SFTExample schema.",
+    "Removed exact, normalized and near-duplicate replies, and MathDial matches."
+  ],
+  "notes": [
+    "All examples are model-written and pending human review; checks are automated.",
+    "Examples live in data/sft (ignored); the authored records are the committed source."
+  ],
+  "output_files": [
+    {
+      "path": "data/sft/original_v1/train.jsonl",
+      "rows": 22,
+      "sha256": "7ffb7e07a3610b5e4e9ae859f2c4f4a80daa16bb064d65f9d9f13f06e6ef21ef"
+    },
+    {
+      "path": "data/sft/original_v1/validation.jsonl",
+      "rows": 4,
+      "sha256": "158a093f806190f8410c52c3f81cb1e45515c55d23f54041d97fa0a1d101e20b"
+    },
+    {
+      "path": "data/sft/original_v1/test.jsonl",
+      "rows": 4,
+      "sha256": "d9aa526a15e0780e41ba93e5a09a4dfc5a4dbc03f5152cd7ab915f854bbe4145"
+    }
+  ],
+  "permitted_purposes": [
+    "response SFT",
+    "response evaluation"
+  ],
+  "plan_modifications": [
+    "concept_name and goal_name use the catalogue names instead of concept IDs",
+    "forbidden_answer_fingerprints holds the solver answer when reveal is forbidden",
+    "response_context carries the authored dialogue and learner message",
+    "PROBE and CHECK_MASTERY items come from teaching families, never assessment ones",
+    "REFLECT previous_step is a learner-facing description of the earlier step"
+  ],
+  "prompt_version": "prompt_v1",
+  "publisher_url": null,
+  "raw_record_count": 30,
+  "record_files": [
+    {
+      "path": "data/response/original_v1/records/batch_01_day_one.jsonl",
+      "sha256": "7a6c37203ded0b32407b49ae351485e8fbf94fd2eaddcd2246f4620034edf3d4"
+    }
+  ],
+  "rejected_count_by_reason": {},
+  "rejection_report": {
+    "path": "evaluation/response/original_v1_rejection_report.json"
+  },
+  "responsible_owner": "Person A",
+  "review_sample": {
+    "path": "evaluation/response/original_v1_review_sample.md",
+    "rows": 28
+  },
+  "reviewer_status": "pending",
+  "revision": "instructions_v1",
+  "source_id": "original_v1",
+  "split_assignment_sha256": "2d7b96cb16783db05cacb3b9b855495c015a95f608ee156f7bed41e2aaa55e94",
+  "split_manifest": {
+    "path": "data/response/original_v1/split_manifest.json",
+    "sha256": "b4668f30d573ced42c69a1772ca2d51ef2b283ce1978cda6feb1dfda6af01f31",
+    "status": "frozen_before_expansion"
+  },
+  "split_rule": "Every example inherits the split of its template family, the one Person B assigned in packages/learning/content/templates/families.py (SPLIT_BY_VARIANT): teach_01 and teach_02 train, teach_03 validation, teach_04 test. original_problem_id is '<family>:seed<sampler seed>', so every parameter variant stays with its family. Examples whose plan carries no item are anchored to the family of the learner's active item, or for session-level examples to the first teaching family of the split, as B's plan builder does for worked examples.",
+  "synthetic": true,
+  "validator_version": "validator_v1"
+}
