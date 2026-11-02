@@ -200,7 +200,7 @@ models:
     concurrency: 2
     timeout_s: 300
     decoding: {temperature: null, max_tokens: 1024, token_param: max_tokens}
-    reasoning: {setting: provider default (adaptive thinking, effort medium)}
+    reasoning: {setting: "provider default (adaptive thinking, effort medium)"}
     pricing:
       <<: *anthropic_source
       input_usd_per_mtok: 0.10

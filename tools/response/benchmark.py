@@ -996,7 +996,7 @@ def pilot_summary(entry, ctx, remaining, seconds_per_case=None):
 
 def run_with_deployment(entry, cases, ctx, *, pilot=3):
     """Create the deployment, pilot, run the rest within budget, then always delete it."""
-    from tools.response.fireworks_deployment import DeploymentRun, FireworksAPI
+    from tools.response.fireworks_deployment import DeploymentError, DeploymentRun, FireworksAPI
 
     spec = entry["deployment"]
     rate = gpu_usd_per_hour(entry)
@@ -1012,7 +1012,10 @@ def run_with_deployment(entry, cases, ctx, *, pilot=3):
     run = DeploymentRun(
         api, entry, deployment_state_path(ctx, entry), ctx.ledger, out=ctx.out, sleep=ctx.sleep
     )
-    run.create()
+    try:
+        run.create()
+    except DeploymentError as exc:
+        raise BenchmarkError(f"{entry['id']}: {exc}") from None
     try:
         run.wait_ready(timeout_s=float(spec.get("ready_timeout_s", 2400)))
         model = resolve_model(entry, ctx)
@@ -1058,6 +1061,8 @@ def run_with_deployment(entry, cases, ctx, *, pilot=3):
             remaining = remaining[:affordable]
         records, _ = execute(entry, remaining, ctx, model=model, tag="full", deadline=deadline)
         return pilot_records + records
+    except DeploymentError as exc:
+        raise BenchmarkError(f"{entry['id']}: {exc}") from None
     finally:
         run.delete_and_verify()
 

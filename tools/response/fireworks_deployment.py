@@ -341,7 +341,8 @@ def main(argv=None):
     ctx, api, run = _context(args)
     if args.command == "validate":
         status, payload = run.validate()
-        print(json.dumps({"http": status, **summarize(payload)}, indent=2, sort_keys=True))
+        shown = summarize(payload) if status == 200 else payload
+        print(json.dumps({"http": status, **shown}, indent=2, sort_keys=True))
         return 0 if status == 200 else 1
     if args.command == "status":
         if not run.state.get("name"):
