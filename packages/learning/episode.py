@@ -570,6 +570,7 @@ def run_episode(
     horizon: int = HORIZON,
     bank: EventRandomBank | None = None,
     simulator_config: str | Path = DEFAULT_SIMULATOR_CONFIG,
+    text_path: object | None = None,
 ) -> EpisodeResult:
     if not 1 <= horizon <= HORIZON:
         raise ValueError("episode horizon must be between one and sixteen turns")
@@ -875,10 +876,13 @@ def run_episode(
         )
         for pattern in patterns:
             repeated_pattern_evidence[pattern] = learner_evidence_count
-        realized = realize_plan(
+        realizer = text_path.realize if text_path is not None else realize_plan
+        realized = realizer(
             plan, request_id=f"{episode_id}-request-{turn:02d}", generation_seed=episode_seed
         )
-        if not all(realized["checks"].values()):
+        if text_path is not None:
+            realized = text_path.check_content(plan, realized, item=active_item)
+        if text_path is None and not all(realized["checks"].values()):
             raise AssertionError("response stub returned failed safety checks")
         item_moves = {"PROBE", "PRACTICE", "CHALLENGE", "CHECK_MASTERY", "HINT"}
         if (move in item_moves or (forced_answer and active_item is not None)) and active_item:
@@ -898,6 +902,8 @@ def run_episode(
                 bank=random_bank,
                 config=sim_config,
             )
+            if text_path is not None:
+                outcome = text_path.observe(outcome, plan, realized, turn=turn, item=item)
             grader_result = (
                 grade_answer(outcome.normalized_answer, item["instance"], item["family"])
                 if outcome.normalized_answer is not None
@@ -946,6 +952,8 @@ def run_episode(
             outcome = StudentOutcome(
                 "not_applicable", None, plan["assistance"], "none", None, False
             )
+            if text_path is not None:
+                outcome = text_path.observe(outcome, plan, realized, turn=turn, item=None)
             evidence_correctness = "unknown"
             family_id = None
         mastery_before = dict(private.mastery)
