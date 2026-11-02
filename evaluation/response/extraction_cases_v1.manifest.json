@@ -1,0 +1,105 @@
+{
+  "builder": "tools/response/make_extraction_cases.py",
+  "cases_sha256": "86b14504ee65c330651e2a79aaade4ec12913c273899a0c9986e6b565d19bbc7",
+  "contexts_sha256": "787ef31a0fa278a17821b807807b82f2f1cad3a7903710014e26b391e983d847",
+  "counts": {
+    "by_category": {
+      "answer_plus_request": {
+        "dev": 4,
+        "test": 4
+      },
+      "answer_request": {
+        "dev": 8,
+        "test": 8
+      },
+      "assistance_report": {
+        "dev": 6,
+        "test": 7
+      },
+      "bare_number": {
+        "dev": 9,
+        "test": 9
+      },
+      "change_goal": {
+        "dev": 9,
+        "test": 9
+      },
+      "formats": {
+        "dev": 13,
+        "test": 13
+      },
+      "hedged": {
+        "dev": 9,
+        "test": 9
+      },
+      "hint_request": {
+        "dev": 7,
+        "test": 8
+      },
+      "idk": {
+        "dev": 9,
+        "test": 10
+      },
+      "injection": {
+        "dev": 10,
+        "test": 10
+      },
+      "misconception": {
+        "dev": 22,
+        "test": 23
+      },
+      "multi_number": {
+        "dev": 12,
+        "test": 12
+      },
+      "number_words": {
+        "dev": 11,
+        "test": 11
+      },
+      "off_topic": {
+        "dev": 7,
+        "test": 7
+      },
+      "pace": {
+        "dev": 10,
+        "test": 10
+      },
+      "request_mentions": {
+        "dev": 7,
+        "test": 7
+      },
+      "self_report": {
+        "dev": 8,
+        "test": 8
+      },
+      "skip": {
+        "dev": 8,
+        "test": 8
+      },
+      "stop": {
+        "dev": 8,
+        "test": 8
+      },
+      "typos": {
+        "dev": 9,
+        "test": 9
+      }
+    },
+    "dev": 186,
+    "test": 190,
+    "total": 376
+  },
+  "created": "2026-11-02",
+  "dataset_id": "extraction_cases_v1",
+  "frozen": "test split frozen before any extractor tuning; see test_sha256",
+  "provenance": {
+    "generator": "claude-opus-5-5 (Claude Code agent, branch a/extractor-v1, 2026-11-02)",
+    "label_source": "synthetic_model_authored",
+    "message_source": "synthetic_model_authored",
+    "pending_reviewer": "Xueming Xu (Person A)",
+    "reviewer_status": "pending"
+  },
+  "split_rule": "groups of paraphrases stay together; within each category groups are ordered by sha256('extraction_cases_v1:' + group_id) and alternate test, dev",
+  "synthetic": true,
+  "test_sha256": "eafcc00603038886f432f5378b244c1b6ca0ff157abe7921a666c66fe169d8b9"
+}
