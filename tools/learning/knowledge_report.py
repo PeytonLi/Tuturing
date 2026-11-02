@@ -15,6 +15,7 @@ ARMS = [
     ("qwen3p8_27b_base", "Base Qwen 3.8 27B", "#c98b5b"),
     ("strategist_bc", "Our trained Strategist", "#4f8a6e"),
     ("gpt_6_1_sol", "gpt-6.1-sol", "#5b7fc9"),
+    ("gpt_6_astra", "gpt-6-astra", "#8a6fc9"),
 ]
 TYPES = [
     "missing_basics", "already_knows", "reverses_conditionals", "wrong_denominator",

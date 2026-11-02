@@ -15,3 +15,12 @@ qwen3p8_27b_base:
   max_tokens: 8192
   temperature: 0
   prompt: evaluation/learning/llm_strategist_prompt_v1.txt
+
+gpt_6_astra:
+  base_url: https://api.openai.com/v1
+  model: gpt-6-astra
+  api_key_env: OPENAI_API_KEY
+  max_tokens_field: max_completion_tokens
+  max_tokens: 4000
+  temperature: null
+  prompt: evaluation/learning/llm_strategist_prompt_v1.txt
