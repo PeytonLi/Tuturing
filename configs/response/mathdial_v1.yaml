@@ -1,0 +1,29 @@
+source_id: mathdial
+hf_dataset: eth-nlped/mathdial
+revision: acc3878459e0bd8c04ab840056572f0b8b1abe1f
+url_template: https://huggingface.co/datasets/eth-nlped/mathdial/resolve/{revision}/{file}
+files:
+  - train.jsonl
+  - test.jsonl
+download_readme: README.md
+raw_dir: data/raw/mathdial/acc3878459e0bd8c04ab840056572f0b8b1abe1f
+out_dir: data/sft/mathdial_v1
+manifest_path: data/manifests/response/mathdial_v1.json
+move_map: configs/response/mathdial_move_map_v1.yaml
+expected_counts:
+  train_rows: 2262
+  test_rows: 599
+  dialogues: 2861
+  unique_qids: 1111
+  teacher_turns: 18609
+  test_qids_in_train: 318
+split_salt: mathdial
+max_words: 150
+include_student_solution_as_opening_turn: true
+license:
+  name: CC-BY-4.0
+  url: https://creativecommons.org/licenses/by/4.0/
+attribution: >-
+  Macina et al. 2023, "MathDial: A Dialogue Tutoring Dataset with Rich
+  Pedagogical Properties Grounded in Math Reasoning Problems", Findings of
+  EMNLP 2023, arXiv:2305.14536.
