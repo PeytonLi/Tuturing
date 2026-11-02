@@ -73,6 +73,7 @@ Peyton merged the internal learning service to `main` on 2026-11-02 (`apps/learn
 Xueming decided that Person A owns SFT (capture `cap_7c410346-63da-4a59-9c26-bfb410856672`): the SFT configs, trainer, SFT data and D09/D10 are maintained by Xueming's agents from now on. Xueming asked to be sent review items as each workstream finishes.
 
 - Smoke SFT (started 2026-11-02, branch `a/sft-smoke-v1`): Qwen3.8-27B LoRA on Fireworks, `original_v1` train split only, $20 budget, evaluated on the validation split against prompt-only Qwen.
+- Full SFT (requested 2026-11-02, queued behind the smoke checks on the same branch): Qwen3.8-27B LoRA on `mix_v1`, at most 3 epochs, checkpoint chosen on validation, one final run on the probability test split, $40 budget.
 
 ## Open questions
 

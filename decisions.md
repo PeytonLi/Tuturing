@@ -211,3 +211,11 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 **Also recorded:** another Claude session on this Mac committed a note to `brief.md` that A's OpenAI-compatible responder sends `temperature: 0` and `max_tokens`, which `gpt-6.1-sol` rejects, so frontier-model turns through the real pipeline fall back silently. The response-service agent is fixing it.
 
+## 2026-11-02 — Full SFT run requested
+
+**User direction:** “do the full SFT run” (Lark message in the Tuturing topic), sent while the smoke run was still in progress.
+
+**Implementation (assistant):** the full run is queued on the smoke-run agent and starts only if the smoke run shows the Fireworks training path works (PRD 13.5 requires the smoke checks before a long run). Data: the 60/40 `mix_v1` (435 training examples). At most 3 epochs. Checkpoints are chosen on validation by the PRD 13.5 order, with no human score yet. The probability test split is then used once, for the selected checkpoint only, compared with the prompt-only results already measured. Budget: $40 for the full run on top of the smoke's $20, an assistant figure Xueming can change. Every deployment is deleted and verified.
+
+**On D10:** Xueming directed both the smoke and the full run on Qwen3.8-27B. The assistant treats that as confirming D10's base model for the hackathon run unless Xueming says otherwise; D10's file is left unchanged until the results are in.
+
