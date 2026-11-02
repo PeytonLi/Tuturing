@@ -26,6 +26,10 @@ from tools.response.benchmark import (
 from tools.response.evaluate import CHECK_NAMES
 
 DELIVERIES = ("model", "repair", "fallback", "error", "unavailable")
+SHEET_FILENAME = "review_sheet_blinded.csv"
+SUPPLEMENT_FILENAME = "review_sheet_blinded_supplement.csv"
+KEY_FILENAME = "review_key_do_not_open_before_rating.csv"
+KEY_COLUMNS = ("item", "case_set", "case_id", "response_label", "model_id")
 REVIEW_COLUMNS = (
     "item", "case_set", "case_id", "move", "difficulty", "pace", "max_words",
     "max_questions", "reveal_allowed", "must_request_attempt", "problem_stem",
@@ -225,6 +229,104 @@ def _deployment_records(run_dir):
     return records
 
 
+def _review_row(item, case, label, text):
+    plan = case.plan
+    content = plan["content"]
+    constraints = plan["constraints"]
+    approved = []
+    for name, field in (
+        ("facts", "approved_facts"), ("hint", "permitted_hint"),
+        ("worked example", "worked_example"), ("previous step", "previous_step"),
+        ("solution (reveal allowed)", "reveal_solution"),
+    ):
+        value = content.get(field)
+        if field == "reveal_solution" and not constraints.get("reveal_allowed"):
+            continue
+        if isinstance(value, list):
+            value = " | ".join(value)
+        if value:
+            approved.append(f"{name}: {value}")
+    return {
+        "item": item,
+        "case_set": case.case_set,
+        "case_id": case.case_id,
+        "move": case.move,
+        "difficulty": plan["teaching_action"].get("difficulty"),
+        "pace": plan["teaching_action"].get("pace"),
+        "max_words": constraints.get("max_words"),
+        "max_questions": constraints.get("max_questions"),
+        "reveal_allowed": constraints.get("reveal_allowed"),
+        "must_request_attempt": constraints.get("must_request_student_attempt"),
+        "problem_stem": content.get("problem_stem") or "",
+        "approved_content": "\n".join(approved),
+        "last_learner_message": plan["response_context"].get("last_student_message"),
+        "response_label": label,
+        "response_text": text,
+    }
+
+
+def _read_csv(path):
+    with Path(path).open(encoding="utf-8", newline="") as stream:
+        return list(csv.DictReader(stream))
+
+
+def build_review_supplement(cases, entries, runs, out_dir):
+    """Add models absent from the published sheet without touching its items or labels.
+
+    The supplement keeps the same items and columns; each added model's response takes
+    the next unused label for that item and its mapping is appended to the key. Raters can
+    tell these rows were added later, which weakens blinding between the added model and
+    the earlier ones, but not among the earlier ones.
+    """
+    review_dir = Path(out_dir) / "review"
+    key_path = review_dir / KEY_FILENAME
+    key_rows = _read_csv(key_path)
+    present = {row["model_id"] for row in key_rows}
+    new_models = [e["id"] for e in entries if runs.get(e["id"]) and e["id"] not in present]
+    if not new_models:
+        return None, 0
+    items = {}
+    labels = defaultdict(set)
+    for row in key_rows:
+        items[int(row["item"])] = (row["case_set"], row["case_id"])
+        labels[int(row["item"])].add(row["response_label"])
+    supplement_path = review_dir / SUPPLEMENT_FILENAME
+    sheet = _read_csv(supplement_path) if supplement_path.exists() else []
+    case_by_key = {case.key: case for case in cases}
+    additions = []
+    for item in sorted(items):
+        case_set, case_id = items[item]
+        case = case_by_key.get(f"{case_set}/{case_id}")
+        if case is None:
+            continue
+        for model_id in new_models:
+            record = runs[model_id].get(case.key)
+            if not record or record["error"] or not record["text"].strip():
+                continue
+            number = 1
+            while f"R{number}" in labels[item]:
+                number += 1
+            label = f"R{number}"
+            labels[item].add(label)
+            sheet.append(_review_row(item, case, label, record["text"]))
+            additions.append({
+                "item": item, "case_set": case_set, "case_id": case_id,
+                "response_label": label, "model_id": model_id,
+            })
+    _write_csv(supplement_path, sheet, REVIEW_COLUMNS)
+    _write_csv(key_path, key_rows + additions, KEY_COLUMNS)
+    with (review_dir / "README.md").open("a", encoding="utf-8") as stream:
+        stream.write(
+            f"\n## Supplement added {utc_now()}\n\n`{SUPPLEMENT_FILENAME}` adds "
+            f"{len(additions)} responses from {len(new_models)} model(s) that ran after the "
+            "sheet above was published, for the same items and columns, each under the next "
+            "unused label of its item (R2 or R3); the mappings were appended to the key. A "
+            "rater can tell these rows were added later, which weakens the blinding between "
+            "the added model(s) and the earlier ones but not among the earlier ones.\n"
+        )
+    return supplement_path, len(additions)
+
+
 def build_review(cases, entries, runs, config, out_dir):
     """Blinded sheet: per case, responses shuffled and labelled R1..Rk; key kept apart."""
     review = config.get("review") or {}
@@ -244,41 +346,9 @@ def build_review(cases, entries, runs, config, out_dir):
             continue
         item += 1
         rng.shuffle(responses)
-        plan = case.plan
-        content = plan["content"]
-        constraints = plan["constraints"]
-        approved = []
-        for label, field in (
-            ("facts", "approved_facts"), ("hint", "permitted_hint"),
-            ("worked example", "worked_example"), ("previous step", "previous_step"),
-            ("solution (reveal allowed)", "reveal_solution"),
-        ):
-            value = content.get(field)
-            if field == "reveal_solution" and not constraints.get("reveal_allowed"):
-                continue
-            if isinstance(value, list):
-                value = " | ".join(value)
-            if value:
-                approved.append(f"{label}: {value}")
         for index, (model_id, text) in enumerate(responses, start=1):
             label = f"R{index}"
-            sheet.append({
-                "item": item,
-                "case_set": case.case_set,
-                "case_id": case.case_id,
-                "move": case.move,
-                "difficulty": plan["teaching_action"].get("difficulty"),
-                "pace": plan["teaching_action"].get("pace"),
-                "max_words": constraints.get("max_words"),
-                "max_questions": constraints.get("max_questions"),
-                "reveal_allowed": constraints.get("reveal_allowed"),
-                "must_request_attempt": constraints.get("must_request_student_attempt"),
-                "problem_stem": content.get("problem_stem") or "",
-                "approved_content": "\n".join(approved),
-                "last_learner_message": plan["response_context"].get("last_student_message"),
-                "response_label": label,
-                "response_text": text,
-            })
+            sheet.append(_review_row(item, case, label, text))
             key.append({
                 "item": item, "case_set": case.case_set, "case_id": case.case_id,
                 "response_label": label, "model_id": model_id,
@@ -286,11 +356,8 @@ def build_review(cases, entries, runs, config, out_dir):
         if item >= wanted:
             break
     review_dir = Path(out_dir) / "review"
-    _write_csv(review_dir / "review_sheet_blinded.csv", sheet, REVIEW_COLUMNS)
-    _write_csv(
-        review_dir / "review_key_do_not_open_before_rating.csv", key,
-        ("item", "case_set", "case_id", "response_label", "model_id"),
-    )
+    _write_csv(review_dir / SHEET_FILENAME, sheet, REVIEW_COLUMNS)
+    _write_csv(review_dir / KEY_FILENAME, key, KEY_COLUMNS)
     per_model = Counter(row["model_id"] for row in key)
     (review_dir / "README.md").write_text(
         "# Blinded response review\n\n"
@@ -397,8 +464,25 @@ def build_report(config, ctx):
 
     spend, gpu_events = _ledger_summary(run_dir / "ledger.jsonl")
     deployments = _deployment_records(run_dir)
-    review_dir, review_items, review_rows = build_review(cases, ran, runs, config, out_dir)
-    written.append(review_dir / "review_sheet_blinded.csv")
+    review_dir = out_dir / "review"
+    if (review_dir / SHEET_FILENAME).exists():
+        # A published sheet is frozen: raters may be working on it. New models go to a
+        # supplement with the same items and the next unused labels.
+        supplement_path, added = build_review_supplement(cases, ran, runs, out_dir)
+        if supplement_path is not None:
+            written.append(supplement_path)
+        key_rows = _read_csv(review_dir / KEY_FILENAME)
+        review_items = len({row["item"] for row in key_rows})
+        review_rows = len(key_rows)
+        review_note = (
+            f" The published sheet is frozen; `review/{SUPPLEMENT_FILENAME}` holds responses "
+            "from models that ran later, under the same items." if (
+                review_dir / SUPPLEMENT_FILENAME).exists() else ""
+        )
+    else:
+        review_dir, review_items, review_rows = build_review(cases, ran, runs, config, out_dir)
+        written.append(review_dir / SHEET_FILENAME)
+        review_note = ""
 
     lines = [
         "# Response benchmark v1: prompt-only models on the tutoring response task",
@@ -531,8 +615,8 @@ def build_report(config, ctx):
         "- Latency is one client on a home connection with concurrency per entry as "
         "configured, not the PRD 14.3 serving measurement.",
         "",
-        f"Review sheet: `review/review_sheet_blinded.csv` ({review_items} cases, {review_rows} "
-        "responses); key in `review/review_key_do_not_open_before_rating.csv`.",
+        f"Review sheet: `review/{SHEET_FILENAME}` ({review_items} cases, {review_rows} "
+        f"responses including any supplement); key in `review/{KEY_FILENAME}`.{review_note}",
         "",
     ]
     (out_dir / "report.md").write_text("\n".join(lines), encoding="utf-8")

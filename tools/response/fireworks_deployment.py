@@ -229,6 +229,9 @@ class DeploymentRun:
             try:
                 call()
             except Exception as exc:  # CallError from the benchmark client
+                status = getattr(exc, "status", None)
+                if status is not None and 400 <= status < 500 and status != 429:
+                    raise DeploymentError(f"request rejected during warm-up: {exc}") from None
                 if self.clock() > deadline:
                     raise DeploymentError(f"no replica served after {timeout_s:.0f}s: {exc}")
                 if attempts == 1 or attempts % 6 == 0:
