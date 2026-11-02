@@ -4,6 +4,7 @@ import json
 import sqlite3
 import threading
 from contextlib import contextmanager
+from pathlib import Path
 
 
 def canonical(value):
@@ -13,6 +14,8 @@ def canonical(value):
 class Store:
     def __init__(self, db_path):
         self.lock = threading.Lock()
+        if str(db_path) != ":memory:":
+            Path(db_path).parent.mkdir(parents=True, exist_ok=True)
         self.connection = sqlite3.connect(str(db_path), check_same_thread=False)
         self.connection.row_factory = sqlite3.Row
         self.connection.executescript("""
