@@ -2,15 +2,19 @@
 # (a local llama.cpp llama-server, vLLM, or a hosted provider) behind the verified pipeline.
 # This config names environment variables only; it holds no URL, model name or key.
 #
-#   export TUTOR_LLM_BASE_URL=http://127.0.0.1:8080/v1   # llama-server example
-#   export TUTOR_LLM_MODEL=local-model                   # whatever the server expects
-#   export TUTOR_LLM_API_KEY=...                         # hosted providers; omit locally
-#   export TUTOR_RESPONSE_SERVICE_TOKEN=...              # bearer token for this service
+#   export TUTOR_LLM_BASE_URL=https://api.fireworks.ai/inference/v1   # or a local server
+#   export TUTOR_LLM_MODEL=accounts/<account>/deployments/<id>         # what the server expects
+#   export TUTOR_LLM_API_KEY=...                                       # omit for a local server
+#   export TUTOR_RESPONSE_SERVICE_TOKEN=...                            # this service's token
 #   uv run python -m tools.response.serve --config configs/response/serve_openai_compatible.yaml
 #
-# Decoding is greedy (temperature 0) with at most 384 output tokens (PRD 14.1). Every reply
-# is buffered and checked before delivery; a reply that leaks a protected answer is replaced
-# by the verified fallback. A frozen release must pin the model under a distinct artifact id.
+# The decoding block reproduces the request body benchmark_v1 used for Qwen3.8-27B on a
+# Fireworks deployment: greedy (temperature 0), max_tokens, and reasoning_effort none, which
+# Fireworks maps to enable_thinking=false. For a server that rejects reasoning_effort, delete
+# that line; a rejection is logged as a responder config error, never a silent fallback. For
+# gpt-6.1-sol use serve_gpt61sol.yaml. Every reply is buffered and checked before delivery;
+# a reply that leaks a protected answer is replaced by the verified fallback. A frozen
+# release must pin the model under a distinct artifact id.
 schema_version: 1
 service:
   host: 127.0.0.1
@@ -31,6 +35,10 @@ responder:
   api_key_env: TUTOR_LLM_API_KEY
   api_key_required: false        # unset variable: no Authorization header (local server)
   request_timeout_s: 8
+  decoding:
+    token_param: max_tokens
+    temperature: 0               # greedy decoding (PRD 14.1)
+    reasoning_effort: none       # Fireworks Qwen3.8: thinking off, as in benchmark_v1
 generation:
   internal_deadline_ms: 8000
   max_output_tokens: 384

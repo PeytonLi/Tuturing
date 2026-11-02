@@ -18,6 +18,7 @@ from packages.response.validate import VALIDATOR_VERSION
 from tools.response.benchmark import (
     HARNESS_VERSION,
     cost_basis,
+    fine_tuned_model,
     load_all_cases,
     load_results,
     stratified_order,
@@ -137,6 +138,8 @@ def _model_table(entries, runs):
         pricing = entry.get("pricing") or {}
         if cost_basis(entry) == "tokens":
             price = f"{pricing.get('input_usd_per_mtok')} / {pricing.get('output_usd_per_mtok')}"
+        elif entry.get("adapter"):
+            price = f"GPU shared with {entry['adapter'].get('deployment_entry')}"
         elif cost_basis(entry) == "gpu_time":
             spec = entry.get("deployment") or {}
             price = f"GPU {spec.get('usd_per_gpu_hour')}/h x{spec.get('accelerator_count', 1)}"
@@ -145,7 +148,9 @@ def _model_table(entries, runs):
         decoding = entry.get("decoding") or {}
         temp = decoding.get("temperature")
         reasoning = (entry.get("reasoning") or {}).get("setting", "n/a")
-        model = (entry.get("deployment") or {}).get("base_model") or entry.get("model") or "-"
+        model = (fine_tuned_model(entry) or (entry.get("adapter") or {}).get("model")
+                 or (entry.get("deployment") or {}).get("base_model")
+                 or entry.get("model") or "-")
         lines.append(
             f"| {entry.get('label', model_id)} | {entry.get('provider')} | `{model}` | "
             f"{reasoning} | {'default' if temp is None else temp} | {price} | "

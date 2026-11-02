@@ -1,0 +1,47 @@
+# Response service, prompt-only gpt-6.1-sol profile (the frontier model chosen for
+# benchmark_v1) behind the verified pipeline. This file names environment variables only
+# and holds no secret.
+#
+#   set -a; . ~/.config/tuturing/llm.env; set +a      # exports OPENAI_API_KEY, prints nothing
+#   export TUTOR_RESPONSE_SERVICE_TOKEN=...             # bearer token for this service
+#   uv run python -m tools.response.serve --config configs/response/serve_gpt61sol.yaml --check --probe
+#   uv run python -m tools.response.serve --config configs/response/serve_gpt61sol.yaml
+#
+# gpt-6.1-sol is a reasoning model. It rejects temperature 0 with HTTP 400 ("Only the
+# default (1) value is supported") and wants max_completion_tokens instead of max_tokens,
+# so this profile omits temperature and sends max_completion_tokens. Decoding is therefore
+# not deterministic (PRD 14.1 reports stochastic decoding as its own experiment); a retry of
+# the same request_id is still answered from the service's idempotency cache. Reasoning
+# tokens count toward max_completion_tokens, so the 384-token cap covers reasoning plus the
+# visible reply; a reply cut off at the cap is repaired once or falls back.
+schema_version: 1
+service:
+  host: 127.0.0.1
+  port: 8082
+  auth:
+    token_env: TUTOR_RESPONSE_SERVICE_TOKEN
+    allow_unauthenticated_loopback: false   # every request spends money, so always require it
+  max_request_bytes: 262144
+  max_concurrent: 4
+  idempotency_cache_size: 1024
+artifact:
+  id: prompt_only_gpt61sol_v1
+  compatible_ids: []
+responder:
+  kind: openai_compatible
+  base_url: https://api.openai.com/v1
+  model: gpt-6.1-sol
+  api_key_env: OPENAI_API_KEY
+  request_timeout_s: 8
+  decoding:
+    token_param: max_completion_tokens
+    temperature: null            # omitted: the model accepts only its default temperature
+    reasoning_effort: low        # the lowest effort its model page lists (benchmark_v1)
+generation:
+  internal_deadline_ms: 8000
+  max_output_tokens: 384
+  max_repairs: 1
+versions:
+  prompt: prompt_v1
+  validator: validator_v2
+  fallback: fallback_v1

@@ -1,0 +1,91 @@
+# Full LoRA SFT of the D10 base model on the 60/40 mix_v1 (PRD 13.2 mix, 13.4 values,
+# 13.5 at most three epochs). Same runner and LoRA settings as the smoke run:
+#   uv run python -m tools.response.fireworks_sft --config <this file> {convert,tokens,...}
+# Runbook: docs/runbooks/sft_fireworks.md. Report: experiments/response/sft_full_v1/report.md.
+# Separate run directory and ledger from the smoke run; separate $40 cap.
+run_type: response_sft
+run_id: sft_full_v1
+base_model: Qwen/Qwen3.8-27B
+base_model_revision: 1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0
+tokenizer_revision: 1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0
+method: lora
+lora_rank: 16
+lora_alpha: 32
+lora_dropout: 0.05
+# D10's decided scope (160 modules). Fireworks chooses its own targets; see the report.
+lora_target_modules: '^(model\.)?(language_model\.)?layers\.\d+\.[^.]+\.(q_proj|k_proj|v_proj|o_proj|in_proj_qkv|out_proj)$'
+lora_target_modules_scope: language_model_attention
+lora_expected_target_count: 160
+precision: bfloat16
+max_sequence_tokens: 4096
+micro_batch_size: 1
+gradient_accumulation_steps: 16   # 16 samples per optimizer step -> batch_size_samples 16
+learning_rate: 0.0001
+epochs_max: 3
+warmup_ratio: 0.05
+weight_decay: 0.01
+gradient_clip_norm: 1.0
+packing: false
+loss_scope: target_completion_only
+evaluation_interval_optimizer_steps: 28   # one epoch of 435 rows at 16 per step
+checkpoint_interval_optimizer_steps: 28   # not settable on Fireworks
+seed: 17
+
+data:
+  source: mix_v1 (60 percent original_v1, 40 percent model-labelled MathDial)
+  build: >-
+    uv run python -m tools.response.prepare_sft --config configs/response/mathdial_v1.yaml &&
+    uv run python -m tools.response.build_original_sft &&
+    uv run python -m tools.response.build_sft_mix --config configs/response/sft_mix_v1.yaml
+  manifest: data/manifests/response/mix_v1.json
+  train: data/sft/mix_v1/train.jsonl            # 435 rows: 261 original + 174 MathDial
+  validation: data/sft/mix_v1/validation.jsonl  # 92 rows: 55 original + 37 MathDial
+  test: frozen until the selected checkpoint's single test run
+
+evaluation:
+  # Checkpoint selection uses the original_v1 validation cases (55), exported by the smoke
+  # config, plus B's 9 fixtures and the 8 smoke cases; the mix validation split above is
+  # only the evaluation dataset for Fireworks' validation loss.
+  validation_cases_source: data/sft/original_v1/validation.jsonl
+  validation_cases: experiments/response/sft_smoke_v1/validation_cases_v1.jsonl
+  benchmark_config: configs/response/sft_full_eval_v1.yaml
+
+fireworks:
+  keys_file: ~/.config/tuturing/llm.env
+  api_key_env: FIREWORKS_API_KEY
+  spend_cap_env: TUTURING_BENCH_SPEND_CAP_USD   # must exist: it authorizes paid calls
+  spend_cap_usd: 40          # hard cap for the full run (training plus evaluation deployments)
+  run_dir: experiments/response/sft_full_v1/runs   # git-ignored; its own ledger
+  base_model: accounts/fireworks/models/qwen3p8-27b
+  datasets:
+    train: tut-sft-full-v1-train
+    validation: tut-sft-full-v1-validation
+  job:
+    id: tut-sft-full-v1
+    output_model: tut-sft-full-v1
+    display_name: tuturing response sft full v1 (mix_v1)
+    epochs: 3                      # PRD epochs_max
+    batch_size_samples: 16         # PRD micro_batch_size 1 x gradient_accumulation_steps 16
+    learning_rate: 0.0001
+    learning_rate_warmup_steps: 5  # ceil(0.05 x 84 optimizer steps)
+    lr_scheduler:
+      linear: {minLrRatio: 0.0, decayRatio: 0.0}
+    lora_rank: 16
+    lora_alpha: 32
+    max_context_length: 4096
+    optimizer_weight_decay: 0.01
+    eval_auto_carveout: false
+    is_turbo: false
+  not_settable: [lora_dropout, lora_target_modules, gradient_clip_norm, packing, seed,
+                 evaluation_interval_optimizer_steps, checkpoint_interval_optimizer_steps,
+                 per-epoch checkpoints]
+  pricing:
+    basis: training_tokens
+    usd_per_mtok: 3.00
+    tier: Managed Training, LoRA SFT, models 16.1B - 80B (Qwen3.8-27B has 27.36B parameters)
+    token_rule: training tokens = tokens in the training dataset x epochs (Fireworks pricing)
+    source: https://fireworks.ai/pricing
+    checked: 2026-11-02
+    estimate_safety_factor: 1.5
+  poll_interval_s: 60
+  max_wait_minutes: 240

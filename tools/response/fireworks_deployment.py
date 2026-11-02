@@ -57,14 +57,17 @@ class FireworksAPI:
     def _clean(self, text):
         return text.replace(self._key, "<redacted>") if self._key else text
 
-    def request(self, method, path, body=None, query=None):
+    def request(self, method, path, body=None, query=None, *, data=None,
+                content_type="application/json"):
+        """Send JSON ``body`` or raw ``data`` with ``content_type``; return (status, json)."""
         url = self.base + path
         if query:
             url += "?" + urllib.parse.urlencode(query)
-        data = json.dumps(body).encode("utf-8") if body is not None else None
+        if data is None and body is not None:
+            data = json.dumps(body).encode("utf-8")
         request = urllib.request.Request(url, data=data, method=method, headers={
             "Authorization": f"Bearer {self._key}",
-            "Content-Type": "application/json",
+            "Content-Type": content_type,
             "User-Agent": USER_AGENT,
         })
         try:
@@ -139,9 +142,13 @@ class DeploymentRun:
             },
             "annotations": {
                 "custom/project": "tuturing",
-                "custom/purpose": "response-benchmark",
+                "custom/purpose": spec.get("purpose", "response-benchmark"),
             },
         }
+        if spec.get("enable_hot_reload_latest_addon"):
+            # One LoRA at a time, merged into the base weights on load (validated shapes for
+            # qwen3p8-27b lack MULTI_LORA, so enableAddons is rejected for them).
+            body["enableHotReloadLatestAddon"] = True
         return body
 
     def validate(self):
@@ -250,6 +257,53 @@ class DeploymentRun:
             self.out(f"deployment serving after {attempts} warm-up attempt(s)")
             return
 
+    def load_addon(self, model, timeout_s=1800, poll_s=15):
+        """Load a LoRA onto this deployment (hot reload: merged, replacing any previous one).
+
+        API reference: https://docs.fireworks.ai/api-reference/create-deployed-model
+        """
+        account = self.state["account_id"]
+        started = self.clock()
+        body = {"model": model, "deployment": self.state["name"],
+                "displayName": self.spec.get("display_name", "tuturing")[:63]}
+        status, payload = self.api.request(
+            "POST", f"/v1/accounts/{account}/deployedModels", body,
+            {"replaceMergedAddon": "true"},
+        )
+        record = {"model": model, "load_requested_at": _iso(started), "http": status}
+        self.state.setdefault("addons", []).append(record)
+        self.state["events"].append({"at": _iso(started), "op": "load_addon", "http": status})
+        self._save()
+        if status != 200 or "name" not in payload:
+            record["error"] = payload
+            self._save()
+            raise DeploymentError(f"LoRA load failed (HTTP {status}): {json.dumps(payload)[:500]}")
+        record["deployed_model"] = payload["name"]
+        deadline = started + timeout_s
+        while True:
+            get_status, current = self.api.request("GET", f"/v1/{payload['name']}")
+            state = current.get("state")
+            record.update({"state": state, "last_get_http": get_status,
+                           "status": current.get("status")})
+            self._save()
+            if get_status == 200 and state == "DEPLOYED":
+                record["deployed_at"] = _iso(self.clock())
+                record["load_seconds"] = round(self.clock() - started, 1)
+                self._save()
+                self.out(f"LoRA {model} is DEPLOYED on {self.state['name']}")
+                return current
+            if state == "UNDEPLOYING" or get_status == 404:
+                raise DeploymentError(f"LoRA load did not complete: HTTP {get_status} {state}")
+            if self.clock() > deadline:
+                raise DeploymentError(f"LoRA not DEPLOYED after {timeout_s:.0f}s ({state})")
+            self.sleep(poll_s)
+
+    def annotate_addon(self, **fields):
+        """Add fields (for example the model string that served) to the latest addon record."""
+        if self.state.get("addons"):
+            self.state["addons"][-1].update(fields)
+            self._save()
+
     def delete_and_verify(self, attempts=40, poll_s=15):
         """Delete, then confirm with GET (state DELETED or 404). Records GPU cost."""
         name = self.state.get("name")
@@ -300,6 +354,15 @@ class DeploymentRun:
             }
         except Exception as exc:  # listing is supplementary evidence only
             self.state["verification_list"] = {"error": str(exc)[:200]}
+        for addon in self.state.get("addons", []):
+            if addon.get("deployed_model"):
+                try:
+                    addon_status, addon_payload = self.api.request(
+                        "GET", f"/v1/{addon['deployed_model']}")
+                    addon["after_delete"] = {"http": addon_status,
+                                             "state": addon_payload.get("state")}
+                except Exception as exc:  # supplementary evidence only
+                    addon["after_delete"] = {"error": str(exc)[:200]}
         self._save()
         self.ledger.append({
             "event": "gpu",

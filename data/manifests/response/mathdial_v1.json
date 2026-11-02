@@ -1,55 +1,74 @@
 {
-  "accepted_count": 13696,
+  "accepted_count": 8146,
   "access_restrictions": "public, no gating",
   "attribution": "Macina et al. 2023, \"MathDial: A Dialogue Tutoring Dataset with Rich Pedagogical Properties Grounded in Math Reasoning Problems\", Findings of EMNLP 2023, arXiv:2305.14536.",
   "config": {
     "path": "configs/response/mathdial_v1.yaml",
-    "sha256": "921af221038823287273668735b529f3b67e88061a1032fd14fc1172dc2a219d"
+    "sha256": "59db3124db2ebc339f5d11f6708d782f8908cb42c4f3aeedf911f29cbc36456e"
   },
   "counts_per_move": {
-    "EXPLAIN_CONCEPT": 3086,
-    "HINT": 6534,
-    "PROBE": 4076
+    "CHALLENGE": 23,
+    "CHECK_MASTERY": 5,
+    "EXPLAIN_CONCEPT": 858,
+    "HINT": 2688,
+    "PRACTICE": 273,
+    "PROBE": 2742,
+    "REFLECT": 1539,
+    "WORKED_EXAMPLE": 18
   },
   "counts_per_split": {
     "test": {
-      "dialogues": 322,
-      "examples": 1583,
+      "dialogues": 330,
+      "examples": 1845,
       "qids": 128
     },
     "train": {
-      "dialogues": 2266,
-      "examples": 10921,
+      "dialogues": 2012,
+      "examples": 5030,
       "qids": 890
     },
     "validation": {
-      "dialogues": 232,
-      "examples": 1192,
+      "dialogues": 233,
+      "examples": 1271,
       "qids": 93
     }
   },
   "counts_per_split_and_move": {
     "test": {
-      "EXPLAIN_CONCEPT": 350,
-      "HINT": 766,
-      "PROBE": 467
+      "CHALLENGE": 6,
+      "EXPLAIN_CONCEPT": 170,
+      "HINT": 604,
+      "PRACTICE": 56,
+      "PROBE": 656,
+      "REFLECT": 349,
+      "WORKED_EXAMPLE": 4
     },
     "train": {
-      "EXPLAIN_CONCEPT": 2501,
-      "HINT": 5152,
-      "PROBE": 3268
+      "CHALLENGE": 14,
+      "CHECK_MASTERY": 2,
+      "EXPLAIN_CONCEPT": 570,
+      "HINT": 1682,
+      "PRACTICE": 167,
+      "PROBE": 1651,
+      "REFLECT": 931,
+      "WORKED_EXAMPLE": 13
     },
     "validation": {
-      "EXPLAIN_CONCEPT": 235,
-      "HINT": 616,
-      "PROBE": 341
+      "CHALLENGE": 3,
+      "CHECK_MASTERY": 3,
+      "EXPLAIN_CONCEPT": 118,
+      "HINT": 402,
+      "PRACTICE": 50,
+      "PROBE": 435,
+      "REFLECT": 259,
+      "WORKED_EXAMPLE": 1
     }
   },
   "deduplication": {
     "duplicates_found": 0,
     "method": "exact conversation text match"
   },
-  "download_date": "2026-11-02T20:56:10+00:00",
+  "download_date": "2026-11-02T23:09:53+00:00",
   "download_urls": [
     "https://huggingface.co/datasets/eth-nlped/mathdial/resolve/acc3878459e0bd8c04ab840056572f0b8b1abe1f/train.jsonl",
     "https://huggingface.co/datasets/eth-nlped/mathdial/resolve/acc3878459e0bd8c04ab840056572f0b8b1abe1f/test.jsonl",
@@ -75,7 +94,7 @@
       "sha256": "c63e86fd95d4e1fd60cccd78226a27d9e787ad91ed037b353d8e3083a0e5eaeb"
     }
   ],
-  "generator": "tools.response.prepare_sft v1.1",
+  "generator": "tools.response.prepare_sft v1.2",
   "license": {
     "local_snapshot_file": "README.md",
     "local_snapshot_sha256": "c63e86fd95d4e1fd60cccd78226a27d9e787ad91ed037b353d8e3083a0e5eaeb",
@@ -87,21 +106,37 @@
     "Hashed and counted raw source files; validated the pinned raw count assertions.",
     "Pooled dialogues and split qids deterministically before expanding turns.",
     "Parsed preceding dialogue context; stripped known speaker and teacher-act prefixes.",
-    "Mapped probing/focus/telling acts; excluded generic, malformed and overlength turns.",
+    "Applied the per-turn model labels; excluded EXCLUDE-labeled, unlabeled, empty and overlength turns.",
     "Rejected reveal-forbidden examples whose prompt already holds the full reference solution or whose target states the forbidden final answer.",
     "Compiled deterministic prompts and wrote turn-level SFT records."
   ],
   "mapping": {
-    "path": "configs/response/mathdial_move_map_v1.yaml",
-    "sha256": "35c2a0baf40c9ea8c98030992b0c1c2ac662ecda25080fc764581baf169841af",
-    "status": "draft_unaudited"
+    "kind": "per_turn",
+    "label_source": "model, never human",
+    "labelers_used": [
+      {
+        "accepted_examples": 8146,
+        "model": "gpt-5.4-mini",
+        "prompt_version": "mathdial_moves_prompt_v3-fs3-s20261102"
+      }
+    ],
+    "labels_file": {
+      "path": "data/response/mathdial_moves_v1/labels.jsonl",
+      "rows": 9575,
+      "sha256": "8eea6753543f97c4e473dc34c51d02d9cd81eaa9ce4dd1ac88f55dadfde4352e"
+    },
+    "labels_manifest": "data/manifests/response/mathdial_moves_v1.json",
+    "path": "configs/response/mathdial_move_map_v2.yaml",
+    "sha256": "6095474cd12dcc447359f01c6049ea9a24c889c80b1687bf6761b1abdcb80ab1",
+    "status": "model_labeled"
   },
   "notes": [
-    "SFT checks are null and not computed; mapped labels are draft_unaudited.",
+    "SFT checks are null and not computed; mapped labels are model_labeled and never human labels.",
     "The disclosure check (packages.response.validate) runs only as an admission filter on reveal-forbidden targets; its result is not stored in checks.",
     "External MathDial concepts use navigation action_id -1 because they have no catalogue index.",
     "MathDial HINT and EXPLAIN_CONCEPT plans lack the corresponding PRD 9.3 approved hint/facts.",
-    "Only EXPLAIN_CONCEPT plans include ground_truth, as reveal_solution."
+    "Only EXPLAIN_CONCEPT plans include ground_truth, as reveal_solution.",
+    "extensions.target_uses_unseen_name flags targets that address the learner by a profile name the prompt never shows (leak review open point 2); the name itself is never stored."
   ],
   "official_split_crosstab": {
     "test": {
@@ -118,18 +153,18 @@
   "output_files": [
     {
       "path": "data/sft/mathdial_v1/train.jsonl",
-      "rows": 10921,
-      "sha256": "258a44ff988d5cdd62b996a09a7cd8413098f8113e7604c209e90ed9f316e285"
+      "rows": 5030,
+      "sha256": "b5cd4ceb6af03726277aab0d5996a858af396ca34addb059ae01cbba0ca324c0"
     },
     {
       "path": "data/sft/mathdial_v1/validation.jsonl",
-      "rows": 1192,
-      "sha256": "a28503dad7a55962591aaa5cba96dccce60bd7ef7d96e35b36097864f6406ea0"
+      "rows": 1271,
+      "sha256": "050a34560f8bad94e9c149697564133cdbf9cc88cbfb9515e156bbeb6b81fb2d"
     },
     {
       "path": "data/sft/mathdial_v1/test.jsonl",
-      "rows": 1583,
-      "sha256": "7acdefad0bde3ee0e0733526b4dd98c5c627729312210cd8123931d93fc5fe58"
+      "rows": 1845,
+      "sha256": "9d07c4541e2652690f8d54631b263479da5868001d7aa198a58beef97a18bcf9"
     }
   ],
   "permitted_purposes": [
@@ -153,9 +188,10 @@
   },
   "rejected_count_by_reason": {
     "empty_text": 68,
-    "generic_act": 4430,
-    "reference_solution_in_protected_context": 5,
-    "target_states_protected_answer": 410
+    "excluded_by_label": 1153,
+    "reference_solution_in_protected_context": 6,
+    "target_states_protected_answer": 270,
+    "unlabeled_turn": 8966
   },
   "responsible_owner": "Person A",
   "revision": "acc3878459e0bd8c04ab840056572f0b8b1abe1f",

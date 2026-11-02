@@ -155,8 +155,9 @@ def load_config(path, *, overrides: dict | None = None) -> ServiceConfig:
         raise ConfigError("artifact.compatible_ids must be a list of ASCII IDs")
 
     responder = _mapping(
-        data.get("responder"), "responder", set(RESPONDER_KINDS) | _RESPONDER_EXTRA_KEYS | {
-            "kind", "base_url", "model", "api_key_env", "request_timeout_s", "extra_body",
+        data.get("responder"), "responder", _RESPONDER_EXTRA_KEYS | {
+            "kind", "base_url", "model", "api_key_env", "request_timeout_s", "decoding",
+            "extra_body",
         },
     )
     if responder.get("kind") not in RESPONDER_KINDS:

@@ -1,0 +1,59 @@
+# Option B, default plan: OpenAI supervised fine-tuning on the 60/40 mix_v1 (PRD 13.2 mix,
+# at most three epochs per PRD 13.5), OpenAI's defaults otherwise.
+#   uv run python -m tools.response.openai_sft --config configs/response/sft_openai_full_v1.yaml \
+#     {convert,check,upload,train,poll,fetch,select,status}
+# Runbook: docs/runbooks/sft_openai.md. Evaluation: configs/response/sft_openai_eval_v1.yaml.
+# Nothing is uploaded or trained until Xueming approves option B.
+run_id: sft_openai_full_v1
+provider: openai
+
+data:
+  source: mix_v1 (261 original_v1 + 174 model-labelled MathDial in train)
+  build: >-
+    uv run python -m tools.response.prepare_sft --config configs/response/mathdial_v1.yaml &&
+    uv run python -m tools.response.build_original_sft &&
+    uv run python -m tools.response.build_sft_mix --config configs/response/sft_mix_v1.yaml
+  manifest: data/manifests/response/mix_v1.json   # train 243a6869..., validation 9d1a860e...
+  train: data/sft/mix_v1/train.jsonl              # 435 rows
+  validation: data/sft/mix_v1/validation.jsonl    # 92 rows; OpenAI reports its loss
+  test: frozen until the selected model's single test run
+
+evaluation:
+  # Checkpoint selection uses the original_v1 validation cases, B's fixtures and the smoke
+  # cases (configs/response/sft_openai_eval_v1.yaml), not the mix validation split.
+  benchmark_config: configs/response/sft_openai_eval_v1.yaml
+
+openai:
+  keys_file: ~/.config/tuturing/llm.env
+  api_key_env: OPENAI_API_KEY
+  spend_cap_env: TUTURING_BENCH_SPEND_CAP_USD   # must exist: it authorizes paid calls
+  spend_cap_usd: 40          # full-run cap: training plus every evaluation call
+  run_dir: experiments/response/sft_openai_v1/runs/full   # git-ignored; its own ledger
+  # Strongest fine-tunable model whose full-mix training stays well under $15 (see check
+  # output); gpt-4.1-2025-04-14 is the stronger alternative at five times the price.
+  base_model: gpt-4.1-mini-2025-04-14
+  suffix: tut-sft-full-v1    # 1-64 characters; becomes part of the ft: model ID
+  seed: 17                   # PRD 13.4 seed
+  hyperparameters:
+    n_epochs: 3              # batch_size and learning_rate_multiplier stay "auto"
+  metadata: {project: tuturing, run: sft_openai_full_v1, data: mix_v1, owner: person_a}
+  tokenizer: o200k_base      # gpt-4.1 family encoding, for the estimate only
+  limits:
+    min_examples: 10         # supervised fine-tuning guide
+    max_example_tokens: 65536  # gpt-4.1 family "Examples context length"
+  pricing:
+    training_usd_per_mtok: 5.00
+    fine_tuned_input_usd_per_mtok: 0.80
+    fine_tuned_cached_input_usd_per_mtok: 0.20
+    fine_tuned_output_usd_per_mtok: 3.20
+    estimate_safety_factor: 1.5
+    source: https://developers.openai.com/api/docs/pricing (Fine-tuning, standard)
+    checked: 2026-11-02
+  alternatives:
+    gpt-4.1-2025-04-14:
+      training_usd_per_mtok: 25.00
+      fine_tuned_input_usd_per_mtok: 3.00
+      fine_tuned_output_usd_per_mtok: 12.00
+      estimate_safety_factor: 1.5
+  poll_interval_s: 60
+  max_wait_minutes: 240

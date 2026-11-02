@@ -1,8 +1,38 @@
 # D09: Draft MathDial teacher-act mapping
 
-- **Status:** proposed
+- **Status:** superseded for the hackathon by Xueming's decision of 2026-11-02 (see below); the human audit procedure stays desirable
 - **Owner:** Person A
 - **Reviewer:** Person B
+
+## 2026-11-02: human audit waived; model-made turn-level labels instead
+
+**Decision (Xueming, Lark message in the Tuturing topic, 2026-11-02):** skip the human labeling of the 200-turn audit for the hackathon; have models produce the move mapping and merge MathDial into the SFT data. Peyton's reviewer role is unchanged: Person B's Strategist may not imitate these labels without Peyton's acceptance, and the labels are never presented as human labels (`action_label_source: mapped`, labeler recorded).
+
+**What was done instead.**
+
+1. **Calibration set.** The 200-row audit sheet carries model-drafted labels (`evaluation/response/mathdial_mapping_audit_200_model_draft.csv`, written by claude-fable-5-1 under `audit_draft_v1`, all from the regrouped train split; the drafter flagged 178 of 200 as ambiguous). The draft per-act mapping below agrees with those turn-level drafts on **74 of 200 turns (37 percent)**: probing to PROBE 17/50, focus to HINT 21/50, telling to EXPLAIN_CONCEPT 21/50, generic to EXCLUDE 15/50. The act is not a usable move label.
+2. **Turn-level labeling.** `tools/response/label_mathdial_moves.py` (config `configs/response/mathdial_moves_v1.yaml`) labels each non-empty teacher turn within the word cap (18,541 of 18,609 turns) through the OpenAI Chat Completions API with one of the eight moves or EXCLUDE. Each request sees only the student's last message and the teacher turn, the reply is a strict two-line format (one retry, then EXCLUDE), temperature is 0 where the model accepts it, and reasoning is off. The prompt (`configs/response/mathdial_moves_prompt_v3.txt`) gives the PRD move definitions, disambiguation rules and 18 drafted rows as examples (3 per label, seed 20261102), which are held out of every agreement figure.
+3. **Model choice.** Pilots on the 182 held-out rows with prompt v3. Standard prices (USD per 1M input/output tokens) were read from developers.openai.com/api/docs/pricing on 2026-11-02:
+
+   | Model | Price | Agreement |
+   |---|---|---|
+   | gpt-5-nano | $0.05/$0.40 | 63.7 percent |
+   | gpt-5-mini | $0.25/$2.00 | 58.8 percent |
+   | gpt-5.4-nano | $0.20/$1.25 | 70.9 percent (72.0 with low reasoning) |
+   | **gpt-5.4-mini** | **$0.75/$4.50** | **80.2 percent (146/182; Wilson 95% 73.8 to 85.4)** |
+
+   Per act, gpt-5.4-mini agreed on probing 82, focus 74, telling 73 and generic 91 percent. Six examples per label did not help (79.3 percent on 164 rows), and earlier prompt versions scored 38 to 69 percent. **No candidate reached the 85 percent target.** gpt-5.4-mini was used as the closest, and the shortfall is recorded in `data/manifests/response/mathdial_moves_v1.json`. The pilot and the full run gave the same label on 85 of the 88 calibration rows both labeled.
+4. **Budget and coverage.** The task's hard cap was $5. Labeling all 18,541 turns with gpt-5.4-mini was estimated at $10.81 from the pilot's token usage, and would cost about $7.7 at the rate later observed. So every test-split turn was labeled, then train and validation turns in a per-act round robin (four train picks per validation pick) until the budget was used, in two passes. Labeled: 9,575 turns. That is all 2,127 test turns, 1,489 of 1,576 validation turns and 5,959 of 14,838 train turns, with no API errors and no malformed replies. Counts per label: PROBE 2,763, HINT 2,810, REFLECT 1,656, EXCLUDE 1,153, EXPLAIN_CONCEPT 858, PRACTICE 286, CHALLENGE 24, WORKED_EXAMPLE 20, CHECK_MASTERY 5. Spend was $4.57 of $5.00 ($0.55 for probes and pilots, $4.01 for the full passes), recorded in the ignored ledger under `experiments/response/runs/mathdial_moves_v1/`. `data/response/mathdial_moves_v1/labels.jsonl` holds ids and labels only.
+5. **Use in SFT.** `configs/response/mathdial_move_map_v2.yaml` (status `model_labeled`) points `prepare_sft` at the labels file. EXCLUDE-labeled and unlabeled turns are rejected, and the leak review's rejections of protected examples stay in force: 270 targets state the protected answer, and 6 prompts hold the reference solution. 8,146 MathDial examples remain (train 5,030, validation 1,271, test 1,845), labeled `action_label_source: mapped` with the labeler in `extensions.move_label`.
+6. **Admission to the mix.** `tools/response/build_sft_mix.py` writes `data/sft/mix_v1` at the PRD 13.2 mix (60 percent original, 40 percent MathDial, capped by what passes, sampled per move). A MathDial target enters only if it passes these rules (`configs/response/sft_mix_v1.yaml`):
+   - its numbers are supported by the plan, it states no protected answer, and it respects the length and one-question limits;
+   - under PRACTICE, CHALLENGE or CHECK_MASTERY it keeps the issued problem (validator_v2 item fidelity), because most such MathDial turns pose a new problem and would teach item substitution;
+   - it is not WORKED_EXAMPLE, because a MathDial plan has no approved example;
+   - it does not address the learner by a profile name the prompt never shows (864 targets; leak review open point 2).
+
+   5,224 of 8,146 pass. The mix holds 619 examples: train 261 original + 174 MathDial, validation 55 + 37, test 55 + 37, with no repeated exposure. `action_faithful` is not required, because MathDial plans lack the hint, facts, previous step and example its move rules need (see the limitations below).
+
+**Still desirable.** A human review of a stratified sample of the model labels would turn the 80 percent model-to-model agreement into an audited figure, as would Xueming's and Peyton's independent labels on the 200-row sheet. Until then the labels serve response wording only, which is what the original decision rule prescribed for anything under 80 percent human agreement. The calibration labels are themselves model drafts, so 80 percent measures agreement between two models, not accuracy.
 
 ## Draft mapping
 

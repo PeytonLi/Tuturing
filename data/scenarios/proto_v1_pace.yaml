@@ -1,0 +1,142 @@
+schema_version: scenarios_v1
+scenarios:
+- scenario_id: proto-scenario-31
+  scenario_family_id: proto-family-detailed-31
+  split: train
+  goal_concept_id: C08
+  start_concept_id: C06
+  profile_id: careful_detailed
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-31
+  public_history: []
+  template_family_allowlist: &id001
+  - c01_teach_01
+  - c01_teach_02
+  - c02_teach_01
+  - c02_teach_02
+  - c03_teach_01
+  - c03_teach_02
+  - c06_teach_01
+  - c06_teach_02
+  - c08_teach_01
+  - c08_teach_02
+  - c01_assess_01
+  - c01_assess_04
+  - c02_assess_01
+  - c02_assess_04
+  - c03_assess_01
+  - c03_assess_04
+  - c06_assess_01
+  - c06_assess_04
+  - c08_assess_01
+  - c08_assess_04
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_pace
+- scenario_id: proto-scenario-32
+  scenario_family_id: proto-family-detailed-32
+  split: train
+  goal_concept_id: C08
+  start_concept_id: C06
+  profile_id: careful_detailed
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-32
+  public_history: []
+  template_family_allowlist: *id001
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_pace
+- scenario_id: proto-scenario-33
+  scenario_family_id: proto-family-detailed-33
+  split: train
+  goal_concept_id: C06
+  start_concept_id: C02
+  profile_id: careful_detailed
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-33
+  public_history: []
+  template_family_allowlist: *id001
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_pace
+- scenario_id: proto-scenario-34
+  scenario_family_id: proto-family-detailed-34
+  split: train
+  goal_concept_id: C08
+  start_concept_id: C06
+  profile_id: careful_detailed
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-34
+  public_history: []
+  template_family_allowlist: *id001
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_pace
+- scenario_id: proto-scenario-35
+  scenario_family_id: proto-family-detailed-35
+  split: validation
+  goal_concept_id: C08
+  start_concept_id: C06
+  profile_id: careful_detailed
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-35
+  public_history: []
+  template_family_allowlist:
+  - c01_teach_03
+  - c02_teach_03
+  - c03_teach_03
+  - c06_teach_03
+  - c08_teach_03
+  - c01_assess_02
+  - c01_assess_05
+  - c02_assess_02
+  - c02_assess_05
+  - c03_assess_02
+  - c03_assess_05
+  - c06_assess_02
+  - c06_assess_05
+  - c08_assess_02
+  - c08_assess_05
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_pace
+- scenario_id: proto-scenario-36
+  scenario_family_id: proto-family-detailed-36
+  split: test
+  goal_concept_id: C06
+  start_concept_id: C02
+  profile_id: careful_detailed
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-36
+  public_history: []
+  template_family_allowlist:
+  - c01_teach_04
+  - c02_teach_04
+  - c03_teach_04
+  - c06_teach_04
+  - c08_teach_04
+  - c01_assess_03
+  - c01_assess_06
+  - c02_assess_03
+  - c02_assess_06
+  - c03_assess_03
+  - c03_assess_06
+  - c06_assess_03
+  - c06_assess_06
+  - c08_assess_03
+  - c08_assess_06
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_pace

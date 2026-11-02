@@ -122,12 +122,18 @@ def load_keys(path):
 
 
 def spend_cap(keys, config):
+    """The keys file authorizes paid calls; a config ``spend_cap_usd`` can only lower it."""
     raw = keys.get(config.get("spend_cap_env", "TUTURING_BENCH_SPEND_CAP_USD"))
     try:
         cap = float(raw) if raw is not None else None
     except ValueError:
         return None
-    return cap if cap is not None and cap > 0 else None
+    if cap is None or cap <= 0:
+        return None
+    limit = config.get("spend_cap_usd")
+    if limit is not None:
+        cap = min(cap, float(limit))
+    return cap if cap > 0 else None
 
 
 def redact(text, keys):
@@ -604,9 +610,26 @@ def call_model(entry, model, messages, keys, *, urlopen=None, sleep=time.sleep):
 # Results
 
 
+def fine_tuned_model(entry):
+    """The model ID an entry's ``fine_tuned`` block names in its models file, or None.
+
+    ``tools.response.openai_sft fetch`` writes the file (keys ``final``, ``epoch_N`` and,
+    after ``select``, ``selected``), so configs need no edit after training.
+    """
+    spec = entry.get("fine_tuned")
+    if not spec:
+        return None
+    path = Path(spec["models_file"])
+    if not path.exists():
+        return None
+    value = json.loads(path.read_text(encoding="utf-8")).get(spec["key"])
+    return value if isinstance(value, str) and value else None
+
+
 def decoding_id(entry):
     identity = {
-        "model": (entry.get("deployment") or {}).get("base_model") or entry.get("model"),
+        "model": fine_tuned_model(entry) or (entry.get("adapter") or {}).get("model")
+        or (entry.get("deployment") or {}).get("base_model") or entry.get("model"),
         "provider": entry.get("provider"),
         "decoding": entry.get("decoding") or {},
     }
@@ -796,11 +819,31 @@ def readiness(entry, ctx, *, managing=False):
         )
     if entry.get("deployment") and not managing and not active_deployment_model(entry, ctx):
         return False, "skipped: no active deployment; rerun with --manage-deployment"
+    adapter = entry.get("adapter")
+    if adapter is not None:
+        if not adapter.get("model"):
+            return False, "skipped: adapter.model is not set (train the adapter first)"
+        if not managing:
+            return False, "skipped: adapter entries run only with --manage-deployment"
+    if entry.get("fine_tuned") and fine_tuned_model(entry) is None:
+        spec = entry["fine_tuned"]
+        return False, (f"skipped: no {spec['key']} model in {spec['models_file']} yet "
+                       "(train, then run openai_sft fetch)")
     return True, "ready"
 
 
 def deployment_state_path(ctx, entry):
     return ctx.run_dir / "deployments" / f"{entry['id']}.json"
+
+
+def deployment_owner(entry, config):
+    """The entry whose deployment serves ``entry``: itself, its adapter base, or None."""
+    if entry.get("deployment"):
+        return entry
+    adapter = entry.get("adapter")
+    if adapter:
+        return entry_by_id(config, adapter["deployment_entry"])
+    return None
 
 
 def active_deployment_model(entry, ctx):
@@ -813,13 +856,23 @@ def active_deployment_model(entry, ctx):
     return state.get("name")
 
 
-def resolve_model(entry, ctx):
-    model = entry.get("model")
-    if entry.get("deployment"):
-        name = active_deployment_model(entry, ctx)
+def resolve_model(entry, ctx, template=None):
+    """Fill ``{deployment}``, ``{adapter}`` or ``{fine_tuned}`` in the entry's model string."""
+    model = template or entry.get("model")
+    if entry.get("fine_tuned"):
+        resolved = fine_tuned_model(entry)
+        if resolved is None:
+            raise BenchmarkError(f"{entry['id']}: the fine-tuned model is not available yet")
+        return (model or "{fine_tuned}").replace("{fine_tuned}", resolved)
+    owner = deployment_owner(entry, ctx.config)
+    if owner is not None:
+        name = active_deployment_model(owner, ctx)
         if not name:
             raise BenchmarkError(f"{entry['id']}: no active deployment")
-        return (model or "{deployment}").replace("{deployment}", name)
+        model = (model or "{deployment}").replace("{deployment}", name)
+        adapter = (entry.get("adapter") or {}).get("model")
+        if adapter:
+            model = model.replace("{adapter}", adapter)
     return model
 
 
@@ -1010,8 +1063,129 @@ def pilot_summary(entry, ctx, remaining, seconds_per_case=None):
     return summary
 
 
-def run_with_deployment(entry, cases, ctx, *, pilot=3):
-    """Create the deployment, pilot, run the rest within budget, then always delete it."""
+def _ping(entry, model, ctx):
+    return call_model(
+        {**entry, "retry": {"max_attempts": 1}},
+        model,
+        [{"role": "user", "content": "Reply with the word ready."}],
+        ctx.keys,
+        urlopen=ctx.urlopen,
+        sleep=ctx.sleep,
+    )
+
+
+def _run_on_deployment(entry, cases, ctx, *, model, deadline, pilot, rate, spec, check=None):
+    """Pilot, estimate from measured latency, then run what fits the time and money left."""
+    todo = pending_cases(entry, cases, ctx)
+    pilot_batch, remaining = todo[:pilot], todo[pilot:]
+    ctx.out(f"{entry['id']}: {len(todo)} cases to run; pilot of {len(pilot_batch)}")
+    pilot_records, stopped = execute(
+        entry, pilot_batch, ctx, model=model, tag="pilot", deadline=deadline
+    )
+    if check is not None:
+        check(pilot_records)
+    if stopped or not remaining:
+        return pilot_records
+    if pilot_records and all(r["error"] for r in pilot_records):
+        ctx.out(f"  {entry['id']}: every pilot call failed; stopping before the full run")
+        return pilot_records
+    latencies = [r["latency_ms"] for r in pilot_records if r.get("latency_ms")]
+    mean_latency_s = (sum(latencies) / len(latencies) / 1000) if latencies else 30.0
+    concurrency = max(1, int(entry.get("concurrency", 1)))
+    safety = float(ctx.config.get("estimate_safety_factor", 1.3))
+    effective = mean_latency_s / min(concurrency, len(remaining)) * safety
+    summary = pilot_summary(entry, ctx, len(remaining), seconds_per_case=effective)
+    ctx.out(f"  pilot summary: {json.dumps(summary, sort_keys=True)}")
+    time_left = deadline - time.time()
+    delete_reserve = rate * spec.get("delete_buffer_s", 300) / 3600
+    budget_left = ctx.cap - ctx.ledger.committed() - delete_reserve
+    cost_left_s = budget_left / rate * 3600 if rate else float("inf")
+    affordable = int(max(min(time_left, cost_left_s), 0) // max(effective, 0.01))
+    if affordable < len(remaining):
+        min_cases = int(ctx.config.get("min_subsample_cases", 20))
+        ctx.ledger.append({
+            "event": "estimate", "model_id": entry["id"], "pending_cases": len(remaining),
+            "selected_cases": affordable if affordable >= min_cases else 0,
+            "reason": "deployment time or budget limit",
+        })
+        if affordable < min_cases:
+            ctx.out(f"  {entry['id']}: only {affordable} more cases fit; stopping")
+            return pilot_records
+        remaining = remaining[:affordable]
+    records, _ = execute(entry, remaining, ctx, model=model, tag="full", deadline=deadline)
+    return pilot_records + records
+
+
+def _first_serving(entry, candidates, ctx, *, rounds, poll_s=20):
+    """Return the first candidate model string that answers; retry the list ``rounds`` times."""
+    errors = []
+    for attempt in range(max(1, rounds)):
+        for model in candidates:
+            try:
+                _ping(entry, model, ctx)
+            except CallError as exc:
+                errors.append(f"{model}: {exc}")
+                continue
+            ctx.out(f"{entry['id']}: serving as {model}")
+            return model
+        if attempt == 0 or attempt % 6 == 5:
+            ctx.out(f"  {entry['id']}: waiting for the adapter ({errors[-1][:160]})")
+        ctx.sleep(poll_s)
+    raise BenchmarkError(f"{entry['id']}: no candidate model string served; last: "
+                         f"{errors[-1][:300] if errors else 'none'}")
+
+
+def same_as_base_check(entry, base_entry, ctx):
+    """Stop an adapter run whose pilot replies all equal the base replies (LoRA not applied)."""
+    base_texts = {
+        key: record["text"] for key, record in load_results(ctx.run_dir, base_entry["id"]).items()
+        if not record["error"]
+    }
+
+    def check(pilot_records):
+        compared = [
+            record for record in pilot_records
+            if not record["error"] and f"{record['case_set']}/{record['case_id']}" in base_texts
+        ]
+        if compared and all(
+            record["text"] == base_texts[f"{record['case_set']}/{record['case_id']}"]
+            for record in compared
+        ):
+            raise BenchmarkError(
+                f"{entry['id']}: replies equal the base replies on all {len(compared)} pilot "
+                "cases; the adapter does not appear to be applied"
+            )
+
+    return check
+
+
+def _run_adapter(run, base_entry, entry, cases, ctx, *, deadline, pilot, rate, spec):
+    """Load the entry's LoRA onto the running deployment, find its route, then run it."""
+    adapter = entry["adapter"]
+    if time.time() > deadline:
+        ctx.out(f"{entry['id']}: no deployment time left for the adapter")
+        return []
+    run.load_addon(adapter["model"], timeout_s=float(adapter.get("load_timeout_s", 1200)),
+                   poll_s=float(adapter.get("load_poll_s", 15)))
+    templates = adapter.get("model_candidates") or [entry.get("model") or "{adapter}#{deployment}"]
+    candidates = [resolve_model(entry, ctx, template) for template in templates]
+    model = _first_serving(entry, candidates, ctx,
+                           rounds=int(adapter.get("warmup_rounds", 30)),
+                           poll_s=float(adapter.get("warmup_poll_s", 20)))
+    run.annotate_addon(served_as=model)
+    return _run_on_deployment(
+        entry, cases, ctx, model=model, deadline=deadline, pilot=pilot, rate=rate, spec=spec,
+        check=same_as_base_check(entry, base_entry, ctx),
+    )
+
+
+def run_with_deployment(entry, cases, ctx, *, pilot=3, adapters=()):
+    """Create the deployment, run the entry, then each adapter on it; always delete it.
+
+    Adapters are entries whose ``adapter`` block names this entry. On a hot-reload
+    deployment each load merges one LoRA into the served weights, so adapters run after
+    the base entry has finished, one at a time.
+    """
     from tools.response.fireworks_deployment import DeploymentError, DeploymentRun, FireworksAPI
 
     spec = entry["deployment"]
@@ -1035,51 +1209,16 @@ def run_with_deployment(entry, cases, ctx, *, pilot=3):
     try:
         run.wait_ready(timeout_s=float(spec.get("ready_timeout_s", 2400)))
         model = resolve_model(entry, ctx)
-        run.warm_up(lambda: call_model(
-            {**entry, "retry": {"max_attempts": 1}},
-            model,
-            [{"role": "user", "content": "Reply with the word ready."}],
-            ctx.keys,
-            urlopen=ctx.urlopen,
-            sleep=ctx.sleep,
-        ), timeout_s=float(spec.get("warmup_timeout_s", 2400)))
+        run.warm_up(lambda: _ping(entry, model, ctx),
+                    timeout_s=float(spec.get("warmup_timeout_s", 2400)))
         deadline = run.create_requested_epoch + max_minutes * 60 - spec.get("delete_buffer_s", 300)
-        todo = pending_cases(entry, cases, ctx)
-        pilot_batch, remaining = todo[:pilot], todo[pilot:]
-        ctx.out(f"{entry['id']}: {len(todo)} cases to run; pilot of {len(pilot_batch)}")
-        pilot_records, stopped = execute(
-            entry, pilot_batch, ctx, model=model, tag="pilot", deadline=deadline
+        records = _run_on_deployment(
+            entry, cases, ctx, model=model, deadline=deadline, pilot=pilot, rate=rate, spec=spec
         )
-        if stopped or not remaining:
-            return pilot_records
-        if pilot_records and all(r["error"] for r in pilot_records):
-            ctx.out(f"  {entry['id']}: every pilot call failed; stopping before the full run")
-            return pilot_records
-        latencies = [r["latency_ms"] for r in pilot_records if r.get("latency_ms")]
-        mean_latency_s = (sum(latencies) / len(latencies) / 1000) if latencies else 30.0
-        concurrency = max(1, int(entry.get("concurrency", 1)))
-        safety = float(ctx.config.get("estimate_safety_factor", 1.3))
-        effective = mean_latency_s / min(concurrency, len(remaining)) * safety
-        summary = pilot_summary(entry, ctx, len(remaining), seconds_per_case=effective)
-        ctx.out(f"  pilot summary: {json.dumps(summary, sort_keys=True)}")
-        time_left = deadline - time.time()
-        delete_reserve = rate * spec.get("delete_buffer_s", 300) / 3600
-        budget_left = ctx.cap - ctx.ledger.committed() - delete_reserve
-        cost_left_s = budget_left / rate * 3600 if rate else float("inf")
-        affordable = int(max(min(time_left, cost_left_s), 0) // max(effective, 0.01))
-        if affordable < len(remaining):
-            min_cases = int(ctx.config.get("min_subsample_cases", 20))
-            ctx.ledger.append({
-                "event": "estimate", "model_id": entry["id"], "pending_cases": len(remaining),
-                "selected_cases": affordable if affordable >= min_cases else 0,
-                "reason": "deployment time or budget limit",
-            })
-            if affordable < min_cases:
-                ctx.out(f"  {entry['id']}: only {affordable} more cases fit; stopping")
-                return pilot_records
-            remaining = remaining[:affordable]
-        records, _ = execute(entry, remaining, ctx, model=model, tag="full", deadline=deadline)
-        return pilot_records + records
+        for adapter_entry in adapters:
+            records += _run_adapter(run, entry, adapter_entry, cases, ctx, deadline=deadline,
+                                    pilot=pilot, rate=rate, spec=spec)
+        return records
     except DeploymentError as exc:
         raise BenchmarkError(f"{entry['id']}: {exc}") from None
     finally:
@@ -1134,6 +1273,8 @@ def command_plan(args, config, ctx):
                 for c in cases
             )
             line += f"; worst-case ${worst:.2f} for all cases"
+        elif entry.get("adapter"):
+            line += f"; runs on the {entry['adapter']['deployment_entry']} deployment"
         elif cost_basis(entry) == "gpu_time":
             spec = entry["deployment"]
             line += (
@@ -1151,7 +1292,25 @@ def command_run(args, config, ctx):
     if args.limit:
         cases = stratified_order(cases, seed=config.get("order_seed", 0))[: args.limit]
     status = 0
-    for entry in selected_entries(config, args.models):
+    entries = selected_entries(config, args.models)
+    selected_ids = {entry["id"] for entry in entries}
+    adapters = defaultdict(list)
+    for entry in entries:
+        adapter = entry.get("adapter")
+        if adapter is None:
+            continue
+        ok, reason = readiness(entry, ctx, managing=args.manage_deployment)
+        if not ok:
+            ctx.out(f"{entry['id']}: {reason}")
+        elif adapter["deployment_entry"] not in selected_ids:
+            ctx.out(f"{entry['id']}: skipped: select its base entry "
+                    f"{adapter['deployment_entry']} too; adapters run on its deployment")
+            status = 1
+        else:
+            adapters[adapter["deployment_entry"]].append(entry)
+    for entry in entries:
+        if entry.get("adapter") is not None:
+            continue  # runs on its base entry's deployment, after the base entry
         ok, reason = readiness(entry, ctx, managing=args.manage_deployment)
         if not ok:
             ctx.out(f"{entry['id']}: {reason}")
@@ -1166,7 +1325,8 @@ def command_run(args, config, ctx):
                 if not args.manage_deployment:
                     run_entry(entry, cases, ctx, pilot=args.pilot, skip_pilot=args.skip_pilot)
                 else:
-                    run_with_deployment(entry, cases, ctx, pilot=args.pilot or 3)
+                    run_with_deployment(entry, cases, ctx, pilot=args.pilot or 3,
+                                        adapters=adapters.get(entry["id"], []))
             else:
                 run_entry(entry, cases, ctx, pilot=args.pilot, skip_pilot=args.skip_pilot)
         except (BenchmarkError, BudgetExceeded) as exc:

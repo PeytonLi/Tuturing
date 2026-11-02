@@ -17,10 +17,12 @@ import hmac
 import json
 import logging
 import os
+import socket
 import socketserver
 import threading
 import time
 from collections import OrderedDict
+from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 from apps.response_service.config import (
@@ -38,6 +40,8 @@ GENERATE_PATH = "/internal/v1/generate"
 HEALTH_PATHS = ("/internal/v1/health", "/healthz")
 SERVER_VERSION = "tuturing-response-service/1.0"
 MAX_SESSION_LOCKS = 4096
+LINGER_SECONDS = 2.0
+LINGER_MAX_BYTES = 8 * 1024 * 1024
 
 
 class ResponseService:
@@ -67,21 +71,53 @@ class ResponseService:
         self._session_guard = threading.Lock()
         self._clock = clock
         self._logger = logger
+        self._config_errors = {"count": 0, "last": None, "last_seen_at": None}
+        self._config_error_lock = threading.Lock()
 
     @property
     def authenticated(self) -> bool:
         return self._token is not None
 
     def health(self) -> dict:
+        """Versions plus any provider configuration rejection seen since startup.
+
+        ``status`` is ``degraded`` once the model provider has refused the configured request
+        format: learners still get verified fallbacks, but no model text is being delivered.
+        """
         info = self.pipeline.describe()
+        with self._config_error_lock:
+            config_errors = dict(self._config_errors) if self._config_errors["count"] else None
         return {
-            "status": "ok",
+            "status": "degraded" if config_errors else "ok",
             "artifact_id": info["artifact_id"],
             "compatible_artifact_ids": info["compatible_artifact_ids"],
             "responder_kind": info["responder"].get("kind"),
+            "decoding": info["limits"]["decoding"],
             "versions": info["versions"],
             "auth": "bearer" if self.authenticated else "none",
+            "responder_config_errors": config_errors,
         }
+
+    def _note_config_error(self, record: dict) -> bool:
+        """Lift a provider config rejection out of the attempt trail into the log record."""
+        detail = next(
+            (
+                attempt.get("detail")
+                for attempt in record.get("attempts") or ()
+                if attempt.get("outcome") == "config_error"
+            ),
+            None,
+        )
+        if detail is None:
+            return False
+        record["responder_config_error"] = detail
+        with self._config_error_lock:
+            self._config_errors["count"] += 1
+            self._config_errors["last"] = detail
+            self._config_errors["last_seen_at"] = (
+                datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+            )
+        return True
 
     def handle_generate(self, headers, read) -> tuple[int, dict, bool]:
         """Return ``(status, body, close_connection)`` for one generate request.
@@ -136,7 +172,10 @@ class ResponseService:
             return 503, self._error(fallback, request), True
         finally:
             record["elapsed_ms"] = max(0, round((self._clock() - started) * 1000))
-            self._logger.info(json.dumps(record, sort_keys=True))
+            # A provider that refuses the configured format is an operator problem, not a
+            # learner one: log it at WARNING so it never hides behind a working fallback.
+            level = logging.WARNING if self._note_config_error(record) else logging.INFO
+            self._logger.log(level, json.dumps(record, sort_keys=True))
 
     def _error(self, error: GenerationError, request) -> dict:
         request_id = trace_id = UNKNOWN_ID
@@ -293,12 +332,27 @@ def _handler_class(service: ResponseService):
 
         def do_POST(self):
             if self.path.split("?", 1)[0] != GENERATE_PATH:
-                self._reply(404, {"message": "not found"}, close=True)
+                self._reply(404, {"message": "not found"}, close=True, unread=self._declared())
                 return
-            status, body, close = service.handle_generate(self.headers, self.rfile.read)
-            self._reply(status, body, close=close)
+            consumed = 0
 
-        def _reply(self, status: int, body: dict, *, close: bool):
+            def read(size):
+                nonlocal consumed
+                data = self.rfile.read(size)
+                consumed += len(data)
+                return data
+
+            status, body, close = service.handle_generate(self.headers, read)
+            unread = self._declared() - consumed if close else 0
+            self._reply(status, body, close=close, unread=unread)
+
+        def _declared(self) -> int:
+            try:
+                return max(0, int(self.headers.get("Content-Length") or 0))
+            except ValueError:
+                return 0
+
+        def _reply(self, status: int, body: dict, *, close: bool, unread: int = 0):
             payload = json.dumps(body, ensure_ascii=False, sort_keys=True).encode("utf-8")
             self.send_response(status)
             self.send_header("Content-Type", "application/json; charset=utf-8")
@@ -309,6 +363,33 @@ def _handler_class(service: ResponseService):
                 self.close_connection = True
             self.end_headers()
             self.wfile.write(payload)
+            if close and unread > 0:
+                self._linger(unread)
+
+        def _linger(self, remaining: int):
+            """Lingering close for a refused body the client may still be sending.
+
+            The response is already written; half-close, then discard incoming bytes for a
+            bounded time so the client reads the error instead of a connection reset.
+            """
+            try:
+                self.wfile.flush()
+                self.connection.shutdown(socket.SHUT_WR)
+                self.connection.settimeout(0.2)
+            except OSError:
+                return
+            deadline = time.monotonic() + LINGER_SECONDS
+            remaining = min(remaining, LINGER_MAX_BYTES)
+            while remaining > 0 and time.monotonic() < deadline:
+                try:
+                    chunk = self.connection.recv(min(65_536, remaining))
+                except TimeoutError:
+                    continue
+                except OSError:
+                    return
+                if not chunk:
+                    return
+                remaining -= len(chunk)
 
     return Handler
 

@@ -1,0 +1,1465 @@
+{
+  "adjustments": [
+    "reasoning_effort set to none: Unsupported value: 'reasoning_effort' does not support 'minimal' with this model. Supported values are: 'none', 'low', 'medium', 'high', and 'xhigh'."
+  ],
+  "calibration": {
+    "act_mapping_agreement": {
+      "move_map": "configs/response/mathdial_move_map_v1.yaml",
+      "overall": {
+        "agree": 74,
+        "n": 200,
+        "rate": 0.37
+      },
+      "per_act": {
+        "focus": {
+          "agree": 21,
+          "n": 50,
+          "rate": 0.42
+        },
+        "generic": {
+          "agree": 15,
+          "n": 50,
+          "rate": 0.3
+        },
+        "probing": {
+          "agree": 17,
+          "n": 50,
+          "rate": 0.34
+        },
+        "telling": {
+          "agree": 21,
+          "n": 50,
+          "rate": 0.42
+        }
+      }
+    },
+    "chosen_model_agreement_in_full_run": {
+      "draft_vs_model": {
+        "EXCLUDE": {
+          "EXCLUDE": 9,
+          "EXPLAIN_CONCEPT": 1
+        },
+        "EXPLAIN_CONCEPT": {
+          "EXPLAIN_CONCEPT": 9,
+          "HINT": 7,
+          "REFLECT": 1
+        },
+        "HINT": {
+          "EXPLAIN_CONCEPT": 2,
+          "HINT": 14,
+          "PRACTICE": 2,
+          "PROBE": 3,
+          "REFLECT": 5
+        },
+        "PRACTICE": {
+          "PRACTICE": 2
+        },
+        "PROBE": {
+          "PROBE": 18,
+          "REFLECT": 1
+        },
+        "REFLECT": {
+          "EXCLUDE": 1,
+          "HINT": 1,
+          "REFLECT": 12
+        }
+      },
+      "overall": {
+        "agree": 64,
+        "n": 88,
+        "rate": 0.7273
+      },
+      "per_act": {
+        "focus": {
+          "agree": 8,
+          "n": 13,
+          "rate": 0.6154
+        },
+        "generic": {
+          "agree": 18,
+          "n": 21,
+          "rate": 0.8571
+        },
+        "probing": {
+          "agree": 17,
+          "n": 21,
+          "rate": 0.8095
+        },
+        "telling": {
+          "agree": 21,
+          "n": 33,
+          "rate": 0.6364
+        }
+      }
+    },
+    "drafted_by": "claude-fable-5-1 (model draft, audit_draft_v1); not human labels",
+    "few_shot_ids_held_out": [
+      "mathdial:train:0646:t00",
+      "mathdial:train:1091:t10",
+      "mathdial:train:0418:t00",
+      "mathdial:test:0504:t16",
+      "mathdial:train:2069:t06",
+      "mathdial:train:1087:t06",
+      "mathdial:train:1989:t10",
+      "mathdial:test:0282:t16",
+      "mathdial:train:1977:t07",
+      "mathdial:test:0048:t00",
+      "mathdial:test:0035:t10",
+      "mathdial:train:0725:t08",
+      "mathdial:test:0592:t10",
+      "mathdial:train:1261:t08",
+      "mathdial:test:0324:t04",
+      "mathdial:train:1153:t10",
+      "mathdial:test:0010:t04",
+      "mathdial:train:0158:t06"
+    ],
+    "label_column": "model_draft_label",
+    "n": 200,
+    "n_evaluated": 182,
+    "path": "evaluation/response/mathdial_mapping_audit_200_model_draft.csv",
+    "repeat_consistency_pilot_vs_full": {
+      "rate": 0.9659,
+      "rows": 88,
+      "same_label": 85
+    },
+    "sha256": "548cfa427e413912cb81a4b9daae28049f93393257f9f08b5bc346fdbecb88b9"
+  },
+  "counts_per_label": {
+    "CHALLENGE": 24,
+    "CHECK_MASTERY": 5,
+    "EXCLUDE": 1153,
+    "EXPLAIN_CONCEPT": 858,
+    "HINT": 2810,
+    "PRACTICE": 286,
+    "PROBE": 2763,
+    "REFLECT": 1656,
+    "WORKED_EXAMPLE": 20
+  },
+  "counts_per_source_act_and_label": {
+    "focus": {
+      "CHALLENGE": 13,
+      "EXCLUDE": 84,
+      "EXPLAIN_CONCEPT": 106,
+      "HINT": 1106,
+      "PRACTICE": 92,
+      "PROBE": 809,
+      "REFLECT": 631
+    },
+    "generic": {
+      "CHECK_MASTERY": 4,
+      "EXCLUDE": 765,
+      "EXPLAIN_CONCEPT": 26,
+      "HINT": 87,
+      "PRACTICE": 23,
+      "PROBE": 1210,
+      "REFLECT": 223
+    },
+    "probing": {
+      "CHALLENGE": 11,
+      "EXCLUDE": 41,
+      "EXPLAIN_CONCEPT": 65,
+      "HINT": 741,
+      "PRACTICE": 159,
+      "PROBE": 684,
+      "REFLECT": 602,
+      "WORKED_EXAMPLE": 19
+    },
+    "telling": {
+      "CHECK_MASTERY": 1,
+      "EXCLUDE": 263,
+      "EXPLAIN_CONCEPT": 661,
+      "HINT": 876,
+      "PRACTICE": 12,
+      "PROBE": 60,
+      "REFLECT": 200,
+      "WORKED_EXAMPLE": 1
+    }
+  },
+  "counts_per_split_and_label": {
+    "test": {
+      "CHALLENGE": 6,
+      "EXCLUDE": 237,
+      "EXPLAIN_CONCEPT": 170,
+      "HINT": 627,
+      "PRACTICE": 59,
+      "PROBE": 658,
+      "REFLECT": 365,
+      "WORKED_EXAMPLE": 5
+    },
+    "train": {
+      "CHALLENGE": 14,
+      "CHECK_MASTERY": 2,
+      "EXCLUDE": 758,
+      "EXPLAIN_CONCEPT": 570,
+      "HINT": 1764,
+      "PRACTICE": 172,
+      "PROBE": 1663,
+      "REFLECT": 1003,
+      "WORKED_EXAMPLE": 13
+    },
+    "validation": {
+      "CHALLENGE": 4,
+      "CHECK_MASTERY": 3,
+      "EXCLUDE": 158,
+      "EXPLAIN_CONCEPT": 118,
+      "HINT": 419,
+      "PRACTICE": 55,
+      "PROBE": 442,
+      "REFLECT": 288,
+      "WORKED_EXAMPLE": 2
+    }
+  },
+  "dataset_id": "mathdial_moves_v1",
+  "generated_at": "2026-11-02T23:07:37+00:00",
+  "invocations": [
+    {
+      "outcome": {
+        "already_done": 0,
+        "error_messages": [],
+        "errors": 0,
+        "labeled": 7455,
+        "requested": 7455,
+        "skipped_for_cap": 0
+      },
+      "selection": {
+        "budget_usd": 4.3473,
+        "estimate_usd": 10.8101,
+        "pending": 18541,
+        "planned_usd": 4.3472,
+        "rule": "estimate exceeds the budget: every test turn, then train and validation turns in a per-act round robin (four train picks per validation pick) until the budget is used",
+        "selected": 7455,
+        "selected_by_split": {
+          "test": 2127,
+          "train": 4263,
+          "validation": 1065
+        }
+      },
+      "spent_after_usd": 3.663734,
+      "started": "2026-11-02T22:51:31+00:00"
+    },
+    {
+      "outcome": {
+        "already_done": 7455,
+        "error_messages": [],
+        "errors": 0,
+        "labeled": 2120,
+        "requested": 2120,
+        "skipped_for_cap": 0
+      },
+      "selection": {
+        "budget_usd": 1.2363,
+        "estimate_usd": 6.463,
+        "pending": 11086,
+        "planned_usd": 1.2362,
+        "rule": "estimate exceeds the budget: every test turn, then train and validation turns in a per-act round robin (four train picks per validation pick) until the budget is used",
+        "selected": 2120,
+        "selected_by_split": {
+          "train": 1696,
+          "validation": 424
+        }
+      },
+      "spent_after_usd": 4.566991,
+      "started": "2026-11-02T23:03:51+00:00"
+    }
+  ],
+  "label_source": "model (OpenAI Chat Completions), never human; action_label_source stays 'mapped'",
+  "labeled": 9575,
+  "labels_file": {
+    "path": "data/response/mathdial_moves_v1/labels.jsonl",
+    "rows": 9575,
+    "sha256": "8eea6753543f97c4e473dc34c51d02d9cd81eaa9ce4dd1ac88f55dadfde4352e"
+  },
+  "model_selection": {
+    "chosen_model": "gpt-5.4-mini",
+    "chosen_prompt_version": "mathdial_moves_prompt_v3-fs3-s20261102",
+    "chosen_run_tag": "gpt-5.4-mini",
+    "pilots": {
+      "gpt-5-mini@mathdial_moves_prompt_v1": {
+        "adjustments": [
+          "temperature dropped: Unsupported value: 'temperature' does not support 0 with this model. Only the default (1) value is supported."
+        ],
+        "agreement": {
+          "draft_vs_model": {
+            "EXCLUDE": {
+              "EXCLUDE": 16,
+              "PROBE": 4,
+              "REFLECT": 1
+            },
+            "EXPLAIN_CONCEPT": {
+              "EXPLAIN_CONCEPT": 17,
+              "PROBE": 1,
+              "REFLECT": 11
+            },
+            "HINT": {
+              "HINT": 6,
+              "PRACTICE": 3,
+              "PROBE": 28,
+              "REFLECT": 10
+            },
+            "PRACTICE": {
+              "PRACTICE": 5,
+              "PROBE": 1
+            },
+            "PROBE": {
+              "PROBE": 59
+            },
+            "REFLECT": {
+              "CHECK_MASTERY": 1,
+              "PROBE": 16,
+              "REFLECT": 10
+            }
+          },
+          "overall": {
+            "agree": 113,
+            "n": 189,
+            "rate": 0.5979
+          },
+          "per_act": {
+            "focus": {
+              "agree": 23,
+              "n": 39,
+              "rate": 0.5897
+            },
+            "generic": {
+              "agree": 42,
+              "n": 50,
+              "rate": 0.84
+            },
+            "probing": {
+              "agree": 25,
+              "n": 50,
+              "rate": 0.5
+            },
+            "telling": {
+              "agree": 23,
+              "n": 50,
+              "rate": 0.46
+            }
+          }
+        },
+        "agreement_wilson_95": [
+          0.5267,
+          0.6652
+        ],
+        "cost_usd": 0.043146,
+        "labeled": 189,
+        "meets_threshold": false,
+        "model": "gpt-5-mini",
+        "n_evaluated": null,
+        "prices_usd_per_m": {
+          "cached_input_per_m": 0.025,
+          "input_per_m": 0.25,
+          "output_per_m": 2.0
+        },
+        "prompt_version": "mathdial_moves_prompt_v1",
+        "request_parameters": {
+          "max_completion_tokens": 120,
+          "reasoning_effort": "minimal"
+        },
+        "run_tag": null,
+        "status_counts": {
+          "labeled": 189
+        },
+        "token_fit": {
+          "completion_mean": 39.27,
+          "intercept": 516.75,
+          "n": 189,
+          "per_word": 1.3576
+        }
+      },
+      "gpt-5-mini@mathdial_moves_prompt_v2": {
+        "adjustments": [
+          "temperature dropped: Unsupported value: 'temperature' does not support 0 with this model. Only the default (1) value is supported."
+        ],
+        "agreement": {
+          "draft_vs_model": {
+            "EXCLUDE": {
+              "EXCLUDE": 21,
+              "PROBE": 1
+            },
+            "EXPLAIN_CONCEPT": {
+              "EXPLAIN_CONCEPT": 10,
+              "REFLECT": 19
+            },
+            "HINT": {
+              "EXCLUDE": 1,
+              "HINT": 1,
+              "PRACTICE": 2,
+              "PROBE": 12,
+              "REFLECT": 36
+            },
+            "PRACTICE": {
+              "PRACTICE": 6,
+              "PROBE": 1
+            },
+            "PROBE": {
+              "EXCLUDE": 1,
+              "PROBE": 38,
+              "REFLECT": 23
+            },
+            "REFLECT": {
+              "EXCLUDE": 1,
+              "PROBE": 1,
+              "REFLECT": 26
+            }
+          },
+          "overall": {
+            "agree": 102,
+            "n": 200,
+            "rate": 0.51
+          },
+          "per_act": {
+            "focus": {
+              "agree": 21,
+              "n": 50,
+              "rate": 0.42
+            },
+            "generic": {
+              "agree": 38,
+              "n": 50,
+              "rate": 0.76
+            },
+            "probing": {
+              "agree": 26,
+              "n": 50,
+              "rate": 0.52
+            },
+            "telling": {
+              "agree": 17,
+              "n": 50,
+              "rate": 0.34
+            }
+          }
+        },
+        "agreement_wilson_95": [
+          0.4412,
+          0.5784
+        ],
+        "cost_usd": 0.101631,
+        "labeled": 200,
+        "meets_threshold": false,
+        "model": "gpt-5-mini",
+        "n_evaluated": null,
+        "prices_usd_per_m": {
+          "cached_input_per_m": 0.025,
+          "input_per_m": 0.25,
+          "output_per_m": 2.0
+        },
+        "prompt_version": "mathdial_moves_prompt_v2",
+        "request_parameters": {
+          "max_completion_tokens": 120,
+          "reasoning_effort": "minimal"
+        },
+        "run_tag": null,
+        "status_counts": {
+          "labeled": 200
+        },
+        "token_fit": {
+          "completion_mean": 39.86,
+          "intercept": 768.71,
+          "n": 200,
+          "per_word": 1.3558
+        }
+      },
+      "gpt-5-mini@mathdial_moves_prompt_v3-fs3-s20261102": {
+        "adjustments": [],
+        "agreement": {
+          "draft_vs_model": {
+            "EXCLUDE": {
+              "EXCLUDE": 14,
+              "EXPLAIN_CONCEPT": 1,
+              "PROBE": 3,
+              "REFLECT": 1
+            },
+            "EXPLAIN_CONCEPT": {
+              "EXPLAIN_CONCEPT": 12,
+              "HINT": 3,
+              "PROBE": 1,
+              "REFLECT": 10
+            },
+            "HINT": {
+              "EXPLAIN_CONCEPT": 1,
+              "HINT": 5,
+              "PRACTICE": 2,
+              "PROBE": 27,
+              "REFLECT": 14
+            },
+            "PRACTICE": {
+              "PRACTICE": 3,
+              "PROBE": 1
+            },
+            "PROBE": {
+              "PROBE": 59
+            },
+            "REFLECT": {
+              "PROBE": 11,
+              "REFLECT": 14
+            }
+          },
+          "overall": {
+            "agree": 107,
+            "n": 182,
+            "rate": 0.5879
+          },
+          "per_act": {
+            "focus": {
+              "agree": 24,
+              "n": 43,
+              "rate": 0.5581
+            },
+            "generic": {
+              "agree": 39,
+              "n": 46,
+              "rate": 0.8478
+            },
+            "probing": {
+              "agree": 22,
+              "n": 45,
+              "rate": 0.4889
+            },
+            "telling": {
+              "agree": 22,
+              "n": 48,
+              "rate": 0.4583
+            }
+          }
+        },
+        "agreement_wilson_95": [
+          0.5153,
+          0.6569
+        ],
+        "cost_usd": 0.051041,
+        "labeled": 182,
+        "meets_threshold": false,
+        "model": "gpt-5-mini",
+        "n_evaluated": 182,
+        "prices_usd_per_m": {
+          "cached_input_per_m": 0.025,
+          "input_per_m": 0.25,
+          "output_per_m": 2.0
+        },
+        "prompt_version": "mathdial_moves_prompt_v3-fs3-s20261102",
+        "request_parameters": {
+          "max_completion_tokens": 120,
+          "reasoning_effort": "minimal",
+          "temperature": 0
+        },
+        "run_tag": "gpt-5-mini",
+        "status_counts": {
+          "labeled": 182
+        },
+        "token_fit": {
+          "cached_fraction": 0.4757,
+          "completion_mean": 38.67,
+          "intercept": 1338.01,
+          "n": 182,
+          "per_word": 1.3543
+        }
+      },
+      "gpt-5-nano@mathdial_moves_prompt_v1": {
+        "adjustments": [
+          "temperature dropped: Unsupported value: 'temperature' does not support 0 with this model. Only the default (1) value is supported."
+        ],
+        "agreement": {
+          "draft_vs_model": {
+            "EXCLUDE": {
+              "CHECK_MASTERY": 3,
+              "EXCLUDE": 12,
+              "EXPLAIN_CONCEPT": 3,
+              "PROBE": 2,
+              "REFLECT": 1
+            },
+            "EXPLAIN_CONCEPT": {
+              "CHECK_MASTERY": 1,
+              "EXPLAIN_CONCEPT": 18,
+              "HINT": 4,
+              "PROBE": 2,
+              "REFLECT": 3
+            },
+            "HINT": {
+              "CHECK_MASTERY": 1,
+              "EXPLAIN_CONCEPT": 7,
+              "HINT": 26,
+              "PRACTICE": 1,
+              "PROBE": 9,
+              "REFLECT": 4
+            },
+            "PRACTICE": {
+              "HINT": 3,
+              "PROBE": 3
+            },
+            "PROBE": {
+              "CHECK_MASTERY": 1,
+              "EXPLAIN_CONCEPT": 3,
+              "HINT": 1,
+              "PROBE": 53,
+              "REFLECT": 1
+            },
+            "REFLECT": {
+              "CHECK_MASTERY": 1,
+              "EXPLAIN_CONCEPT": 2,
+              "HINT": 8,
+              "PROBE": 8,
+              "REFLECT": 8
+            }
+          },
+          "overall": {
+            "agree": 117,
+            "n": 189,
+            "rate": 0.619
+          },
+          "per_act": {
+            "focus": {
+              "agree": 23,
+              "n": 39,
+              "rate": 0.5897
+            },
+            "generic": {
+              "agree": 37,
+              "n": 50,
+              "rate": 0.74
+            },
+            "probing": {
+              "agree": 29,
+              "n": 50,
+              "rate": 0.58
+            },
+            "telling": {
+              "agree": 28,
+              "n": 50,
+              "rate": 0.56
+            }
+          }
+        },
+        "agreement_wilson_95": [
+          0.5481,
+          0.6853
+        ],
+        "cost_usd": 0.008676,
+        "labeled": 189,
+        "meets_threshold": false,
+        "model": "gpt-5-nano",
+        "n_evaluated": null,
+        "prices_usd_per_m": {
+          "cached_input_per_m": 0.005,
+          "input_per_m": 0.05,
+          "output_per_m": 0.4
+        },
+        "prompt_version": "mathdial_moves_prompt_v1",
+        "request_parameters": {
+          "max_completion_tokens": 120,
+          "reasoning_effort": "minimal"
+        },
+        "run_tag": null,
+        "status_counts": {
+          "labeled": 188,
+          "labeled_after_retry": 1
+        },
+        "token_fit": {
+          "completion_mean": 39.38,
+          "intercept": 516.18,
+          "n": 189,
+          "per_word": 1.4238
+        }
+      },
+      "gpt-5-nano@mathdial_moves_prompt_v2": {
+        "adjustments": [
+          "temperature dropped: Unsupported value: 'temperature' does not support 0 with this model. Only the default (1) value is supported."
+        ],
+        "agreement": {
+          "draft_vs_model": {
+            "EXCLUDE": {
+              "EXCLUDE": 13,
+              "PROBE": 2,
+              "REFLECT": 7
+            },
+            "EXPLAIN_CONCEPT": {
+              "EXCLUDE": 1,
+              "EXPLAIN_CONCEPT": 1,
+              "REFLECT": 27
+            },
+            "HINT": {
+              "HINT": 3,
+              "PROBE": 8,
+              "REFLECT": 41
+            },
+            "PRACTICE": {
+              "HINT": 1,
+              "PROBE": 6
+            },
+            "PROBE": {
+              "HINT": 1,
+              "PROBE": 31,
+              "REFLECT": 30
+            },
+            "REFLECT": {
+              "EXCLUDE": 1,
+              "REFLECT": 27
+            }
+          },
+          "overall": {
+            "agree": 75,
+            "n": 200,
+            "rate": 0.375
+          },
+          "per_act": {
+            "focus": {
+              "agree": 14,
+              "n": 50,
+              "rate": 0.28
+            },
+            "generic": {
+              "agree": 34,
+              "n": 50,
+              "rate": 0.68
+            },
+            "probing": {
+              "agree": 15,
+              "n": 50,
+              "rate": 0.3
+            },
+            "telling": {
+              "agree": 12,
+              "n": 50,
+              "rate": 0.24
+            }
+          }
+        },
+        "agreement_wilson_95": [
+          0.3109,
+          0.4439
+        ],
+        "cost_usd": 0.020695,
+        "labeled": 200,
+        "meets_threshold": false,
+        "model": "gpt-5-nano",
+        "n_evaluated": null,
+        "prices_usd_per_m": {
+          "cached_input_per_m": 0.005,
+          "input_per_m": 0.05,
+          "output_per_m": 0.4
+        },
+        "prompt_version": "mathdial_moves_prompt_v2",
+        "request_parameters": {
+          "max_completion_tokens": 120,
+          "reasoning_effort": "minimal"
+        },
+        "run_tag": null,
+        "status_counts": {
+          "labeled": 195,
+          "labeled_after_retry": 2,
+          "malformed": 3
+        },
+        "token_fit": {
+          "completion_mean": 41.11,
+          "intercept": 810.54,
+          "n": 200,
+          "per_word": 1.0324
+        }
+      },
+      "gpt-5-nano@mathdial_moves_prompt_v3-fs3-s20261102": {
+        "adjustments": [],
+        "agreement": {
+          "draft_vs_model": {
+            "EXCLUDE": {
+              "EXCLUDE": 9,
+              "EXPLAIN_CONCEPT": 4,
+              "PROBE": 4,
+              "REFLECT": 2
+            },
+            "EXPLAIN_CONCEPT": {
+              "EXPLAIN_CONCEPT": 16,
+              "HINT": 7,
+              "REFLECT": 3
+            },
+            "HINT": {
+              "EXPLAIN_CONCEPT": 1,
+              "HINT": 29,
+              "PRACTICE": 1,
+              "PROBE": 4,
+              "REFLECT": 14
+            },
+            "PRACTICE": {
+              "HINT": 1,
+              "PRACTICE": 1,
+              "PROBE": 2
+            },
+            "PROBE": {
+              "HINT": 6,
+              "PROBE": 47,
+              "REFLECT": 6
+            },
+            "REFLECT": {
+              "CHECK_MASTERY": 1,
+              "EXPLAIN_CONCEPT": 1,
+              "HINT": 6,
+              "PROBE": 3,
+              "REFLECT": 14
+            }
+          },
+          "overall": {
+            "agree": 116,
+            "n": 182,
+            "rate": 0.6374
+          },
+          "per_act": {
+            "focus": {
+              "agree": 21,
+              "n": 43,
+              "rate": 0.4884
+            },
+            "generic": {
+              "agree": 39,
+              "n": 46,
+              "rate": 0.8478
+            },
+            "probing": {
+              "agree": 28,
+              "n": 45,
+              "rate": 0.6222
+            },
+            "telling": {
+              "agree": 28,
+              "n": 48,
+              "rate": 0.5833
+            }
+          }
+        },
+        "agreement_wilson_95": [
+          0.5653,
+          0.7037
+        ],
+        "cost_usd": 0.007343,
+        "labeled": 182,
+        "meets_threshold": false,
+        "model": "gpt-5-nano",
+        "n_evaluated": 182,
+        "prices_usd_per_m": {
+          "cached_input_per_m": 0.005,
+          "input_per_m": 0.05,
+          "output_per_m": 0.4
+        },
+        "prompt_version": "mathdial_moves_prompt_v3-fs3-s20261102",
+        "request_parameters": {
+          "max_completion_tokens": 120,
+          "reasoning_effort": "minimal",
+          "temperature": 0
+        },
+        "run_tag": "gpt-5-nano",
+        "status_counts": {
+          "labeled": 182
+        },
+        "token_fit": {
+          "cached_fraction": 0.7262,
+          "completion_mean": 39.34,
+          "intercept": 1338.01,
+          "n": 182,
+          "per_word": 1.3543
+        }
+      },
+      "gpt-5.4-mini@mathdial_moves_prompt_v3-fs3-s20261102": {
+        "adjustments": [],
+        "agreement": {
+          "draft_vs_model": {
+            "EXCLUDE": {
+              "EXCLUDE": 17,
+              "EXPLAIN_CONCEPT": 1,
+              "PROBE": 1
+            },
+            "EXPLAIN_CONCEPT": {
+              "EXPLAIN_CONCEPT": 14,
+              "HINT": 11,
+              "REFLECT": 1
+            },
+            "HINT": {
+              "EXPLAIN_CONCEPT": 2,
+              "HINT": 37,
+              "PRACTICE": 2,
+              "PROBE": 1,
+              "REFLECT": 7
+            },
+            "PRACTICE": {
+              "PRACTICE": 4
+            },
+            "PROBE": {
+              "HINT": 4,
+              "PROBE": 51,
+              "REFLECT": 4
+            },
+            "REFLECT": {
+              "EXCLUDE": 1,
+              "HINT": 1,
+              "REFLECT": 23
+            }
+          },
+          "overall": {
+            "agree": 146,
+            "n": 182,
+            "rate": 0.8022
+          },
+          "per_act": {
+            "focus": {
+              "agree": 32,
+              "n": 43,
+              "rate": 0.7442
+            },
+            "generic": {
+              "agree": 42,
+              "n": 46,
+              "rate": 0.913
+            },
+            "probing": {
+              "agree": 37,
+              "n": 45,
+              "rate": 0.8222
+            },
+            "telling": {
+              "agree": 35,
+              "n": 48,
+              "rate": 0.7292
+            }
+          }
+        },
+        "agreement_wilson_95": [
+          0.7383,
+          0.8536
+        ],
+        "cost_usd": 0.092851,
+        "labeled": 182,
+        "meets_threshold": false,
+        "model": "gpt-5.4-mini",
+        "n_evaluated": 182,
+        "prices_usd_per_m": {
+          "cached_input_per_m": 0.075,
+          "input_per_m": 0.75,
+          "output_per_m": 4.5
+        },
+        "prompt_version": "mathdial_moves_prompt_v3-fs3-s20261102",
+        "request_parameters": {
+          "max_completion_tokens": 120,
+          "reasoning_effort": "minimal",
+          "temperature": 0
+        },
+        "run_tag": "gpt-5.4-mini",
+        "status_counts": {
+          "labeled": 182
+        },
+        "token_fit": {
+          "cached_fraction": 0.7133,
+          "completion_mean": 28.6,
+          "intercept": 1338.01,
+          "n": 182,
+          "per_word": 1.3543
+        }
+      },
+      "gpt-5.4-mini@mathdial_moves_prompt_v3-fs6-s20261102": {
+        "adjustments": [
+          "reasoning_effort set to none: Unsupported value: 'reasoning_effort' does not support 'minimal' with this model. Supported values are: 'none', 'low', 'medium', 'high', and 'xhigh'."
+        ],
+        "agreement": {
+          "draft_vs_model": {
+            "EXCLUDE": {
+              "EXCLUDE": 14,
+              "EXPLAIN_CONCEPT": 1,
+              "PROBE": 1
+            },
+            "EXPLAIN_CONCEPT": {
+              "EXPLAIN_CONCEPT": 14,
+              "HINT": 8,
+              "REFLECT": 1
+            },
+            "HINT": {
+              "EXPLAIN_CONCEPT": 2,
+              "HINT": 35,
+              "PRACTICE": 2,
+              "PROBE": 1,
+              "REFLECT": 6
+            },
+            "PRACTICE": {
+              "PRACTICE": 1
+            },
+            "PROBE": {
+              "HINT": 5,
+              "PROBE": 46,
+              "REFLECT": 5
+            },
+            "REFLECT": {
+              "EXCLUDE": 1,
+              "HINT": 1,
+              "REFLECT": 20
+            }
+          },
+          "overall": {
+            "agree": 130,
+            "n": 164,
+            "rate": 0.7927
+          },
+          "per_act": {
+            "focus": {
+              "agree": 28,
+              "n": 39,
+              "rate": 0.7179
+            },
+            "generic": {
+              "agree": 39,
+              "n": 43,
+              "rate": 0.907
+            },
+            "probing": {
+              "agree": 27,
+              "n": 37,
+              "rate": 0.7297
+            },
+            "telling": {
+              "agree": 36,
+              "n": 45,
+              "rate": 0.8
+            }
+          }
+        },
+        "agreement_wilson_95": [
+          0.7243,
+          0.8477
+        ],
+        "cost_usd": 0.072114,
+        "labeled": 164,
+        "meets_threshold": false,
+        "model": "gpt-5.4-mini",
+        "n_evaluated": 164,
+        "prices_usd_per_m": {
+          "cached_input_per_m": 0.075,
+          "input_per_m": 0.75,
+          "output_per_m": 4.5
+        },
+        "prompt_version": "mathdial_moves_prompt_v3-fs6-s20261102",
+        "request_parameters": {
+          "max_completion_tokens": 120,
+          "reasoning_effort": "none",
+          "temperature": 0
+        },
+        "run_tag": "gpt-5.4-mini",
+        "status_counts": {
+          "labeled": 164
+        },
+        "token_fit": {
+          "cached_fraction": 0.8917,
+          "completion_mean": 27.71,
+          "intercept": 2044.06,
+          "n": 164,
+          "per_word": 1.3556
+        }
+      },
+      "gpt-5.4-nano-low@mathdial_moves_prompt_v3-fs3-s20261102": {
+        "adjustments": [
+          "temperature dropped: Unsupported value: 'temperature' does not support 0 with this model. Only the default (1) value is supported."
+        ],
+        "agreement": {
+          "draft_vs_model": {
+            "EXCLUDE": {
+              "EXCLUDE": 17,
+              "PROBE": 1,
+              "REFLECT": 1
+            },
+            "EXPLAIN_CONCEPT": {
+              "EXPLAIN_CONCEPT": 11,
+              "HINT": 15
+            },
+            "HINT": {
+              "EXPLAIN_CONCEPT": 2,
+              "HINT": 32,
+              "PRACTICE": 2,
+              "PROBE": 5,
+              "REFLECT": 8
+            },
+            "PRACTICE": {
+              "PRACTICE": 4
+            },
+            "PROBE": {
+              "HINT": 2,
+              "PRACTICE": 1,
+              "PROBE": 48,
+              "REFLECT": 8
+            },
+            "REFLECT": {
+              "EXCLUDE": 3,
+              "HINT": 2,
+              "PROBE": 1,
+              "REFLECT": 19
+            }
+          },
+          "overall": {
+            "agree": 131,
+            "n": 182,
+            "rate": 0.7198
+          },
+          "per_act": {
+            "focus": {
+              "agree": 33,
+              "n": 43,
+              "rate": 0.7674
+            },
+            "generic": {
+              "agree": 38,
+              "n": 46,
+              "rate": 0.8261
+            },
+            "probing": {
+              "agree": 30,
+              "n": 45,
+              "rate": 0.6667
+            },
+            "telling": {
+              "agree": 30,
+              "n": 48,
+              "rate": 0.625
+            }
+          }
+        },
+        "agreement_wilson_95": [
+          0.6505,
+          0.78
+        ],
+        "cost_usd": 0.063646,
+        "labeled": 182,
+        "meets_threshold": false,
+        "model": "gpt-5.4-nano",
+        "n_evaluated": 182,
+        "prices_usd_per_m": {
+          "cached_input_per_m": 0.02,
+          "input_per_m": 0.2,
+          "output_per_m": 1.25
+        },
+        "prompt_version": "mathdial_moves_prompt_v3-fs3-s20261102",
+        "request_parameters": {
+          "max_completion_tokens": 120,
+          "reasoning_effort": "low"
+        },
+        "run_tag": "gpt-5.4-nano-low",
+        "status_counts": {
+          "labeled": 178,
+          "labeled_after_retry": 2,
+          "malformed": 2
+        },
+        "token_fit": {
+          "cached_fraction": 0.0,
+          "completion_mean": 47.31,
+          "intercept": 1354.81,
+          "n": 182,
+          "per_word": 1.6055
+        }
+      },
+      "gpt-5.4-nano@mathdial_moves_prompt_v2": {
+        "adjustments": [
+          "reasoning_effort set to none: Unsupported value: 'reasoning_effort' does not support 'minimal' with this model. Supported values are: 'none', 'low', 'medium', 'high', and 'xhigh'."
+        ],
+        "agreement": {
+          "draft_vs_model": {
+            "EXCLUDE": {
+              "EXCLUDE": 20,
+              "PROBE": 1,
+              "REFLECT": 1
+            },
+            "EXPLAIN_CONCEPT": {
+              "EXPLAIN_CONCEPT": 14,
+              "HINT": 1,
+              "PROBE": 1,
+              "REFLECT": 13
+            },
+            "HINT": {
+              "EXCLUDE": 7,
+              "EXPLAIN_CONCEPT": 3,
+              "HINT": 7,
+              "PRACTICE": 5,
+              "PROBE": 6,
+              "REFLECT": 24
+            },
+            "PRACTICE": {
+              "EXCLUDE": 1,
+              "PRACTICE": 6
+            },
+            "PROBE": {
+              "EXCLUDE": 4,
+              "PROBE": 53,
+              "REFLECT": 5
+            },
+            "REFLECT": {
+              "EXCLUDE": 2,
+              "PROBE": 1,
+              "REFLECT": 25
+            }
+          },
+          "overall": {
+            "agree": 125,
+            "n": 200,
+            "rate": 0.625
+          },
+          "per_act": {
+            "focus": {
+              "agree": 27,
+              "n": 50,
+              "rate": 0.54
+            },
+            "generic": {
+              "agree": 40,
+              "n": 50,
+              "rate": 0.8
+            },
+            "probing": {
+              "agree": 33,
+              "n": 50,
+              "rate": 0.66
+            },
+            "telling": {
+              "agree": 25,
+              "n": 50,
+              "rate": 0.5
+            }
+          }
+        },
+        "agreement_wilson_95": [
+          0.5561,
+          0.6891
+        ],
+        "cost_usd": 0.083747,
+        "labeled": 200,
+        "meets_threshold": false,
+        "model": "gpt-5.4-nano",
+        "n_evaluated": null,
+        "prices_usd_per_m": {
+          "cached_input_per_m": 0.02,
+          "input_per_m": 0.2,
+          "output_per_m": 1.25
+        },
+        "prompt_version": "mathdial_moves_prompt_v2",
+        "request_parameters": {
+          "max_completion_tokens": 120,
+          "reasoning_effort": "none",
+          "temperature": 0
+        },
+        "run_tag": null,
+        "status_counts": {
+          "labeled": 200
+        },
+        "token_fit": {
+          "completion_mean": 33.92,
+          "intercept": 768.71,
+          "n": 200,
+          "per_word": 1.3558
+        }
+      },
+      "gpt-5.4-nano@mathdial_moves_prompt_v3-fs3-s20261102": {
+        "adjustments": [],
+        "agreement": {
+          "draft_vs_model": {
+            "EXCLUDE": {
+              "EXCLUDE": 16,
+              "EXPLAIN_CONCEPT": 1,
+              "PROBE": 1,
+              "REFLECT": 1
+            },
+            "EXPLAIN_CONCEPT": {
+              "EXPLAIN_CONCEPT": 9,
+              "HINT": 17
+            },
+            "HINT": {
+              "EXPLAIN_CONCEPT": 2,
+              "HINT": 35,
+              "PRACTICE": 2,
+              "PROBE": 1,
+              "REFLECT": 9
+            },
+            "PRACTICE": {
+              "PRACTICE": 4
+            },
+            "PROBE": {
+              "HINT": 5,
+              "PROBE": 45,
+              "REFLECT": 9
+            },
+            "REFLECT": {
+              "EXCLUDE": 2,
+              "HINT": 1,
+              "PROBE": 2,
+              "REFLECT": 20
+            }
+          },
+          "overall": {
+            "agree": 129,
+            "n": 182,
+            "rate": 0.7088
+          },
+          "per_act": {
+            "focus": {
+              "agree": 33,
+              "n": 43,
+              "rate": 0.7674
+            },
+            "generic": {
+              "agree": 37,
+              "n": 46,
+              "rate": 0.8043
+            },
+            "probing": {
+              "agree": 29,
+              "n": 45,
+              "rate": 0.6444
+            },
+            "telling": {
+              "agree": 30,
+              "n": 48,
+              "rate": 0.625
+            }
+          }
+        },
+        "agreement_wilson_95": [
+          0.639,
+          0.7699
+        ],
+        "cost_usd": 0.059589,
+        "labeled": 182,
+        "meets_threshold": false,
+        "model": "gpt-5.4-nano",
+        "n_evaluated": 182,
+        "prices_usd_per_m": {
+          "cached_input_per_m": 0.02,
+          "input_per_m": 0.2,
+          "output_per_m": 1.25
+        },
+        "prompt_version": "mathdial_moves_prompt_v3-fs3-s20261102",
+        "request_parameters": {
+          "max_completion_tokens": 120,
+          "reasoning_effort": "minimal",
+          "temperature": 0
+        },
+        "run_tag": "gpt-5.4-nano",
+        "status_counts": {
+          "labeled": 182
+        },
+        "token_fit": {
+          "cached_fraction": 0.0,
+          "completion_mean": 34.62,
+          "intercept": 1338.01,
+          "n": 182,
+          "per_word": 1.3543
+        }
+      }
+    },
+    "rule": "cheapest configured candidate whose pilot agreement with the drafts meets the threshold",
+    "threshold": 0.85
+  },
+  "notes": [
+    "Every label is model-made; D09's human audit was waived for the hackathon by Xueming on 2026-11-02.",
+    "The labels file holds ids and labels only; MathDial text is reproducible from the pinned revision.",
+    "Person B's Strategist may not imitate these labels without Peyton's acceptance."
+  ],
+  "pricing": "USD per 1M tokens, standard tier, read from https://developers.openai.com/api/docs/pricing (platform.openai.com/docs/pricing redirects there) on 2026-11-02. Reasoning tokens bill as output.",
+  "prompt_file": "configs/response/mathdial_moves_prompt_v3.txt",
+  "prompt_sha256": "6d4c509bc939863f2cc0aab39f7d3d2745fbbcbd9d74b025fec8ada1205b8e16",
+  "prompt_version": "mathdial_moves_prompt_v3-fs3-s20261102",
+  "request_parameters": {
+    "max_completion_tokens": 120,
+    "reasoning_effort": "none",
+    "temperature": 0
+  },
+  "responsible_owner": "Person A",
+  "selection": {
+    "budget_usd": 1.2363,
+    "estimate_usd": 6.463,
+    "pending": 11086,
+    "planned_usd": 1.2362,
+    "rule": "estimate exceeds the budget: every test turn, then train and validation turns in a per-act round robin (four train picks per validation pick) until the budget is used",
+    "selected": 2120,
+    "selected_by_split": {
+      "train": 1696,
+      "validation": 424
+    }
+  },
+  "source": {
+    "config": {
+      "path": "configs/response/mathdial_v1.yaml",
+      "sha256": "59db3124db2ebc339f5d11f6708d782f8908cb42c4f3aeedf911f29cbc36456e"
+    },
+    "files": [
+      {
+        "bytes": 7181555,
+        "name": "train.jsonl",
+        "rows": 2262,
+        "sha256": "d6135869c02dccf8d14756fa2f0367c5352922bb263ec22dc0eeace4da815d43"
+      },
+      {
+        "bytes": 1858054,
+        "name": "test.jsonl",
+        "rows": 599,
+        "sha256": "3ec54ee8ab921dc6191bf5e2ee766d4e7916b4264394eb17a6be9b3fe486e50b"
+      },
+      {
+        "bytes": 1930,
+        "name": "README.md",
+        "rows": null,
+        "sha256": "c63e86fd95d4e1fd60cccd78226a27d9e787ad91ed037b353d8e3083a0e5eaeb"
+      }
+    ],
+    "revision": "acc3878459e0bd8c04ab840056572f0b8b1abe1f",
+    "source_id": "mathdial"
+  },
+  "spend": {
+    "by_stage_model": {
+      "full:gpt-5.4-mini": 4.014252,
+      "pilot:gpt-5-mini": 0.152672,
+      "pilot:gpt-5-nano": 0.028038,
+      "pilot:gpt-5.4-mini": 0.164965,
+      "pilot:gpt-5.4-nano": 0.206982,
+      "probe:gpt-5-nano": 2.2e-05,
+      "probe:gpt-5.4-nano": 6e-05
+    },
+    "cap_usd": 5.0,
+    "ledger": "experiments/response/runs/mathdial_moves_v1/ledger.jsonl (ignored by Git)",
+    "remaining_usd": 0.433009,
+    "requests": 11847,
+    "spent_usd": 4.566991
+  },
+  "status_counts": {
+    "labeled": 9575
+  },
+  "tool_version": "tools.response.label_mathdial_moves v1",
+  "universe": {
+    "by_split_and_act": {
+      "test": {
+        "focus": 791,
+        "generic": 509,
+        "probing": 477,
+        "telling": 350
+      },
+      "train": {
+        "focus": 5351,
+        "generic": 3582,
+        "probing": 3404,
+        "telling": 2501
+      },
+      "validation": {
+        "focus": 647,
+        "generic": 339,
+        "probing": 355,
+        "telling": 235
+      }
+    },
+    "labelable": 18541,
+    "skipped": {
+      "empty_text": 68
+    },
+    "teacher_turns_total": 18609
+  },
+  "unlabeled": {
+    "by_act": {
+      "focus": 3948,
+      "generic": 2092,
+      "probing": 1914,
+      "telling": 1012
+    },
+    "by_split": {
+      "train": 8879,
+      "validation": 87
+    },
+    "count": 8966
+  }
+}
