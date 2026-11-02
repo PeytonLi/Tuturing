@@ -208,3 +208,95 @@ def action_label(action_id: int) -> tuple[str, str, str]:
     move_index, rest = divmod(action_id, 9)
     difficulty_index, pace_index = divmod(rest, 3)
     return MOVES[move_index], DIFFICULTIES[difficulty_index], PACES[pace_index]
+
+
+ASSESSED_MOVES = {"PROBE", "PRACTICE", "CHALLENGE", "CHECK_MASTERY"}
+TEACHING_MOVES = {"HINT", "EXPLAIN_CONCEPT", "WORKED_EXAMPLE"}
+
+
+class RulesFastReadyStrategist(RulesStrategist):
+    """Rules variant that treats a concept as ready after clean early answers.
+
+    While a concept has no wrong or assisted answers yet, items are posed at medium or
+    harder. Once the first ``ready_after`` assessed answers on it are unassisted and
+    correct at medium or hard, it checks mastery or challenges instead of teaching.
+    One wrong answer after a clean correct one, with no misconception signal, counts as a
+    slip and asks for one more clean answer; any other wrong or assisted answer hands the
+    concept back to the default rules.
+    """
+
+    policy_version = "rules_fastready_v1"
+
+    def __init__(self, ready_after: int = 2) -> None:
+        self.ready_after = ready_after
+        self.concepts: dict[str, dict] = {}
+        self.last: tuple[str, str, str, int, int, int] | None = None
+
+    def _counts(self, context: dict, concept_id: str) -> tuple[int, int]:
+        index = _target_index(concept_id)
+        concepts = context.get("concepts") or []
+        if index is None or index >= len(concepts):
+            return 0, 0
+        entry = concepts[index]
+        return int(entry.get("independent_correct", 0)), int(entry.get("independent_incorrect", 0))
+
+    def _observe(self, context: dict) -> None:
+        if self.last is None:
+            return
+        concept_id, move, difficulty, correct, incorrect, hint_level = self.last
+        state = self.concepts.setdefault(concept_id, {"clean": True, "strong": 0, "slips": 0})
+        now_correct, now_incorrect = self._counts(context, concept_id)
+        if move in TEACHING_MOVES or hint_level > 0:
+            state["clean"] = False
+        elif now_incorrect > incorrect:
+            misconceptions = context.get("misconceptions") or []
+            if isinstance(misconceptions, dict):
+                misconceptions = list(misconceptions.values())
+            signal = max((float(value) for value in misconceptions), default=0.0)
+            if state["slips"] == 0 and state["strong"] >= 1 and signal < 0.5:
+                state["slips"] = 1
+            else:
+                state["clean"] = False
+        elif move in ASSESSED_MOVES:
+            if now_correct > correct and difficulty in {"medium", "hard"}:
+                state["strong"] += 1
+            elif now_correct <= correct:
+                state["clean"] = False
+
+    def act(self, observation: list[float], mask: list[bool], context: dict) -> int:
+        self._observe(context)
+        concept_id = str(context.get("current_concept_id"))
+        state = self.concepts.setdefault(concept_id, {"clean": True, "strong": 0, "slips": 0})
+        action = None
+        pace = str(context.get("pace_preference", "normal"))
+        if pace not in PACES:
+            pace = "normal"
+        if state["clean"] and not context.get("skip_diagnostic_due"):
+            mastery = float(context.get("mastery", 0.35))
+            if state["strong"] >= self.ready_after + state["slips"]:
+                if context.get("current_certified"):
+                    difficulty, moves = "hard", ("CHALLENGE", "CHECK_MASTERY", "PRACTICE")
+                else:
+                    difficulty, moves = "medium", ("CHECK_MASTERY", "CHALLENGE", "PRACTICE")
+            else:
+                difficulty = "hard" if mastery >= 0.75 else "medium"
+                moves = ("PROBE",) if context.get("no_diagnostic_yet") else ("PRACTICE",)
+                moves = (*moves, "PROBE", "PRACTICE", "CHECK_MASTERY")
+            for move in moves:
+                candidate = encode_strategist(move, difficulty, pace)
+                if _valid(mask, candidate):
+                    action = candidate
+                    break
+        if action is None:
+            action = super().act(observation, mask, context)
+        move, difficulty, _ = action_label(action)
+        correct, incorrect = self._counts(context, concept_id)
+        self.last = (
+            concept_id,
+            move,
+            difficulty,
+            correct,
+            incorrect,
+            int(context.get("hint_level", 0)) if move == "HINT" else 0,
+        )
+        return action

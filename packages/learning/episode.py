@@ -30,6 +30,7 @@ from packages.policies.rules import (
     AlwaysHintStrategist,
     AlwaysWorkedExampleStrategist,
     RandomStrategist,
+    RulesFastReadyStrategist,
     RulesNavigator,
     RulesStrategist,
 )
@@ -669,6 +670,8 @@ def run_episode(
     if strategist is None:
         if strategist_name == "rules":
             strategist = RulesStrategist()
+        elif strategist_name == "rules_fastready":
+            strategist = RulesFastReadyStrategist()
         elif strategist_name == "random":
             strategist = RandomStrategist(episode_seed)
         elif strategist_name == "always_hint":
