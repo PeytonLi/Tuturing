@@ -1,15 +1,25 @@
 {
-  "accepted": 30,
+  "accepted": 371,
   "dataset_id": "original_v1",
   "deduplication": {
     "mathdial": {
-      "status": "skipped"
+      "compared": "every reply, plus learner messages of at least 6 words; shorter messages such as bare numbers or acknowledgements are expected to coincide and are skipped",
+      "mathdial_texts": 29944,
+      "max_similarity": 0.286,
+      "rejected_ids": [],
+      "short_messages_skipped": 219,
+      "status": "compared"
     },
     "method": "exact reply match; normalized match after casefolding, masking numbers and stripping punctuation; near-duplicate when word 3-gram Jaccard is at least 0.85; earlier example_id wins",
-    "nearest_neighbour_buckets": {}
+    "nearest_neighbour_buckets": {
+      "at_least_0.5": 33,
+      "at_least_0.6": 11,
+      "at_least_0.7": 3,
+      "at_least_0.8": 1
+    }
   },
-  "generator": "tools.response.build_original_sft v1",
-  "records_total": 30,
+  "generator": "tools.response.build_original_sft v1.1",
+  "records_total": 371,
   "rejected": 0,
   "rejected_by_reason": {},
   "rejections": []
