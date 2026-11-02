@@ -33,5 +33,20 @@
     "wall_seconds": 13.3,
     "cost_usd": 0.0,
     "cost_basis": "CPU only on the dev VM"
+  },
+  "strategist_bc_fidelity": {
+    "wall_seconds": null,
+    "cost_usd": 0.0,
+    "cost_basis": "CPU only on the dev VM"
+  },
+  "strategist_bc_fidelity_data": {
+    "wall_seconds": null,
+    "cost_usd": 0.0,
+    "cost_basis": "CPU only on the dev VM"
+  },
+  "strategist_bc_fidelity_wide": {
+    "wall_seconds": null,
+    "cost_usd": 0.0,
+    "cost_basis": "CPU only on the dev VM"
   }
 }

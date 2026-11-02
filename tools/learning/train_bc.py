@@ -54,6 +54,39 @@ def returns_for_result(result, gamma: float) -> list[float]:
     return discounted_episode_returns(transitions, gamma)
 
 
+def _batch_losses(model, observations, masks, actions, value_targets):
+    logits, values = model(torch.as_tensor(observations, dtype=torch.float32))
+    logits = model.mask_logits(logits, torch.as_tensor(masks, dtype=torch.bool))
+    targets = torch.as_tensor(actions, dtype=torch.long)
+    value_targets = torch.as_tensor(value_targets, dtype=torch.float32)
+    policy_loss = torch.nn.functional.cross_entropy(logits, targets)
+    value_loss = torch.nn.functional.mse_loss(values, value_targets)
+    return policy_loss, value_loss
+
+
+def train_epoch(model, optimizer, observations, masks, actions, value_targets, batch_size, rng):
+    order = list(range(len(actions)))
+    rng.shuffle(order)
+    total = 0.0
+    count = 0
+    for start in range(0, len(order), batch_size):
+        indexes = order[start : start + batch_size]
+        policy_loss, value_loss = _batch_losses(
+            model,
+            [observations[i] for i in indexes],
+            [masks[i] for i in indexes],
+            [actions[i] for i in indexes],
+            [value_targets[i] for i in indexes],
+        )
+        loss = policy_loss + value_loss
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        total += float(loss.detach()) * len(indexes)
+        count += len(indexes)
+    return total / max(1, count)
+
+
 class LabelingStrategist:
     """Acts with `actor` (or the teacher when actor is None) and records the teacher's label."""
 
@@ -123,7 +156,8 @@ def collect(job: dict, episodes: int, workers: int, cache: bool) -> list[dict]:
     cache_path = None
     if cache and job.get("state_dict") is None:
         key = json.dumps(
-            {k: v for k, v in job.items() if k not in {"state_dict", "hidden"}}, sort_keys=True
+            {k: v for k, v in job.items() if k not in {"state_dict", "hidden", "run_id"}},
+            sort_keys=True,
         )
         digest = hashlib.sha1(f"{key}|{episodes}".encode()).hexdigest()[:16]
         cache_path = ROOT / "experiments/learning/runs/_bc_cache" / f"{digest}.pkl"
