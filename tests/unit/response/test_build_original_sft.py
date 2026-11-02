@@ -3,6 +3,8 @@ from pathlib import Path
 
 import pytest
 
+from packages.learning.content.templates.families import FAMILIES
+from packages.learning.episode import _problem_stem
 from packages.response.validate import run_checks
 from tools.response.build_original_sft import (
     DEFAULT_RECORDS_DIR,
@@ -108,6 +110,43 @@ def test_learner_answers_are_graded_by_b(split_manifest, validators):
     assert example["plan"]["response_context"]["last_student_message"] == "i got 1/2"
 
 
+def test_an_answer_may_refer_to_the_item_shown_earlier(split_manifest, validators):
+    names = load_concept_names()
+    family = FAMILIES["c01_teach_01"]
+    earlier = family.sample(2)
+    stem = _problem_stem(family, earlier)
+    shown = [{"role": "tutor", "text": f"Try this one: {stem}"}]
+    record = _record(
+        learner_type="correct",
+        answer={"kind": "correct", "format": "fraction", "seed": 2},
+        message="{answer}",
+        dialogue=shown,
+        reply="Noted. Now a fresh one with no help: {stem} Give it a try.",
+    )
+    example, meta = build_example(record, split_manifest, names, validators)
+    answer = earlier["answer"]
+    assert meta["learner_answer"] == f"{answer.numerator}/{answer.denominator}"
+    assert example["plan"]["content"]["problem_stem"] != stem
+    assert stem in example["prompt"][1]["content"]
+    mismatched = _record(
+        learner_type="correct",
+        answer={"kind": "correct", "format": "fraction"},
+        message="{answer}",
+        dialogue=shown,
+        reply="Noted. Now a fresh one with no help: {stem} Give it a try.",
+    )
+    with pytest.raises(RecordError, match="other than the one last shown"):
+        build_example(mismatched, split_manifest, names, validators)
+    unshown = _record(
+        learner_type="correct",
+        answer={"kind": "correct", "format": "fraction", "seed": 2},
+        message="{answer}",
+        reply="Noted. Now a fresh one with no help: {stem} Give it a try.",
+    )
+    with pytest.raises(RecordError, match="needs that item's stem"):
+        build_example(unshown, split_manifest, names, validators)
+
+
 def test_assessment_families_and_wrong_attack_split_are_rejected(split_manifest, validators):
     names = load_concept_names()
     with pytest.raises(RecordError, match="reserved"):
@@ -159,3 +198,5 @@ def test_committed_records_all_build(tmp_path):
             assert example["reviewer_status"] == "pending"
             assert example["action_label_source"] == "synthetic"
             assert example["split"] == split
+            rendered = json.dumps([example["prompt"], example["completion"]])
+            assert "{n}" not in rendered and "{d}" not in rendered and "{stem}" not in rendered

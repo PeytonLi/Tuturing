@@ -38,7 +38,7 @@ from packages.response.validate import VALIDATOR_VERSION, run_checks
 from packages.simulator.response_adapter import realize_plan
 
 ROOT = Path(__file__).resolve().parents[2]
-GENERATOR_VERSION = "tools.response.build_original_sft v1"
+GENERATOR_VERSION = "tools.response.build_original_sft v1.1"
 SOURCE_ID = "original_v1"
 INSTRUCTIONS_VERSION = "instructions_v1"
 GENERATING_MODEL = {
@@ -56,6 +56,8 @@ CHECK_NAMES = (
     "length_valid", "question_count_valid",
 )
 PLACEHOLDER = re.compile(r"\{([a-z][a-z0-9_]*)\}")
+# Mirrors the teaching-item stem written by packages.learning.episode._problem_stem.
+ITEM_STEM = re.compile(r"has (\d+) favorable outcomes? out of (\d+) equally likely outcomes")
 PHRASE_FRACTION = re.compile(r"\b(\d+)\s+(?:out of|in|over|of)\s+(\d+)\b")
 WORKED_EXAMPLE = re.compile(
     r"has (\d+) favorable sections out of (\d+)\. The answer is (\d+)/(\d+)\."
@@ -70,6 +72,7 @@ WORD_FRACTIONS = {
     Fraction(1, 10): ("a tenth", "one tenth"),
 }
 NEAR_DUPLICATE_THRESHOLD = 0.85
+MIN_COMPARED_MESSAGE_WORDS = 6
 DEFAULT_RECORDS_DIR = "data/response/original_v1"
 DEFAULT_OUT_DIR = "data/sft/original_v1"
 DEFAULT_MANIFEST = "data/manifests/response/original_v1.json"
@@ -138,6 +141,10 @@ def answer_value(spec, family, instance):
     answer = instance["answer"]
     if kind == "correct":
         return answer
+    if kind == "count_favorable":
+        return Fraction(instance["numerator"])
+    if kind == "count_total":
+        return Fraction(instance["denominator"])
     if kind == "arithmetic":
         value = answer + Fraction(1, int(spec.get("k", 3)))
         return value if value != answer else answer + Fraction(1, 3)
@@ -146,9 +153,34 @@ def answer_value(spec, family, instance):
     raise RecordError(f"unknown answer kind {kind}")
 
 
+def answered_instance(spec, family, instance):
+    """Return the item an answer spec refers to: the record's item, or an earlier one by seed."""
+    if spec.get("seed") is None:
+        return instance
+    earlier = family.sample(int(spec["seed"]))
+    if earlier["answer"] >= 1:
+        raise RecordError("the answered item's answer is not below one; choose another seed")
+    return earlier
+
+
+def last_item_shown(dialogue):
+    """Return (numerator, denominator) of the last teaching item a tutor turn stated, or None."""
+    shown = None
+    for turn in dialogue:
+        if turn["role"] != "tutor":
+            continue
+        for match in ITEM_STEM.finditer(turn["text"]):
+            shown = (int(match.group(1)), int(match.group(2)))
+    return shown
+
+
 def format_answer(value, fmt, instance):
     if fmt == "fraction":
         return f"{value.numerator}/{value.denominator}"
+    if fmt == "integer":
+        if value.denominator != 1:
+            raise RecordError(f"{value} is not an integer")
+        return str(value.numerator)
     if fmt == "unreduced":
         if value != instance["answer"]:
             raise RecordError("unreduced format is only defined for the correct answer")
@@ -212,7 +244,7 @@ def answer_text(fraction):
     return f"{fraction.numerator}/{fraction.denominator}"
 
 
-def build_plan(record, family, instance, split_manifest, names):
+def build_plan(record, family, instance, split_manifest, names, previous_step=None):
     split = family.split
     scenario = {
         "scenario_id": split_manifest["plan_envelope_scenarios"][split][0],
@@ -245,7 +277,7 @@ def build_plan(record, family, instance, split_manifest, names):
         active_item=active_item,
         beliefs={},
         hint_level=hint_level,
-        previous_step=record.get("previous_step"),
+        previous_step=previous_step,
         assessment_independent=bool(record.get("independent", False)),
         actor_eligible=not reveal,
         forced_answer=reveal,
@@ -352,16 +384,21 @@ def build_example(record, split_manifest, names, validators):
 
     prior_answers = {}
     for name, spec in (record.get("prior_answers") or {}).items():
+        spec_instance = answered_instance(spec, family, instance)
         prior_answers[name] = format_answer(
-            answer_value(spec, family, instance), spec.get("format", "fraction"), instance
+            answer_value(spec, family, spec_instance),
+            spec.get("format", "fraction"),
+            spec_instance,
         )
     learner_answer = None
+    answered = None
     answer_spec = record.get("answer")
     learner_type = record["learner_type"]
     if answer_spec is not None:
-        value = answer_value(answer_spec, family, instance)
-        learner_answer = format_answer(value, answer_spec.get("format", "fraction"), instance)
-        grade = grade_answer(learner_answer, instance, family)
+        answered = answered_instance(answer_spec, family, instance)
+        value = answer_value(answer_spec, family, answered)
+        learner_answer = format_answer(value, answer_spec.get("format", "fraction"), answered)
+        grade = grade_answer(learner_answer, answered, family)
         expected_grade = "correct" if answer_spec["kind"] == "correct" else "incorrect"
         if grade != expected_grade:
             raise RecordError(
@@ -379,13 +416,28 @@ def build_example(record, split_manifest, names, validators):
     elif learner_type.startswith("incorrect") or learner_type.endswith("correct"):
         raise RecordError(f"learner_type {learner_type} needs an answer spec")
 
-    plan = build_plan(record, family, instance, split_manifest, names)
+    item_context = {
+        "n": instance["numerator"], "d": instance["denominator"], "kind": family.item_kind,
+    }
+    previous_step = record.get("previous_step")
+    if previous_step is not None:
+        previous_step = render(previous_step, item_context, "previous_step")
+    plan = build_plan(record, family, instance, split_manifest, names, previous_step)
     context = placeholder_context(record, family, instance, plan, learner_answer, prior_answers)
     message = render(record["message"], context, "message")
     dialogue = [
         {"role": turn["role"], "text": render(turn["text"], context, "dialogue")}
         for turn in record.get("dialogue") or []
     ]
+    rendered_texts = [message, *(turn["text"] for turn in dialogue), json.dumps(plan["content"])]
+    if any(PLACEHOLDER.search(text) for text in rendered_texts):
+        raise RecordError("an unrendered placeholder survived in the plan or dialogue")
+    if answered is not None:
+        shown = last_item_shown(dialogue)
+        if shown is not None and shown != (answered["numerator"], answered["denominator"]):
+            raise RecordError("the learner's answer is for an item other than the one last shown")
+        if answer_spec.get("seed") is not None and shown is None:
+            raise RecordError("an answer to an earlier item needs that item's stem in the dialogue")
     if message.strip():
         if not dialogue or dialogue[-1] != {"role": "student", "text": message}:
             dialogue.append({"role": "student", "text": message})
@@ -397,6 +449,8 @@ def build_example(record, split_manifest, names, validators):
         "qualified_misconception_summary": record.get("misconception_summary"),
     }
     reply = render(record["reply"], context, "reply")
+    if PLACEHOLDER.search(reply):
+        raise RecordError("an unrendered placeholder survived in the reply")
 
     schema_errors = [error.message for error in validators["plan"].iter_errors(plan)]
     schema_errors.extend(validate_plan_rules(plan))
@@ -461,6 +515,7 @@ def build_example(record, split_manifest, names, validators):
         "learner_answer": learner_answer,
         "attack_group": attack_group,
         "pair": record.get("pair"),
+        "tags": sorted(record.get("tags") or []),
         "words": len(reply.split()),
         "response_checks": checks,
     }
@@ -560,13 +615,15 @@ def _compare_with_mathdial(kept, mathdial_dir):
             index[gram].append(position)
     rejected_ids = []
     best_overall = 0.0
+    short_messages_skipped = 0
     for example, _ in kept:
-        for text in (
-            example["completion"][0]["content"],
-            example["plan"]["response_context"]["last_student_message"],
-        ):
-            if not text.strip():
-                continue
+        message = example["plan"]["response_context"]["last_student_message"]
+        candidates_to_check = [example["completion"][0]["content"]]
+        if len(normalize_for_dedup(message).split()) >= MIN_COMPARED_MESSAGE_WORDS:
+            candidates_to_check.append(message)
+        elif message.strip():
+            short_messages_skipped += 1
+        for text in candidates_to_check:
             norm = normalize_for_dedup(text)
             if norm in normalized:
                 rejected_ids.append(example["example_id"])
@@ -581,6 +638,10 @@ def _compare_with_mathdial(kept, mathdial_dir):
     return {
         "status": "compared",
         "mathdial_texts": len(texts),
+        "compared": "every reply, plus learner messages of at least "
+        f"{MIN_COMPARED_MESSAGE_WORDS} words; shorter messages such as bare numbers or "
+        "acknowledgements are expected to coincide and are skipped",
+        "short_messages_skipped": short_messages_skipped,
         "max_similarity": round(best_overall, 3),
         "rejected_ids": rejected_ids,
     }
@@ -593,6 +654,9 @@ def _coverage(metas):
         counts[key] = dict(sorted(Counter(meta[key] for meta in metas).items()))
     counts["attack_group"] = dict(sorted(Counter(
         meta["attack_group"] for meta in metas if meta["attack_group"]
+    ).items()))
+    counts["tags"] = dict(sorted(Counter(
+        tag for meta in metas for tag in meta["tags"]
     ).items()))
     counts["reveal_allowed"] = sum(meta["reveal_allowed"] for meta in metas)
     counts["move_by_split"] = {
@@ -870,7 +934,8 @@ def build(records_dir, out_dir, manifest_path, rejections_path, cases_path, revi
             "Loaded authored records and the frozen split manifest.",
             "Sampled each item with B's family sampler and solved it with B's solver.",
             "Built each TeachingPlan with B's plan builder and applied the listed normalizations.",
-            "Graded every learner answer with B's grader and error generators.",
+            "Graded every learner answer with B's grader and error generators against the item "
+            "the dialogue last showed.",
             "Validated plans against learning_v1, plan rules and B's response stub.",
             "Ran the six response checks, solver agreement and phrase disclosure on every reply.",
             "Validated every example against the SFTExample schema.",
@@ -883,7 +948,7 @@ def build(records_dir, out_dir, manifest_path, rejections_path, cases_path, revi
         "examples": [
             {key: meta[key] for key in (
                 "example_id", "split", "concept_id", "family", "seed", "move", "difficulty",
-                "pace", "learner_type", "attack_group", "pair", "words",
+                "pace", "learner_type", "attack_group", "pair", "tags", "words",
             )}
             for meta in metas
         ],
