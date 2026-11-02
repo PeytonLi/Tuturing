@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "plan_id": "plan_fx_check_0007",
+  "session_id": "sess_fx_check_0007",
+  "trace_id": "trace_fx_check_0007",
+  "based_on_state_version": 9,
+  "option_id": "option_fx_check_0007",
+  "navigation_action": {"action_id": 1, "operation": "STAY", "target_concept_id": "C02"},
+  "teaching_action": {"action_id": 58, "move": "CHECK_MASTERY", "difficulty": "medium", "pace": "normal"},
+  "actor_eligible": true,
+  "concept_id": "C02",
+  "goal_concept_id": "C02",
+  "problem_instance_id": "problem_fx_check_0007",
+  "template_family_id": "family_fx_check_0007",
+  "assessment_mode": "independent",
+  "assistance": "none",
+  "content_bundle_id": "bundle_fx_check_0007",
+  "content": {
+    "concept_name": "Probability bounds and equally likely outcomes",
+    "goal_name": "Find a probability",
+    "problem_stem": "A box contains 4 red and 6 blue tiles. One tile is drawn at random. What is the probability of drawing blue?",
+    "approved_facts": ["For equally likely outcomes, count favorable outcomes and all outcomes."],
+    "permitted_hint": null,
+    "worked_example": null,
+    "reveal_solution": null,
+    "previous_step": null
+  },
+  "constraints": {
+    "reveal_allowed": false,
+    "max_words": 150,
+    "max_questions": 1,
+    "must_request_student_attempt": true,
+    "forbidden_answer_fingerprints": ["3/5", "0.6", "60%"]
+  },
+  "response_context": {
+    "last_student_message": "Okay, I will try independently.",
+    "recent_dialogue": [{"role": "student", "text": "Okay, I will try independently."}],
+    "qualified_misconception_summary": null
+  },
+  "versions": {
+    "graph": "graph_proto_v1",
+    "content": "content_proto_v1",
+    "state_estimator": "state_proto_v1",
+    "navigator": "navigator_proto_v1",
+    "strategist": "strategist_proto_v1",
+    "mask": "mask_proto_v1",
+    "feature": "feature_proto_v1"
+  },
+  "expires_at": "2099-01-01T00:00:00Z"
+}
