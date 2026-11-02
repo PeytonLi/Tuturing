@@ -63,7 +63,7 @@ Observe returns either `{kind: "plan", teaching_plan: ...}` or
 held-out validation/test families remain reserved. Items persist their family and sample seed.
 Plan counters, rather than delivered turn counts, identify reservations and sampled instances.
 The rules runtime defaults to `work/learning.sqlite3` under the existing ignored `work/` directory.
-Callers must create its parent directory before opening that path.
+The store creates its parent directory automatically, including when used without the HTTP server.
 
 `PROBE` and `CHECK_MASTERY` are independent assessments in this runtime; requested answers cannot
 reveal an independent assessment. Both extractor assistance and committed-plan assistance gate BKT.
@@ -74,3 +74,16 @@ accepted evidence, but unsuccessful operations are not cached. Exact successful 
 take precedence over the ended-session guard; fresh mutations on ended sessions are rejected.
 Idempotency conflicts precede lookup of a different, potentially unknown session in a reused key's
 body. No HTTP or Person A implementation is included.
+
+## 2026-11-02 — Internal learning HTTP hand-off
+
+**Source:** Follow-up Person B learning-service handoff in this agent session.
+
+The stdlib HTTP server authenticates before reading any body. Missing or invalid trace IDs are
+authentication failures (401), as requested. Error correlation IDs use `unknown` when absent or
+invalid so even rejected requests receive contract-valid Error records. Unknown GET/POST routes
+return 422 `INVALID_SCHEMA`. Successful requests return 200, including session creation.
+POSTs require a nonempty ASCII Idempotency-Key of at most 128 characters. Chunked requests are not
+supported; POSTs require Content-Length and at most 65,536 bytes of finite JSON. The server closes
+each response connection, so an unread rejected body cannot become the next request.
+`docs/learning_service.md` records a real local transport run with a development-only token.
