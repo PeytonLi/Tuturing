@@ -610,9 +610,25 @@ def call_model(entry, model, messages, keys, *, urlopen=None, sleep=time.sleep):
 # Results
 
 
+def fine_tuned_model(entry):
+    """The model ID an entry's ``fine_tuned`` block names in its models file, or None.
+
+    ``tools.response.openai_sft fetch`` writes the file (keys ``final``, ``epoch_N`` and,
+    after ``select``, ``selected``), so configs need no edit after training.
+    """
+    spec = entry.get("fine_tuned")
+    if not spec:
+        return None
+    path = Path(spec["models_file"])
+    if not path.exists():
+        return None
+    value = json.loads(path.read_text(encoding="utf-8")).get(spec["key"])
+    return value if isinstance(value, str) and value else None
+
+
 def decoding_id(entry):
     identity = {
-        "model": (entry.get("adapter") or {}).get("model")
+        "model": fine_tuned_model(entry) or (entry.get("adapter") or {}).get("model")
         or (entry.get("deployment") or {}).get("base_model") or entry.get("model"),
         "provider": entry.get("provider"),
         "decoding": entry.get("decoding") or {},
@@ -809,6 +825,10 @@ def readiness(entry, ctx, *, managing=False):
             return False, "skipped: adapter.model is not set (train the adapter first)"
         if not managing:
             return False, "skipped: adapter entries run only with --manage-deployment"
+    if entry.get("fine_tuned") and fine_tuned_model(entry) is None:
+        spec = entry["fine_tuned"]
+        return False, (f"skipped: no {spec['key']} model in {spec['models_file']} yet "
+                       "(train, then run openai_sft fetch)")
     return True, "ready"
 
 
@@ -837,8 +857,13 @@ def active_deployment_model(entry, ctx):
 
 
 def resolve_model(entry, ctx, template=None):
-    """Fill ``{deployment}`` (and ``{adapter}``) in the entry's model string."""
+    """Fill ``{deployment}``, ``{adapter}`` or ``{fine_tuned}`` in the entry's model string."""
     model = template or entry.get("model")
+    if entry.get("fine_tuned"):
+        resolved = fine_tuned_model(entry)
+        if resolved is None:
+            raise BenchmarkError(f"{entry['id']}: the fine-tuned model is not available yet")
+        return (model or "{fine_tuned}").replace("{fine_tuned}", resolved)
     owner = deployment_owner(entry, ctx.config)
     if owner is not None:
         name = active_deployment_model(owner, ctx)

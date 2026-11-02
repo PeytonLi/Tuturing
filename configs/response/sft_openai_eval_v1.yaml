@@ -1,0 +1,128 @@
+# Option B validation comparison and checkpoint selection (PRD 13.5): gpt-4.1-mini prompt
+# only versus the fine-tuned model and its epoch checkpoints, through the benchmark harness
+# and validator_v2. No deployment: fine-tuned models are served by OpenAI per token.
+#   uv run python -m tools.response.benchmark --config configs/response/sft_openai_eval_v1.yaml plan
+#   ... run --models <id> --pilot 3, then run --models <id>   (paid entries need a pilot)
+# Fine-tuned entries read their model ID from models.json, written by
+# `tools.response.openai_sft fetch`; until then they are skipped with a reason.
+# Validation sets only; the probability test set is in sft_openai_test_v1.yaml.
+benchmark_id: response_sft_openai_v1_eval
+run_dir: experiments/response/sft_openai_v1/runs/full   # shares the full run's ledger
+report_dir: experiments/response/sft_openai_v1/eval
+keys_file: ~/.config/tuturing/llm.env
+spend_cap_env: TUTURING_BENCH_SPEND_CAP_USD
+spend_cap_usd: 40
+chars_per_token_estimate: 3.0
+estimate_safety_factor: 1.3
+min_subsample_cases: 20
+order_seed: 0
+
+case_sets:
+  - name: validation
+    format: jsonl
+    path: experiments/response/sft_smoke_v1/validation_cases_v1.jsonl
+    source: original_v1 validation split (55)
+  - name: b_fixtures
+    format: plan_dir
+    path: contracts/fixtures/learning/valid
+    source: Person B valid TeachingPlan fixtures (8 moves plus the protected check)
+  - name: smoke
+    format: jsonl
+    path: evaluation/response/smoke_cases_v1.jsonl
+    source: Person A synthetic eight-move smoke suite
+
+review:
+  cases: 40
+  seed: 23
+
+# Decoding as the merged responder accepts it (responder.decoding: token_param, temperature,
+# reasoning_effort): gpt-4.1-mini is not a reasoning model, so reasoning_effort is left
+# out, temperature 0 is greedy, and max_completion_tokens carries the PRD 14.1 cap of 384.
+x-decoding: &decoding
+  temperature: 0
+  max_tokens: 384
+  token_param: max_completion_tokens
+x-fine-tuned-pricing: &ft_pricing
+  basis: tokens
+  input_usd_per_mtok: 0.80
+  cached_input_usd_per_mtok: 0.20
+  output_usd_per_mtok: 3.20
+  source: https://developers.openai.com/api/docs/pricing (Fine-tuning, standard, gpt-4.1-mini)
+  checked: 2026-11-02
+  verified: true
+
+models:
+  - id: fallback
+    label: Deterministic fallback (floor)
+    provider: fallback
+
+  - id: gpt-4.1-mini-base
+    label: gpt-4.1-mini, prompt only (base of the fine-tune)
+    provider: openai_compatible
+    base_url: https://api.openai.com/v1
+    model: gpt-4.1-mini-2025-04-14
+    api_key_env: OPENAI_API_KEY
+    concurrency: 4
+    timeout_s: 120
+    decoding: *decoding
+    reasoning: {setting: not applicable (no reasoning)}
+    pricing:
+      basis: tokens
+      input_usd_per_mtok: 0.40
+      cached_input_usd_per_mtok: 0.10
+      output_usd_per_mtok: 1.60
+      source: https://developers.openai.com/api/docs/pricing
+      checked: 2026-11-02
+      verified: true
+
+  - id: gpt-4.1-mini-sft-full-final
+    label: gpt-4.1-mini fine-tuned on mix_v1, final (epoch 3)
+    provider: openai_compatible
+    base_url: https://api.openai.com/v1
+    model: "{fine_tuned}"
+    fine_tuned: {models_file: experiments/response/sft_openai_v1/runs/full/models.json, key: final}
+    api_key_env: OPENAI_API_KEY
+    concurrency: 4
+    timeout_s: 120
+    decoding: *decoding
+    reasoning: {setting: not applicable (no reasoning)}
+    pricing: *ft_pricing
+
+  - id: gpt-4.1-mini-sft-full-epoch1
+    label: gpt-4.1-mini fine-tuned on mix_v1, epoch 1 checkpoint
+    provider: openai_compatible
+    base_url: https://api.openai.com/v1
+    model: "{fine_tuned}"
+    fine_tuned: {models_file: experiments/response/sft_openai_v1/runs/full/models.json, key: epoch_1}
+    api_key_env: OPENAI_API_KEY
+    concurrency: 4
+    timeout_s: 120
+    decoding: *decoding
+    reasoning: {setting: not applicable (no reasoning)}
+    pricing: *ft_pricing
+
+  - id: gpt-4.1-mini-sft-full-epoch2
+    label: gpt-4.1-mini fine-tuned on mix_v1, epoch 2 checkpoint
+    provider: openai_compatible
+    base_url: https://api.openai.com/v1
+    model: "{fine_tuned}"
+    fine_tuned: {models_file: experiments/response/sft_openai_v1/runs/full/models.json, key: epoch_2}
+    api_key_env: OPENAI_API_KEY
+    concurrency: 4
+    timeout_s: 120
+    decoding: *decoding
+    reasoning: {setting: not applicable (no reasoning)}
+    pricing: *ft_pricing
+
+  - id: gpt-4.1-mini-sft-smoke-final
+    label: gpt-4.1-mini fine-tuned on original_v1 only (optional smoke run)
+    provider: openai_compatible
+    base_url: https://api.openai.com/v1
+    model: "{fine_tuned}"
+    fine_tuned: {models_file: experiments/response/sft_openai_v1/runs/smoke/models.json, key: final}
+    api_key_env: OPENAI_API_KEY
+    concurrency: 4
+    timeout_s: 120
+    decoding: *decoding
+    reasoning: {setting: not applicable (no reasoning)}
+    pricing: *ft_pricing

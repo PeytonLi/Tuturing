@@ -1,0 +1,49 @@
+# Option B single test run (PRD 18.4): only the model selected on validation, once, on the
+# 55 frozen probability test cases. `openai_sft select` writes models.json["selected"];
+# until then the entry is skipped. Do not iterate after seeing these results.
+#   uv run python -m tools.response.benchmark --config configs/response/sft_openai_test_v1.yaml \
+#     run --models gpt-4.1-mini-sft-selected --pilot 3
+#   ... run --models gpt-4.1-mini-sft-selected
+# Prompt-only numbers already on main for this set (benchmark_v1, validator_v2): fallback
+# 55/55, gpt-6.1-sol 33/55, Qwen3.8-27B 19/55 delivered as model.
+benchmark_id: response_sft_openai_v1_test
+run_dir: experiments/response/sft_openai_v1/runs/full   # shares the full run's ledger
+report_dir: experiments/response/sft_openai_v1/test
+keys_file: ~/.config/tuturing/llm.env
+spend_cap_env: TUTURING_BENCH_SPEND_CAP_USD
+spend_cap_usd: 40
+chars_per_token_estimate: 3.0
+estimate_safety_factor: 1.3
+min_subsample_cases: 55          # all or nothing: the test set is never subsampled
+order_seed: 0
+
+case_sets:
+  - name: probability_test
+    format: jsonl
+    path: evaluation/response/probability_cases_v1.jsonl
+    source: Person A original probability test cases (55, frozen)
+
+review:
+  cases: 20
+  seed: 29
+
+models:
+  - id: gpt-4.1-mini-sft-selected
+    label: gpt-4.1-mini fine-tuned, the checkpoint selected on validation
+    provider: openai_compatible
+    base_url: https://api.openai.com/v1
+    model: "{fine_tuned}"
+    fine_tuned: {models_file: experiments/response/sft_openai_v1/runs/full/models.json, key: selected}
+    api_key_env: OPENAI_API_KEY
+    concurrency: 4
+    timeout_s: 120
+    decoding: {temperature: 0, max_tokens: 384, token_param: max_completion_tokens}
+    reasoning: {setting: not applicable (no reasoning)}
+    pricing:
+      basis: tokens
+      input_usd_per_mtok: 0.80
+      cached_input_usd_per_mtok: 0.20
+      output_usd_per_mtok: 3.20
+      source: https://developers.openai.com/api/docs/pricing (Fine-tuning, standard, gpt-4.1-mini)
+      checked: 2026-11-02
+      verified: true
