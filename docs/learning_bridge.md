@@ -67,15 +67,25 @@ move, item changed, answer disclosed, validator failure, fallback used, rejected
 draft, extractor disagreement and rejected verbalizer. Extractor disagreement is
 an interpretation flag, not automatically a tutor-content fidelity failure.
 
-Every flagged turn from either arm goes to `<output>.traces.jsonl.gz`; all turns
-also go to `<output>.turns.jsonl.gz` for replay/audit. These contain only simulated
-student text. JSON and Markdown contain counts and artifact SHA-256 hashes.
+Only turns with a `CRITICAL_FLAGS` flag from either arm require G8 review and go
+to `<output>.traces.jsonl.gz`. Fallback use and rejected drafts remain informational
+counts: alone they do not require review. These files contain only simulated text.
+If the full critical file exceeds 1,000,000 compressed bytes, the committed file is
+a deterministic hash-ranked sample of up to 200 critical turns per run. JSON records
+the sample and full SHA-256 hashes and row counts. Sampling never reduces the G8
+review requirement: reviewers must still cover the full critical set.
+
+Full per-turn dumps are never written beside the committed report. They are stored
+under the gitignored `experiments/learning/evals/bridge/<sha256>.turns.jsonl.gz`;
+JSON records only their SHA-256. An oversized full critical file is retained there
+as `<sha256>.traces.jsonl.gz`, using the full hash recorded in JSON. Do not add
+these ignored audit files to Git.
 Read traces with `gzip -dc <output>.traces.jsonl.gz`. For example, decompress into
 an editor and review the actual plan, reply and extraction, not just the flag.
 
 G8 (PRD line 1152) is PASS only for at least 300 explicitly unsealed **test**
 pairs with at least one delivered model/repaired-model reply in **each** text
-episode, all flagged traces human-reviewed, no reviewed
+episode, all critical-flagged traces human-reviewed, no reviewed
 critical failures, and mean(text gain - structured gain) >= -0.02. Reports publish
 1,000-resample percentile bootstrap 95% intervals for each path and for the
 paired episode differences. A CI crossing -0.02 is published, not an additional
@@ -83,7 +93,7 @@ PRD gate. Intervals condition on the simulator, policy and scenario bank, not
 human effects or new scenario families. Automated critical candidates are not
 human verdicts: reviewers can dismiss documented false positives.
 
-A review file is a JSON array with one entry for every flagged trace:
+A review file is a JSON array with one entry for every critical-flagged trace:
 
 ```json
 [
@@ -103,6 +113,13 @@ Pass `--review-file work/reviews.json` on an identical run. The hash binds revie
 to the inspected plan/text/outcome; mismatched, duplicate and foreign reviews are
 refused. A rerun with a nondeterministic hosted backend can differ; re-review it
 instead of reusing stale decisions. There is no automatic human approval.
+
+The misconception-deactivation fidelity guard does not change the default
+structured episode (`text_path=None`): the primary stub coefficient is 1.0 and
+its failure probability is zero, so every structured teaching turn has positive
+fidelity. Regression tests compare gains, move histograms and private diagnostics
+against the pre-guard function for two fixed seeds. Nondefault simulator configs
+with zero fidelity are intentionally subject to the guard even without a text path.
 
 ## Local runs (no network, no credentials)
 

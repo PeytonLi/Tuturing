@@ -37,6 +37,9 @@ FIDELITY_RULE = (
     "seeded failure process apply. Extraction disagreement is separate from content fidelity."
 )
 FAILURE_TYPES = sorted(CRITICAL_FLAGS | {"fallback_used", "draft_validator_failure"})
+AUDIT_DIR = ROOT / "experiments/learning/evals/bridge"
+MAX_REVIEW_BYTES = 1_000_000
+MAX_REVIEW_SAMPLE_PER_RUN = 200
 
 
 def _hash(path: str | Path) -> str:
@@ -54,8 +57,12 @@ def _estimate(values, seed):
     }
 
 
+def requires_review(row: dict) -> bool:
+    return any(row["flags"].get(name, False) for name in CRITICAL_FLAGS)
+
+
 def g8_gate(report: dict, records: list[dict], reviews: list[dict] | None = None) -> dict:
-    flags = {(row["path"], row["trace_id"]): row for row in records if any(row["flags"].values())}
+    flags = {(row["path"], row["trace_id"]): row for row in records if requires_review(row)}
     reviews_by_key = {}
     for row in reviews or []:
         key = (row["path"], row["trace_id"])
@@ -66,8 +73,8 @@ def g8_gate(report: dict, records: list[dict], reviews: list[dict] | None = None
         if row.get("review_hash") != flags[key]["review_hash"] or not row.get("reviewed_by"):
             raise ValueError("review must bind to review_hash and name a human reviewer")
         reviews_by_key[key] = row
-    complete = reviews is not None and set(reviews_by_key) == set(flags)
-    critical = sum(any(row["flags"].get(name, False) for name in CRITICAL_FLAGS) for row in records)
+    complete = set(reviews_by_key) == set(flags)
+    critical = sum(requires_review(row) for row in records)
     reviewed_critical = sum(row["critical_failure"] for row in reviews_by_key.values())
     outcome_ok = report["paired_text_minus_structured"]["mean"] >= -0.02
     eligible = report["split"] == "test" and report["episodes"] >= 300
@@ -87,7 +94,7 @@ def g8_gate(report: dict, records: list[dict], reviews: list[dict] | None = None
         "flagged_traces": len(flags),
         "automated_critical_candidates": critical,
         "human_critical_failures": reviewed_critical,
-        "rule": "test pairs>=300 AND real replies AND all flagged traces reviewed with no "
+        "rule": "test pairs>=300 AND real replies AND all critical-flagged traces reviewed with no "
         "critical failures AND text-minus-structured mean>=-0.02; "
         "publish paired bootstrap 95% CI (CI crossing -0.02 is reported, not an extra PRD gate)",
     }
@@ -310,8 +317,8 @@ def markdown(report: dict) -> str:
             lines += [f"{name} G8 detail: `{json.dumps(row['g8'], sort_keys=True)}`", ""]
     lines += [
         "Validation and stub/fake runs are engineering checks, not G8 clearance. "
-        "Fallback and rejected drafts are flagged for review but do not by themselves "
-        "mean the delivered content is critical. Human reviews are absent unless supplied.",
+        "Only critical flags require review. Fallback and rejected-draft counts are "
+        "informational; alone they never require review. Human reviews are absent unless supplied.",
         "Bootstrap resamples paired episode differences (1,000 resamples); repeated seeds within "
         "the same scenario are not new scenario families. Intervals are conditional on this "
         "scenario bank, simulator and policy, not intervals for human effects.",
@@ -321,19 +328,54 @@ def markdown(report: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
+def _compressed_rows(rows: list[dict]) -> bytes:
+    content = "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows)
+    return gzip.compress(content.encode(), mtime=0)
+
+
 def write_report(output: str | Path, report: dict, records: list[dict]) -> None:
     prefix = Path(output)
     prefix.parent.mkdir(parents=True, exist_ok=True)
-    artifacts = {}
-    for suffix, rows in (
-        ("turns", records),
-        ("traces", [row for row in records if any(row["flags"].values())]),
-    ):
-        path = prefix.with_suffix(f".{suffix}.jsonl.gz")
-        content = "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows)
-        path.write_bytes(gzip.compress(content.encode(), mtime=0))
-        artifacts[suffix] = {"path": str(path), "sha256": _hash(path), "rows": len(rows)}
-    report["artifacts"] = artifacts
+    AUDIT_DIR.mkdir(parents=True, exist_ok=True)
+    turns = _compressed_rows(records)
+    turns_hash = hashlib.sha256(turns).hexdigest()
+    (AUDIT_DIR / f"{turns_hash}.turns.jsonl.gz").write_bytes(turns)
+
+    critical = [row for row in records if requires_review(row)]
+    content = _compressed_rows(critical)
+    full_hash = hashlib.sha256(content).hexdigest()
+    sampled = len(content) > MAX_REVIEW_BYTES
+    rows = critical
+    if sampled:
+        (AUDIT_DIR / f"{full_hash}.traces.jsonl.gz").write_bytes(content)
+        ordered = sorted(
+            critical,
+            key=lambda row: (
+                row.get("run", "run"),
+                hashlib.sha256(json.dumps(row, sort_keys=True).encode()).digest(),
+            ),
+        )
+        counts = Counter()
+        rows = []
+        for row in ordered:
+            run = row.get("run", "run")
+            if counts[run] < MAX_REVIEW_SAMPLE_PER_RUN:
+                rows.append(row)
+                counts[run] += 1
+        content = _compressed_rows(rows)
+    path = prefix.with_suffix(".traces.jsonl.gz")
+    path.write_bytes(content)
+    report["artifacts"] = {
+        "turns": {"sha256": turns_hash},
+        "traces": {
+            "path": str(path),
+            "sha256": _hash(path),
+            "rows": len(rows),
+            "full_sha256": full_hash,
+            "full_rows": len(critical),
+            "sampled": sampled,
+        },
+    }
     prefix.with_suffix(".json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     prefix.with_suffix(".md").write_text(markdown(report))
 

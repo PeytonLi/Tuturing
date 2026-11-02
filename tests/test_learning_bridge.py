@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import gzip
+import hashlib
+import inspect
 import json
 from copy import deepcopy
 from dataclasses import asdict
@@ -20,7 +22,15 @@ from packages.simulator.text_path import (
     TextPath,
 )
 from packages.simulator.text_renderer import render_checked, render_student_outcome
-from tools.learning.bridge import MODEL_CONFIG, STUB_CONFIG, g8_gate, main, run_bridge, write_report
+from tools.learning.bridge import (
+    MODEL_CONFIG,
+    STUB_CONFIG,
+    g8_gate,
+    main,
+    requires_review,
+    run_bridge,
+    write_report,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -41,6 +51,65 @@ def test_stub_bridge_is_exactly_paired():
     assert report["g8"]["status"] == "FAIL"
     assert report["g8"]["eligible_test_budget"] is False
     assert records and all("sampled_outcome" in row for row in records)
+
+
+def test_stub_review_set_is_only_extractor_disagreements():
+    report, records = run_bridge(episodes=4)
+    required = [row for row in records if requires_review(row)]
+    disagreements = [row for row in records if row["flags"]["extractor_disagreement"]]
+    assert required == disagreements
+    assert any(row["flags"]["fallback_used"] for row in records)
+    assert report["g8"]["flagged_traces"] == len(disagreements) < len(records)
+    reviews = [
+        {
+            "path": row["path"],
+            "trace_id": row["trace_id"],
+            "review_hash": row["review_hash"],
+            "reviewed": True,
+            "reviewed_by": "Fixture reviewer",
+            "critical_failure": False,
+        }
+        for row in required
+    ]
+    assert g8_gate(report, records, reviews)["review_complete"]
+
+
+@pytest.mark.parametrize("seed", [7, 20250115])
+def test_default_structured_episode_matches_pre_fidelity_guard(monkeypatch, seed):
+    import packages.learning.episode as episode
+    import packages.simulator.student as student
+
+    guarded = student.apply_teaching_effect
+    original = inspect.getsource(guarded)
+    legacy = original.replace(
+        'if fidelity > 0 and move in {"EXPLAIN_CONCEPT", "WORKED_EXAMPLE"}:',
+        'if move in {"EXPLAIN_CONCEPT", "WORKED_EXAMPLE"}:',
+    )
+    assert legacy != original
+    namespace = dict(vars(student))
+    exec(compile(legacy, "<pre-fidelity-guard>", "exec"), namespace)
+    scenario = next(row for row in load_scenarios() if row["split"] == "validation")
+    monkeypatch.setattr(episode, "apply_teaching_effect", namespace["apply_teaching_effect"])
+    before = run_episode(scenario, episode_seed=seed, text_path=None)
+
+    observed = []
+
+    def checked(*args, **kwargs):
+        assert kwargs["content_realized"] is True
+        assert kwargs["config"]["content_fidelity"] == {
+            "stub_realized": 1.0,
+            "failure_probability": 0.0,
+        }
+        observed.append(kwargs["move"])
+        return guarded(*args, **kwargs)
+
+    monkeypatch.setattr(episode, "apply_teaching_effect", checked)
+    after = run_episode(scenario, episode_seed=seed, text_path=None)
+    assert observed
+    assert {"EXPLAIN_CONCEPT", "WORKED_EXAMPLE"} & set(observed)
+    assert before.gain == after.gain
+    assert before.move_histogram == after.move_histogram
+    assert before.private_diagnostics == after.private_diagnostics
 
 
 @pytest.mark.parametrize("answer", [None, "0.6", "3/5", "-2", "100"])
@@ -300,17 +369,64 @@ def test_g8_requires_test_pairs_real_replies_and_human_review():
     )
     with pytest.raises(ValueError, match="review_hash"):
         g8_gate(report, [record], [{**review, "review_hash": "stale"}])
+    informational = {
+        **record,
+        "trace_id": "informational",
+        "flags": {"fallback_used": True, "draft_validator_failure": True},
+    }
+    gate = g8_gate(report, [informational])
+    assert gate["flagged_traces"] == 0
+    assert gate["review_complete"] and gate["status"] == "PASS"
+    assert g8_gate(report, [record, informational], [review])["status"] == "PASS"
+    with pytest.raises(ValueError, match="flagged trace"):
+        g8_gate(report, [informational], [{**review, "trace_id": "informational"}])
 
 
-def test_report_saves_every_flagged_turn(tmp_path):
+def test_report_saves_only_critical_turns_and_keeps_full_dump_outside_output(tmp_path, monkeypatch):
+    import tools.learning.bridge as bridge
+
+    monkeypatch.setattr(bridge, "AUDIT_DIR", tmp_path / "audit")
     report, records = run_bridge(episodes=1, reply="degraded", degradation_rate=1)
     output = tmp_path / "smoke"
     write_report(output, report, records)
     with gzip.open(output.with_suffix(".traces.jsonl.gz"), "rt") as source:
         traces = [json.loads(line) for line in source]
-    assert len(traces) == sum(any(row["flags"].values()) for row in records)
+    assert len(traces) == sum(requires_review(row) for row in records)
+    assert all(requires_review(row) for row in traces)
     assert any(row["flags"]["wrong_move"] for row in traces)
     assert all(row["plan"] and row["response"] and row["review_hash"] for row in traces)
     saved = json.loads(output.with_suffix(".json").read_text())
     assert saved["label"] == "SIMULATED"
     assert saved["g8"]["status"] == "FAIL"
+    turns = saved["artifacts"]["turns"]
+    assert set(turns) == {"sha256"}
+    full = bridge.AUDIT_DIR / f"{turns['sha256']}.turns.jsonl.gz"
+    assert hashlib.sha256(full.read_bytes()).hexdigest() == turns["sha256"]
+    with gzip.open(full, "rt") as source:
+        assert [json.loads(line) for line in source] == json.loads(json.dumps(records))
+    assert not output.with_suffix(".turns.jsonl.gz").exists()
+    assert not saved["artifacts"]["traces"]["sampled"]
+
+
+def test_large_critical_dump_is_sampled_deterministically_per_run(tmp_path, monkeypatch):
+    import tools.learning.bridge as bridge
+
+    monkeypatch.setattr(bridge, "AUDIT_DIR", tmp_path / "audit")
+    monkeypatch.setattr(bridge, "MAX_REVIEW_BYTES", 1)
+    records = [
+        {"run": run, "path": "text", "trace_id": str(index), "flags": {"wrong_move": True}}
+        for run in ("stub", "degraded")
+        for index in range(220)
+    ]
+    report = {"label": "SIMULATED", "smokes": {}}
+    write_report(tmp_path / "first", report, records)
+    first = deepcopy(report["artifacts"]["traces"])
+    with gzip.open(first["path"], "rt") as source:
+        rows = [json.loads(line) for line in source]
+    assert first["sampled"] and first["full_rows"] == 440
+    assert first["rows"] == 400
+    assert all(sum(row["run"] == run for row in rows) == 200 for run in ("stub", "degraded"))
+    full = bridge.AUDIT_DIR / f"{first['full_sha256']}.traces.jsonl.gz"
+    assert hashlib.sha256(full.read_bytes()).hexdigest() == first["full_sha256"]
+    write_report(tmp_path / "second", report, list(reversed(records)))
+    assert report["artifacts"]["traces"]["sha256"] == first["sha256"]
