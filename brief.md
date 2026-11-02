@@ -72,6 +72,8 @@ Peyton merged the internal learning service to `main` on 2026-11-02 (`apps/learn
 
 Xueming decided that Person A owns SFT (capture `cap_7c410346-63da-4a59-9c26-bfb410856672`): the SFT configs, trainer, SFT data and D09/D10 are maintained by Xueming's agents from now on. Xueming asked to be sent review items as each workstream finishes.
 
+- Smoke SFT (started 2026-11-02, branch `a/sft-smoke-v1`): Qwen3.8-27B LoRA on Fireworks, `original_v1` train split only, $20 budget, evaluated on the validation split against prompt-only Qwen.
+
 ## Open questions
 
 - D10 on `main` switches the SFT base model from the PRD's `Qwen/Qwen2.5-7B-Instruct` to `Qwen/Qwen3.8-27B` on Fireworks and is marked "accepted by lead". PRD 2.3 makes SFT selection a Person A decision, so Xueming should confirm it. Fireworks lists the model as LoRA-tunable but not serverless, so benchmarking and serving it need a paid dedicated deployment. Xueming approved a deployment so the benchmark can include it; the results are meant to inform this decision.
