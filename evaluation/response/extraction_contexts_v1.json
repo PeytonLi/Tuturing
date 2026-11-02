@@ -1,0 +1,1870 @@
+{
+ "a_bag_red": {
+  "context_id": "a_bag_red",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 4,
+   "concept_id": "C02",
+   "constraints": {
+    "forbidden_answer_fingerprints": [
+     "3/10",
+     "0.3",
+     "30%"
+    ],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "A probability is a ratio of favorable outcomes to all equally likely outcomes."
+    ],
+    "concept_name": "Probability bounds and equally likely outcomes",
+    "goal_name": "Find probabilities from equally likely outcomes",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "A bag contains 3 red and 7 blue counters. One counter is drawn at random. What is the probability of drawing red?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle_fx_practice_0001",
+   "expires_at": "2099-01-01T00:00:00Z",
+   "goal_concept_id": "C02",
+   "navigation_action": {
+    "action_id": 1,
+    "operation": "STAY",
+    "target_concept_id": "C02"
+   },
+   "option_id": "option_fx_practice_0001",
+   "plan_id": "plan_fx_practice_0001",
+   "problem_instance_id": "problem_fx_practice_0001",
+   "response_context": {
+    "last_student_message": "I am ready to try one.",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": [
+     {
+      "role": "student",
+      "text": "I am ready to try one."
+     }
+    ]
+   },
+   "schema_version": "1.0",
+   "session_id": "sess_fx_practice_0001",
+   "teaching_action": {
+    "action_id": 40,
+    "difficulty": "medium",
+    "move": "PRACTICE",
+    "pace": "normal"
+   },
+   "template_family_id": "family_fx_practice_0001",
+   "trace_id": "trace_fx_practice_0001",
+   "versions": {
+    "content": "content_proto_v1",
+    "feature": "feature_proto_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_proto_v1",
+    "navigator": "navigator_proto_v1",
+    "state_estimator": "state_proto_v1",
+    "strategist": "strategist_proto_v1"
+   }
+  },
+  "provenance": "Person A response plan fixture tests/unit/response/fixtures/plans/practice.json",
+  "reference_answer": "3/10"
+ },
+ "a_cond_probe": {
+  "context_id": "a_cond_probe",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 5,
+   "concept_id": "C06",
+   "constraints": {
+    "forbidden_answer_fingerprints": [
+     "1/2",
+     "0.5",
+     "50%"
+    ],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": false,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [],
+    "concept_name": "Conditional probability",
+    "goal_name": "Explain conditional probability",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "If P(A and B)=2/5 and P(B)=4/5, what is P(A given B)?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle_fx_probe_0005",
+   "expires_at": "2099-01-01T00:00:00Z",
+   "goal_concept_id": "C06",
+   "navigation_action": {
+    "action_id": 5,
+    "operation": "STAY",
+    "target_concept_id": "C06"
+   },
+   "option_id": "option_fx_probe_0005",
+   "plan_id": "plan_fx_probe_0005",
+   "problem_instance_id": "problem_fx_probe_0005",
+   "response_context": {
+    "last_student_message": "I think the condition matters.",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": [
+     {
+      "role": "student",
+      "text": "I think the condition matters."
+     }
+    ]
+   },
+   "schema_version": "1.0",
+   "session_id": "sess_fx_probe_0005",
+   "teaching_action": {
+    "action_id": 4,
+    "difficulty": "medium",
+    "move": "PROBE",
+    "pace": "normal"
+   },
+   "template_family_id": "family_fx_probe_0005",
+   "trace_id": "trace_fx_probe_0005",
+   "versions": {
+    "content": "content_proto_v1",
+    "feature": "feature_proto_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_proto_v1",
+    "navigator": "navigator_proto_v1",
+    "state_estimator": "state_proto_v1",
+    "strategist": "strategist_proto_v1"
+   }
+  },
+  "provenance": "Person A response plan fixture tests/unit/response/fixtures/plans/probe.json",
+  "reference_answer": "1/2"
+ },
+ "a_jar_challenge": {
+  "context_id": "a_jar_challenge",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 8,
+   "concept_id": "C08",
+   "constraints": {
+    "forbidden_answer_fingerprints": [
+     "4/49"
+    ],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [],
+    "concept_name": "Multiplication rule and probability trees",
+    "goal_name": "Use a probability tree",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "A jar contains 2 green and 5 yellow beads. One bead is drawn and replaced before a second draw. What is the probability both beads are green?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle_fx_challenge_0006",
+   "expires_at": "2099-01-01T00:00:00Z",
+   "goal_concept_id": "C08",
+   "navigation_action": {
+    "action_id": 7,
+    "operation": "STAY",
+    "target_concept_id": "C08"
+   },
+   "option_id": "option_fx_challenge_0006",
+   "plan_id": "plan_fx_challenge_0006",
+   "problem_instance_id": "problem_fx_challenge_0006",
+   "response_context": {
+    "last_student_message": "I want a harder one.",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": [
+     {
+      "role": "student",
+      "text": "I want a harder one."
+     }
+    ]
+   },
+   "schema_version": "1.0",
+   "session_id": "sess_fx_challenge_0006",
+   "teaching_action": {
+    "action_id": 52,
+    "difficulty": "hard",
+    "move": "CHALLENGE",
+    "pace": "normal"
+   },
+   "template_family_id": "family_fx_challenge_0006",
+   "trace_id": "trace_fx_challenge_0006",
+   "versions": {
+    "content": "content_proto_v1",
+    "feature": "feature_proto_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_proto_v1",
+    "navigator": "navigator_proto_v1",
+    "state_estimator": "state_proto_v1",
+    "strategist": "strategist_proto_v1"
+   }
+  },
+  "provenance": "Person A response plan fixture tests/unit/response/fixtures/plans/challenge.json; difficulty set to hard (action 52) so the plan passes B's plan rules",
+  "reference_answer": "4/49"
+ },
+ "a_spinner_hint": {
+  "context_id": "a_spinner_hint",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "hint",
+   "based_on_state_version": 2,
+   "concept_id": "C03",
+   "constraints": {
+    "forbidden_answer_fingerprints": [
+     "7/10",
+     "0.7"
+    ],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": false,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "A complement contains outcomes outside the event."
+    ],
+    "concept_name": "Complements",
+    "goal_name": "Find a complement",
+    "permitted_hint": "Count the sections that are not blue, then compare that count to all sections.",
+    "previous_step": null,
+    "problem_stem": "A spinner has 10 equal sections, and 3 are blue. What is the probability of landing on a section that is not blue?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle_fx_hint_0002",
+   "expires_at": "2099-01-01T00:00:00Z",
+   "goal_concept_id": "C03",
+   "navigation_action": {
+    "action_id": 2,
+    "operation": "STAY",
+    "target_concept_id": "C03"
+   },
+   "option_id": "option_fx_hint_0002",
+   "plan_id": "plan_fx_hint_0002",
+   "problem_instance_id": "problem_fx_hint_0002",
+   "response_context": {
+    "last_student_message": "Can I get a small clue?",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": [
+     {
+      "role": "student",
+      "text": "Can I get a small clue?"
+     }
+    ]
+   },
+   "schema_version": "1.0",
+   "session_id": "sess_fx_hint_0002",
+   "teaching_action": {
+    "action_id": 13,
+    "difficulty": "medium",
+    "move": "HINT",
+    "pace": "normal"
+   },
+   "template_family_id": "family_fx_hint_0002",
+   "trace_id": "trace_fx_hint_0002",
+   "versions": {
+    "content": "content_proto_v1",
+    "feature": "feature_proto_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_proto_v1",
+    "navigator": "navigator_proto_v1",
+    "state_estimator": "state_proto_v1",
+    "strategist": "strategist_proto_v1"
+   }
+  },
+  "provenance": "Person A response plan fixture tests/unit/response/fixtures/plans/hint.json",
+  "reference_answer": "7/10"
+ },
+ "a_tiles_check": {
+  "context_id": "a_tiles_check",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "independent",
+   "assistance": "none",
+   "based_on_state_version": 9,
+   "concept_id": "C02",
+   "constraints": {
+    "forbidden_answer_fingerprints": [
+     "3/5",
+     "0.6",
+     "60%"
+    ],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "For equally likely outcomes, count favorable outcomes and all outcomes."
+    ],
+    "concept_name": "Probability bounds and equally likely outcomes",
+    "goal_name": "Find a probability",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "A box contains 4 red and 6 blue tiles. One tile is drawn at random. What is the probability of drawing blue?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle_fx_check_0007",
+   "expires_at": "2099-01-01T00:00:00Z",
+   "goal_concept_id": "C02",
+   "navigation_action": {
+    "action_id": 1,
+    "operation": "STAY",
+    "target_concept_id": "C02"
+   },
+   "option_id": "option_fx_check_0007",
+   "plan_id": "plan_fx_check_0007",
+   "problem_instance_id": "problem_fx_check_0007",
+   "response_context": {
+    "last_student_message": "Okay, I will try independently.",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": [
+     {
+      "role": "student",
+      "text": "Okay, I will try independently."
+     }
+    ]
+   },
+   "schema_version": "1.0",
+   "session_id": "sess_fx_check_0007",
+   "teaching_action": {
+    "action_id": 58,
+    "difficulty": "medium",
+    "move": "CHECK_MASTERY",
+    "pace": "normal"
+   },
+   "template_family_id": "family_fx_check_0007",
+   "trace_id": "trace_fx_check_0007",
+   "versions": {
+    "content": "content_proto_v1",
+    "feature": "feature_proto_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_proto_v1",
+    "navigator": "navigator_proto_v1",
+    "state_estimator": "state_proto_v1",
+    "strategist": "strategist_proto_v1"
+   }
+  },
+  "provenance": "Person A response plan fixture tests/unit/response/fixtures/plans/check_mastery.json",
+  "reference_answer": "3/5"
+ },
+ "b_c01_dice": {
+  "context_id": "b_c01_dice",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C01",
+   "constraints": {
+    "forbidden_answer_fingerprints": [],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "A sample space lists all possible outcomes.",
+     "An event is a set of outcomes."
+    ],
+    "concept_name": "Outcomes events and sample spaces",
+    "goal_name": "Outcomes events and sample spaces",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "A dice experiment has 2 favorable outcomes out of 8 equally likely outcomes. Find the probability.",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-eval-b_c01_dice",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C01",
+   "navigation_action": {
+    "action_id": 0,
+    "operation": "STAY",
+    "target_concept_id": "C01"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-eval-b_c01_dice",
+   "problem_instance_id": "item-eval-b_c01_dice",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-eval-b_c01_dice",
+   "teaching_action": {
+    "action_id": 40,
+    "difficulty": "medium",
+    "move": "PRACTICE",
+    "pace": "normal"
+   },
+   "template_family_id": "c01_teach_01",
+   "trace_id": "trace-eval-b_c01_dice",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "problem rendered from B template family c01_teach_01 seed 7 (packages.learning.episode._problem_stem at 782f948), placed in B fixture contracts/fixtures/learning/valid/teaching_plan_practice.json; no fingerprints, as B's episode builder issues plans",
+  "reference_answer": "1/4"
+ },
+ "b_c02_coins": {
+  "context_id": "b_c02_coins",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C02",
+   "constraints": {
+    "forbidden_answer_fingerprints": [],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "A probability is between zero and one.",
+     "Equally likely outcomes have equal probability."
+    ],
+    "concept_name": "Probability bounds and equally likely outcomes",
+    "goal_name": "Probability bounds and equally likely outcomes",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "A coins experiment has 5 favorable outcomes out of 14 equally likely outcomes. Find the probability.",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-eval-b_c02_coins",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C02",
+   "navigation_action": {
+    "action_id": 1,
+    "operation": "STAY",
+    "target_concept_id": "C02"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-eval-b_c02_coins",
+   "problem_instance_id": "item-eval-b_c02_coins",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-eval-b_c02_coins",
+   "teaching_action": {
+    "action_id": 40,
+    "difficulty": "medium",
+    "move": "PRACTICE",
+    "pace": "normal"
+   },
+   "template_family_id": "c02_teach_02",
+   "trace_id": "trace-eval-b_c02_coins",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "problem rendered from B template family c02_teach_02 seed 5 (packages.learning.episode._problem_stem at 782f948), placed in B fixture contracts/fixtures/learning/valid/teaching_plan_practice.json; no fingerprints, as B's episode builder issues plans",
+  "reference_answer": "5/14"
+ },
+ "b_c03_marbles_hint": {
+  "context_id": "b_c03_marbles_hint",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "none",
+   "assistance": "hint",
+   "based_on_state_version": 1,
+   "concept_id": "C03",
+   "constraints": {
+    "forbidden_answer_fingerprints": [],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "An event and its complement have probabilities that sum to one."
+    ],
+    "concept_name": "Complements",
+    "goal_name": "Complements",
+    "permitted_hint": "Name the event that is not wanted.",
+    "previous_step": null,
+    "problem_stem": "A marbles experiment has 3 favorable outcomes out of 8 equally likely outcomes. Find the probability.",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-eval-b_c03_marbles_hint",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C03",
+   "navigation_action": {
+    "action_id": 2,
+    "operation": "STAY",
+    "target_concept_id": "C03"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-eval-b_c03_marbles_hint",
+   "problem_instance_id": "item-eval-b_c03_marbles_hint",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-eval-b_c03_marbles_hint",
+   "teaching_action": {
+    "action_id": 13,
+    "difficulty": "medium",
+    "move": "HINT",
+    "pace": "normal"
+   },
+   "template_family_id": "c03_teach_03",
+   "trace_id": "trace-eval-b_c03_marbles_hint",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "problem rendered from B template family c03_teach_03 seed 13 (packages.learning.episode._problem_stem at 782f948), placed in B fixture contracts/fixtures/learning/valid/teaching_plan_hint.json; no fingerprints, as B's episode builder issues plans",
+  "reference_answer": "3/8"
+ },
+ "b_c06_table_check": {
+  "context_id": "b_c06_table_check",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "independent",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C06",
+   "constraints": {
+    "forbidden_answer_fingerprints": [],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "Conditional probability restricts the denominator to the condition event."
+    ],
+    "concept_name": "Conditional probability",
+    "goal_name": "Conditional probability",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "A two-way table has 5 outcomes in the intersection and 7 in the relevant group. Find the probability.",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-eval-b_c06_table_check",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C06",
+   "navigation_action": {
+    "action_id": 5,
+    "operation": "STAY",
+    "target_concept_id": "C06"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-eval-b_c06_table_check",
+   "problem_instance_id": "item-eval-b_c06_table_check",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-eval-b_c06_table_check",
+   "teaching_action": {
+    "action_id": 58,
+    "difficulty": "medium",
+    "move": "CHECK_MASTERY",
+    "pace": "normal"
+   },
+   "template_family_id": "c06_assess_02",
+   "trace_id": "trace-eval-b_c06_table_check",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "problem rendered from B template family c06_assess_02 seed 21 (packages.learning.episode._problem_stem at 782f948), placed in B fixture contracts/fixtures/learning/valid/teaching_plan_check_mastery.json; no fingerprints, as B's episode builder issues plans",
+  "reference_answer": "5/7"
+ },
+ "b_c08_dice_probe": {
+  "context_id": "b_c08_dice_probe",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C08",
+   "constraints": {
+    "forbidden_answer_fingerprints": [],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "A path probability is the product of its conditional branch probabilities."
+    ],
+    "concept_name": "Multiplication rule and probability trees",
+    "goal_name": "Multiplication rule and probability trees",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "A dice experiment has 8 favorable outcomes out of 12 equally likely outcomes. Find the probability.",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-eval-b_c08_dice_probe",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C08",
+   "navigation_action": {
+    "action_id": 7,
+    "operation": "STAY",
+    "target_concept_id": "C08"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-eval-b_c08_dice_probe",
+   "problem_instance_id": "item-eval-b_c08_dice_probe",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-eval-b_c08_dice_probe",
+   "teaching_action": {
+    "action_id": 4,
+    "difficulty": "medium",
+    "move": "PROBE",
+    "pace": "normal"
+   },
+   "template_family_id": "c08_teach_01",
+   "trace_id": "trace-eval-b_c08_dice_probe",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "problem rendered from B template family c08_teach_01 seed 6 (packages.learning.episode._problem_stem at 782f948), placed in B fixture contracts/fixtures/learning/valid/teaching_plan_probe.json; no fingerprints, as B's episode builder issues plans",
+  "reference_answer": "2/3"
+ },
+ "b_coin_challenge": {
+  "context_id": "b_coin_challenge",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C01",
+   "constraints": {
+    "forbidden_answer_fingerprints": [],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "A fair coin has two equally likely outcomes."
+    ],
+    "concept_name": "Outcomes and sample spaces",
+    "goal_name": "Outcomes and sample spaces",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "A fair coin is flipped once. What is the probability of heads?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-1",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C01",
+   "navigation_action": {
+    "action_id": 0,
+    "operation": "STAY",
+    "target_concept_id": "C01"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-challenge",
+   "problem_instance_id": "item-1",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-1",
+   "teaching_action": {
+    "action_id": 52,
+    "difficulty": "hard",
+    "move": "CHALLENGE",
+    "pace": "normal"
+   },
+   "template_family_id": "family-1",
+   "trace_id": "trace-1",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "Person B fixture contracts/fixtures/learning/valid/teaching_plan_challenge.json, unchanged",
+  "reference_answer": "1/2"
+ },
+ "b_coin_check": {
+  "context_id": "b_coin_check",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "independent",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C01",
+   "constraints": {
+    "forbidden_answer_fingerprints": [],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "A fair coin has two equally likely outcomes."
+    ],
+    "concept_name": "Outcomes and sample spaces",
+    "goal_name": "Outcomes and sample spaces",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "A fair coin is flipped once. What is the probability of heads?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-1",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C01",
+   "navigation_action": {
+    "action_id": 0,
+    "operation": "STAY",
+    "target_concept_id": "C01"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-check_mastery",
+   "problem_instance_id": "item-1",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-1",
+   "teaching_action": {
+    "action_id": 58,
+    "difficulty": "medium",
+    "move": "CHECK_MASTERY",
+    "pace": "normal"
+   },
+   "template_family_id": "family-1",
+   "trace_id": "trace-1",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "Person B fixture contracts/fixtures/learning/valid/teaching_plan_check_mastery.json, unchanged",
+  "reference_answer": "1/2"
+ },
+ "b_coin_hint": {
+  "context_id": "b_coin_hint",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "none",
+   "assistance": "hint",
+   "based_on_state_version": 1,
+   "concept_id": "C01",
+   "constraints": {
+    "forbidden_answer_fingerprints": [],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "A fair coin has two equally likely outcomes."
+    ],
+    "concept_name": "Outcomes and sample spaces",
+    "goal_name": "Outcomes and sample spaces",
+    "permitted_hint": "List the two outcomes.",
+    "previous_step": null,
+    "problem_stem": "A fair coin is flipped once. What is the probability of heads?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-1",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C01",
+   "navigation_action": {
+    "action_id": 0,
+    "operation": "STAY",
+    "target_concept_id": "C01"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-hint",
+   "problem_instance_id": "item-1",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-1",
+   "teaching_action": {
+    "action_id": 13,
+    "difficulty": "medium",
+    "move": "HINT",
+    "pace": "normal"
+   },
+   "template_family_id": "family-1",
+   "trace_id": "trace-1",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "Person B fixture contracts/fixtures/learning/valid/teaching_plan_hint.json, unchanged",
+  "reference_answer": "1/2"
+ },
+ "b_coin_practice": {
+  "context_id": "b_coin_practice",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C01",
+   "constraints": {
+    "forbidden_answer_fingerprints": [],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "A fair coin has two equally likely outcomes."
+    ],
+    "concept_name": "Outcomes and sample spaces",
+    "goal_name": "Outcomes and sample spaces",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "A fair coin is flipped once. What is the probability of heads?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-1",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C01",
+   "navigation_action": {
+    "action_id": 0,
+    "operation": "STAY",
+    "target_concept_id": "C01"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-practice",
+   "problem_instance_id": "item-1",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-1",
+   "teaching_action": {
+    "action_id": 40,
+    "difficulty": "medium",
+    "move": "PRACTICE",
+    "pace": "normal"
+   },
+   "template_family_id": "family-1",
+   "trace_id": "trace-1",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "Person B fixture contracts/fixtures/learning/valid/teaching_plan_practice.json, unchanged",
+  "reference_answer": "1/2"
+ },
+ "b_coin_probe": {
+  "context_id": "b_coin_probe",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C01",
+   "constraints": {
+    "forbidden_answer_fingerprints": [],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "A fair coin has two equally likely outcomes."
+    ],
+    "concept_name": "Outcomes and sample spaces",
+    "goal_name": "Outcomes and sample spaces",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "A fair coin is flipped once. What is the probability of heads?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-1",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C01",
+   "navigation_action": {
+    "action_id": 0,
+    "operation": "STAY",
+    "target_concept_id": "C01"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-probe",
+   "problem_instance_id": "item-1",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-1",
+   "teaching_action": {
+    "action_id": 4,
+    "difficulty": "medium",
+    "move": "PROBE",
+    "pace": "normal"
+   },
+   "template_family_id": "family-1",
+   "trace_id": "trace-1",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "Person B fixture contracts/fixtures/learning/valid/teaching_plan_probe.json, unchanged",
+  "reference_answer": "1/2"
+ },
+ "b_explain": {
+  "context_id": "b_explain",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "none",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C01",
+   "constraints": {
+    "forbidden_answer_fingerprints": [],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": false,
+    "reveal_allowed": true
+   },
+   "content": {
+    "approved_facts": [
+     "A fair coin has two equally likely outcomes."
+    ],
+    "concept_name": "Outcomes and sample spaces",
+    "goal_name": "Outcomes and sample spaces",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": null,
+    "reveal_solution": "1/2",
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-1",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C01",
+   "navigation_action": {
+    "action_id": 0,
+    "operation": "STAY",
+    "target_concept_id": "C01"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-explain_concept",
+   "problem_instance_id": null,
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-1",
+   "teaching_action": {
+    "action_id": 22,
+    "difficulty": "medium",
+    "move": "EXPLAIN_CONCEPT",
+    "pace": "normal"
+   },
+   "template_family_id": null,
+   "trace_id": "trace-1",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "Person B fixture contracts/fixtures/learning/valid/teaching_plan_explain_concept.json, unchanged",
+  "reference_answer": null
+ },
+ "b_reflect": {
+  "context_id": "b_reflect",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "none",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C01",
+   "constraints": {
+    "forbidden_answer_fingerprints": [],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": false,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "A fair coin has two equally likely outcomes."
+    ],
+    "concept_name": "Outcomes and sample spaces",
+    "goal_name": "Outcomes and sample spaces",
+    "permitted_hint": null,
+    "previous_step": "You listed the sample space.",
+    "problem_stem": null,
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-1",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C01",
+   "navigation_action": {
+    "action_id": 0,
+    "operation": "STAY",
+    "target_concept_id": "C01"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-reflect",
+   "problem_instance_id": null,
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-1",
+   "teaching_action": {
+    "action_id": 67,
+    "difficulty": "medium",
+    "move": "REFLECT",
+    "pace": "normal"
+   },
+   "template_family_id": null,
+   "trace_id": "trace-1",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "Person B fixture contracts/fixtures/learning/valid/teaching_plan_reflect.json, unchanged",
+  "reference_answer": null
+ },
+ "b_worked": {
+  "context_id": "b_worked",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "none",
+   "assistance": "example",
+   "based_on_state_version": 1,
+   "concept_id": "C01",
+   "constraints": {
+    "forbidden_answer_fingerprints": [],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": false,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "A fair coin has two equally likely outcomes."
+    ],
+    "concept_name": "Outcomes and sample spaces",
+    "goal_name": "Outcomes and sample spaces",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": null,
+    "reveal_solution": null,
+    "worked_example": "A different coin has probability 1/2 of tails."
+   },
+   "content_bundle_id": "bundle-1",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C01",
+   "navigation_action": {
+    "action_id": 0,
+    "operation": "STAY",
+    "target_concept_id": "C01"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-worked_example",
+   "problem_instance_id": null,
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-1",
+   "teaching_action": {
+    "action_id": 31,
+    "difficulty": "medium",
+    "move": "WORKED_EXAMPLE",
+    "pace": "normal"
+   },
+   "template_family_id": null,
+   "trace_id": "trace-1",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "Person B fixture contracts/fixtures/learning/valid/teaching_plan_worked_example.json, unchanged",
+  "reference_answer": null
+ },
+ "no_plan": {
+  "context_id": "no_plan",
+  "plan": null,
+  "provenance": "no plan: the learner writes before any committed response",
+  "reference_answer": null
+ },
+ "x_club": {
+  "context_id": "x_club",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C06",
+   "constraints": {
+    "forbidden_answer_fingerprints": [
+     "6/15",
+     "2/5",
+     "0.4",
+     "40%"
+    ],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "Conditional probability restricts the denominator to the condition event."
+    ],
+    "concept_name": "Conditional probability",
+    "goal_name": "Conditional probability",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "In a club of 40 students, 15 play chess, 10 play piano, and 6 play both. A chess player is chosen at random. What is the probability that they also play piano?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-eval-x_club",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C06",
+   "navigation_action": {
+    "action_id": 5,
+    "operation": "STAY",
+    "target_concept_id": "C06"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-eval-x_club",
+   "problem_instance_id": "item-eval-x_club",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-eval-x_club",
+   "teaching_action": {
+    "action_id": 4,
+    "difficulty": "medium",
+    "move": "PROBE",
+    "pace": "normal"
+   },
+   "template_family_id": "family-eval-x_club",
+   "trace_id": "trace-eval-x_club",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "problem authored for this evaluation (synthetic, pending review), placed in B fixture contracts/fixtures/learning/valid/teaching_plan_probe.json",
+  "reference_answer": "2/5"
+ },
+ "x_cold": {
+  "context_id": "x_cold",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C06",
+   "constraints": {
+    "forbidden_answer_fingerprints": [
+     "12/16",
+     "3/4",
+     "0.75",
+     "75%"
+    ],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "Conditional probability restricts the denominator to the condition event."
+    ],
+    "concept_name": "Conditional probability",
+    "goal_name": "Conditional probability",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "In a group of 50 people, 20 have a cold. 12 of the people with a cold have a fever, and 4 people without a cold have a fever. A person with a fever is chosen at random. What is the probability that they have a cold?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-eval-x_cold",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C06",
+   "navigation_action": {
+    "action_id": 5,
+    "operation": "STAY",
+    "target_concept_id": "C06"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-eval-x_cold",
+   "problem_instance_id": "item-eval-x_cold",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-eval-x_cold",
+   "teaching_action": {
+    "action_id": 40,
+    "difficulty": "medium",
+    "move": "PRACTICE",
+    "pace": "normal"
+   },
+   "template_family_id": "family-eval-x_cold",
+   "trace_id": "trace-eval-x_cold",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "problem authored for this evaluation (synthetic, pending review), placed in B fixture contracts/fixtures/learning/valid/teaching_plan_practice.json",
+  "reference_answer": "3/4"
+ },
+ "x_die_even": {
+  "context_id": "x_die_even",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C01",
+   "constraints": {
+    "forbidden_answer_fingerprints": [
+     "1/2",
+     "0.5",
+     "50%"
+    ],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "A sample space lists all possible outcomes.",
+     "An event is a set of outcomes."
+    ],
+    "concept_name": "Outcomes events and sample spaces",
+    "goal_name": "Outcomes events and sample spaces",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "A fair six-sided die is rolled once. What is the probability of rolling an even number?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-eval-x_die_even",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C01",
+   "navigation_action": {
+    "action_id": 0,
+    "operation": "STAY",
+    "target_concept_id": "C01"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-eval-x_die_even",
+   "problem_instance_id": "item-eval-x_die_even",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-eval-x_die_even",
+   "teaching_action": {
+    "action_id": 40,
+    "difficulty": "medium",
+    "move": "PRACTICE",
+    "pace": "normal"
+   },
+   "template_family_id": "family-eval-x_die_even",
+   "trace_id": "trace-eval-x_die_even",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "problem authored for this evaluation (synthetic, pending review), placed in B fixture contracts/fixtures/learning/valid/teaching_plan_practice.json",
+  "reference_answer": "1/2"
+ },
+ "x_marbles_noreplace": {
+  "context_id": "x_marbles_noreplace",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C08",
+   "constraints": {
+    "forbidden_answer_fingerprints": [
+     "3/10",
+     "0.3",
+     "30%"
+    ],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "A path probability is the product of its conditional branch probabilities."
+    ],
+    "concept_name": "Multiplication rule and probability trees",
+    "goal_name": "Multiplication rule and probability trees",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "A bag has 3 red and 2 blue marbles. Two marbles are drawn without replacement. What is the probability that both are red?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-eval-x_marbles_noreplace",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C08",
+   "navigation_action": {
+    "action_id": 7,
+    "operation": "STAY",
+    "target_concept_id": "C08"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-eval-x_marbles_noreplace",
+   "problem_instance_id": "item-eval-x_marbles_noreplace",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-eval-x_marbles_noreplace",
+   "teaching_action": {
+    "action_id": 52,
+    "difficulty": "hard",
+    "move": "CHALLENGE",
+    "pace": "normal"
+   },
+   "template_family_id": "family-eval-x_marbles_noreplace",
+   "trace_id": "trace-eval-x_marbles_noreplace",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "problem authored for this evaluation (synthetic, pending review), placed in B fixture contracts/fixtures/learning/valid/teaching_plan_challenge.json",
+  "reference_answer": "3/10"
+ },
+ "x_marbles_notblue": {
+  "context_id": "x_marbles_notblue",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C03",
+   "constraints": {
+    "forbidden_answer_fingerprints": [
+     "7/10",
+     "0.7",
+     "70%"
+    ],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "An event and its complement have probabilities that sum to one."
+    ],
+    "concept_name": "Complements",
+    "goal_name": "Complements",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "A bag has 5 red, 3 blue and 2 green marbles. One marble is drawn at random. What is the probability that it is not blue?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-eval-x_marbles_notblue",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C03",
+   "navigation_action": {
+    "action_id": 2,
+    "operation": "STAY",
+    "target_concept_id": "C03"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-eval-x_marbles_notblue",
+   "problem_instance_id": "item-eval-x_marbles_notblue",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-eval-x_marbles_notblue",
+   "teaching_action": {
+    "action_id": 40,
+    "difficulty": "medium",
+    "move": "PRACTICE",
+    "pace": "normal"
+   },
+   "template_family_id": "family-eval-x_marbles_notblue",
+   "trace_id": "trace-eval-x_marbles_notblue",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "problem authored for this evaluation (synthetic, pending review), placed in B fixture contracts/fixtures/learning/valid/teaching_plan_practice.json",
+  "reference_answer": "7/10"
+ },
+ "x_rain": {
+  "context_id": "x_rain",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C03",
+   "constraints": {
+    "forbidden_answer_fingerprints": [
+     "13/20",
+     "0.65",
+     "65%"
+    ],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "An event and its complement have probabilities that sum to one."
+    ],
+    "concept_name": "Complements",
+    "goal_name": "Complements",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "The probability that it rains tomorrow is 0.35. What is the probability that it does not rain?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-eval-x_rain",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C03",
+   "navigation_action": {
+    "action_id": 2,
+    "operation": "STAY",
+    "target_concept_id": "C03"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-eval-x_rain",
+   "problem_instance_id": "item-eval-x_rain",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-eval-x_rain",
+   "teaching_action": {
+    "action_id": 40,
+    "difficulty": "medium",
+    "move": "PRACTICE",
+    "pace": "normal"
+   },
+   "template_family_id": "family-eval-x_rain",
+   "trace_id": "trace-eval-x_rain",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "problem authored for this evaluation (synthetic, pending review), placed in B fixture contracts/fixtures/learning/valid/teaching_plan_practice.json",
+  "reference_answer": "13/20"
+ },
+ "x_spinner_thirds": {
+  "context_id": "x_spinner_thirds",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C02",
+   "constraints": {
+    "forbidden_answer_fingerprints": [
+     "1/4",
+     "0.25",
+     "25%"
+    ],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "A probability is between zero and one.",
+     "Equally likely outcomes have equal probability."
+    ],
+    "concept_name": "Probability bounds and equally likely outcomes",
+    "goal_name": "Probability bounds and equally likely outcomes",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "A spinner is half red, and the other half is split equally into blue and green sections. What is the probability of landing on blue?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-eval-x_spinner_thirds",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C02",
+   "navigation_action": {
+    "action_id": 1,
+    "operation": "STAY",
+    "target_concept_id": "C02"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-eval-x_spinner_thirds",
+   "problem_instance_id": "item-eval-x_spinner_thirds",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-eval-x_spinner_thirds",
+   "teaching_action": {
+    "action_id": 40,
+    "difficulty": "medium",
+    "move": "PRACTICE",
+    "pace": "normal"
+   },
+   "template_family_id": "family-eval-x_spinner_thirds",
+   "trace_id": "trace-eval-x_spinner_thirds",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "problem authored for this evaluation (synthetic, pending review), placed in B fixture contracts/fixtures/learning/valid/teaching_plan_practice.json",
+  "reference_answer": "1/4"
+ },
+ "x_spinner_tree": {
+  "context_id": "x_spinner_tree",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C08",
+   "constraints": {
+    "forbidden_answer_fingerprints": [
+     "1/5",
+     "0.2",
+     "20%"
+    ],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "A path probability is the product of its conditional branch probabilities."
+    ],
+    "concept_name": "Multiplication rule and probability trees",
+    "goal_name": "Multiplication rule and probability trees",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "A spinner lands on A with probability 0.4 and on B with probability 0.6. After A, a fair coin is flipped; after B, a fair die is rolled. What is the probability of landing on A and then getting heads?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-eval-x_spinner_tree",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C08",
+   "navigation_action": {
+    "action_id": 7,
+    "operation": "STAY",
+    "target_concept_id": "C08"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-eval-x_spinner_tree",
+   "problem_instance_id": "item-eval-x_spinner_tree",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-eval-x_spinner_tree",
+   "teaching_action": {
+    "action_id": 40,
+    "difficulty": "medium",
+    "move": "PRACTICE",
+    "pace": "normal"
+   },
+   "template_family_id": "family-eval-x_spinner_tree",
+   "trace_id": "trace-eval-x_spinner_tree",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "problem authored for this evaluation (synthetic, pending review), placed in B fixture contracts/fixtures/learning/valid/teaching_plan_practice.json",
+  "reference_answer": "1/5"
+ },
+ "x_two_coins": {
+  "context_id": "x_two_coins",
+  "plan": {
+   "actor_eligible": true,
+   "assessment_mode": "practice",
+   "assistance": "none",
+   "based_on_state_version": 1,
+   "concept_id": "C03",
+   "constraints": {
+    "forbidden_answer_fingerprints": [
+     "3/4",
+     "0.75",
+     "75%"
+    ],
+    "max_questions": 1,
+    "max_words": 150,
+    "must_request_student_attempt": true,
+    "reveal_allowed": false
+   },
+   "content": {
+    "approved_facts": [
+     "An event and its complement have probabilities that sum to one."
+    ],
+    "concept_name": "Complements",
+    "goal_name": "Complements",
+    "permitted_hint": null,
+    "previous_step": null,
+    "problem_stem": "Two fair coins are flipped. What is the probability of getting at least one head?",
+    "reveal_solution": null,
+    "worked_example": null
+   },
+   "content_bundle_id": "bundle-eval-x_two_coins",
+   "expires_at": "2026-11-02T00:00:00Z",
+   "goal_concept_id": "C03",
+   "navigation_action": {
+    "action_id": 2,
+    "operation": "STAY",
+    "target_concept_id": "C03"
+   },
+   "option_id": "option-1",
+   "plan_id": "plan-eval-x_two_coins",
+   "problem_instance_id": "item-eval-x_two_coins",
+   "response_context": {
+    "last_student_message": "",
+    "qualified_misconception_summary": null,
+    "recent_dialogue": []
+   },
+   "schema_version": "1.0",
+   "session_id": "session-eval-x_two_coins",
+   "teaching_action": {
+    "action_id": 40,
+    "difficulty": "medium",
+    "move": "PRACTICE",
+    "pace": "normal"
+   },
+   "template_family_id": "family-eval-x_two_coins",
+   "trace_id": "trace-eval-x_two_coins",
+   "versions": {
+    "content": "content_v1",
+    "feature": "features_v1",
+    "graph": "graph_proto_v1",
+    "mask": "mask_v1",
+    "navigator": "rules_v1",
+    "state_estimator": "bkt_v1",
+    "strategist": "rules_v1"
+   }
+  },
+  "provenance": "problem authored for this evaluation (synthetic, pending review), placed in B fixture contracts/fixtures/learning/valid/teaching_plan_practice.json",
+  "reference_answer": "3/4"
+ }
+}

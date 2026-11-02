@@ -1,0 +1,29 @@
+{
+  "kind": "exchange",
+  "operation": "postTurn",
+  "path_params": {
+    "session_id": "ses-0123456789abcdef01234567"
+  },
+  "headers": {
+    "Authorization": "Bearer <token from TUTOR_PUBLIC_API_TOKENS>"
+  },
+  "request": {
+    "request_id": "req-turn-stale",
+    "expected_state_version": 0,
+    "source_response_id": "response-52f8838b1acbd8d8176ce1a8",
+    "message": "is it 1/2?",
+    "session_id": "ses-0123456789abcdef01234567"
+  },
+  "response": {
+    "status": 409,
+    "body": {
+      "schema_version": "1.0",
+      "request_id": "req-turn-stale",
+      "trace_id": "trc-fixture",
+      "code": "STATE_CONFLICT",
+      "message": "expected_state_version is stale; refresh the session and send a new request",
+      "retryable": false,
+      "current_state_version": 2
+    }
+  }
+}

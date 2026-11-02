@@ -124,3 +124,25 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 **Implementation (commit `e497294`):** responders declare their own delivery label. The template stub says `fallback`, including when its CHECK_MASTERY template goes through the one permitted repair, because a template is a verified fallback realization and never model text (PRD 8.4). Only a language-model responder yields `model` or `repaired`. The runbook and tests were updated; 237 tests pass.
 
+## 2026-11-02 — Qwen3.8-27B benchmark result and the item-substitution gap
+
+**Source:** the benchmark agent's final report; results in `experiments/response/benchmark_v1/` (merge `374758a`).
+
+**Facts:** Qwen3.8-27B ran on all 107 cases from a one-H100 Fireworks deployment on Peyton's account, created at 21:32:51 UTC and verified deleted at 21:36:42 UTC, for at most $0.51 of GPU time. Automated results: 41 of 107 delivered as model, 5 repaired, 61 fallback, 1.2 s median latency. A human read found that it substituted a six-sided die for the issued coin problem on both CHECK_MASTERY fixtures and the CHALLENGE fixture; the automated checks passed because the coin stem contains no digits to anchor the fidelity and math checks. gpt-6.1-sol kept the issued problem in all 17 fixture and smoke cases.
+
+**Consequences (assistant):** an item substitution on a protected check is a critical failure under PRD 14.1, so the validator gets a digit-independent item-fidelity check before any model output is trusted; the response-service agent was tasked with it. The finding weighs on D10, which Xueming has not yet confirmed. The review sheet Xueming is rating was left byte-for-byte unchanged; the 40 Qwen replies were added as a supplement under new labels, which weakens blinding between Qwen and the earlier two systems but not between those two.
+
+## 2026-11-02 — Public API merged; ten-session smoke passes against B's service
+
+**Source:** the public API agent's final report; merge `428bda3`.
+
+**Facts:** the public contract, fixtures, `apps/public_api` and the ten-session smoke workflow are on `main`. The smoke test starts Peyton's real learning service in-process and completed 10 of 10 sessions with byte-identical retries and hashes matching B's records (gate G4, A's side). The agent mapped PRD gaps to existing codes: `request_id` reuse with different content and an in-flight competing request both return `409 STATE_CONFLICT`; unexpected failures return `503 LEARNING_UNAVAILABLE`.
+
+**Open for the owners:** D11 proposes keeping `Error` in A's contract and referencing B's `PublicState` and `SessionEnd`; the public session ID is B's allocated ID because B rejects a client-supplied one, a deviation from PRD 8.1; and four findings about B's service are recorded in D11 for the first integration review rather than patched.
+
+## 2026-11-02 — Evidence extractor v2 merged
+
+**Source:** the extractor agent's final report; merge `e1e0183` (462 tests pass).
+
+**Facts:** the extractor was rewritten as `extractor_rules_v2`, tuned on the development split only, with the test split frozen by hash before tuning. It never emits `correct` or `incorrect`; `confidence` now means answer-commitment confidence (0.9, 0.85, 0.6 or 0), and B's engine drops grades below 0.80, so a learner message with several numbers does not update mastery. Both semantics are to be confirmed with Peyton at the first integration review (PRD 21.3). Two known test failures remain for a later version.
+

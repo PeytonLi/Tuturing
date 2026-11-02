@@ -1,0 +1,9 @@
+{
+  "kind": "schema",
+  "schema": "TurnRequest",
+  "instance": {
+    "request_id": "req",
+    "expected_state_version": 0,
+    "message": "hi"
+  }
+}

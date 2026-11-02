@@ -5,6 +5,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+from apps.public_api.contract import ContractError, validate_public_fixtures
 from packages.learning.plan_rules import validate_plan_rules
 from tools.learning.validate_contracts import load_json
 
@@ -50,6 +51,14 @@ def main() -> None:
     print(
         f"response contracts: {valid_count} valid fixtures and "
         f"{invalid_count} invalid fixtures passed"
+    )
+    try:
+        summary = validate_public_fixtures()
+    except ContractError as error:
+        raise SystemExit(f"public contract: {error}") from error
+    print(
+        f"public contract: {summary.operations} operations, {summary.error_codes} error codes,"
+        f" {summary.valid} valid fixtures and {summary.invalid} invalid fixtures passed"
     )
 
 

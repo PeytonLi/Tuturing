@@ -1,0 +1,29 @@
+{
+  "kind": "exchange",
+  "operation": "createSession",
+  "path_params": {},
+  "headers": {
+    "Authorization": "Bearer <token from TUTOR_PUBLIC_API_TOKENS>",
+    "Idempotency-Key": "req-create-1"
+  },
+  "request": {
+    "request_id": "req-create-1",
+    "goal_concept_id": "C01",
+    "pace_preference": "normal"
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "session_id": "ses-0123456789abcdef01234567",
+      "public_state": {
+        "session_id": "ses-0123456789abcdef01234567",
+        "state_version": 0,
+        "current_concept_id": "C01",
+        "goal_concept_id": "C01",
+        "teaching_turns": 0,
+        "status": "active",
+        "end_reason": null
+      }
+    }
+  }
+}

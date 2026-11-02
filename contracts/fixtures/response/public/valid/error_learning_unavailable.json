@@ -1,0 +1,14 @@
+{
+  "kind": "schema",
+  "schema": "Error",
+  "http_status": 503,
+  "instance": {
+    "schema_version": "1.0",
+    "request_id": "req-error",
+    "trace_id": "trc-fixture",
+    "code": "LEARNING_UNAVAILABLE",
+    "message": "The learning service is unavailable; retry the same request.",
+    "retryable": true,
+    "current_state_version": null
+  }
+}

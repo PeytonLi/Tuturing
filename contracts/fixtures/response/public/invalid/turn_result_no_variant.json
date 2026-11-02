@@ -1,0 +1,7 @@
+{
+  "kind": "schema",
+  "schema": "TurnResult",
+  "instance": {
+    "request_id": "req-turn-1"
+  }
+}

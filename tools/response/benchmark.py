@@ -1036,6 +1036,9 @@ def run_with_deployment(entry, cases, ctx, *, pilot=3):
         )
         if stopped or not remaining:
             return pilot_records
+        if pilot_records and all(r["error"] for r in pilot_records):
+            ctx.out(f"  {entry['id']}: every pilot call failed; stopping before the full run")
+            return pilot_records
         latencies = [r["latency_ms"] for r in pilot_records if r.get("latency_ms")]
         mean_latency_s = (sum(latencies) / len(latencies) / 1000) if latencies else 30.0
         concurrency = max(1, int(entry.get("concurrency", 1)))

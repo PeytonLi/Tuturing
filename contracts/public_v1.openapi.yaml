@@ -1,0 +1,595 @@
+openapi: 3.1.0
+info:
+  title: Tuturing public API
+  version: 1.0.0
+  summary: Public session and turn API of the adaptive probability tutor (contract public_v1).
+  description: |
+    Owner: Person A (PRD 2.2). Reviewer: Person B for every change that affects the learning
+    service. Normative sources: PRD 8.1 to 8.3 (runtime flow and recovery) and 9.4 to 9.5
+    (records, endpoints and errors). Contract placement is proposed in
+    docs/decisions/D11_public_contract_placement.md.
+
+    Conventions
+    - Bodies are JSON (`application/json`, UTF-8). Every object rejects unknown fields. NaN,
+      Infinity and duplicate object keys are rejected.
+    - Limits: a request body is at most 65,536 bytes and a learner message at most 8,000
+      characters (Unicode code points). A larger request receives `422 INVALID_SCHEMA`.
+    - Idempotency: `request_id` is the idempotency key of every POST and is scoped to the
+      authenticated caller. Resending a request with the same `request_id` and the same content
+      returns the stored outcome with an identical body and never repeats a learning update or a
+      response generation. Reusing a `request_id` with different content returns
+      `409 STATE_CONFLICT` with `retryable: false`. The `Idempotency-Key` header is optional; when
+      present it must equal `request_id`.
+    - The path session ID must agree with the optional `session_id` field of a request body.
+    - `retryable: true` in an Error means that resending the identical request with the same
+      `request_id` may succeed later. `retryable: false` means the client must change the request,
+      for example refresh the session with GET and send a new turn with a new `request_id`.
+    - The first turn of a session has `source_response_id: null`; every later turn names the last
+      committed response. Only committed responses are ever returned.
+    - Public results never contain response checks, content hashes, answer fingerprints, hidden
+      plan content (solutions, hints or examples not yet delivered), teaching actions, or private
+      model, prompt, validator, content or policy versions.
+    - `PublicState` and `SessionEnd` are Person B's projections, referenced from
+      `learning_v1.schema.json`. `Error` is defined here.
+  x-tutor-owner: Person A
+  x-tutor-reviewer: Person B
+x-tutor-limits:
+  max_request_bytes: 65536
+  max_message_chars: 8000
+  request_deadline_ms: 10000
+servers:
+  - url: http://127.0.0.1:8080
+    description: Local CPU-only development server (configs/response/public_api_local.yaml).
+security:
+  - bearerAuth: []
+paths:
+  /v1/sessions:
+    post:
+      operationId: createSession
+      summary: Create a tutoring session.
+      description: |
+        Validates the goal and contract version, allocates the public session ID and asks the
+        learning service to initialize the session (PRD 8.1). The first tutor message comes from
+        the first turn (`source_response_id: null`).
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/ContractVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSessionRequest'
+      responses:
+        '201':
+          description: Session created. A retry with the same request_id returns the same body.
+          headers:
+            Tutor-Trace-Id:
+              $ref: '#/components/headers/TraceId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSessionResult'
+        '400':
+          $ref: '#/components/responses/UnsupportedVersion'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/InvalidSchema'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+        '504':
+          $ref: '#/components/responses/DeadlineExceeded'
+  /v1/sessions/{session_id}:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    get:
+      operationId: getSession
+      summary: Read the permitted public state and the committed transcript.
+      parameters:
+        - $ref: '#/components/parameters/ContractVersion'
+      responses:
+        '200':
+          description: Public state and committed transcript.
+          headers:
+            Tutor-Trace-Id:
+              $ref: '#/components/headers/TraceId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionView'
+        '400':
+          $ref: '#/components/responses/UnsupportedVersion'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/InvalidSchema'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/sessions/{session_id}/turns:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    post:
+      operationId: postTurn
+      summary: Send a learner message and receive the committed tutor response or the session end.
+      description: |
+        Flow (PRD 8.2): request cache check, evidence extraction, learning observe-and-plan,
+        response generation and validation, durable staging of the exact response and its hash,
+        learning commit-plan, completion. A retry reuses the reserved plan and the exact staged
+        response; a committed response is never regenerated (PRD 8.3).
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/ContractVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TurnRequest'
+      responses:
+        '200':
+          description: Exactly one of the committed response variant or the session end variant.
+          headers:
+            Tutor-Trace-Id:
+              $ref: '#/components/headers/TraceId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TurnResult'
+        '400':
+          $ref: '#/components/responses/UnsupportedVersion'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/InvalidSchema'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+        '504':
+          $ref: '#/components/responses/DeadlineExceeded'
+  /v1/sessions/{session_id}/stop:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    post:
+      operationId: stopSession
+      summary: Stop the session at the learner's request.
+      description: |
+        Sends an explicit stop request to the learning service, which ends the session and returns
+        its SessionEnd. An undelivered pending plan of the session is canceled first.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/ContractVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StopRequest'
+      responses:
+        '200':
+          description: The session end.
+          headers:
+            Tutor-Trace-Id:
+              $ref: '#/components/headers/TraceId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StopResult'
+        '400':
+          $ref: '#/components/responses/UnsupportedVersion'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/InvalidSchema'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+        '504':
+          $ref: '#/components/responses/DeadlineExceeded'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: |
+        Opaque bearer token. Each configured token is one caller. A session is visible only to the
+        caller that created it; a session ID alone never grants access (PRD 23.1).
+  parameters:
+    SessionId:
+      name: session_id
+      in: path
+      required: true
+      description: Public session ID returned by createSession.
+      schema:
+        $ref: '#/components/schemas/Id'
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: false
+      description: Optional copy of the body's request_id; when present it must equal request_id.
+      schema:
+        $ref: '#/components/schemas/Id'
+    ContractVersion:
+      name: Tutor-Contract-Version
+      in: header
+      required: false
+      description: |
+        Contract version the client was built against. Major version 1 is the only supported
+        version; another major version receives 400 UNSUPPORTED_VERSION, as does a path prefix
+        other than /v1/.
+      schema:
+        type: string
+        pattern: '^[0-9]+(\.[0-9]+){0,2}$'
+  headers:
+    TraceId:
+      description: Trace identifier for log correlation and support requests.
+      schema:
+        $ref: '#/components/schemas/Id'
+    RetryAfter:
+      description: Seconds to wait before retrying.
+      schema:
+        type: integer
+        minimum: 0
+    WwwAuthenticate:
+      description: Bearer challenge.
+      schema:
+        type: string
+  responses:
+    UnsupportedVersion:
+      description: UNSUPPORTED_VERSION.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    Unauthorized:
+      description: UNAUTHORIZED. Missing or unknown bearer token.
+      headers:
+        WWW-Authenticate:
+          $ref: '#/components/headers/WwwAuthenticate'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error401'
+    Forbidden:
+      description: FORBIDDEN. The session does not exist or belongs to another caller.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error403'
+    Conflict:
+      description: |
+        STATE_CONFLICT, PLAN_EXPIRED or SESSION_ENDED. STATE_CONFLICT covers a stale
+        expected_state_version or source_response_id, a competing request on the same state
+        version, another request of the session still in progress (retryable), and reuse of a
+        request_id with different content (not retryable).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error409'
+    InvalidSchema:
+      description: |
+        INVALID_SCHEMA. Malformed JSON, unknown or missing fields, a message over 8,000
+        characters, a body over 65,536 bytes, an Idempotency-Key or session ID disagreement, or
+        an unknown operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error422'
+    RateLimited:
+      description: RATE_LIMITED.
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error429'
+    Unavailable:
+      description: |
+        GENERATION_UNAVAILABLE or LEARNING_UNAVAILABLE. Retryable errors keep the reserved plan
+        and any staged response, so a retry with the same request_id resumes without a second
+        learning update.
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error503'
+    DeadlineExceeded:
+      description: DEADLINE_EXCEEDED. The request deadline (10 seconds) elapsed; retry it.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error504'
+  schemas:
+    Id:
+      description: PRD 9.1 ID, a nonempty ASCII string of at most 128 characters.
+      type: string
+      minLength: 1
+      maxLength: 128
+      pattern: '^[\u0000-\u007F]+$'
+    PacePreference:
+      type: string
+      enum: [concise, normal, detailed]
+    DeliveryMode:
+      type: string
+      enum: [model, repaired, fallback]
+    LearnerMessage:
+      description: Raw learner text, at most 8,000 characters. Stored access-controlled, never logged.
+      type: string
+      maxLength: 8000
+    CreateSessionRequest:
+      type: object
+      additionalProperties: false
+      required: [request_id, goal_concept_id, pace_preference]
+      properties:
+        request_id:
+          $ref: '#/components/schemas/Id'
+        goal_concept_id:
+          $ref: '#/components/schemas/Id'
+        pace_preference:
+          $ref: '#/components/schemas/PacePreference'
+    CreateSessionResult:
+      type: object
+      additionalProperties: false
+      required: [session_id, public_state]
+      properties:
+        session_id:
+          $ref: '#/components/schemas/Id'
+        public_state:
+          $ref: '#/components/schemas/PublicState'
+    TurnRequest:
+      type: object
+      additionalProperties: false
+      required: [request_id, expected_state_version, source_response_id, message]
+      properties:
+        request_id:
+          $ref: '#/components/schemas/Id'
+        expected_state_version:
+          type: integer
+          minimum: 0
+        source_response_id:
+          description: Null on the first turn; otherwise the last committed response_id.
+          anyOf:
+            - $ref: '#/components/schemas/Id'
+            - type: 'null'
+        message:
+          $ref: '#/components/schemas/LearnerMessage'
+        session_id:
+          description: Optional; when present it must equal the path session ID.
+          $ref: '#/components/schemas/Id'
+    StopRequest:
+      type: object
+      additionalProperties: false
+      required: [request_id, expected_state_version]
+      properties:
+        request_id:
+          $ref: '#/components/schemas/Id'
+        expected_state_version:
+          type: integer
+          minimum: 0
+        session_id:
+          description: Optional; when present it must equal the path session ID.
+          $ref: '#/components/schemas/Id'
+    PublicResponse:
+      description: |
+        The committed tutor response as the learner sees it (PRD 9.5). Internal checks, the content
+        hash, the effective teaching action, usage and versions stay internal.
+      type: object
+      additionalProperties: false
+      required: [response_id, plan_id, text, delivery_mode]
+      properties:
+        response_id:
+          $ref: '#/components/schemas/Id'
+        plan_id:
+          $ref: '#/components/schemas/Id'
+        text:
+          type: string
+        delivery_mode:
+          $ref: '#/components/schemas/DeliveryMode'
+    TurnResponseResult:
+      type: object
+      additionalProperties: false
+      required: [request_id, response, public_state]
+      properties:
+        request_id:
+          $ref: '#/components/schemas/Id'
+        response:
+          $ref: '#/components/schemas/PublicResponse'
+        public_state:
+          $ref: '#/components/schemas/PublicState'
+    TurnSessionEndResult:
+      type: object
+      additionalProperties: false
+      required: [request_id, session_end]
+      properties:
+        request_id:
+          $ref: '#/components/schemas/Id'
+        session_end:
+          allOf:
+            - $ref: '#/components/schemas/SessionEnd'
+            - type: object
+              properties:
+                public_state:
+                  type: object
+                  properties:
+                    status:
+                      const: ended
+    TurnResult:
+      description: Exactly one variant (PRD 9.5).
+      oneOf:
+        - $ref: '#/components/schemas/TurnResponseResult'
+        - $ref: '#/components/schemas/TurnSessionEndResult'
+    StopResult:
+      $ref: '#/components/schemas/TurnSessionEndResult'
+    LearnerTranscriptEntry:
+      type: object
+      additionalProperties: false
+      required: [role, request_id, text]
+      properties:
+        role:
+          const: learner
+        request_id:
+          $ref: '#/components/schemas/Id'
+        text:
+          $ref: '#/components/schemas/LearnerMessage'
+    TutorTranscriptEntry:
+      type: object
+      additionalProperties: false
+      required: [role, request_id, response]
+      properties:
+        role:
+          const: tutor
+        request_id:
+          $ref: '#/components/schemas/Id'
+        response:
+          $ref: '#/components/schemas/PublicResponse'
+    TranscriptEntry:
+      oneOf:
+        - $ref: '#/components/schemas/LearnerTranscriptEntry'
+        - $ref: '#/components/schemas/TutorTranscriptEntry'
+      discriminator:
+        propertyName: role
+        mapping:
+          learner: '#/components/schemas/LearnerTranscriptEntry'
+          tutor: '#/components/schemas/TutorTranscriptEntry'
+    SessionView:
+      description: |
+        Permitted public state and committed transcript, oldest first. Learner messages appear
+        only for turns that completed with a committed response or a session end.
+      type: object
+      additionalProperties: false
+      required: [session_id, public_state, transcript]
+      properties:
+        session_id:
+          $ref: '#/components/schemas/Id'
+        public_state:
+          $ref: '#/components/schemas/PublicState'
+        transcript:
+          type: array
+          items:
+            $ref: '#/components/schemas/TranscriptEntry'
+    PublicState:
+      description: Person B's approved public projection (PRD 9.4), referenced unchanged.
+      $ref: 'learning_v1.schema.json#/$defs/PublicState'
+    SessionEnd:
+      description: Person B's SessionEnd record (PRD 9.5), referenced unchanged.
+      $ref: 'learning_v1.schema.json#/$defs/SessionEnd'
+    ErrorCode:
+      type: string
+      enum:
+        - INVALID_SCHEMA
+        - UNSUPPORTED_VERSION
+        - UNAUTHORIZED
+        - FORBIDDEN
+        - STATE_CONFLICT
+        - PLAN_EXPIRED
+        - SESSION_ENDED
+        - RATE_LIMITED
+        - GENERATION_UNAVAILABLE
+        - LEARNING_UNAVAILABLE
+        - DEADLINE_EXCEEDED
+      x-tutor-http-status:
+        INVALID_SCHEMA: 422
+        UNSUPPORTED_VERSION: 400
+        UNAUTHORIZED: 401
+        FORBIDDEN: 403
+        STATE_CONFLICT: 409
+        PLAN_EXPIRED: 409
+        SESSION_ENDED: 409
+        RATE_LIMITED: 429
+        GENERATION_UNAVAILABLE: 503
+        LEARNING_UNAVAILABLE: 503
+        DEADLINE_EXCEEDED: 504
+    Error:
+      description: |
+        PRD 9.5 Error. Messages contain no answer keys, learner text or model prompt internals.
+        When a request carries no usable request_id the server assigns one prefixed `srv-`.
+        `current_state_version` is the last committed state version known for the session, or
+        null when the error is not tied to a session state.
+      type: object
+      additionalProperties: false
+      required: [schema_version, request_id, trace_id, code, message, retryable, current_state_version]
+      properties:
+        schema_version:
+          const: '1.0'
+        request_id:
+          $ref: '#/components/schemas/Id'
+        trace_id:
+          $ref: '#/components/schemas/Id'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+        message:
+          type: string
+        retryable:
+          type: boolean
+        current_state_version:
+          anyOf:
+            - type: integer
+              minimum: 0
+            - type: 'null'
+    Error400:
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - properties:
+            code:
+              const: UNSUPPORTED_VERSION
+    Error401:
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - properties:
+            code:
+              const: UNAUTHORIZED
+    Error403:
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - properties:
+            code:
+              const: FORBIDDEN
+    Error409:
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - properties:
+            code:
+              enum: [STATE_CONFLICT, PLAN_EXPIRED, SESSION_ENDED]
+    Error422:
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - properties:
+            code:
+              const: INVALID_SCHEMA
+    Error429:
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - properties:
+            code:
+              const: RATE_LIMITED
+    Error503:
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - properties:
+            code:
+              enum: [GENERATION_UNAVAILABLE, LEARNING_UNAVAILABLE]
+    Error504:
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - properties:
+            code:
+              const: DEADLINE_EXCEEDED

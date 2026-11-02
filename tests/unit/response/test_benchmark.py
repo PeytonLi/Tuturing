@@ -405,6 +405,43 @@ def test_report_writes_tables_and_blinded_review(tmp_path):
     assert SECRET not in report and SECRET not in key
 
 
+def test_report_keeps_published_sheet_frozen_and_adds_a_supplement(tmp_path):
+    config = make_config(tmp_path, PLAN_DIR)
+    write_keys(tmp_path)
+    chat = FakeChat(text="A fair coin is flipped once. What is the probability of heads? Try it.")
+    ctx = make_ctx(config, chat)
+    cases, _ = bench.load_all_cases(config)
+    bench.run_entry(config["models"][0], cases, ctx)
+    bench.run_entry(config["models"][1], cases, ctx, pilot=8)
+    build_report(config, ctx)
+    review_dir = Path(config["report_dir"]) / "review"
+    sheet_before = (review_dir / "review_sheet_blinded.csv").read_bytes()
+    key_before = (review_dir / "review_key_do_not_open_before_rating.csv").read_text()
+    later = copy.deepcopy(config["models"][1])
+    later.update({"id": "later-model", "label": "Later"})
+    config["models"].append(later)
+    bench.run_entry(later, cases, ctx, pilot=8)
+    build_report(config, ctx)
+    assert (review_dir / "review_sheet_blinded.csv").read_bytes() == sheet_before
+    key_after = key_before.splitlines()
+    key_rows = list(__import__("csv").DictReader(
+        (review_dir / "review_key_do_not_open_before_rating.csv").open(encoding="utf-8")))
+    assert key_rows[: len(key_after) - 1] == list(
+        __import__("csv").DictReader(io.StringIO(key_before)))
+    added = [row for row in key_rows if row["model_id"] == "later-model"]
+    supplement = list(__import__("csv").DictReader(
+        (review_dir / "review_sheet_blinded_supplement.csv").open(encoding="utf-8")))
+    items = {row["item"] for row in key_rows}
+    assert len(items) == 3 and len(added) == len(supplement) == 3  # review.cases is 3
+    assert all(row["response_label"] == "R3" for row in added)
+    assert {row["item"] for row in supplement} == items
+    assert "later-model" not in (review_dir / "review_sheet_blinded_supplement.csv").read_text()
+    assert "added later" in (review_dir / "README.md").read_text()
+    build_report(config, ctx)  # idempotent: no duplicate rows for an already-keyed model
+    assert len(list(__import__("csv").DictReader(
+        (review_dir / "review_sheet_blinded_supplement.csv").open(encoding="utf-8")))) == 3
+
+
 def test_committed_config_is_consistent():
     config = yaml.safe_load((ROOT / "configs/response/benchmark_v1.yaml").read_text())
     ids = [entry["id"] for entry in config["models"]]

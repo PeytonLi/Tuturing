@@ -172,6 +172,7 @@ class DeploymentRun:
             "deployment_shape": self.spec["deployment_shape"],
             "accelerator_type": self.spec.get("accelerator_type"),
             "accelerator_count": int(self.spec.get("accelerator_count", 1)),
+            "precision": self.spec.get("precision"),
             "usd_per_gpu_hour": float(self.spec["usd_per_gpu_hour"]),
             "usd_per_hour": self.usd_per_hour,
             "price_source": self.spec.get("price_source"),
@@ -229,6 +230,9 @@ class DeploymentRun:
             try:
                 call()
             except Exception as exc:  # CallError from the benchmark client
+                status = getattr(exc, "status", None)
+                if status is not None and 400 <= status < 500 and status != 429:
+                    raise DeploymentError(f"request rejected during warm-up: {exc}") from None
                 if self.clock() > deadline:
                     raise DeploymentError(f"no replica served after {timeout_s:.0f}s: {exc}")
                 if attempts == 1 or attempts % 6 == 0:

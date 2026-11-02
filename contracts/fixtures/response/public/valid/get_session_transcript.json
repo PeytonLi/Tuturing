@@ -1,0 +1,53 @@
+{
+  "kind": "exchange",
+  "operation": "getSession",
+  "path_params": {
+    "session_id": "ses-0123456789abcdef01234567"
+  },
+  "headers": {
+    "Authorization": "Bearer <token from TUTOR_PUBLIC_API_TOKENS>"
+  },
+  "request": null,
+  "response": {
+    "status": 200,
+    "body": {
+      "session_id": "ses-0123456789abcdef01234567",
+      "public_state": {
+        "session_id": "ses-0123456789abcdef01234567",
+        "state_version": 2,
+        "current_concept_id": "C01",
+        "goal_concept_id": "C01",
+        "teaching_turns": 2,
+        "status": "active",
+        "end_reason": null
+      },
+      "transcript": [
+        {
+          "role": "tutor",
+          "request_id": "req-turn-1",
+          "response": {
+            "response_id": "response-52f8838b1acbd8d8176ce1a8",
+            "plan_id": "plan-probe",
+            "text": "Let's check your thinking about this: A fair coin is flipped once. What is the probability of heads? Show how you reason it out.",
+            "delivery_mode": "fallback"
+          }
+        },
+        {
+          "role": "learner",
+          "request_id": "req-turn-2",
+          "text": "is it 1/2?"
+        },
+        {
+          "role": "tutor",
+          "request_id": "req-turn-2",
+          "response": {
+            "response_id": "response-01cd3ff987e713c74006bb65",
+            "plan_id": "plan-probe",
+            "text": "Let's check your thinking about this: A fair coin is flipped once. What is the probability of heads? Show how you reason it out.",
+            "delivery_mode": "fallback"
+          }
+        }
+      ]
+    }
+  }
+}

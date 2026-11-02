@@ -1,0 +1,14 @@
+{
+  "kind": "schema",
+  "schema": "Error",
+  "http_status": 422,
+  "instance": {
+    "schema_version": "1.0",
+    "request_id": "req-error",
+    "trace_id": "trc-fixture",
+    "code": "INVALID_SCHEMA",
+    "message": "request does not match TurnRequest: $: additionalProperties",
+    "retryable": false,
+    "current_state_version": null
+  }
+}
