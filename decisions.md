@@ -167,3 +167,9 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 **Assistant note:** this keeps MathDial out of Peyton's Strategist behavior cloning unless Peyton separately accepts model labels; D09's reviewer line stays with Peyton. Labeling API spend comes out of the $25 benchmark cap.
 
+## 2026-11-02 — Item-fidelity false positives fixed; main pushed at 512 tests
+
+**Source:** the response-service agent's follow-up report; merges `9457fa4` and `3120ad3`.
+
+**Facts:** the four rejections under `validator_v2` were false positives: "in your head" matched the coin family's `head`, and "in three moves. A marbles experiment" let a number cross a sentence boundary into the stem's noun. The quantity rule now requires a scenario object noun in the same sentence, and `head`/`tail` count only alongside a coin anchor. The four Qwen substitutions still fail. `build_original_sft` accepts 371 of 371 under `validator_v2`. Main was pushed after the full CPU smoke (512 tests, both validators, content validation, a ten-episode simulate).
+
