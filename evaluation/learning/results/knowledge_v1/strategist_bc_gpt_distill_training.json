@@ -1,0 +1,34 @@
+{
+  "checkpoint": "experiments/learning/runs/bc_gpt_distill_seed20250115/bc.pt (gitignored)",
+  "fallback_turns_excluded": 0,
+  "holdout_action_agreement": 0.5910714285714286,
+  "holdout_transitions": 560,
+  "labeled_turns": 5495,
+  "seed": 20250115,
+  "teacher_usage": {
+    "cache_hits": 1828,
+    "calls": 3667,
+    "completion_tokens": 176561,
+    "cost_usd": 8.835,
+    "episodes": {
+      "call_limit": 0,
+      "misaligned": 0,
+      "ok": 400
+    },
+    "fallback_rate": 0.0,
+    "fallbacks_by_reason": {
+      "http_error": 0,
+      "illegal": 0,
+      "parse_failure": 0,
+      "truncated": 0
+    },
+    "model": "gpt-6.1-sol",
+    "prompt_tokens": 3534802,
+    "wall_seconds": 458.1,
+    "cost_basis": "$2/M input, $10/M output; plus a 2-episode smoke run of $0.063"
+  },
+  "train_action_agreement": 0.617629179331307,
+  "train_transitions": 4935,
+  "label": "simulated",
+  "command": "OPENAI_API_KEY=<TUTURING_OPENAI_API_KEY> uv run --extra learning python -m tools.learning.distill_llm --config configs/learning/bc_gpt_distill.yaml"
+}
