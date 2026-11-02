@@ -314,8 +314,8 @@ def markdown(report: dict) -> str:
         "Bootstrap resamples paired episode differences (1,000 resamples); repeated seeds within "
         "the same scenario are not new scenario families. Intervals are conditional on this "
         "scenario bank, simulator and policy, not intervals for human effects.",
-        "Item identity uses a conservative exact stem anchor: paraphrases can be over-flagged; "
-        "A's checks are heuristics, not a semantic/math oracle. Review remains mandatory.",
+        "Item identity uses A's public item_fidelity check (validator_v2); "
+        "these checks are heuristics, not a semantic/math oracle. Review remains mandatory.",
     ]
     return "\n".join(lines) + "\n"
 

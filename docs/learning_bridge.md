@@ -43,8 +43,8 @@ unsupported or contradictory rendered content and at most one for verified conte
 Line 899 requires independent checks rather than the generator's pass flag.
 
 Implemented rule: independently rerun A's public `run_checks` on the delivered
-text and effective action. **Any failed check, or a changed/missing issued item
-stem, sets `content_realized=False`, hence `content_fidelity=0`.** Otherwise use the
+text and effective action. **Any failed check or A item-fidelity failure sets
+`content_realized=False`, hence `content_fidelity=0`.** Otherwise use the
 declared simulator `stub_realized` coefficient and its seeded fidelity-failure
 process (primary configuration: 1.0, failure probability 0.0). Zero fidelity
 prevents both direct mastery gain and misconception deactivation. A valid fallback
@@ -53,10 +53,12 @@ can teach; a rejected draft is not itself the delivered content.
 For protected non-example items, the independent audit adds B's solver answer to
 a private copy of the plan's forbidden fingerprints, never the generator prompt.
 WORKED_EXAMPLE is exempt from that extra answer fingerprint: showing the example's
-own answer is intentional. A's checks are heuristic, not a semantic/math oracle.
-The additional item check requires the issued stem verbatim after case/whitespace
-normalization on PROBE/PRACTICE/CHALLENGE/CHECK_MASTERY. Paraphrases can be
-over-flagged; changes hidden behind an otherwise intact stem may be missed.
+own answer is intentional. A's public `packages.response.item_fidelity.item_fidelity`
+(introduced with validator_v2) supplies item-identity diagnostics, including
+coverage, new objects, new quantities and reasons. It also applies to HINT.
+This check is part of A's `action_faithful`; the bridge records its separate
+`item_changed` flag and diagnostics as well. These checks are heuristic, not a
+semantic/math oracle: false positives and missed substitutions remain possible.
 
 Each trace records the complete plan, delivered reply/effective move, draft
 attempts, independent checks, sampled outcome, rendered message, extracted
@@ -209,8 +211,9 @@ the warning and split are recorded. No test-split rollout was run for the smokes
   Simulator help-seeking requests can have `assistance=none` after a HINT plan;
   extraction then reports `hint`. These semantic disagreements are retained for
   review, not overwritten to force zero flag counts.
-- A has no dedicated item-identity validator. B's conservative stem anchor does
-  not establish semantic equivalence or catch every change.
+- A's item-fidelity validator was merged during this work. The bridge now calls
+  that public entry point instead of maintaining a separate exact-stem heuristic.
+  It detects word/quantity/scenario substitutions, not mathematical equivalence.
 - Hosted provider/schema/model support is untested; real runs may fall back on
   provider errors. Inspect fallback and attempt counts, not just gain. Credentials
   and paid access were not required or exercised for these simulated smokes.

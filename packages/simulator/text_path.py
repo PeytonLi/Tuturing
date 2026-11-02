@@ -13,6 +13,7 @@ from apps.response_service.config import build_pipeline, load_config
 from packages.evidence_extractor.extract import EXTRACTOR_VERSION, extract
 from packages.learning.grader import grade_answer, normalize_for_instance
 from packages.response.hashing import content_hash
+from packages.response.item_fidelity import item_fidelity
 from packages.response.validate import run_checks
 from packages.simulator.student import StudentOutcome
 from packages.simulator.text_renderer import RENDERER_VERSION, render_checked
@@ -130,10 +131,6 @@ class DegradedRealizer:
         return response
 
 
-def _canonical(text: str) -> str:
-    return " ".join(text.casefold().split())
-
-
 class TextPath:
     def __init__(
         self,
@@ -163,16 +160,8 @@ class TextPath:
                 str(item["instance"]["answer"])
             ]
         checks = run_checks(audit_plan, realized["text"], realized["effective_move"])
-        content = plan["content"]
-        move = plan["teaching_action"]["move"]
-        stem = content.get("problem_stem")
-        # A's public validator has no item-identity field. Conservatively require the
-        # issued stem verbatim (whitespace/case normalized) on a newly delivered item.
-        item_changed = bool(
-            stem
-            and move in {"PROBE", "PRACTICE", "CHALLENGE", "CHECK_MASTERY"}
-            and _canonical(stem) not in _canonical(realized["text"])
-        )
+        item_check = item_fidelity(plan, realized["text"])
+        item_changed = item_check.applicable and not item_check.passed
         flags = {
             "wrong_move": not checks["action_faithful"],
             "item_changed": item_changed,
@@ -192,6 +181,7 @@ class TextPath:
             "plan": copy.deepcopy(plan),
             "response": copy.deepcopy(realized),
             "checks": checks,
+            "item_fidelity": asdict(item_check),
             "flags": flags,
             "content_fidelity_verified": verified,
             "attempts": copy.deepcopy(getattr(self.realizer, "last_attempts", [])),

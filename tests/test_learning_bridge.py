@@ -108,6 +108,33 @@ def test_wrong_move_uses_independent_checks_not_realizer_claims(plan):
     assert not path.current["content_fidelity_verified"]
 
 
+def test_public_item_validator_detects_digit_free_substitution(plan):
+    base = ServiceRealizer(STUB_CONFIG, budget=CallBudget())
+    path = TextPath(base)
+    realized = path.realize(plan, request_id="changed-item")
+    realized["text"] = (
+        "A fair six-sided die is rolled once. What is the probability of an even number? "
+        "Show how you reason it out."
+    )
+    checked = path.check_content(plan, realized)
+    assert not checked["checks"]["item_unchanged"]
+    assert path.current["flags"]["item_changed"]
+    assert path.current["item_fidelity"]["new_objects"]
+
+
+def test_disclosed_protected_answer_fails_fidelity(plan):
+    from fractions import Fraction
+
+    base = ServiceRealizer(STUB_CONFIG, budget=CallBudget())
+    path = TextPath(base)
+    realized = path.realize(plan, request_id="leaked-answer")
+    realized["text"] += " The final answer is 0.5."
+    checked = path.check_content(plan, realized, item={"instance": {"answer": Fraction(1, 2)}})
+    assert not checked["checks"]["disclosure_allowed"]
+    assert path.current["flags"]["answer_disclosed"]
+    assert not path.current["content_fidelity_verified"]
+
+
 def test_zero_fidelity_prevents_mastery_gain_and_misconception_learning():
     scenario = next(row for row in load_scenarios() if row["split"] == "validation")
     path = TextPath(DegradedRealizer(ServiceRealizer(STUB_CONFIG, budget=CallBudget()), rate=1))
