@@ -140,3 +140,9 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 **Open for the owners:** D11 proposes keeping `Error` in A's contract and referencing B's `PublicState` and `SessionEnd`; the public session ID is B's allocated ID because B rejects a client-supplied one, a deviation from PRD 8.1; and four findings about B's service are recorded in D11 for the first integration review rather than patched.
 
+## 2026-11-02 — Evidence extractor v2 merged
+
+**Source:** the extractor agent's final report; merge `e1e0183` (462 tests pass).
+
+**Facts:** the extractor was rewritten as `extractor_rules_v2`, tuned on the development split only, with the test split frozen by hash before tuning. It never emits `correct` or `incorrect`; `confidence` now means answer-commitment confidence (0.9, 0.85, 0.6 or 0), and B's engine drops grades below 0.80, so a learner message with several numbers does not update mastery. Both semantics are to be confirmed with Peyton at the first integration review (PRD 21.3). Two known test failures remain for a later version.
+
