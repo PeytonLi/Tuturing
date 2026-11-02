@@ -30,5 +30,5 @@ generation:
   max_repairs: 1                 # at most one repair, for word cap or question count only
 versions:                        # the service refuses to start if the code disagrees
   prompt: prompt_v1
-  validator: validator_v1
+  validator: validator_v2
   fallback: fallback_v1

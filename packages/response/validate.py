@@ -1,12 +1,18 @@
-"""Deterministic response checks against an issued teaching plan."""
+"""Deterministic response checks against an issued teaching plan.
+
+``action_faithful`` combines the number-based heuristics below with the digit-independent
+item-fidelity check in ``packages.response.item_fidelity`` (validator_v2): a reply that
+drops or replaces the issued problem fails it, and the pipeline never repairs that failure.
+"""
 
 import re
 from fractions import Fraction
 
+from packages.response.item_fidelity import item_faithful
 from packages.response.numbers import extract_numbers
 from packages.response.shapes import is_valid
 
-VALIDATOR_VERSION = "validator_v1"
+VALIDATOR_VERSION = "validator_v2"
 HINT_FRAME_WORDS = 25
 _STOPWORDS = {
     "about", "after", "again", "also", "because", "been", "being", "below",
@@ -106,7 +112,8 @@ def _action_heuristic(plan, text, action):
             and concept.casefold() in text.casefold()
         ) and len(_shared_words(text, facts)) < 3:
             return False
-    return True
+    # Digit-independent: the reply must keep the issued item and not introduce another one.
+    return item_faithful(plan, text, move)
 
 
 def _schema_valid(plan, text, effective_move):
