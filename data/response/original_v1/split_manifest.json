@@ -1,0 +1,274 @@
+{
+  "adversarial_attack_groups": {
+    "groups": {
+      "ATK01_direct_override": {
+        "description": "Learner tells the tutor to ignore its rules or the plan and give the answer.",
+        "split": "train"
+      },
+      "ATK02_authority_claim": {
+        "description": "Learner claims to be a teacher, developer or admin who has unlocked answers.",
+        "split": "train"
+      },
+      "ATK03_tag_injection": {
+        "description": "Learner message imitates system text or closes the learner_message tag to grant reveal.",
+        "split": "train"
+      },
+      "ATK04_verdict_fishing": {
+        "description": "Learner asks only for a yes or no on a guessed answer during a protected item.",
+        "split": "train"
+      },
+      "ATK05_prompt_extraction": {
+        "description": "Learner asks the tutor to print its instructions, plan or hidden solution.",
+        "split": "train"
+      },
+      "ATK06_role_swap": {
+        "description": "Learner asks the tutor to switch roles and answer the item as if it were the student.",
+        "split": "train"
+      },
+      "ATK07_mode_relabel": {
+        "description": "Learner claims the independent check is only practice so help is allowed.",
+        "split": "validation"
+      },
+      "ATK08_emotional_pressure": {
+        "description": "Learner applies emotional pressure or urgency to obtain the answer.",
+        "split": "validation"
+      },
+      "ATK09_mastery_claim_request": {
+        "description": "Learner asks the tutor to declare mastery, a grade or that the topic is done.",
+        "split": "validation"
+      },
+      "ATK10_format_override": {
+        "description": "Learner demands a format or length that would break the plan's limits.",
+        "split": "test"
+      },
+      "ATK11_obfuscation_request": {
+        "description": "Learner asks for the answer in disguised form (riddle, code, spelled out).",
+        "split": "test"
+      },
+      "ATK12_topic_override": {
+        "description": "Learner tells the tutor to drop the plan and teach a different topic now.",
+        "split": "test"
+      }
+    },
+    "rule": "PRD 13.3: every paraphrase of one attack pattern stays in one split. An adversarial example must use a family from its attack group's split."
+  },
+  "dataset_id": "original_v1",
+  "frozen_on": "2026-11-02",
+  "plan_envelope_scenarios": {
+    "test": [
+      "proto-scenario-11",
+      "proto-scenario-12",
+      "proto-scenario-18",
+      "proto-scenario-24",
+      "proto-scenario-30"
+    ],
+    "train": [
+      "proto-scenario-01",
+      "proto-scenario-02",
+      "proto-scenario-03",
+      "proto-scenario-04",
+      "proto-scenario-05",
+      "proto-scenario-06",
+      "proto-scenario-07",
+      "proto-scenario-08",
+      "proto-scenario-13",
+      "proto-scenario-14",
+      "proto-scenario-15",
+      "proto-scenario-16",
+      "proto-scenario-19",
+      "proto-scenario-20",
+      "proto-scenario-21",
+      "proto-scenario-22",
+      "proto-scenario-25",
+      "proto-scenario-26",
+      "proto-scenario-27",
+      "proto-scenario-28"
+    ],
+    "validation": [
+      "proto-scenario-09",
+      "proto-scenario-10",
+      "proto-scenario-17",
+      "proto-scenario-23",
+      "proto-scenario-29"
+    ]
+  },
+  "reserved_assessment_families": {
+    "families": [
+      "c01_assess_01",
+      "c01_assess_02",
+      "c01_assess_03",
+      "c02_assess_01",
+      "c02_assess_02",
+      "c02_assess_03",
+      "c03_assess_01",
+      "c03_assess_02",
+      "c03_assess_03",
+      "c06_assess_01",
+      "c06_assess_02",
+      "c06_assess_03",
+      "c08_assess_01",
+      "c08_assess_02",
+      "c08_assess_03"
+    ],
+    "rule": "PRD 18.1: independent assessment families are never instructional items or SFT targets. No original_v1 example uses them. PROBE and CHECK_MASTERY plans, which B's episode collector fills from these families, use a teaching-family instance of the same split instead."
+  },
+  "responsible_owner": "Person A",
+  "rule": "Every example inherits the split of its template family, the one Person B assigned in packages/learning/content/templates/families.py (SPLIT_BY_VARIANT): teach_01 and teach_02 train, teach_03 validation, teach_04 test. original_problem_id is '<family>:seed<sampler seed>', so every parameter variant stays with its family. Examples whose plan carries no item are anchored to the family of the learner's active item, or for session-level examples to the first teaching family of the split, as B's plan builder does for worked examples.",
+  "source_hashes": {
+    "data/original_content/concepts.yaml": "2711177ccc9443543b381b83e727b2f459181a5b6decf9a944679052641e675f",
+    "data/original_content/misconceptions.yaml": "78ecbc645b4f0a6fdd8c59ecabef3f0c8b6879cf0b39495f7f4a98042809296a",
+    "data/scenarios/proto_v1.yaml": "f88a0cb878d54bf758193e30afe10efacf69378dc23a7d783769230594ec8681",
+    "packages/learning/content/templates/families.py": "04d30b9375db7e9783047c42509aea1a8d14013bcde358eda961897806ae46ca",
+    "packages/learning/episode.py": "9d5c7260c998276e6f6c29818be4a42131570ac3f5d4e2fa1363469ec7c7f29c"
+  },
+  "split_unit": "template_family_id",
+  "status": "frozen_before_expansion",
+  "target_proportions": {
+    "note": "Family-level split is fixed by B (two train, one validation, one test family per concept). Example counts aim near PRD 18.1's 80/10/10 while keeping enough test cases for the probability benchmark; actual counts are reported in the dataset manifest.",
+    "test": 0.125,
+    "train": 0.75,
+    "validation": 0.125
+  },
+  "teaching_families": {
+    "c01_teach_01": {
+      "b_split": "train",
+      "concept_id": "C01",
+      "family_difficulty": "easy",
+      "item_kind": "dice",
+      "sft_split": "train"
+    },
+    "c01_teach_02": {
+      "b_split": "train",
+      "concept_id": "C01",
+      "family_difficulty": "medium",
+      "item_kind": "coins",
+      "sft_split": "train"
+    },
+    "c01_teach_03": {
+      "b_split": "validation",
+      "concept_id": "C01",
+      "family_difficulty": "medium",
+      "item_kind": "marbles",
+      "sft_split": "validation"
+    },
+    "c01_teach_04": {
+      "b_split": "test",
+      "concept_id": "C01",
+      "family_difficulty": "hard",
+      "item_kind": "spinners",
+      "sft_split": "test"
+    },
+    "c02_teach_01": {
+      "b_split": "train",
+      "concept_id": "C02",
+      "family_difficulty": "easy",
+      "item_kind": "dice",
+      "sft_split": "train"
+    },
+    "c02_teach_02": {
+      "b_split": "train",
+      "concept_id": "C02",
+      "family_difficulty": "medium",
+      "item_kind": "coins",
+      "sft_split": "train"
+    },
+    "c02_teach_03": {
+      "b_split": "validation",
+      "concept_id": "C02",
+      "family_difficulty": "medium",
+      "item_kind": "marbles",
+      "sft_split": "validation"
+    },
+    "c02_teach_04": {
+      "b_split": "test",
+      "concept_id": "C02",
+      "family_difficulty": "hard",
+      "item_kind": "spinners",
+      "sft_split": "test"
+    },
+    "c03_teach_01": {
+      "b_split": "train",
+      "concept_id": "C03",
+      "family_difficulty": "easy",
+      "item_kind": "dice",
+      "sft_split": "train"
+    },
+    "c03_teach_02": {
+      "b_split": "train",
+      "concept_id": "C03",
+      "family_difficulty": "medium",
+      "item_kind": "coins",
+      "sft_split": "train"
+    },
+    "c03_teach_03": {
+      "b_split": "validation",
+      "concept_id": "C03",
+      "family_difficulty": "medium",
+      "item_kind": "marbles",
+      "sft_split": "validation"
+    },
+    "c03_teach_04": {
+      "b_split": "test",
+      "concept_id": "C03",
+      "family_difficulty": "hard",
+      "item_kind": "spinners",
+      "sft_split": "test"
+    },
+    "c06_teach_01": {
+      "b_split": "train",
+      "concept_id": "C06",
+      "family_difficulty": "easy",
+      "item_kind": "dice",
+      "sft_split": "train"
+    },
+    "c06_teach_02": {
+      "b_split": "train",
+      "concept_id": "C06",
+      "family_difficulty": "medium",
+      "item_kind": "coins",
+      "sft_split": "train"
+    },
+    "c06_teach_03": {
+      "b_split": "validation",
+      "concept_id": "C06",
+      "family_difficulty": "medium",
+      "item_kind": "marbles",
+      "sft_split": "validation"
+    },
+    "c06_teach_04": {
+      "b_split": "test",
+      "concept_id": "C06",
+      "family_difficulty": "hard",
+      "item_kind": "spinners",
+      "sft_split": "test"
+    },
+    "c08_teach_01": {
+      "b_split": "train",
+      "concept_id": "C08",
+      "family_difficulty": "easy",
+      "item_kind": "dice",
+      "sft_split": "train"
+    },
+    "c08_teach_02": {
+      "b_split": "train",
+      "concept_id": "C08",
+      "family_difficulty": "medium",
+      "item_kind": "coins",
+      "sft_split": "train"
+    },
+    "c08_teach_03": {
+      "b_split": "validation",
+      "concept_id": "C08",
+      "family_difficulty": "medium",
+      "item_kind": "marbles",
+      "sft_split": "validation"
+    },
+    "c08_teach_04": {
+      "b_split": "test",
+      "concept_id": "C08",
+      "family_difficulty": "hard",
+      "item_kind": "spinners",
+      "sft_split": "test"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "accepted_count": 14111,
+  "accepted_count": 13696,
   "access_restrictions": "public, no gating",
   "attribution": "Macina et al. 2023, \"MathDial: A Dialogue Tutoring Dataset with Rich Pedagogical Properties Grounded in Math Reasoning Problems\", Findings of EMNLP 2023, arXiv:2305.14536.",
   "config": {
@@ -8,48 +8,48 @@
   },
   "counts_per_move": {
     "EXPLAIN_CONCEPT": 3086,
-    "HINT": 6789,
-    "PROBE": 4236
+    "HINT": 6534,
+    "PROBE": 4076
   },
   "counts_per_split": {
     "test": {
-      "dialogues": 324,
-      "examples": 1618,
+      "dialogues": 322,
+      "examples": 1583,
       "qids": 128
     },
     "train": {
-      "dialogues": 2275,
-      "examples": 11256,
+      "dialogues": 2266,
+      "examples": 10921,
       "qids": 890
     },
     "validation": {
-      "dialogues": 234,
-      "examples": 1237,
+      "dialogues": 232,
+      "examples": 1192,
       "qids": 93
     }
   },
   "counts_per_split_and_move": {
     "test": {
       "EXPLAIN_CONCEPT": 350,
-      "HINT": 791,
-      "PROBE": 477
+      "HINT": 766,
+      "PROBE": 467
     },
     "train": {
       "EXPLAIN_CONCEPT": 2501,
-      "HINT": 5351,
-      "PROBE": 3404
+      "HINT": 5152,
+      "PROBE": 3268
     },
     "validation": {
       "EXPLAIN_CONCEPT": 235,
-      "HINT": 647,
-      "PROBE": 355
+      "HINT": 616,
+      "PROBE": 341
     }
   },
   "deduplication": {
     "duplicates_found": 0,
     "method": "exact conversation text match"
   },
-  "download_date": "2026-11-02T20:06:55+00:00",
+  "download_date": "2026-11-02T20:56:10+00:00",
   "download_urls": [
     "https://huggingface.co/datasets/eth-nlped/mathdial/resolve/acc3878459e0bd8c04ab840056572f0b8b1abe1f/train.jsonl",
     "https://huggingface.co/datasets/eth-nlped/mathdial/resolve/acc3878459e0bd8c04ab840056572f0b8b1abe1f/test.jsonl",
@@ -75,7 +75,7 @@
       "sha256": "c63e86fd95d4e1fd60cccd78226a27d9e787ad91ed037b353d8e3083a0e5eaeb"
     }
   ],
-  "generator": "tools.response.prepare_sft v1",
+  "generator": "tools.response.prepare_sft v1.1",
   "license": {
     "local_snapshot_file": "README.md",
     "local_snapshot_sha256": "c63e86fd95d4e1fd60cccd78226a27d9e787ad91ed037b353d8e3083a0e5eaeb",
@@ -88,6 +88,7 @@
     "Pooled dialogues and split qids deterministically before expanding turns.",
     "Parsed preceding dialogue context; stripped known speaker and teacher-act prefixes.",
     "Mapped probing/focus/telling acts; excluded generic, malformed and overlength turns.",
+    "Rejected reveal-forbidden examples whose prompt already holds the full reference solution or whose target states the forbidden final answer.",
     "Compiled deterministic prompts and wrote turn-level SFT records."
   ],
   "mapping": {
@@ -97,6 +98,7 @@
   },
   "notes": [
     "SFT checks are null and not computed; mapped labels are draft_unaudited.",
+    "The disclosure check (packages.response.validate) runs only as an admission filter on reveal-forbidden targets; its result is not stored in checks.",
     "External MathDial concepts use navigation action_id -1 because they have no catalogue index.",
     "MathDial HINT and EXPLAIN_CONCEPT plans lack the corresponding PRD 9.3 approved hint/facts.",
     "Only EXPLAIN_CONCEPT plans include ground_truth, as reveal_solution."
@@ -116,18 +118,18 @@
   "output_files": [
     {
       "path": "data/sft/mathdial_v1/train.jsonl",
-      "rows": 11256,
-      "sha256": "4cea593bbd6c3b7e1b1fa9f0c6d79a33735b8f432e6d4e5782d7a6d9b3beff0f"
+      "rows": 10921,
+      "sha256": "258a44ff988d5cdd62b996a09a7cd8413098f8113e7604c209e90ed9f316e285"
     },
     {
       "path": "data/sft/mathdial_v1/validation.jsonl",
-      "rows": 1237,
-      "sha256": "1c922d688c35bcda9af5deae60649d18aeafc13a0ed373fd2c5d9e1ab5d036f0"
+      "rows": 1192,
+      "sha256": "a28503dad7a55962591aaa5cba96dccce60bd7ef7d96e35b36097864f6406ea0"
     },
     {
       "path": "data/sft/mathdial_v1/test.jsonl",
-      "rows": 1618,
-      "sha256": "b1f87640209584f97071abb04aa0a65a95841637344316347dce4617b64a5c96"
+      "rows": 1583,
+      "sha256": "7acdefad0bde3ee0e0733526b4dd98c5c627729312210cd8123931d93fc5fe58"
     }
   ],
   "permitted_purposes": [
@@ -151,7 +153,9 @@
   },
   "rejected_count_by_reason": {
     "empty_text": 68,
-    "generic_act": 4430
+    "generic_act": 4430,
+    "reference_solution_in_protected_context": 5,
+    "target_states_protected_answer": 410
   },
   "responsible_owner": "Person A",
   "revision": "acc3878459e0bd8c04ab840056572f0b8b1abe1f",

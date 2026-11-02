@@ -13,8 +13,9 @@ import yaml
 
 from packages.response.hashing import canonical_json
 from packages.response.prompt import compile_prompt
+from packages.response.validate import run_checks
 
-GENERATOR_VERSION = "tools.response.prepare_sft v1"
+GENERATOR_VERSION = "tools.response.prepare_sft v1.1"
 USER_AGENT = "Tutoring-response-sft-prep/1.0"
 MOVE_ORDER = (
     "PROBE", "HINT", "EXPLAIN_CONCEPT", "WORKED_EXAMPLE",
@@ -194,6 +195,28 @@ def parse_turn(turn, student_name=""):
     return {"role": "student", "act": None, "text": text.strip()}
 
 
+def _normalized(text):
+    return " ".join(str(text).casefold().split())
+
+
+def protected_rejection(plan, prompt, teacher_text, ground_truth):
+    """Return a rejection reason for a reveal-forbidden example, or None.
+
+    A protected prompt must not contain the full reference solution, even when
+    an earlier tutor turn pasted it into the dialogue, and a protected target
+    must not state the forbidden final answer (PRD 13.2 steps 2 and 6).
+    """
+    if plan["constraints"]["reveal_allowed"]:
+        return None
+    solution = _normalized(ground_truth or "")
+    prompt_text = _normalized("\n".join(message["content"] for message in prompt))
+    if solution and solution in prompt_text:
+        return "reference_solution_in_protected_context"
+    if not run_checks(plan, teacher_text, plan["teaching_action"])["disclosure_allowed"]:
+        return "target_states_protected_answer"
+    return None
+
+
 def _action_id(move):
     difficulty_index = 1  # medium
     pace_index = 1  # normal
@@ -356,6 +379,18 @@ def build_examples(rows_by_official, config, move_map):
                     dialogue_id, example_id, row, move, recent_dialogue,
                     last_student, config,
                 )
+                prompt = compile_prompt(plan)
+                rejection = protected_rejection(
+                    plan, prompt, teacher_text, row.get("ground_truth")
+                )
+                if rejection:
+                    rejected.append({
+                        "example_id": example_id,
+                        "reason": rejection,
+                        "source_act": act,
+                        "split": split,
+                    })
+                    continue
                 accepted.append({
                     "example_id": example_id,
                     "dialogue_id": dialogue_id,
@@ -369,7 +404,7 @@ def build_examples(rows_by_official, config, move_map):
                     "reviewer_status": "pending",
                     "action_label_source": "mapped",
                     "plan": plan,
-                    "prompt": compile_prompt(plan),
+                    "prompt": prompt,
                     "completion": [{"role": "assistant", "content": teacher_text}],
                     "checks": {
                         "math_correct": None,
@@ -545,10 +580,14 @@ def prepare(config_path):
             "Pooled dialogues and split qids deterministically before expanding turns.",
             "Parsed preceding dialogue context; stripped known speaker and teacher-act prefixes.",
             "Mapped probing/focus/telling acts; excluded generic, malformed and overlength turns.",
+            "Rejected reveal-forbidden examples whose prompt already holds the full reference "
+            "solution or whose target states the forbidden final answer.",
             "Compiled deterministic prompts and wrote turn-level SFT records.",
         ],
         "notes": [
             "SFT checks are null and not computed; mapped labels are draft_unaudited.",
+            "The disclosure check (packages.response.validate) runs only as an admission "
+            "filter on reveal-forbidden targets; its result is not stored in checks.",
             "External MathDial concepts use navigation action_id -1 because they have no "
             "catalogue index.",
             "MathDial HINT and EXPLAIN_CONCEPT plans lack the corresponding PRD 9.3 "
