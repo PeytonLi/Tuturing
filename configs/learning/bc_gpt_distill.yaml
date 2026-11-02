@@ -1,0 +1,14 @@
+seed: 20250115
+episodes: 400
+split: train
+holdout_fraction: 0.1
+epochs: 10
+batch_size: 256
+learning_rate: 0.001
+gamma: 0.99
+run_name: bc_gpt_distill
+simulator_config: configs/learning/simulator_proto_v2.yaml
+scenarios: data/scenarios/proto_v1.yaml
+teacher: llm:gpt_6_1_sol
+max_calls: 7000
+workers: 16
