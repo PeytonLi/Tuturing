@@ -304,6 +304,7 @@ def markdown(report: dict) -> str:
         for path, values in row["paths"].items():
             counts = " | ".join(str(values["failure_counts"][key]) for key in FAILURE_TYPES)
             lines.append(f"| {name} | {path} | {values['turns']} | {counts} |")
+    for name, row in reports.items():
         lines += ["", f"{name} calls: `{json.dumps(row['call_estimate'], sort_keys=True)}`", ""]
         if not row["dry_run"]:
             lines += [f"{name} G8 detail: `{json.dumps(row['g8'], sort_keys=True)}`", ""]
