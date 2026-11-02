@@ -177,7 +177,14 @@ dropped, light suffix stemming):
   or `six-sided die` that the stem, approved facts, hint, worked example, previous step,
   concept names, misconception summary and recent dialogue do not already contain. A family
   the plan mentions is allowed as a whole, so "tails" is fine in a reply about a coin that
-  only named heads.
+  only named heads. A number counts as a quantity only when a scenario object noun follows
+  it directly or after modifiers such as colours, "fair" or "sided" within the same
+  sentence; instructional nouns ("two things", "three moves") never count, and "head",
+  "tail", "flip" and "toss" are companions of the coin family, never evidence on their own
+  ("in your head"). The 371 original SFT examples in `data/response/original_v1` all pass
+  (`tools.response.build_original_sft` accepts 371 of 371); before that narrowing, three
+  replies that embed the stem verbatim were rejected for "in your head" and "in three
+  moves".
 
 Calibration on the benchmark_v1 review-sheet texts (the only responses with text in the
 repository; MathDial plans were approximated from the sheet's stem and last learner message,

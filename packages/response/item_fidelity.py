@@ -56,8 +56,23 @@ SCENARIO_FAMILIES = {
     )},
     **{colour: frozenset({colour}) for colour in sorted(COLOURS)},
 }
-_VERBS = frozenset({"flip", "toss"})  # allowed with their family, never evidence alone
-FLAGGABLE = frozenset().union(*SCENARIO_FAMILIES.values()) - _VERBS
+# Companions are allowed with their family but are never evidence on their own: "flip" and
+# "toss" are verbs, and "head" and "tail" are everyday words ("in your head").
+_COMPANIONS = frozenset({"flip", "toss", "head", "tail"})
+FLAGGABLE = frozenset().union(*SCENARIO_FAMILIES.values()) - _COMPANIONS
+QUANTITY_NOUNS = FLAGGABLE - COLOURS
+# Words that may stand between a number and the noun it quantifies ("two fair coins",
+# "six-sided die", "3 red marbles"). Anything else ends the phrase, so "two things in your
+# head" and "in three moves. A bag ..." quantify nothing.
+_MODIFIERS = COLOURS | frozenset({
+    "additional", "biased", "big", "coloured", "colored", "complete", "different",
+    "distinct", "equal", "equally", "extra", "fair", "full", "further", "identical",
+    "labeled", "labelled", "large", "likely", "little", "loaded", "marked", "mixed", "more",
+    "new", "numbered", "ordinary", "other", "plain", "random", "regular", "same", "separate",
+    "shuffled", "sided", "simple", "single", "small", "special", "standard", "such", "tiny",
+    "unfair", "whole",
+})
+_SENTENCE = re.compile(r"[.!?;:\n]+")
 NUMBER_WORDS = {
     "two": "2", "three": "3", "four": "4", "five": "5", "six": "6", "seven": "7",
     "eight": "8", "nine": "9", "ten": "10", "eleven": "11", "twelve": "12",
@@ -150,19 +165,27 @@ def allowed_texts(plan: dict) -> list[str]:
 
 
 def quantity_phrases(text: str) -> list[tuple[str, str]]:
-    """``(number, object)`` pairs such as ``("3", "marble")`` from ``3 red marbles``."""
-    tokens = _tokens(text)
+    """``(number, object)`` pairs such as ``("3", "marble")`` from ``3 red marbles``.
+
+    A number counts only when a scenario object noun follows it directly or after modifiers
+    inside the same sentence; abstract or instructional nouns ("two things", "three moves")
+    never form a phrase.
+    """
     found = []
-    for index, token in enumerate(tokens):
-        if not token[0].isdigit():
-            continue
-        for candidate in tokens[index + 1:index + 4]:
-            if candidate[0].isdigit():
-                break
-            stemmed = stem_word(candidate)
-            if stemmed in FLAGGABLE and stemmed not in COLOURS:
-                found.append((token, stemmed))
-                break
+    for sentence in _SENTENCE.split(text):
+        tokens = _tokens(sentence)
+        for index, token in enumerate(tokens):
+            if not token[0].isdigit():
+                continue
+            for candidate in tokens[index + 1:]:
+                if candidate[0].isdigit():
+                    break
+                stemmed = stem_word(candidate)
+                if stemmed in QUANTITY_NOUNS:
+                    found.append((token, stemmed))
+                    break
+                if candidate not in _MODIFIERS and stemmed not in _MODIFIERS:
+                    break
     return found
 
 
