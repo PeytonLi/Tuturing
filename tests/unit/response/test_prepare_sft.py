@@ -9,6 +9,8 @@ from tools.response.prepare_sft import (
     assign_qid_splits,
     build_examples,
     compute_raw_counts,
+    load_move_map,
+    load_turn_labels,
     validate_raw_counts,
 )
 
@@ -158,6 +160,72 @@ def test_opening_student_solution_turn_can_be_disabled():
         "I subtracted the wrong amounts."
     )
     assert focus_closed["plan"]["response_context"]["recent_dialogue"] == []
+
+
+def test_per_turn_labels_replace_the_act_mapping(tmp_path):
+    config, _, rows = inline_input()
+    labeled = {
+        "mathdial:train:0000:t00": "REFLECT",
+        "mathdial:train:0000:t02": "PROBE",
+        "mathdial:train:0000:t03": "EXCLUDE",
+        "mathdial:train:0001:t00": "PRACTICE",
+    }
+    labels_path = tmp_path / "labels.jsonl"
+    labels_path.write_text("".join(
+        json.dumps({"example_id": example_id, "label": label, "model": "labeler-x",
+                    "prompt_version": "prompt-y", "status": "labeled"}) + "\n"
+        for example_id, label in labeled.items()
+    ), encoding="utf-8")
+    map_path = tmp_path / "map.yaml"
+    map_path.write_text(f"status: model_labeled\nlabels_file: {labels_path}\n", encoding="utf-8")
+    move_map = load_move_map(map_path)
+    assert move_map["kind"] == "per_turn"
+    accepted, rejected, _, _ = build_examples(rows, config, move_map)
+    assert {item["example_id"]: item["plan"]["teaching_action"]["move"] for item in accepted} == {
+        "mathdial:train:0000:t00": "REFLECT",
+        "mathdial:train:0000:t02": "PROBE",
+        "mathdial:train:0001:t00": "PRACTICE",
+    }
+    assert Counter(item["reason"] for item in rejected) == {
+        "excluded_by_label": 1, "unlabeled_turn": 2, "empty_text": 1,
+    }
+    reflect = next(item for item in accepted if item["example_id"] == "mathdial:train:0000:t00")
+    assert reflect["action_label_source"] == "mapped"
+    assert reflect["extensions"]["mapping_status"] == "model_labeled"
+    assert reflect["extensions"]["move_label"] == {
+        "source": "model", "model": "labeler-x", "prompt_version": "prompt-y", "status": "labeled",
+    }
+    assert reflect["plan"]["constraints"]["reveal_allowed"] is False
+    assert reflect["plan"]["content"]["reveal_solution"] is None
+    assert reflect["plan"]["assistance"] == "none"
+    bad = tmp_path / "bad.jsonl"
+    bad.write_text(json.dumps({"example_id": "x", "label": "TELLING"}) + "\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="unknown label"):
+        load_turn_labels(bad)
+    act_map = tmp_path / "act.yaml"
+    act_map.write_text("status: draft\nmappings:\n  probing:\n    move: PROBE\n", encoding="utf-8")
+    assert load_move_map(act_map)["kind"] == "per_act"
+
+
+def test_targets_using_an_unseen_profile_name_are_flagged_without_storing_it():
+    config, mapping, rows = inline_input()
+    rows["train"].append((2, {
+        **rows["train"][0][1],
+        "qid": 11,
+        "conversation": (
+            "Teacher: (probing) Hi Ada, walk me through your answer.|EOM|"
+            "Ada: I added them.|EOM|"
+            "Teacher: (focus) Look at what is being taken away."
+        ),
+    }))
+    accepted, _, _, _ = build_examples(rows, config, mapping)
+    flags = {item["example_id"]: item["extensions"]["target_uses_unseen_name"] for item in accepted}
+    assert flags["mathdial:train:0002:t00"] is True
+    assert flags["mathdial:train:0002:t02"] is False
+    assert sum(flags.values()) == 1
+    for item in accepted:
+        assert "Ada" not in json.dumps(item["extensions"])
+        assert "Ada learner profile must not leak" not in json.dumps(item)
 
 
 def test_raw_count_mismatch_reports_expected_and_actual():

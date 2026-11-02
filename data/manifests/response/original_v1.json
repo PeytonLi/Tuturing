@@ -6,7 +6,7 @@
   "cases_file": {
     "path": "evaluation/response/probability_cases_v1.jsonl",
     "rows": 55,
-    "sha256": "3409402f00bb03af29110044bb82fae62de2a6bd71bd5f7b4167907bd0305745"
+    "sha256": "2be7e0d7f67fc3ff49311a31c127a92560a1c4c4b4417f84698eeb0a13fc4120"
   },
   "concise_detailed_pairs": 16,
   "content_sources": {
@@ -228,8 +228,12 @@
   "dataset_id": "original_v1",
   "deduplication": {
     "mathdial": {
-      "dir": "data/sft/mathdial_v1",
-      "status": "mathdial_files_absent"
+      "compared": "every reply, plus learner messages of at least 6 words; shorter messages such as bare numbers or acknowledgements are expected to coincide and are skipped",
+      "mathdial_texts": 24006,
+      "max_similarity": 0.286,
+      "rejected_ids": [],
+      "short_messages_skipped": 219,
+      "status": "compared"
     },
     "method": "exact reply match; normalized match after casefolding, masking numbers and stripping punctuation; near-duplicate when word 3-gram Jaccard is at least 0.85; earlier example_id wins",
     "nearest_neighbour_buckets": {
@@ -4384,7 +4388,7 @@
       "seed": 2,
       "split": "train",
       "tags": [],
-      "words": 157
+      "words": 156
     },
     {
       "attack_group": null,
@@ -5879,17 +5883,17 @@
     {
       "path": "data/sft/original_v1/train.jsonl",
       "rows": 261,
-      "sha256": "276b1bd70ff23545b6b0b7a2dab9186f098bbfe9e3b931a4091c4f1532cc95dc"
+      "sha256": "8fa0ed93a6ebe8736fe46e3c49a6d5b2e11cb2adcbb435b6ba1376ad0ef94703"
     },
     {
       "path": "data/sft/original_v1/validation.jsonl",
       "rows": 55,
-      "sha256": "d46132345ad1bd36e489269826c1c0cfeceaf82a95d07daaaf05644ec1ff2731"
+      "sha256": "5dc87794a5c1ca2add5e2c641ccd440e740fd96cd8d130feaf161d7642065eb7"
     },
     {
       "path": "data/sft/original_v1/test.jsonl",
       "rows": 55,
-      "sha256": "3409402f00bb03af29110044bb82fae62de2a6bd71bd5f7b4167907bd0305745"
+      "sha256": "2be7e0d7f67fc3ff49311a31c127a92560a1c4c4b4417f84698eeb0a13fc4120"
     }
   ],
   "permitted_purposes": [
@@ -5909,7 +5913,7 @@
   "record_files": [
     {
       "path": "data/response/original_v1/records/batch_01_day_one.jsonl",
-      "sha256": "9ea71a81a2797044435542e784212ca08e46cfb18933e07495c14ba08fb1814c"
+      "sha256": "6d08c0817f7dc514b6487cf46aa54f35aa81aeaff4cc83735ac7ec29cd44fcc1"
     },
     {
       "path": "data/response/original_v1/records/batch_02_c01_train.jsonl",
@@ -5929,7 +5933,7 @@
     },
     {
       "path": "data/response/original_v1/records/batch_06_c08_train.jsonl",
-      "sha256": "bb1c3b7a45e9334052f8fe220da113f3494ebec3d0e2c00fea03962dcbfc6679"
+      "sha256": "d190ba07eb13069f360b7741c16756a80bec6e1d035fafa142a54b490b25b007"
     },
     {
       "path": "data/response/original_v1/records/batch_07_validation.jsonl",
@@ -5941,7 +5945,7 @@
     },
     {
       "path": "data/response/original_v1/records/batch_09_pairs.jsonl",
-      "sha256": "bd939cb3ad5acd103b5a639eac8bdb0e356a96ca3047ded9687b91514d08d172"
+      "sha256": "c5c59e95135c837b7d6ae72cff1c88da862144874d3c1c1828e2a13ce16eace1"
     },
     {
       "path": "data/response/original_v1/records/batch_10_gap_fill.jsonl",

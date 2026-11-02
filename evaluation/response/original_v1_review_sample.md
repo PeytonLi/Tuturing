@@ -82,7 +82,7 @@
   - Tutor: Here is a spinner problem: A spinners experiment has 1 favorable outcomes out of 8 equally likely outcomes. Find the probability.
   - Student: can i get a hint first?
 
-**Reply (107 words):** Before any hint, I'd like to see your starting point, because the right hint depends on where you are. Here is the problem again: A spinners experiment has 1 favorable outcomes out of 8 equally likely outcomes. Find the probability. Read it once more and separate two things in your head: the collection of all equally likely outcomes, which is the total, and the subset of those outcomes the event is asking about, which is the favorable group. Then tell me what you count as the total number of equally likely outcomes and how many of them you treat as favorable, and say briefly how you decided?
+**Reply (107 words):** Before any hint, I'd like to see your starting point, because the right hint depends on where you are. Here is the problem again: A spinners experiment has 1 favorable outcomes out of 8 equally likely outcomes. Find the probability. Read it once more and separate two things in your mind: the collection of all equally likely outcomes, which is the total, and the subset of those outcomes the event is asking about, which is the favorable group. Then tell me what you count as the total number of equally likely outcomes and how many of them you treat as favorable, and say briefly how you decided?
 
 | Criterion | Pass/Fail | Notes |
 |---|---|---|

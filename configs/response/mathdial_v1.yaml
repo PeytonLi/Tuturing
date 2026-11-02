@@ -9,7 +9,8 @@ download_readme: README.md
 raw_dir: data/raw/mathdial/acc3878459e0bd8c04ab840056572f0b8b1abe1f
 out_dir: data/sft/mathdial_v1
 manifest_path: data/manifests/response/mathdial_v1.json
-move_map: configs/response/mathdial_move_map_v1.yaml
+move_map: configs/response/mathdial_move_map_v2.yaml  # per-turn model labels; v1 is the draft per-act map
+act_move_map: configs/response/mathdial_move_map_v1.yaml  # draft per-act map, used by the audit sheet only
 expected_counts:
   train_rows: 2262
   test_rows: 599

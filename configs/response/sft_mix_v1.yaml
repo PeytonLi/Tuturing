@@ -1,0 +1,32 @@
+dataset_id: mix_v1
+out_dir: data/sft/mix_v1            # ignored by Git, like every generated SFT file
+manifest_path: data/manifests/response/mix_v1.json
+seed: 20261102
+# PRD 13.2 proposed mix; the MathDial count follows the original count, capped by what passes.
+shares:
+  original: 0.6
+  mathdial: 0.4
+# Repeat every original example this many times per split (reported as repeated exposure).
+original_repeats: 1
+# Admission rules for MathDial targets (PRD 13.2 step 6), applied before sampling.
+mathdial_admission:
+  # Response checks that do not depend on content MathDial plans lack. action_faithful is not
+  # required: MathDial plans carry no permitted hint, approved facts, previous step or worked
+  # example (D09 limitations), so almost every MathDial target fails its move heuristics.
+  required_checks: [math_supported, disclosure_allowed, length_valid, question_count_valid]
+  # PRACTICE, CHALLENGE and CHECK_MASTERY must keep the issued problem (validator_v2 item
+  # fidelity); MathDial turns under these labels mostly pose a new problem, which would teach
+  # item substitution.
+  presenting_moves_keep_item: true
+  # A MathDial plan has no approved worked example, so the target's example is unverified.
+  excluded_moves: [WORKED_EXAMPLE]
+  # Targets that address the learner by a profile name the prompt never shows would teach the
+  # model to invent names (leak review open point 2; stripping the vocative is the alternative).
+  reject_unseen_names: true
+sources:
+  original:
+    dir: data/sft/original_v1
+    manifest: data/manifests/response/original_v1.json
+  mathdial:
+    dir: data/sft/mathdial_v1
+    manifest: data/manifests/response/mathdial_v1.json

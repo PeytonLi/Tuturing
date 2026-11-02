@@ -1,0 +1,45 @@
+dataset_id: mathdial_moves_v1
+# MathDial parsing, pinned revision and split rule come from the SFT prep config.
+source_config: configs/response/mathdial_v1.yaml
+act_move_map: configs/response/mathdial_move_map_v1.yaml
+calibration_csv: evaluation/response/mathdial_mapping_audit_200_model_draft.csv
+calibration_label_column: model_draft_label
+prompt_file: configs/response/mathdial_moves_prompt_v3.txt  # the file stem is the prompt version
+few_shot:                 # drafted calibration rows inserted as examples and held out of the agreement
+  per_label: 3
+  seed: 20261102
+labels_path: data/response/mathdial_moves_v1/labels.jsonl
+manifest_path: data/manifests/response/mathdial_moves_v1.json
+# Ledger, per-model pilot and full label records (with reasons and raw outputs) stay here, ignored by Git.
+run_dir: experiments/response/runs/mathdial_moves_v1
+key_file: ~/.config/tuturing/llm.env
+key_name: OPENAI_API_KEY
+base_url: https://api.openai.com/v1
+temperature: 0            # dropped automatically when a model only accepts its default
+reasoning_effort: minimal # switched to the lowest value a model offers (none/minimal) or dropped
+max_completion_tokens: 120
+timeout_seconds: 60
+concurrency: 12
+spend_cap_usd: 5.0        # hard cap for this task; the full stage fits a subset when the estimate exceeds it
+budget_reserve_usd: 0.10
+agreement_threshold: 0.85
+pricing_note: >-
+  USD per 1M tokens, standard tier, read from https://developers.openai.com/api/docs/pricing
+  (platform.openai.com/docs/pricing redirects there) on 2026-11-02. Reasoning tokens bill as output.
+candidates:  # cheapest first; the pilot stops at the first model that meets the threshold
+  - model: gpt-5-nano
+    input_per_m: 0.05
+    cached_input_per_m: 0.005
+    output_per_m: 0.40
+  - model: gpt-5.4-nano
+    input_per_m: 0.20
+    cached_input_per_m: 0.02
+    output_per_m: 1.25
+  - model: gpt-5-mini
+    input_per_m: 0.25
+    cached_input_per_m: 0.025
+    output_per_m: 2.00
+  - model: gpt-5.4-mini
+    input_per_m: 0.75
+    cached_input_per_m: 0.075
+    output_per_m: 4.50
