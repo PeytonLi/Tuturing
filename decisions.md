@@ -181,3 +181,9 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 **Reading for D10 (assistant):** prompt-only, the frontier model passes the strict checks far more often than Qwen3.8-27B on our own probability items, and the gap is driven by action fidelity and math support, which SFT targets. This is evidence for the decision, not the decision.
 
+
+## 2026-11-02 — Pace adaptation: one-step requests, a pace estimator, and reused pace slots (Person B)
+
+**User direction:** Peyton asked that the tutor notice pace without being told, and selected "Bug fix plus the full plan, steps 1 to 6".
+
+**What changes:** "faster" and "slower" now move pace one step along detailed, normal, concise instead of jumping to an extreme, so a learner can get back to normal. A per-session pace estimator (`packages/learning/pace.py`) keeps a belief over the three paces, treats a typed request as strong evidence, adds weak behavioral evidence (fast correct streaks lean concise; repeated wrong answers, hint and answer requests lean detailed; optional reply-time and message-length cues from `evidence.extensions.pace_cues` when present), and switches only after two agreeing turns. features_v1 keeps its 140 slots and order; slots 136 and 137 (`explicit_faster`, `explicit_slower`) change meaning from on/off request flags to 0 to 1 "leaning faster" and "leaning slower" scores, which equal 1.0 on a turn with a typed request. The simulator gains observable pace cues and a detail-preferring profile. Simulated results are uncalibrated and are not human evidence.
