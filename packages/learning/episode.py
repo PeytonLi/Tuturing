@@ -36,6 +36,7 @@ from packages.simulator.reward import (
 )
 from packages.simulator.scenarios import ROOT, load_scenarios
 from packages.simulator.student import (
+    DEFAULT_SIMULATOR_CONFIG,
     PrivateStudentState,
     StudentOutcome,
     apply_teaching_effect,
@@ -561,15 +562,19 @@ def run_episode(
     strategist: object | None = None,
     horizon: int = HORIZON,
     bank: EventRandomBank | None = None,
+    simulator_config: str | Path = DEFAULT_SIMULATOR_CONFIG,
 ) -> EpisodeResult:
     if not 1 <= horizon <= HORIZON:
         raise ValueError("episode horizon must be between one and sixteen turns")
     random_bank = bank or EventRandomBank()
     graph = load_graph()
     sim_config = yaml.safe_load(
-        (ROOT / "configs/learning/simulator_proto_v1.yaml").read_text(encoding="utf-8")
+        (ROOT / simulator_config).read_text(encoding="utf-8")
     )
-    private = sample_student(scenario, episode_seed, bank=random_bank)
+    environment_bundle_id = Path(simulator_config).stem
+    private = sample_student(
+        scenario, episode_seed, config_path=simulator_config, bank=random_bank
+    )
     beliefs = {f"C{index:02d}": ConceptBelief() for index in range(1, 16)}
     requests = _scenario_requests(scenario)
     if requests["goal"] in ENABLED_CONCEPTS:
@@ -603,7 +608,9 @@ def run_episode(
             raise ValueError(f"unknown strategist policy {strategist_name}")
     navigator = RulesNavigator()
     episode_id = f"{scenario['scenario_id']}-seed-{episode_seed}"
-    pre_score = expected_score(private, goal, scenario["split"])
+    pre_score = expected_score(
+        private, goal, scenario["split"], config_path=simulator_config
+    )
     initial_public = _public_state(
         beliefs,
         current=current,
@@ -705,7 +712,9 @@ def run_episode(
             if beliefs[goal].certified
             else "policy_stop"
         )
-        pre_score_post = expected_score(private, goal, scenario["split"])
+        pre_score_post = expected_score(
+            private, goal, scenario["split"], config_path=simulator_config
+        )
         terminal_reward_components = terminal_components(pre_score, pre_score_post)
         navigator_transitions.append(
             _make_navigator_transition(
@@ -722,7 +731,7 @@ def run_episode(
                 terminated=True,
                 truncated=False,
                 boundary=["session_start"],
-                environment_bundle_id="simulator_proto_v1",
+                environment_bundle_id=environment_bundle_id,
             )
         )
         terminal_added = True
@@ -1031,7 +1040,9 @@ def run_episode(
         )
         next_observation = build_features(public_after)
         if terminal:
-            post_score = expected_score(private, goal, scenario["split"])
+            post_score = expected_score(
+                private, goal, scenario["split"], config_path=simulator_config
+            )
             terminal_reward_components = terminal_components(pre_score, post_score, dropout=dropout)
             for key, value in terminal_reward_components.to_dict().items():
                 setattr(turn_reward, key, getattr(turn_reward, key) + value)
@@ -1060,7 +1071,7 @@ def run_episode(
                 "actor_eligible": actor_eligible,
                 "collector_cut": False,
                 "policy_version": getattr(strategist, "policy_version", "policy_v1"),
-                "environment_bundle_id": "simulator_proto_v1",
+                "environment_bundle_id": environment_bundle_id,
             }
         )
         diagnostics.append(
@@ -1121,7 +1132,7 @@ def run_episode(
                     terminated=True,
                     truncated=False,
                     boundary=boundary,
-                    environment_bundle_id="simulator_proto_v1",
+                    environment_bundle_id=environment_bundle_id,
                 )
             )
             break
@@ -1159,7 +1170,7 @@ def run_episode(
                 terminated=False,
                 truncated=False,
                 boundary=boundary,
-                environment_bundle_id="simulator_proto_v1",
+                environment_bundle_id=environment_bundle_id,
             )
         )
         boundary_success_streak = success_streak
@@ -1238,7 +1249,9 @@ def run_episode(
                 if beliefs[goal].certified
                 else "policy_stop"
             )
-            post_score = expected_score(private, goal, scenario["split"])
+            post_score = expected_score(
+                private, goal, scenario["split"], config_path=simulator_config
+            )
             terminal_reward_components = terminal_components(pre_score, post_score)
             terminal_added = True
             navigator_transitions.append(
@@ -1256,7 +1269,7 @@ def run_episode(
                     terminated=True,
                     truncated=False,
                     boundary=boundary,
-                    environment_bundle_id="simulator_proto_v1",
+                    environment_bundle_id=environment_bundle_id,
                 )
             )
             break
@@ -1264,7 +1277,9 @@ def run_episode(
 
     if not terminal_added:
         raise AssertionError("episode ended without its single terminal reward")
-    post_score = expected_score(private, goal, scenario["split"])
+    post_score = expected_score(
+        private, goal, scenario["split"], config_path=simulator_config
+    )
     gain = post_score - pre_score
     return EpisodeResult(
         episode_id=episode_id,
@@ -1295,6 +1310,7 @@ def simulate_episodes(
     strategist: object | None = None,
     scenarios: list[dict] | None = None,
     run_id: str = "local",
+    simulator_config: str | Path = DEFAULT_SIMULATOR_CONFIG,
 ) -> list[EpisodeResult]:
     if episodes < 1:
         raise ValueError("episodes must be positive")
@@ -1314,6 +1330,7 @@ def simulate_episodes(
                 strategist_name=strategist_name,
                 strategist=strategist,
                 horizon=min(int(scenario["teaching_horizon"]), HORIZON),
+                simulator_config=simulator_config,
             )
         )
     return results

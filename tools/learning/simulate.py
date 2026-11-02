@@ -8,6 +8,7 @@ from pathlib import Path
 import yaml
 
 from packages.learning.episode import ROOT, simulate_episodes, write_run
+from packages.simulator.student import DEFAULT_SIMULATOR_CONFIG
 
 
 def main() -> None:
@@ -23,6 +24,7 @@ def main() -> None:
     episodes = int(args.episodes if args.episodes is not None else config.get("episodes", 100))
     seed = int(args.seed if args.seed is not None else config.get("seed", 20250115))
     split = str(config.get("split", "train"))
+    simulator_config = config.get("simulator_config", DEFAULT_SIMULATOR_CONFIG)
     config_hash = hashlib.sha256(config_path.read_bytes()).hexdigest()
     run_id = f"{config_path.stem}_{args.strategist}_seed{seed}_{episodes}"
     output_dir = (
@@ -34,6 +36,7 @@ def main() -> None:
         seed=seed,
         strategist_name=args.strategist,
         run_id=run_id,
+        simulator_config=simulator_config,
     )
     manifest = {
         "run_id": run_id,
@@ -48,9 +51,7 @@ def main() -> None:
             "navigator": "rules_navigator_v1",
             "strategist": args.strategist,
         },
-        "simulator_config": config.get(
-            "simulator_config", "configs/learning/simulator_proto_v1.yaml"
-        ),
+        "simulator_config": simulator_config,
         "reward_config": config.get("reward_config", "configs/learning/reward_v1.yaml"),
         "graph_version": config.get("graph_version", "graph_proto_v1"),
         "content_version": config.get("content_version", "content_proto_v1"),

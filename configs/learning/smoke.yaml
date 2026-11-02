@@ -4,5 +4,5 @@ seed: 20250115
 episodes: 100
 horizon: 16
 split: train
-simulator_config: configs/learning/simulator_proto_v1.yaml
+simulator_config: configs/learning/simulator_proto_v2.yaml
 reward_config: configs/learning/reward_v1.yaml
