@@ -47,7 +47,7 @@ def openai_compatible(messages, *, env=None, max_tokens=384, timeout=60):
         headers={
             "Authorization": f"Bearer {env['TUTOR_LLM_API_KEY']}",
             "Content-Type": "application/json",
-            "User-Agent": "tutoring-response-eval/1.0",
+            "User-Agent": "tuturing-response-eval/1.0",
         },
         method="POST",
     )

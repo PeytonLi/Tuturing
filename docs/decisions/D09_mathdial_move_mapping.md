@@ -13,20 +13,33 @@
 | `telling` | `EXPLAIN_CONCEPT` | Often explains a calculation or gives substantive reasoning. |
 | `generic` | `EXCLUDE` (`generic_act`) | Frequently provides praise, acknowledgement, or conversational scaffolding without a stable response action. |
 
-The mapping is unaudited and deliberately provisional. Ambiguous examples
-selected for review are in
-`evaluation/response/mathdial_mapping_audit_200.csv`; the exact source text is
-kept there rather than duplicated in this decision record. Representative
-row references include:
+The mapping is unaudited and deliberately provisional. The following short
+verbatim excerpts are selected from the 200-row audit; their qids belong to
+the regrouped training split. Each illustrates why a source act is not a
+reliable response-move label by itself.
 
-- `probing`: `mathdial:test:0035:t10`, `mathdial:test:0118:t14`,
-  `mathdial:test:0282:t16`
-- `focus`: `mathdial:test:0049:t04`, `mathdial:test:0462:t02`,
-  `mathdial:test:0504:t16`
-- `telling`: `mathdial:test:0012:t18`, `mathdial:test:0226:t12`,
-  `mathdial:test:0247:t06`
-- `generic`: `mathdial:test:0048:t00`, `mathdial:test:0265:t00`,
-  `mathdial:test:0324:t00`
+- **`probing`**
+  - `mathdial:test:0035:t10` — “wonderful. now answer this. Ron has red, blue and black pens. together there are 60 pens…” — poses a new problem and asks for its answer, closer to practice than a diagnostic probe.
+  - `mathdial:test:0118:t14` — “no 3 boxes hold 24 pencils so 24/3=” — supplies the operation setup, making this partly a hint rather than an open probe.
+  - `mathdial:test:0282:t16` — “No, we already calculated that Jack's total is 10*30 = 300” — gives a numeric result outright, which is telling rather than probing.
+- **`focus`**
+  - `mathdial:test:0049:t04` — “brillaint, so with the 15 cups and 25 cups what do we need to do with these numbers?” — asks the learner to choose an operation, so it functions as a probe.
+  - `mathdial:test:0462:t02` — “How many visitors were in December?” — asks for a specific answer instead of narrowing attention with a hint.
+  - `mathdial:test:0504:t16` — “And don't forget to add the percentage of blue eggs that have 5 candies.” — gives a direct procedural cue, which can function as a hint.
+- **`telling`**
+  - `mathdial:test:0012:t18` — “so 14 guests got a second hotdog. hence 40-14=26 guests did not get a second hotdog” — states the final count, going beyond a concept explanation.
+  - `mathdial:test:0247:t06` — “The pants and coat costs ($100 - X/5) + X = $244.” — supplies a worked equation and result, making answer disclosure a concern.
+  - `mathdial:test:0293:t12` — “120 students / 2 in a couple = 60 couples.” — directly states the computed quantity, rather than only explaining a method.
+- **`generic`**
+  - `mathdial:test:0048:t00` — “Hi Brenda, could you have a read through the question again and attempt the answer in a differnt way?” — asks for a new attempt, so it has a probing function.
+  - `mathdial:test:0324:t00` — “Hi Claire, please walk me through your solution.” — requests reasoning and could be labeled as a probe.
+  - `mathdial:test:0538:t00` — “You understood the new price is £240.  The second tank would also be £240…” — gives substantive correction and answer content, not just generic scaffolding.
+
+Attribution for the quoted excerpts: Macina et al. (2023), “MathDial: A
+Dialogue Tutoring Dataset with Rich Pedagogical Properties Grounded in Math
+Reasoning Problems,” Findings of EMNLP 2023, arXiv:2305.14536. Dataset
+licensed CC BY 4.0; source revision
+`acc3878459e0bd8c04ab840056572f0b8b1abe1f`.
 
 ## Limitations
 

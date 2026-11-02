@@ -97,7 +97,7 @@ def test_openai_compatible_evaluation_uses_expected_http_request(monkeypatch, tm
     )
     request = captured["request"]
     assert request.full_url == "https://example.invalid/v1/chat/completions"
-    assert request.get_header("User-agent") == "tutoring-response-eval/1.0"
+    assert request.get_header("User-agent") == "tuturing-response-eval/1.0"
     assert request.get_header("Authorization") == "Bearer do-not-log-this"
     body = json.loads(request.data)
     assert body["temperature"] == 0
