@@ -40,6 +40,7 @@ from packages.simulator.student import (
     StudentOutcome,
     apply_teaching_effect,
     dropout_hazard,
+    dropout_hazard_components,
     probability_correct,
     sample_student,
     sample_student_outcome,
@@ -557,6 +558,7 @@ def run_episode(
     run_id: str = "local",
     episode_seed: int = 0,
     strategist_name: str = "rules",
+    strategist: object | None = None,
     horizon: int = HORIZON,
     bank: EventRandomBank | None = None,
 ) -> EpisodeResult:
@@ -590,14 +592,15 @@ def run_episode(
     used_teaching_families: set[str] = set()
     repeated_pattern_evidence: dict[tuple[str, ...], int] = {}
     learner_evidence_count = 0
-    if strategist_name == "rules":
-        strategist = RulesStrategist()
-    elif strategist_name == "random":
-        strategist = RandomStrategist(episode_seed)
-    elif strategist_name == "always_hint":
-        strategist = AlwaysHintStrategist()
-    else:
-        raise ValueError(f"unknown strategist policy {strategist_name}")
+    if strategist is None:
+        if strategist_name == "rules":
+            strategist = RulesStrategist()
+        elif strategist_name == "random":
+            strategist = RandomStrategist(episode_seed)
+        elif strategist_name == "always_hint":
+            strategist = AlwaysHintStrategist()
+        else:
+            raise ValueError(f"unknown strategist policy {strategist_name}")
     navigator = RulesNavigator()
     episode_id = f"{scenario['scenario_id']}-seed-{episode_seed}"
     pre_score = expected_score(private, goal, scenario["split"])
@@ -776,7 +779,7 @@ def run_episode(
         strat_mask = strategist_mask(context)
         action_id = strategist.act(strategist_observation, strat_mask, context)
         move, difficulty, selected_pace = decode_strategist(action_id)
-        actor_eligible = False
+        actor_eligible = True
         if move in {"PROBE", "PRACTICE", "CHALLENGE", "CHECK_MASTERY"}:
             family, instance, item_id = _next_item(
                 current,
@@ -965,8 +968,38 @@ def run_episode(
         )
         dropout_rng = random_bank.rng(scenario["scenario_id"], episode_seed, turn, "dropout")
         stop_rng = random_bank.rng(scenario["scenario_id"], episode_seed, turn, "stop_request")
+        pace_mismatch = selected_pace != private.preferred_pace
+        pace_request = None
+        if pace_mismatch:
+            pace_request_rng = random_bank.rng(
+                scenario["scenario_id"], episode_seed, turn, "pace_mismatch_request"
+            )
+            if float(pace_request_rng.random()) < 0.5:
+                if private.preferred_pace == "concise":
+                    pace_request = "faster"
+                elif private.preferred_pace == "detailed":
+                    pace_request = "slower"
+                else:
+                    pace_request = "slower" if selected_pace == "concise" else "faster"
+                requests["faster"] = pace_request == "faster"
+                requests["slower"] = pace_request == "slower"
+                pace = "concise" if pace_request == "faster" else "detailed"
+        hazard_components = dropout_hazard_components(private, selected_pace, sim_config)
         hazard = dropout_hazard(private, selected_pace, sim_config)
         dropout = float(dropout_rng.random()) < hazard or float(stop_rng.random()) < hazard
+        dropout_cause = None
+        if dropout:
+            cause_total = sum(hazard_components.values())
+            cause_rng = random_bank.rng(
+                scenario["scenario_id"], episode_seed, turn, "dropout_cause"
+            )
+            cause_draw = float(cause_rng.random()) * cause_total
+            cumulative = 0.0
+            for cause, probability in hazard_components.items():
+                cumulative += probability
+                if cause_draw < cumulative:
+                    dropout_cause = cause
+                    break
         terminal = False
         if dropout:
             end_reason = "simulated_dropout"
@@ -1046,6 +1079,11 @@ def run_episode(
                 "private_mastery_before": mastery_before,
                 "private_mastery_after": dict(private.mastery),
                 "private_active_misconceptions": sorted(private.active_misconceptions),
+                "dropout_hazard_components": hazard_components,
+                "dropout_cause": dropout_cause,
+                "pace_mismatch": pace_mismatch,
+                "pace_request_emitted": pace_request is not None,
+                "pace_request": pace_request,
                 "previous_answer_correct": previous_answer_correct,
                 "previous_answer_item_id": previous_answer_item,
                 "teaching_delta": private.mastery[current] - mastery_before[current],
@@ -1254,6 +1292,7 @@ def simulate_episodes(
     split: str = "train",
     seed: int = 20250115,
     strategist_name: str = "rules",
+    strategist: object | None = None,
     scenarios: list[dict] | None = None,
     run_id: str = "local",
 ) -> list[EpisodeResult]:
@@ -1273,6 +1312,7 @@ def simulate_episodes(
                 run_id=run_id,
                 episode_seed=episode_seed,
                 strategist_name=strategist_name,
+                strategist=strategist,
                 horizon=min(int(scenario["teaching_horizon"]), HORIZON),
             )
         )

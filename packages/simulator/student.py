@@ -313,12 +313,19 @@ def apply_teaching_effect(
 
 
 def dropout_hazard(student: PrivateStudentState, pace: str, config: dict | None = None) -> float:
+    return min(1.0, sum(dropout_hazard_components(student, pace, config).values()))
+
+
+def dropout_hazard_components(
+    student: PrivateStudentState, pace: str, config: dict | None = None
+) -> dict[str, float]:
     dropout_config = (config or {}).get("dropout", {})
     base = float(dropout_config.get("base_per_turn", 0.01))
     per_failure = float(dropout_config.get("per_independent_incorrect_after_two", 0.02))
     per_mismatch = float(dropout_config.get("per_pace_mismatch_turn", 0.02))
     extra_incorrect = max(0, student.consecutive_independent_incorrect - 2)
-    hazard = base + per_failure * extra_incorrect
-    if pace != student.preferred_pace:
-        hazard += per_mismatch
-    return min(1.0, hazard)
+    return {
+        "base": base,
+        "incorrect_streak": per_failure * extra_incorrect,
+        "pace_mismatch": per_mismatch if pace != student.preferred_pace else 0.0,
+    }
