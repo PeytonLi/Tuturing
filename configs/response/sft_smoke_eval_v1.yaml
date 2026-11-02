@@ -1,0 +1,142 @@
+# Validation comparison for the SFT smoke run: base Qwen3.8-27B prompt-only versus the
+# smoke LoRA, from one deployment window (PRD 13.5). Runner: tools/response/benchmark.py.
+#   uv run python -m tools.response.benchmark --config configs/response/sft_smoke_eval_v1.yaml \
+#     run --models qwen3.8-27b-base-hotreload,qwen3.8-27b-sft-smoke-v1 --manage-deployment
+# Validation sets only; the probability test set stays frozen (PRD 18.4).
+#
+# Validated deployment shapes for qwen3p8-27b have no MULTI_LORA capability, so
+# enableAddons is rejected (validateOnly, 2026-11-02: "enable_addons requires a deployment
+# shape with the MULTI_LORA capability"). A hot-reload deployment on the validated H100
+# shape passed validateOnly: it serves the base model, then a LoRA load with
+# replaceMergedAddon merges the adapter. So the base entry runs first and the adapter after
+# it, on the same deployment; the harness stops if the adapter's pilot replies all equal
+# the base replies.
+benchmark_id: response_sft_smoke_v1_eval
+run_dir: experiments/response/sft_smoke_v1/runs     # shares the smoke run's ledger
+report_dir: experiments/response/sft_smoke_v1/eval
+keys_file: ~/.config/tuturing/llm.env
+spend_cap_env: TUTURING_BENCH_SPEND_CAP_USD
+spend_cap_usd: 20                 # task cap; training spend is in the same ledger
+chars_per_token_estimate: 3.0
+estimate_safety_factor: 1.3
+min_subsample_cases: 20
+order_seed: 0
+
+case_sets:
+  - name: validation
+    format: jsonl
+    path: experiments/response/sft_smoke_v1/validation_cases_v1.jsonl
+    source: original_v1 validation split (55; exported by tools.response.fireworks_sft convert)
+  - name: b_fixtures
+    format: plan_dir
+    path: contracts/fixtures/learning/valid
+    source: Person B valid TeachingPlan fixtures (8 moves plus the protected check)
+  - name: smoke
+    format: jsonl
+    path: evaluation/response/smoke_cases_v1.jsonl
+    source: Person A synthetic eight-move smoke suite
+
+review:
+  cases: 40
+  seed: 23
+
+models:
+  - id: fallback
+    label: Deterministic fallback (floor)
+    provider: fallback
+
+  - id: gpt-6.1-sol
+    label: OpenAI GPT-6.1 Sol (frontier reference, validation only)
+    provider: openai_compatible
+    base_url: https://api.openai.com/v1
+    model: gpt-6.1-sol
+    api_key_env: OPENAI_API_KEY
+    concurrency: 4
+    timeout_s: 180
+    decoding:
+      temperature: null          # the model accepts only its default temperature
+      max_tokens: 1024
+      token_param: max_completion_tokens
+      extra: {reasoning_effort: low}
+    reasoning: {setting: reasoning_effort=low}
+    pricing:
+      basis: tokens
+      input_usd_per_mtok: 2.00
+      cached_input_usd_per_mtok: 0.10
+      output_usd_per_mtok: 10.00
+      source: https://developers.openai.com/api/docs/models/gpt-6.1-sol
+      checked: 2026-11-02
+      verified: true
+
+  - id: qwen3.8-27b-base-hotreload
+    label: Qwen3.8-27B base, prompt only (hot-reload H100 deployment)
+    provider: openai_compatible
+    base_url: https://api.fireworks.ai/inference/v1
+    model: "{deployment}"
+    api_key_env: FIREWORKS_API_KEY
+    concurrency: 4
+    timeout_s: 180
+    retry: {max_attempts: 4, scaling_attempts: 40, base_delay_s: 5}
+    decoding:
+      temperature: 0
+      max_tokens: 384            # PRD 14.1 output cap
+      token_param: max_tokens
+      extra: {reasoning_effort: none}   # enable_thinking=false, as in training
+    reasoning: {setting: reasoning_effort=none}
+    pricing:
+      basis: gpu_time
+      source: https://fireworks.ai/pricing
+      checked: 2026-11-02
+      verified: true
+    deployment:
+      provider: fireworks
+      base_model: accounts/fireworks/models/qwen3p8-27b
+      hf_repo: Qwen/Qwen3.8-27B
+      hf_revision: 1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0
+      deployment_shape: accounts/fireworks/deploymentShapes/sva2n3mh   # 1x H100 BF16
+      accelerator_type: NVIDIA_H100_80GB
+      accelerator_count: 1
+      precision: BF16
+      usd_per_gpu_hour: 8.00
+      price_source: https://fireworks.ai/pricing (H100 80 GB, $8.00/h, checked 2026-11-02)
+      enable_hot_reload_latest_addon: true
+      min_replica_count: 0
+      max_replica_count: 1
+      scale_to_zero_window: 300s
+      scale_down_window: 300s
+      max_minutes: 45              # hard time budget; $6.00 reserved against the cap
+      delete_buffer_s: 300
+      ready_timeout_s: 2400
+      warmup_timeout_s: 2400
+      id_prefix: tut-sft-eval-qwen38
+      display_name: tuturing sft smoke eval qwen3.8-27b
+      description: Tuturing SFT smoke evaluation (Person A). Delete after the run.
+      purpose: sft-eval
+
+  - id: qwen3.8-27b-sft-smoke-v1
+    label: Qwen3.8-27B + smoke LoRA (original_v1, 3 epochs)
+    provider: openai_compatible
+    base_url: https://api.fireworks.ai/inference/v1
+    model: "{adapter}#{deployment}"
+    api_key_env: FIREWORKS_API_KEY
+    concurrency: 4
+    timeout_s: 180
+    retry: {max_attempts: 4, scaling_attempts: 40, base_delay_s: 5}
+    decoding:
+      temperature: 0
+      max_tokens: 384
+      token_param: max_tokens
+      extra: {reasoning_effort: none}
+    reasoning: {setting: reasoning_effort=none}
+    pricing:
+      basis: gpu_time              # billed through the base entry's deployment
+      source: https://fireworks.ai/pricing
+      checked: 2026-11-02
+      verified: true
+    adapter:
+      model: accounts/peli/models/tut-sft-smoke-v1   # output of the smoke job
+      deployment_entry: qwen3.8-27b-base-hotreload
+      model_candidates: ["{adapter}#{deployment}", "{adapter}", "{deployment}"]
+      load_timeout_s: 1200
+      warmup_rounds: 30
+      warmup_poll_s: 20

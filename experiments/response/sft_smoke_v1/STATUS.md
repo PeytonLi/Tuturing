@@ -1,6 +1,6 @@
 # SFT on Fireworks: status
 
-Updated 2026-11-02 23:25 UTC.
+Updated 2026-11-02 23:33 UTC.
 
 ## Blocked: no job was submitted, $0.00 spent
 
@@ -44,7 +44,27 @@ deployments of ours. The other qwen3p8-27b deployments on `accounts/peli`
 - Commands:
   `uv run python -m tools.response.fireworks_sft upload` then
   `uv run python -m tools.response.fireworks_sft train --confirm` then `poll`.
-- Job B (mix_v1): being prepared on this branch next; its estimate will be added here.
+- A retry at 23:24:38 UTC was refused the same way. The tool deleted the empty dataset
+  object itself, and a `GET` returned 404.
+- Data B (mix_v1, after `git merge main`): train 435 (261 original, 174 MathDial),
+  validation 92 (55 and 37). The MathDial split hashes match `mix_v1.json`. The rebuilt
+  mix files do not match it (train `243a6869…` against `b1c9e41e…`). The original_v1
+  inputs now match `original_v1.json` on main (train `8fa0ed93…`), while `mix_v1.json`
+  was built from an earlier original_v1 build, so main's two manifests disagree. Tokens:
+  train 214,989, validation 45,800, longest example 1,995. All 435 + 92 records convert
+  (stored prompt = `compile_prompt(plan)`). 20 of 20 MathDial examples pass the
+  loss-mask inspector.
+- Job B: the same LoRA settings, 3 epochs at 16 samples per step, which is 84 steps.
+  Warmup is 5 steps. Expected $1.93, upper bound $2.48, reserve $3.73, against the $40
+  full-run cap.
+  Command: `uv run python -m tools.response.fireworks_sft --config
+  configs/response/sft_full_qwen38_fireworks.yaml upload`, then `train --confirm`, then
+  `poll`.
+- Evaluation is also one command:
+  `uv run python -m tools.response.benchmark --config configs/response/sft_smoke_eval_v1.yaml
+  run --models qwen3.8-27b-base-hotreload,qwen3.8-27b-sft-smoke-v1 --manage-deployment`.
+  It runs on one hot-reload H100 deployment: base first, then the LoRA is merged in. No
+  validated shape for this model supports multi-LoRA. $6 is held for 45 minutes at most.
 
 ## What needs a decision (Xueming / Peyton)
 

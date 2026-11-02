@@ -1248,6 +1248,8 @@ def command_plan(args, config, ctx):
                 for c in cases
             )
             line += f"; worst-case ${worst:.2f} for all cases"
+        elif entry.get("adapter"):
+            line += f"; runs on the {entry['adapter']['deployment_entry']} deployment"
         elif cost_basis(entry) == "gpu_time":
             spec = entry["deployment"]
             line += (

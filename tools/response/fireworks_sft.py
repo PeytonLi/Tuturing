@@ -554,6 +554,8 @@ def _paths(cfg):
         "validation_in": Path(cfg["data"]["validation"]),
         "train_out": run_dir / "data" / "train.jsonl",
         "validation_out": run_dir / "data" / "validation.jsonl",
+        "cases_in": Path(cfg["evaluation"].get("validation_cases_source")
+                         or cfg["data"]["validation"]),
         "cases_out": Path(cfg["evaluation"]["validation_cases"]),
         "tokens": run_dir / "tokens.json",
     }
@@ -581,7 +583,7 @@ def command_convert(cfg):
     result = {
         "train": convert_split(paths["train_in"], paths["train_out"]),
         "validation": convert_split(paths["validation_in"], paths["validation_out"]),
-        "validation_cases": export_cases(paths["validation_in"], paths["cases_out"]),
+        "validation_cases": export_cases(paths["cases_in"], paths["cases_out"]),
     }
     print(json.dumps(result, indent=2))
     return 0
