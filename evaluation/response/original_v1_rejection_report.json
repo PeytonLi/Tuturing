@@ -3,12 +3,8 @@
   "dataset_id": "original_v1",
   "deduplication": {
     "mathdial": {
-      "compared": "every reply, plus learner messages of at least 6 words; shorter messages such as bare numbers or acknowledgements are expected to coincide and are skipped",
-      "mathdial_texts": 29944,
-      "max_similarity": 0.286,
-      "rejected_ids": [],
-      "short_messages_skipped": 219,
-      "status": "compared"
+      "dir": "data/sft/mathdial_v1",
+      "status": "mathdial_files_absent"
     },
     "method": "exact reply match; normalized match after casefolding, masking numbers and stripping punctuation; near-duplicate when word 3-gram Jaccard is at least 0.85; earlier example_id wins",
     "nearest_neighbour_buckets": {
