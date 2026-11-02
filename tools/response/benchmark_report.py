@@ -394,10 +394,16 @@ def build_report(config, ctx):
     labels = {entry["id"]: entry.get("label", entry["id"]) for entry in entries}
     written = []
 
+    spend, gpu_events = _ledger_summary(run_dir / "ledger.jsonl")
     by_model = _summary_rows(
         [({"model_id": e["id"], "label": labels[e["id"]]}, list(runs[e["id"]].values()))
          for e in ran]
     )
+    for entry, row in zip(ran, by_model):
+        if cost_basis(entry) == "gpu_time":
+            # GPU-hour entries have no per-call cost; attribute the ledger's GPU spend.
+            row["cost_usd"] = round(spend.get(entry["id"], 0.0), 4)
+            row["cost_usd_per_case"] = round(row["cost_usd"] / row["n"], 6) if row["n"] else 0.0
     by_move_rows, by_set_rows = [], []
     for entry in ran:
         records = list(runs[entry["id"]].values())
@@ -462,7 +468,6 @@ def build_report(config, ctx):
     _write_csv(out_dir / "results_by_case.csv", case_rows, case_columns)
     written.append(out_dir / "results_by_case.csv")
 
-    spend, gpu_events = _ledger_summary(run_dir / "ledger.jsonl")
     deployments = _deployment_records(run_dir)
     review_dir = out_dir / "review"
     if (review_dir / SHEET_FILENAME).exists():
@@ -580,10 +585,12 @@ def build_report(config, ctx):
     lines += ["", "## Deployments", ""]
     if deployments:
         for state in deployments:
+            precision = state.get("precision") or (state.get("create_response") or {}).get(
+                "precision") or "precision n/a"
             lines.append(
                 f"- `{state.get('name') or state.get('deployment_id')}`: "
                 f"{state.get('accelerator_count')}x {state.get('accelerator_type')} "
-                f"({state.get('precision')}), shape `{state.get('deployment_shape')}`, "
+                f"({precision}), shape `{state.get('deployment_shape')}`, "
                 f"created {state.get('create_requested_at')}, ended {state.get('ended_at')}, "
                 f"final state {state.get('state')}, deletion verified "
                 f"{state.get('deleted_verified')}, estimated GPU cost "

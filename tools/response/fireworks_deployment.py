@@ -172,6 +172,7 @@ class DeploymentRun:
             "deployment_shape": self.spec["deployment_shape"],
             "accelerator_type": self.spec.get("accelerator_type"),
             "accelerator_count": int(self.spec.get("accelerator_count", 1)),
+            "precision": self.spec.get("precision"),
             "usd_per_gpu_hour": float(self.spec["usd_per_gpu_hour"]),
             "usd_per_hour": self.usd_per_hour,
             "price_source": self.spec.get("price_source"),
