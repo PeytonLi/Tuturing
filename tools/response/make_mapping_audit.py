@@ -13,6 +13,7 @@ from tools.response.prepare_sft import (
     validate_raw_counts,
 )
 
+DRAFT_ACT_MOVE_MAP = "configs/response/mathdial_move_map_v1.yaml"
 AUDIT_COLUMNS = (
     "example_id", "qid", "source_act", "context_last_student", "teacher_text",
     "draft_move", "label_person_a", "label_person_b", "notes",
@@ -67,6 +68,9 @@ def write_audit(rows, out_path):
 def make_audit(config_path, out_path, seed):
     config = load_config(config_path)
     move_map = load_move_map(config["move_map"])
+    if move_map["kind"] != "per_act":
+        # The audit sheet compares the draft per-act mapping with turn-level judgments.
+        move_map = load_move_map(config.get("act_move_map", DRAFT_ACT_MOVE_MAP))
     rows_by_official, _, _ = load_source(config)
     validate_raw_counts(rows_by_official, config["expected_counts"])
     _, _, candidates, assignments = build_examples(rows_by_official, config, move_map)

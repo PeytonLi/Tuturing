@@ -15,12 +15,16 @@ from packages.response.hashing import canonical_json
 from packages.response.prompt import compile_prompt
 from packages.response.validate import run_checks
 
-GENERATOR_VERSION = "tools.response.prepare_sft v1.1"
+GENERATOR_VERSION = "tools.response.prepare_sft v1.2"
 USER_AGENT = "Tutoring-response-sft-prep/1.0"
 MOVE_ORDER = (
     "PROBE", "HINT", "EXPLAIN_CONCEPT", "WORKED_EXAMPLE",
     "PRACTICE", "CHALLENGE", "CHECK_MASTERY", "REFLECT",
 )
+TURN_LABELS = (*MOVE_ORDER, "EXCLUDE")
+ASSISTANCE_BY_MOVE = {
+    "HINT": "hint", "WORKED_EXAMPLE": "example", "EXPLAIN_CONCEPT": "answer_shown",
+}
 _TEACHER_ACT = re.compile(r"^Teacher:\s*\((\w+)\)\s*")
 _SPEAKER_PREFIX = re.compile(r"^([^:\n]{1,40}):\s*")
 
@@ -48,7 +52,23 @@ def load_config(path):
 
 def load_move_map(path):
     with Path(path).open(encoding="utf-8") as stream:
-        return yaml.safe_load(stream)
+        move_map = yaml.safe_load(stream)
+    move_map.setdefault("kind", "per_turn" if "labels_file" in move_map else "per_act")
+    return move_map
+
+
+def load_turn_labels(path):
+    """Load per-turn move labels keyed by MathDial example_id (a move or EXCLUDE)."""
+    labels = {}
+    with Path(path).open(encoding="utf-8") as stream:
+        for line_number, line in enumerate(stream, 1):
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            if record.get("label") not in TURN_LABELS:
+                raise ValueError(f"{path}:{line_number}: unknown label {record.get('label')!r}")
+            labels[record["example_id"]] = record
+    return labels
 
 
 def _download_if_missing(path, url):
@@ -264,11 +284,7 @@ def _teaching_plan(dialogue_id, example_id, row, move, recent_dialogue, last_stu
         "problem_instance_id": f"mathdial:q{row['qid']}",
         "template_family_id": f"mathdial:q{row['qid']}",
         "assessment_mode": "none",
-        "assistance": {
-            "PROBE": "none",
-            "HINT": "hint",
-            "EXPLAIN_CONCEPT": "answer_shown",
-        }[move],
+        "assistance": ASSISTANCE_BY_MOVE.get(move, "none"),
         "content_bundle_id": "mathdial_v1",
         "content": content,
         "constraints": {
@@ -299,17 +315,13 @@ def _teaching_plan(dialogue_id, example_id, row, move, recent_dialogue, last_stu
     return plan
 
 
-def build_examples(rows_by_official, config, move_map):
-    """Build accepted teacher-turn examples and rejection records from inline rows."""
-    mapping = move_map["mappings"]
-    assignments = assign_qid_splits(rows_by_official, config.get("split_salt", "mathdial"))
-    accepted = []
-    rejected = []
-    audit_candidates = []
+def iter_teacher_turns(rows_by_official, config, assignments=None):
+    """Yield every teacher turn with only the dialogue that precedes it."""
+    if assignments is None:
+        assignments = assign_qid_splits(rows_by_official, config.get("split_salt", "mathdial"))
     for official_split, rows in rows_by_official.items():
         for row_index, row in rows:
             qid = int(row["qid"])
-            split = assignments[qid]
             dialogue_id = f"mathdial:{official_split}:{row_index:04d}"
             turns = _teacher_turns(row)
             student_profile = row.get("student_profile") or ""
@@ -320,12 +332,9 @@ def build_examples(rows_by_official, config, move_map):
                 opening = row.get("student_incorrect_solution")
                 if isinstance(opening, str) and opening.strip():
                     context_prefix.append({"role": "student", "text": opening.strip()})
-            for turn_index, (raw_turn, parsed) in enumerate(zip(turns, parsed_turns)):
+            for turn_index, parsed in enumerate(parsed_turns):
                 if parsed["role"] != "tutor":
                     continue
-                teacher_text = parsed["text"]
-                act = parsed["act"]
-                example_id = f"{dialogue_id}:t{turn_index:02d}"
                 prior = [*context_prefix, *parsed_turns[:turn_index]]
                 recent_dialogue = [
                     {"role": item["role"], "text": item["text"]}
@@ -340,92 +349,194 @@ def build_examples(rows_by_official, config, move_map):
                     ),
                     "",
                 )
-                mapping_entry = mapping.get(act) if act else None
-                candidate = {
-                    "example_id": example_id,
+                yield {
+                    "example_id": f"{dialogue_id}:t{turn_index:02d}",
+                    "dialogue_id": dialogue_id,
                     "qid": qid,
-                    "source_act": act or "",
-                    "context_last_student": last_student,
-                    "teacher_text": teacher_text,
+                    "split": assignments[qid],
                     "official_split": official_split,
                     "row_index": row_index,
                     "turn_index": turn_index,
+                    "act": parsed["act"],
+                    "source_act": parsed["act"] or "",
+                    "teacher_text": parsed["text"],
+                    "context_last_student": last_student,
+                    "recent_dialogue": recent_dialogue,
                     "row": row,
-                    "split": split,
+                    "student_name": student_name,
                 }
-                if teacher_text:
-                    audit_candidates.append(candidate)
-                rejection = None
-                if not teacher_text:
-                    rejection = "empty_text"
-                elif not act:
-                    rejection = "missing_act"
-                elif not mapping_entry:
-                    rejection = "unmapped_act"
-                elif mapping_entry.get("exclude"):
-                    rejection = mapping_entry.get("reason", "excluded_act")
-                elif len(teacher_text.split()) > config["max_words"]:
-                    rejection = "over_max_words"
-                if rejection:
-                    rejected.append({
-                        "example_id": example_id,
-                        "reason": rejection,
-                        "source_act": act,
-                        "split": split,
-                    })
-                    continue
-                move = mapping_entry["move"]
-                plan = _teaching_plan(
-                    dialogue_id, example_id, row, move, recent_dialogue,
-                    last_student, config,
-                )
-                prompt = compile_prompt(plan)
-                rejection = protected_rejection(
-                    plan, prompt, teacher_text, row.get("ground_truth")
-                )
-                if rejection:
-                    rejected.append({
-                        "example_id": example_id,
-                        "reason": rejection,
-                        "source_act": act,
-                        "split": split,
-                    })
-                    continue
-                accepted.append({
-                    "example_id": example_id,
-                    "dialogue_id": dialogue_id,
-                    "original_problem_id": f"mathdial:q{qid}",
-                    "template_family_id": f"mathdial:q{qid}",
-                    "split": split,
-                    "source_id": "mathdial",
-                    "source_revision": config["revision"],
-                    "license_ref": "CC-BY-4.0",
-                    "synthetic": False,
-                    "reviewer_status": "pending",
-                    "action_label_source": "mapped",
-                    "plan": plan,
-                    "prompt": prompt,
-                    "completion": [{"role": "assistant", "content": teacher_text}],
-                    "checks": {
-                        "math_correct": None,
-                        "faithful": None,
-                        "no_early_answer": None,
-                    },
-                    "extensions": {
-                        "mapping_status": move_map.get("status", "draft_unaudited"),
-                        "checks_status": "not_computed",
-                        "mathdial": {
-                            "qid": qid,
-                            "scenario": row.get("scenario"),
-                            "official_split": official_split,
-                            "row_index": row_index,
-                            "turn_index": turn_index,
-                            "source_act": act,
-                        },
-                    },
-                })
+
+
+def uses_unseen_name(name, target, prompt):
+    """True when the target addresses the learner by a profile name the prompt never shows."""
+    if not name:
+        return False
+    pattern = rf"\b{re.escape(name)}\b"
+    prompt_text = "\n".join(message["content"] for message in prompt)
+    return bool(
+        re.search(pattern, target, re.IGNORECASE)
+        and not re.search(pattern, prompt_text, re.IGNORECASE)
+    )
+
+
+def resolve_move(move_map, labels, turn):
+    """Return (move, rejection_reason) for one teacher turn under a per-act or per-turn map."""
+    if move_map.get("kind") == "per_turn":
+        record = labels.get(turn["example_id"])
+        if record is None:
+            return None, "unlabeled_turn"
+        if record["label"] == "EXCLUDE":
+            return None, "excluded_by_label"
+        return record["label"], None
+    act = turn["act"]
+    if not act:
+        return None, "missing_act"
+    entry = move_map["mappings"].get(act)
+    if not entry:
+        return None, "unmapped_act"
+    if entry.get("exclude"):
+        return None, entry.get("reason", "excluded_act")
+    return entry["move"], None
+
+
+def build_examples(rows_by_official, config, move_map, labels=None):
+    """Build accepted teacher-turn examples and rejection records from inline rows."""
+    per_turn = move_map.get("kind") == "per_turn"
+    if per_turn and labels is None:
+        labels = load_turn_labels(move_map["labels_file"])
+    labels = labels or {}
+    assignments = assign_qid_splits(rows_by_official, config.get("split_salt", "mathdial"))
+    accepted = []
+    rejected = []
+    audit_candidates = []
+    for turn in iter_teacher_turns(rows_by_official, config, assignments):
+        example_id = turn["example_id"]
+        teacher_text = turn["teacher_text"]
+        act = turn["act"]
+        split = turn["split"]
+        row = turn["row"]
+        candidate = {
+            key: turn[key] for key in (
+                "example_id", "qid", "source_act", "context_last_student", "teacher_text",
+                "official_split", "row_index", "turn_index", "row", "split",
+            )
+        }
+        if teacher_text:
+            audit_candidates.append(candidate)
+        move = None
+        rejection = None
+        if not teacher_text:
+            rejection = "empty_text"
+        else:
+            move, rejection = resolve_move(move_map, labels, turn)
+            if rejection is None and len(teacher_text.split()) > config["max_words"]:
+                rejection = "over_max_words"
+        if rejection:
+            rejected.append({
+                "example_id": example_id,
+                "reason": rejection,
+                "source_act": act,
+                "split": split,
+            })
+            continue
+        plan = _teaching_plan(
+            turn["dialogue_id"], example_id, row, move, turn["recent_dialogue"],
+            turn["context_last_student"], config,
+        )
+        prompt = compile_prompt(plan)
+        rejection = protected_rejection(
+            plan, prompt, teacher_text, row.get("ground_truth")
+        )
+        if rejection:
+            rejected.append({
+                "example_id": example_id,
+                "reason": rejection,
+                "source_act": act,
+                "split": split,
+            })
+            continue
+        if per_turn:
+            label_record = labels[example_id]
+            move_label = {
+                "source": "model",
+                "model": label_record.get("model"),
+                "prompt_version": label_record.get("prompt_version"),
+                "status": label_record.get("status"),
+            }
+        else:
+            move_label = {"source": "act_mapping", "source_act": act}
+        accepted.append({
+            "example_id": example_id,
+            "dialogue_id": turn["dialogue_id"],
+            "original_problem_id": f"mathdial:q{turn['qid']}",
+            "template_family_id": f"mathdial:q{turn['qid']}",
+            "split": split,
+            "source_id": "mathdial",
+            "source_revision": config["revision"],
+            "license_ref": "CC-BY-4.0",
+            "synthetic": False,
+            "reviewer_status": "pending",
+            "action_label_source": "mapped",
+            "plan": plan,
+            "prompt": prompt,
+            "completion": [{"role": "assistant", "content": teacher_text}],
+            "checks": {
+                "math_correct": None,
+                "faithful": None,
+                "no_early_answer": None,
+            },
+            "extensions": {
+                "mapping_status": move_map.get("status", "draft_unaudited"),
+                "move_label": move_label,
+                "target_uses_unseen_name": uses_unseen_name(
+                    turn["student_name"], teacher_text, prompt
+                ),
+                "checks_status": "not_computed",
+                "mathdial": {
+                    "qid": turn["qid"],
+                    "scenario": row.get("scenario"),
+                    "official_split": turn["official_split"],
+                    "row_index": turn["row_index"],
+                    "turn_index": turn["turn_index"],
+                    "source_act": act,
+                },
+            },
+        })
     accepted.sort(key=lambda example: example["example_id"])
     return accepted, rejected, audit_candidates, assignments
+
+
+def mapping_summary(config, move_map, labels, accepted):
+    """Describe the move map in the manifest, with the labels file when labels are per turn."""
+    summary = {
+        "path": config["move_map"],
+        "sha256": sha256_file(Path(config["move_map"])),
+        "status": move_map.get("status", "draft_unaudited"),
+        "kind": move_map["kind"],
+    }
+    if move_map["kind"] == "per_turn":
+        labels_path = Path(move_map["labels_file"])
+        used = Counter(
+            (
+                labels[example["example_id"]].get("model"),
+                labels[example["example_id"]].get("prompt_version"),
+            )
+            for example in accepted
+        )
+        summary.update({
+            "label_source": "model, never human",
+            "labels_file": {
+                "path": str(labels_path),
+                "sha256": sha256_file(labels_path),
+                "rows": len(labels),
+            },
+            "labels_manifest": move_map.get("labels_manifest"),
+            "labelers_used": [
+                {"model": model, "prompt_version": version, "accepted_examples": count}
+                for (model, version), count in sorted(used.items(), key=str)
+            ],
+        })
+    return summary
 
 
 def _write_jsonl(path, records):
@@ -472,9 +583,12 @@ def _split_statistics(accepted, assignments):
 def prepare(config_path):
     config = load_config(config_path)
     move_map = load_move_map(config["move_map"])
+    labels = load_turn_labels(move_map["labels_file"]) if move_map["kind"] == "per_turn" else None
     rows_by_official, downloads, download_urls = load_source(config)
     raw_counts = validate_raw_counts(rows_by_official, config["expected_counts"])
-    accepted, rejected, _, assignments = build_examples(rows_by_official, config, move_map)
+    accepted, rejected, _, assignments = build_examples(
+        rows_by_official, config, move_map, labels
+    )
 
     out_dir = Path(config["out_dir"])
     split_records = {
@@ -514,7 +628,6 @@ def prepare(config_path):
         split: sorted(int(qid) for qid, assigned in assignments.items() if assigned == split)
         for split in ("train", "validation", "test")
     }
-    mapping_path = Path(config["move_map"])
     config_path_obj = Path(config_path)
     manifest = {
         "source_id": config["source_id"],
@@ -566,11 +679,7 @@ def prepare(config_path):
         "official_split_crosstab": official_split_crosstab,
         "attribution": config["attribution"],
         "responsible_owner": "Person A",
-        "mapping": {
-            "path": config["move_map"],
-            "sha256": sha256_file(mapping_path),
-            "status": move_map.get("status", "draft_unaudited"),
-        },
+        "mapping": mapping_summary(config, move_map, labels, accepted),
         "config": {"path": str(config_path), "sha256": sha256_file(config_path_obj)},
         "generator": GENERATOR_VERSION,
         "output_files": output_files,
@@ -579,13 +688,20 @@ def prepare(config_path):
             "Hashed and counted raw source files; validated the pinned raw count assertions.",
             "Pooled dialogues and split qids deterministically before expanding turns.",
             "Parsed preceding dialogue context; stripped known speaker and teacher-act prefixes.",
-            "Mapped probing/focus/telling acts; excluded generic, malformed and overlength turns.",
+            (
+                "Applied the per-turn model labels; excluded EXCLUDE-labeled, unlabeled, "
+                "empty and overlength turns."
+                if move_map["kind"] == "per_turn"
+                else "Mapped probing/focus/telling acts; excluded generic, malformed and "
+                "overlength turns."
+            ),
             "Rejected reveal-forbidden examples whose prompt already holds the full reference "
             "solution or whose target states the forbidden final answer.",
             "Compiled deterministic prompts and wrote turn-level SFT records.",
         ],
         "notes": [
-            "SFT checks are null and not computed; mapped labels are draft_unaudited.",
+            "SFT checks are null and not computed; mapped labels are "
+            f"{move_map.get('status', 'draft_unaudited')} and never human labels.",
             "The disclosure check (packages.response.validate) runs only as an admission "
             "filter on reveal-forbidden targets; its result is not stored in checks.",
             "External MathDial concepts use navigation action_id -1 because they have no "
@@ -593,6 +709,9 @@ def prepare(config_path):
             "MathDial HINT and EXPLAIN_CONCEPT plans lack the corresponding PRD 9.3 "
             "approved hint/facts.",
             "Only EXPLAIN_CONCEPT plans include ground_truth, as reveal_solution.",
+            "extensions.target_uses_unseen_name flags targets that address the learner by a "
+            "profile name the prompt never shows (leak review open point 2); the name itself "
+            "is never stored.",
         ],
     }
     manifest_path = Path(config["manifest_path"])

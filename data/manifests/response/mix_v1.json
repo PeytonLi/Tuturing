@@ -1,0 +1,462 @@
+{
+  "config": {
+    "path": "configs/response/sft_mix_v1.yaml",
+    "sha256": "dca2df0f68c67680b2045f74478d175dceab85ffc41f52529ac7ed0c2fc120ed"
+  },
+  "counts_per_split": {
+    "test": {
+      "concepts": {
+        "original": {
+          "C01": 8,
+          "C02": 13,
+          "C03": 10,
+          "C06": 12,
+          "C08": 12
+        }
+      },
+      "mathdial_admitted": 1199,
+      "mathdial_available": 1845,
+      "mathdial_rejected_by_move": {
+        "CHALLENGE": {
+          "new_item_under_presenting_move": 5,
+          "target_uses_unseen_name": 1
+        },
+        "EXPLAIN_CONCEPT": {
+          "failed_check:math_supported": 35,
+          "target_uses_unseen_name": 1
+        },
+        "HINT": {
+          "failed_check:math_supported": 210,
+          "failed_check:question_count_valid": 15,
+          "target_uses_unseen_name": 16
+        },
+        "PRACTICE": {
+          "failed_check:math_supported": 17,
+          "new_item_under_presenting_move": 36,
+          "target_uses_unseen_name": 3
+        },
+        "PROBE": {
+          "failed_check:math_supported": 27,
+          "failed_check:question_count_valid": 7,
+          "target_uses_unseen_name": 156
+        },
+        "REFLECT": {
+          "failed_check:math_supported": 93,
+          "failed_check:question_count_valid": 10,
+          "target_uses_unseen_name": 10
+        },
+        "WORKED_EXAMPLE": {
+          "excluded_move:WORKED_EXAMPLE": 4
+        }
+      },
+      "mathdial_rejected_by_reason": {
+        "excluded_move:WORKED_EXAMPLE": 4,
+        "failed_check:math_supported": 382,
+        "failed_check:question_count_valid": 32,
+        "new_item_under_presenting_move": 41,
+        "target_uses_unseen_name": 187
+      },
+      "mathdial_sampled": 37,
+      "mathdial_target": 37,
+      "mix": {
+        "mathdial": 0.4022,
+        "original": 0.5978
+      },
+      "moves": {
+        "mathdial": {
+          "EXPLAIN_CONCEPT": 10,
+          "HINT": 9,
+          "PROBE": 9,
+          "REFLECT": 9
+        },
+        "mathdial_admitted": {
+          "EXPLAIN_CONCEPT": 134,
+          "HINT": 363,
+          "PROBE": 466,
+          "REFLECT": 236
+        },
+        "mathdial_available": {
+          "CHALLENGE": 6,
+          "EXPLAIN_CONCEPT": 170,
+          "HINT": 604,
+          "PRACTICE": 56,
+          "PROBE": 656,
+          "REFLECT": 349,
+          "WORKED_EXAMPLE": 4
+        },
+        "original": {
+          "CHALLENGE": 2,
+          "CHECK_MASTERY": 9,
+          "EXPLAIN_CONCEPT": 6,
+          "HINT": 10,
+          "PRACTICE": 11,
+          "PROBE": 8,
+          "REFLECT": 6,
+          "WORKED_EXAMPLE": 3
+        }
+      },
+      "original_examples": 55,
+      "original_exposures": 55,
+      "original_repeats": 1,
+      "repeated_exposure": {
+        "mathdial_examples_repeated": 0,
+        "original_examples_repeated": 0,
+        "times": 1
+      },
+      "total": 92
+    },
+    "train": {
+      "concepts": {
+        "original": {
+          "C01": 57,
+          "C02": 50,
+          "C03": 46,
+          "C06": 55,
+          "C08": 53
+        }
+      },
+      "mathdial_admitted": 3219,
+      "mathdial_available": 5030,
+      "mathdial_rejected_by_move": {
+        "CHALLENGE": {
+          "failed_check:math_supported": 4,
+          "new_item_under_presenting_move": 10
+        },
+        "CHECK_MASTERY": {
+          "new_item_under_presenting_move": 2
+        },
+        "EXPLAIN_CONCEPT": {
+          "failed_check:math_supported": 109,
+          "target_uses_unseen_name": 5
+        },
+        "HINT": {
+          "failed_check:math_supported": 577,
+          "failed_check:question_count_valid": 24,
+          "target_uses_unseen_name": 43
+        },
+        "PRACTICE": {
+          "failed_check:math_supported": 52,
+          "new_item_under_presenting_move": 106,
+          "target_uses_unseen_name": 7
+        },
+        "PROBE": {
+          "failed_check:math_supported": 73,
+          "failed_check:question_count_valid": 11,
+          "target_uses_unseen_name": 428
+        },
+        "REFLECT": {
+          "failed_check:math_supported": 256,
+          "failed_check:question_count_valid": 40,
+          "target_uses_unseen_name": 51
+        },
+        "WORKED_EXAMPLE": {
+          "excluded_move:WORKED_EXAMPLE": 13
+        }
+      },
+      "mathdial_rejected_by_reason": {
+        "excluded_move:WORKED_EXAMPLE": 13,
+        "failed_check:math_supported": 1071,
+        "failed_check:question_count_valid": 75,
+        "new_item_under_presenting_move": 118,
+        "target_uses_unseen_name": 534
+      },
+      "mathdial_sampled": 174,
+      "mathdial_target": 174,
+      "mix": {
+        "mathdial": 0.4,
+        "original": 0.6
+      },
+      "moves": {
+        "mathdial": {
+          "EXPLAIN_CONCEPT": 43,
+          "HINT": 43,
+          "PRACTICE": 2,
+          "PROBE": 43,
+          "REFLECT": 43
+        },
+        "mathdial_admitted": {
+          "EXPLAIN_CONCEPT": 456,
+          "HINT": 1038,
+          "PRACTICE": 2,
+          "PROBE": 1139,
+          "REFLECT": 584
+        },
+        "mathdial_available": {
+          "CHALLENGE": 14,
+          "CHECK_MASTERY": 2,
+          "EXPLAIN_CONCEPT": 570,
+          "HINT": 1682,
+          "PRACTICE": 167,
+          "PROBE": 1651,
+          "REFLECT": 931,
+          "WORKED_EXAMPLE": 13
+        },
+        "original": {
+          "CHALLENGE": 12,
+          "CHECK_MASTERY": 29,
+          "EXPLAIN_CONCEPT": 34,
+          "HINT": 47,
+          "PRACTICE": 71,
+          "PROBE": 29,
+          "REFLECT": 23,
+          "WORKED_EXAMPLE": 16
+        }
+      },
+      "original_examples": 261,
+      "original_exposures": 261,
+      "original_repeats": 1,
+      "repeated_exposure": {
+        "mathdial_examples_repeated": 0,
+        "original_examples_repeated": 0,
+        "times": 1
+      },
+      "total": 435
+    },
+    "validation": {
+      "concepts": {
+        "original": {
+          "C01": 13,
+          "C02": 9,
+          "C03": 10,
+          "C06": 12,
+          "C08": 11
+        }
+      },
+      "mathdial_admitted": 806,
+      "mathdial_available": 1271,
+      "mathdial_rejected_by_move": {
+        "CHALLENGE": {
+          "failed_check:math_supported": 1,
+          "new_item_under_presenting_move": 2
+        },
+        "CHECK_MASTERY": {
+          "new_item_under_presenting_move": 3
+        },
+        "EXPLAIN_CONCEPT": {
+          "failed_check:math_supported": 18,
+          "target_uses_unseen_name": 1
+        },
+        "HINT": {
+          "failed_check:math_supported": 133,
+          "failed_check:question_count_valid": 8,
+          "target_uses_unseen_name": 13
+        },
+        "PRACTICE": {
+          "failed_check:math_supported": 13,
+          "failed_check:question_count_valid": 1,
+          "new_item_under_presenting_move": 33,
+          "target_uses_unseen_name": 2
+        },
+        "PROBE": {
+          "failed_check:math_supported": 20,
+          "failed_check:question_count_valid": 1,
+          "target_uses_unseen_name": 108
+        },
+        "REFLECT": {
+          "failed_check:math_supported": 78,
+          "failed_check:question_count_valid": 10,
+          "target_uses_unseen_name": 19
+        },
+        "WORKED_EXAMPLE": {
+          "excluded_move:WORKED_EXAMPLE": 1
+        }
+      },
+      "mathdial_rejected_by_reason": {
+        "excluded_move:WORKED_EXAMPLE": 1,
+        "failed_check:math_supported": 263,
+        "failed_check:question_count_valid": 20,
+        "new_item_under_presenting_move": 38,
+        "target_uses_unseen_name": 143
+      },
+      "mathdial_sampled": 37,
+      "mathdial_target": 37,
+      "mix": {
+        "mathdial": 0.4022,
+        "original": 0.5978
+      },
+      "moves": {
+        "mathdial": {
+          "EXPLAIN_CONCEPT": 9,
+          "HINT": 9,
+          "PRACTICE": 1,
+          "PROBE": 9,
+          "REFLECT": 9
+        },
+        "mathdial_admitted": {
+          "EXPLAIN_CONCEPT": 99,
+          "HINT": 248,
+          "PRACTICE": 1,
+          "PROBE": 306,
+          "REFLECT": 152
+        },
+        "mathdial_available": {
+          "CHALLENGE": 3,
+          "CHECK_MASTERY": 3,
+          "EXPLAIN_CONCEPT": 118,
+          "HINT": 402,
+          "PRACTICE": 50,
+          "PROBE": 435,
+          "REFLECT": 259,
+          "WORKED_EXAMPLE": 1
+        },
+        "original": {
+          "CHALLENGE": 1,
+          "CHECK_MASTERY": 6,
+          "EXPLAIN_CONCEPT": 7,
+          "HINT": 7,
+          "PRACTICE": 15,
+          "PROBE": 8,
+          "REFLECT": 8,
+          "WORKED_EXAMPLE": 3
+        }
+      },
+      "original_examples": 55,
+      "original_exposures": 55,
+      "original_repeats": 1,
+      "repeated_exposure": {
+        "mathdial_examples_repeated": 0,
+        "original_examples_repeated": 0,
+        "times": 1
+      },
+      "total": 92
+    }
+  },
+  "dataset_id": "mix_v1",
+  "generated_at": "2026-11-02T23:09:54+00:00",
+  "mathdial_admission": {
+    "excluded_moves": [
+      "WORKED_EXAMPLE"
+    ],
+    "presenting_moves_keep_item": true,
+    "reject_unseen_names": true,
+    "required_checks": [
+      "math_supported",
+      "disclosure_allowed",
+      "length_valid",
+      "question_count_valid"
+    ],
+    "validator_version": "validator_v2"
+  },
+  "notes": [
+    "Original examples are synthetic and pending review; MathDial labels are model-made (action_label_source mapped), never human labels.",
+    "The mix is capped by what passes: the MathDial count follows the original count, so most admitted MathDial examples stay unused; raising original_repeats uses more of them and is reported as repeated exposure.",
+    "MathDial records keep prepare_sft's null checks and extensions block; they do not validate against SFTExample (leak review open point 4); the trainer reads only prompt and completion."
+  ],
+  "output_files": [
+    {
+      "path": "data/sft/mix_v1/train.jsonl",
+      "rows": 435,
+      "sha256": "b1c9e41e186713a3934656611237b91105aaeea402fca60033f584800451d2ef"
+    },
+    {
+      "path": "data/sft/mix_v1/validation.jsonl",
+      "rows": 92,
+      "sha256": "75f0de07002ba6c4d43814e3f52bba8f2c09f96863f9c032e530d3aa70e8d51f"
+    },
+    {
+      "path": "data/sft/mix_v1/test.jsonl",
+      "rows": 92,
+      "sha256": "73ba28ed9a4da03fc53db59aa58f13278d390f6e75e690d18bfa33a9570a07a7"
+    }
+  ],
+  "repeated_exposure": {
+    "test": {
+      "mathdial_examples_repeated": 0,
+      "original_examples_repeated": 0,
+      "times": 1
+    },
+    "train": {
+      "mathdial_examples_repeated": 0,
+      "original_examples_repeated": 0,
+      "times": 1
+    },
+    "validation": {
+      "mathdial_examples_repeated": 0,
+      "original_examples_repeated": 0,
+      "times": 1
+    }
+  },
+  "rule": "Every original example of a split is used (repeated original_repeats times); MathDial examples of the same split are drawn in a per-move round robin until the mathdial share is reached or the split's MathDial pool is exhausted. MathDial keeps its own qid-level split; protected-assessment MathDial examples were already rejected by prepare_sft.",
+  "seed": 20261102,
+  "shares_target": {
+    "mathdial": 0.4,
+    "original": 0.6
+  },
+  "sources": {
+    "mathdial": {
+      "action_label_source": "mapped",
+      "dir": "data/sft/mathdial_v1",
+      "manifest": {
+        "path": "data/manifests/response/mathdial_v1.json",
+        "sha256": "ce76be89e5bab2fe585d253618c9435ffc3b65b7d99faa2ac795c2c726eb3ff5"
+      },
+      "mapping": {
+        "kind": "per_turn",
+        "label_source": "model, never human",
+        "labelers_used": [
+          {
+            "accepted_examples": 8146,
+            "model": "gpt-5.4-mini",
+            "prompt_version": "mathdial_moves_prompt_v3-fs3-s20261102"
+          }
+        ],
+        "labels_file": {
+          "path": "data/response/mathdial_moves_v1/labels.jsonl",
+          "rows": 9575,
+          "sha256": "8eea6753543f97c4e473dc34c51d02d9cd81eaa9ce4dd1ac88f55dadfde4352e"
+        },
+        "labels_manifest": "data/manifests/response/mathdial_moves_v1.json",
+        "path": "configs/response/mathdial_move_map_v2.yaml",
+        "sha256": "6095474cd12dcc447359f01c6049ea9a24c889c80b1687bf6761b1abdcb80ab1",
+        "status": "model_labeled"
+      },
+      "reviewer_status": "pending",
+      "split_files": {
+        "test": {
+          "path": "data/sft/mathdial_v1/test.jsonl",
+          "sha256": "9d07c4541e2652690f8d54631b263479da5868001d7aa198a58beef97a18bcf9"
+        },
+        "train": {
+          "path": "data/sft/mathdial_v1/train.jsonl",
+          "sha256": "b5cd4ceb6af03726277aab0d5996a858af396ca34addb059ae01cbba0ca324c0"
+        },
+        "validation": {
+          "path": "data/sft/mathdial_v1/validation.jsonl",
+          "sha256": "050a34560f8bad94e9c149697564133cdbf9cc88cbfb9515e156bbeb6b81fb2d"
+        }
+      }
+    },
+    "original": {
+      "action_label_source": "synthetic",
+      "dir": "data/sft/original_v1",
+      "manifest": {
+        "path": "data/manifests/response/original_v1.json",
+        "sha256": "729f38f19a785caba615c0ce43351aa3fd29453ff220d3c21a416a87de636618"
+      },
+      "mapping": null,
+      "reviewer_status": "pending",
+      "split_files": {
+        "test": {
+          "path": "data/sft/original_v1/test.jsonl",
+          "sha256": "3347bff4b858726f5ba5165802373a91e53d540f530fb544aa31d78fc3492cee"
+        },
+        "train": {
+          "path": "data/sft/original_v1/train.jsonl",
+          "sha256": "e013dc0c8f1c29a17faa8474c35135df3a32b55f542c5c9451fded413f63b115"
+        },
+        "validation": {
+          "path": "data/sft/original_v1/validation.jsonl",
+          "sha256": "9896233f04a8fbecc2585b024ca9d1a1c688b90fee556f946e1432aacafe35ae"
+        }
+      }
+    }
+  },
+  "tool_version": "tools.response.build_sft_mix v1",
+  "totals": {
+    "examples": 619,
+    "mathdial_admitted": 5224,
+    "mathdial_available": 8146,
+    "mathdial_sampled": 248,
+    "original_exposures": 371
+  }
+}

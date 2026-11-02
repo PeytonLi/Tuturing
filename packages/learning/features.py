@@ -16,6 +16,13 @@ def _get(source: dict, key: str, default: object = None) -> object:
     return source.get(key, default)
 
 
+def _lean(state: dict, lean_key: str, flag_key: str) -> float:
+    value = state.get(lean_key)
+    if value is None:
+        return float(bool(_get(state, flag_key, False)))
+    return min(1.0, max(0.0, float(value)))
+
+
 def build_features(state: dict, *, navigator: bool = False) -> list[float]:
     concepts = state.get("concepts", [])
     if isinstance(concepts, dict):
@@ -81,8 +88,8 @@ def build_features(state: dict, *, navigator: bool = False) -> list[float]:
         min(1.0, max(0.0, float(_get(state, "independent_success_streak", 0)) / 3)),
         min(1.0, max(0.0, float(_get(state, "remaining_budget", 16)) / 16)),
         float(bool(_get(state, "explicit_skip", False))),
-        float(bool(_get(state, "explicit_faster", False))),
-        float(bool(_get(state, "explicit_slower", False))),
+        _lean(state, "pace_lean_faster", "explicit_faster"),
+        _lean(state, "pace_lean_slower", "explicit_slower"),
         float(bool(_get(state, "response_failure", False))),
         min(1.0, max(0.0, float(_get(state, "stack_depth", 0)) / 4)),
     )

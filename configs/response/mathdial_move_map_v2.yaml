@@ -1,0 +1,26 @@
+# Per-turn move labels for MathDial teacher turns, produced by a model (never by a person).
+# Xueming waived D09's human audit for the hackathon on 2026-11-02; Person B's Strategist may
+# not imitate these labels without Peyton's acceptance. prepare_sft reads the labels file
+# instead of a per-act mapping; turns labeled EXCLUDE or missing from the file are rejected.
+status: model_labeled
+kind: per_turn
+labels_file: data/response/mathdial_moves_v1/labels.jsonl
+labels_manifest: data/manifests/response/mathdial_moves_v1.json
+label_source: model
+labeler:
+  model: gpt-5.4-mini
+  prompt_version: mathdial_moves_prompt_v3-fs3-s20261102
+  prompt_file: configs/response/mathdial_moves_prompt_v3.txt
+  tool: tools/response/label_mathdial_moves.py
+  calibration: >-
+    80.2 percent agreement (146 of 182 held-out rows) with the model-drafted labels in
+    evaluation/response/mathdial_mapping_audit_200_model_draft.csv; the 85 percent target was
+    not met by any candidate, see data/manifests/response/mathdial_moves_v1.json. The pilot and
+    the full run gave the same label on 85 of 88 shared calibration rows.
+  coverage: >-
+    9,575 of the 18,541 usable teacher turns under the $5 cap: all 2,127 test turns, 1,489 of
+    1,576 validation turns and 5,959 of 14,838 train turns (per-act round robin).
+unlabeled_turns: rejected as unlabeled_turn
+excluded_turns: rejected as excluded_by_label
+# The draft per-act mapping (configs/response/mathdial_move_map_v1.yaml) agreed with the same
+# drafted labels on 74 of 200 turns (37 percent); it stays only as a reference.
