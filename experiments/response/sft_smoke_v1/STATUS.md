@@ -1,8 +1,29 @@
 # SFT on Fireworks: status
 
-Updated 2026-11-02 23:35 UTC (final for this session).
+Updated 2026-11-02 23:58 UTC.
 
-## Blocked: no job was submitted, $0.00 spent
+## Option B (OpenAI) is ready and waiting for Xueming's approval
+
+Nothing was uploaded and no job exists; $0.00 spent. The plan trains
+`gpt-4.1-mini-2025-04-14` on mix_v1 for 3 epochs.
+
+- Training tokens: 195,509 per epoch (o200k_base), so 586,527 billed.
+- Expected cost: **$2.93**. The upper bound is $3.56, and $5.34 is held in reserve.
+- Evaluation: at most $0.48 in the worst case for the base model, the final model and
+  the two checkpoints, plus the single test run.
+- The effective cap is $25: the keys file allows $25, and the config's $40 can only
+  lower it.
+
+The stronger alternative, `gpt-4.1-2025-04-14`, is expected to cost $14.66 (upper bound
+$17.79).
+
+This org has never fine-tuned. OpenAI is closing fine-tuning to new users, so whether
+this key may create a job is only known at `train --confirm`. A refusal there costs
+nothing.
+
+Commands are in `docs/runbooks/sft_openai.md`.
+
+## Fireworks: blocked, no job was submitted, $0.00 spent
 
 Fireworks refuses dataset uploads for `accounts/peli`. A managed SFT job can only train
 on an uploaded dataset, so neither job A (original_v1) nor job B (mix_v1) can start, on

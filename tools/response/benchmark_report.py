@@ -18,6 +18,7 @@ from packages.response.validate import VALIDATOR_VERSION
 from tools.response.benchmark import (
     HARNESS_VERSION,
     cost_basis,
+    fine_tuned_model,
     load_all_cases,
     load_results,
     stratified_order,
@@ -147,7 +148,7 @@ def _model_table(entries, runs):
         decoding = entry.get("decoding") or {}
         temp = decoding.get("temperature")
         reasoning = (entry.get("reasoning") or {}).get("setting", "n/a")
-        model = ((entry.get("adapter") or {}).get("model")
+        model = (fine_tuned_model(entry) or (entry.get("adapter") or {}).get("model")
                  or (entry.get("deployment") or {}).get("base_model")
                  or entry.get("model") or "-")
         lines.append(

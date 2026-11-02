@@ -101,8 +101,8 @@ def write_jsonl(path, records):
 # Data conversion
 
 
-def to_fireworks_record(example):
-    """One SFTExample as a Fireworks chat record; only the tutor reply carries loss.
+def chat_turns(example):
+    """Return (system, user, reply) of one SFTExample after the shared consistency checks.
 
     The stored prompt must equal ``compile_prompt(plan)``, which is what the benchmark
     harness and the response service send at inference time.
@@ -125,16 +125,22 @@ def to_fireworks_record(example):
     for message in prompt:
         if not isinstance(message.get("content"), str) or not message["content"].strip():
             raise ValueError(f"{example_id}: empty {message.get('role')} message")
+    return prompt[0]["content"], prompt[1]["content"], reply
+
+
+def to_fireworks_record(example):
+    """One SFTExample as a Fireworks chat record; only the tutor reply carries loss."""
+    system, user, reply = chat_turns(example)
     return {"messages": [
-        {"role": "system", "content": prompt[0]["content"], "weight": 0},
-        {"role": "user", "content": prompt[1]["content"], "weight": 0},
+        {"role": "system", "content": system, "weight": 0},
+        {"role": "user", "content": user, "weight": 0},
         {"role": "assistant", "content": reply, "weight": 1},
     ]}
 
 
-def convert_split(in_path, out_path):
+def convert_split(in_path, out_path, to_record=to_fireworks_record):
     examples = read_jsonl(in_path)
-    records = [to_fireworks_record(example) for example in examples]
+    records = [to_record(example) for example in examples]
     rows, digest = write_jsonl(out_path, records)
     return {
         "source": str(in_path),

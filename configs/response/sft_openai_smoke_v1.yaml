@@ -1,0 +1,49 @@
+# Option B, optional smoke run: OpenAI supervised fine-tuning on original_v1 only (no
+# MathDial), the same model and settings as the full run. The default plan skips it and
+# trains the full mix directly; run this only if a cheap first check is wanted.
+#   uv run python -m tools.response.openai_sft --config configs/response/sft_openai_smoke_v1.yaml ...
+run_id: sft_openai_smoke_v1
+provider: openai
+
+data:
+  source: original_v1 (synthetic, reviewer status pending)
+  build: uv run python -m tools.response.build_original_sft
+  manifest: data/manifests/response/original_v1.json   # train 8fa0ed93..., validation 5dc87794...
+  train: data/sft/original_v1/train.jsonl            # 261 rows
+  validation: data/sft/original_v1/validation.jsonl  # 55 rows
+
+evaluation:
+  validation_cases_source: data/sft/original_v1/validation.jsonl
+  validation_cases: experiments/response/sft_smoke_v1/validation_cases_v1.jsonl
+  benchmark_config: configs/response/sft_openai_eval_v1.yaml
+
+openai:
+  keys_file: ~/.config/tuturing/llm.env
+  api_key_env: OPENAI_API_KEY
+  spend_cap_env: TUTURING_BENCH_SPEND_CAP_USD
+  spend_cap_usd: 20          # smoke cap
+  run_dir: experiments/response/sft_openai_v1/runs/smoke   # git-ignored; its own ledger
+  base_model: gpt-4.1-mini-2025-04-14
+  suffix: tut-sft-smoke-v1
+  seed: 17
+  hyperparameters:
+    n_epochs: 3
+  metadata: {project: tuturing, run: sft_openai_smoke_v1, data: original_v1, owner: person_a}
+  tokenizer: o200k_base
+  limits:
+    min_examples: 10
+    max_example_tokens: 65536
+  pricing:
+    training_usd_per_mtok: 5.00
+    fine_tuned_input_usd_per_mtok: 0.80
+    fine_tuned_cached_input_usd_per_mtok: 0.20
+    fine_tuned_output_usd_per_mtok: 3.20
+    estimate_safety_factor: 1.5
+    source: https://developers.openai.com/api/docs/pricing (Fine-tuning, standard)
+    checked: 2026-11-02
+  alternatives:
+    gpt-4.1-2025-04-14:
+      training_usd_per_mtok: 25.00
+      estimate_safety_factor: 1.5
+  poll_interval_s: 60
+  max_wait_minutes: 180
