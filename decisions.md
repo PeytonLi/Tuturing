@@ -146,3 +146,9 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 **Facts:** the extractor was rewritten as `extractor_rules_v2`, tuned on the development split only, with the test split frozen by hash before tuning. It never emits `correct` or `incorrect`; `confidence` now means answer-commitment confidence (0.9, 0.85, 0.6 or 0), and B's engine drops grades below 0.80, so a learner message with several numbers does not update mastery. Both semantics are to be confirmed with Peyton at the first integration review (PRD 21.3). Two known test failures remain for a later version.
 
+## 2026-11-02 — validator_v2 item-fidelity check merged
+
+**Source:** the response-service agent's final report; merge `bd32b5b` (480 tests pass).
+
+**Facts:** `action_faithful` now includes a digit-independent item-fidelity check for item-presenting and item-referring moves: the reply must reuse enough of the issued stem's content words (or the item's numbers, or the permitted hint) and must not introduce a competing scenario or quantity that the plan does not contain. It is not repairable, so a substituted item always falls back. Calibration on the review-sheet texts: 0 of 11 fallback, 0 of 11 gpt-6.1-sol fixture and 0 of 30 MathDial replies flagged; 4 of 11 Qwen fixture replies flagged, all genuine substitutions. Known limits: the lexicon covers probability devices rather than arbitrary story objects, WORKED_EXAMPLE is not yet covered, and the benchmark report still shows the pre-v2 numbers.
+

@@ -136,7 +136,11 @@ def test_readiness_skips_missing_key_and_missing_cap(tmp_path):
 def test_run_one_sends_expected_request_and_records_cost_without_secrets(tmp_path):
     config = make_config(tmp_path, PLAN_DIR)
     write_keys(tmp_path)
-    chat = FakeChat()
+    # validator_v2 requires a HINT to refer to its own item (the spinner), not the coin.
+    chat = FakeChat(
+        text="Here is a hint: Count the sections that are not blue, then compare that count "
+        "to all sections. What is your next step?"
+    )
     ctx = make_ctx(config, chat)
     entry = config["models"][1]
     case = bench.Case("fixtures", "hint", plans()["hint"], "test")
