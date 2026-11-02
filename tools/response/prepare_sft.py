@@ -363,7 +363,20 @@ def iter_teacher_turns(rows_by_official, config, assignments=None):
                     "context_last_student": last_student,
                     "recent_dialogue": recent_dialogue,
                     "row": row,
+                    "student_name": student_name,
                 }
+
+
+def uses_unseen_name(name, target, prompt):
+    """True when the target addresses the learner by a profile name the prompt never shows."""
+    if not name:
+        return False
+    pattern = rf"\b{re.escape(name)}\b"
+    prompt_text = "\n".join(message["content"] for message in prompt)
+    return bool(
+        re.search(pattern, target, re.IGNORECASE)
+        and not re.search(pattern, prompt_text, re.IGNORECASE)
+    )
 
 
 def resolve_move(move_map, labels, turn):
@@ -475,6 +488,9 @@ def build_examples(rows_by_official, config, move_map, labels=None):
             "extensions": {
                 "mapping_status": move_map.get("status", "draft_unaudited"),
                 "move_label": move_label,
+                "target_uses_unseen_name": uses_unseen_name(
+                    turn["student_name"], teacher_text, prompt
+                ),
                 "checks_status": "not_computed",
                 "mathdial": {
                     "qid": turn["qid"],
@@ -693,6 +709,9 @@ def prepare(config_path):
             "MathDial HINT and EXPLAIN_CONCEPT plans lack the corresponding PRD 9.3 "
             "approved hint/facts.",
             "Only EXPLAIN_CONCEPT plans include ground_truth, as reveal_solution.",
+            "extensions.target_uses_unseen_name flags targets that address the learner by a "
+            "profile name the prompt never shows (leak review open point 2); the name itself "
+            "is never stored.",
         ],
     }
     manifest_path = Path(config["manifest_path"])

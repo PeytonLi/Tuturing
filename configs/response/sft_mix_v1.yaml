@@ -20,6 +20,9 @@ mathdial_admission:
   presenting_moves_keep_item: true
   # A MathDial plan has no approved worked example, so the target's example is unverified.
   excluded_moves: [WORKED_EXAMPLE]
+  # Targets that address the learner by a profile name the prompt never shows would teach the
+  # model to invent names (leak review open point 2; stripping the vocative is the alternative).
+  reject_unseen_names: true
 sources:
   original:
     dir: data/sft/original_v1

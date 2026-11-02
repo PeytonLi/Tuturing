@@ -74,6 +74,10 @@ def mathdial_rejection(example, rules):
     text = example["completion"][0]["content"]
     if move in set(rules.get("excluded_moves") or ()):
         return f"excluded_move:{move}"
+    if rules.get("reject_unseen_names") and (example.get("extensions") or {}).get(
+        "target_uses_unseen_name"
+    ):
+        return "target_uses_unseen_name"
     required = rules.get("required_checks") or ()
     if required:
         checks = run_checks(plan, text, plan["teaching_action"])

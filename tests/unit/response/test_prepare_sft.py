@@ -207,6 +207,27 @@ def test_per_turn_labels_replace_the_act_mapping(tmp_path):
     assert load_move_map(act_map)["kind"] == "per_act"
 
 
+def test_targets_using_an_unseen_profile_name_are_flagged_without_storing_it():
+    config, mapping, rows = inline_input()
+    rows["train"].append((2, {
+        **rows["train"][0][1],
+        "qid": 11,
+        "conversation": (
+            "Teacher: (probing) Hi Ada, walk me through your answer.|EOM|"
+            "Ada: I added them.|EOM|"
+            "Teacher: (focus) Look at what is being taken away."
+        ),
+    }))
+    accepted, _, _, _ = build_examples(rows, config, mapping)
+    flags = {item["example_id"]: item["extensions"]["target_uses_unseen_name"] for item in accepted}
+    assert flags["mathdial:train:0002:t00"] is True
+    assert flags["mathdial:train:0002:t02"] is False
+    assert sum(flags.values()) == 1
+    for item in accepted:
+        assert "Ada" not in json.dumps(item["extensions"])
+        assert "Ada learner profile must not leak" not in json.dumps(item)
+
+
 def test_raw_count_mismatch_reports_expected_and_actual():
     _, _, rows = inline_input()
     actual = compute_raw_counts(rows)

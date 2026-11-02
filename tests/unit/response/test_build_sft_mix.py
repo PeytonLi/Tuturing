@@ -141,6 +141,8 @@ def test_mathdial_admission_rules_follow_the_committed_config():
             "Now try this one: Sam has 3 pears and gives away 2. How many pears remain?",
         ),
         _mathdial_example("worked", "WORKED_EXAMPLE", "If Ann has 4 plums and eats 1, 3 remain."),
+        {**_mathdial_example("named", "PROBE", "Hi Rosa, walk me through your answer."),
+         "extensions": {"target_uses_unseen_name": True}},
     ]
     admitted, reasons, by_move = mixer.admit_mathdial(examples, rules)
     assert [item["example_id"] for item in admitted] == ["keep_hint", "keep_practice"]
@@ -150,6 +152,7 @@ def test_mathdial_admission_rules_follow_the_committed_config():
         "failed_check:question_count_valid": 1,
         "new_item_under_presenting_move": 1,
         "excluded_move:WORKED_EXAMPLE": 1,
+        "target_uses_unseen_name": 1,
     }
     assert by_move["PRACTICE"] == {"new_item_under_presenting_move": 1}
     assert mixer.admit_mathdial(examples, {})[0] == examples
