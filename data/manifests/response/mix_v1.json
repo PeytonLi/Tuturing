@@ -322,7 +322,7 @@
     }
   },
   "dataset_id": "mix_v1",
-  "generated_at": "2026-11-02T23:09:54+00:00",
+  "generated_at": "2026-11-02T23:40:30+00:00",
   "mathdial_admission": {
     "excluded_moves": [
       "WORKED_EXAMPLE"
@@ -346,17 +346,17 @@
     {
       "path": "data/sft/mix_v1/train.jsonl",
       "rows": 435,
-      "sha256": "b1c9e41e186713a3934656611237b91105aaeea402fca60033f584800451d2ef"
+      "sha256": "243a68693397e80bf00ec64ffaee87556ac44e41bf92b3156c702781dfe1532e"
     },
     {
       "path": "data/sft/mix_v1/validation.jsonl",
       "rows": 92,
-      "sha256": "75f0de07002ba6c4d43814e3f52bba8f2c09f96863f9c032e530d3aa70e8d51f"
+      "sha256": "9d1a860ea2ec4c860aa9c186347d07ffe7e59fe06e11a69e6e01f6fd9d0dc5c4"
     },
     {
       "path": "data/sft/mix_v1/test.jsonl",
       "rows": 92,
-      "sha256": "73ba28ed9a4da03fc53db59aa58f13278d390f6e75e690d18bfa33a9570a07a7"
+      "sha256": "4deb185b7740fb8ad8e26f9dda3c128e28f1913545e3de7bbf5af89bc4db3006"
     }
   ],
   "repeated_exposure": {
@@ -431,22 +431,22 @@
       "dir": "data/sft/original_v1",
       "manifest": {
         "path": "data/manifests/response/original_v1.json",
-        "sha256": "729f38f19a785caba615c0ce43351aa3fd29453ff220d3c21a416a87de636618"
+        "sha256": "ac895edbe8ebf2fcc13d25ef061c295dc526aebbdc7236fb880a8e5b5b197bf6"
       },
       "mapping": null,
       "reviewer_status": "pending",
       "split_files": {
         "test": {
           "path": "data/sft/original_v1/test.jsonl",
-          "sha256": "3347bff4b858726f5ba5165802373a91e53d540f530fb544aa31d78fc3492cee"
+          "sha256": "2be7e0d7f67fc3ff49311a31c127a92560a1c4c4b4417f84698eeb0a13fc4120"
         },
         "train": {
           "path": "data/sft/original_v1/train.jsonl",
-          "sha256": "e013dc0c8f1c29a17faa8474c35135df3a32b55f542c5c9451fded413f63b115"
+          "sha256": "8fa0ed93a6ebe8736fe46e3c49a6d5b2e11cb2adcbb435b6ba1376ad0ef94703"
         },
         "validation": {
           "path": "data/sft/original_v1/validation.jsonl",
-          "sha256": "9896233f04a8fbecc2585b024ca9d1a1c688b90fee556f946e1432aacafe35ae"
+          "sha256": "5dc87794a5c1ca2add5e2c641ccd440e740fd96cd8d130feaf161d7642065eb7"
         }
       }
     }
