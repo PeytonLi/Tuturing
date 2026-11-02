@@ -19,7 +19,7 @@ def test_manifest_is_deterministic_and_covers_every_move():
     assert manifest["versions"] == {
         "pipeline": "pipeline_v1",
         "prompt": "prompt_v1",
-        "validator": "validator_v1",
+        "validator": "validator_v2",
         "fallback": "fallback_v1",
         "repair": "repair_v1",
         "template_stub": "template_stub_v1",

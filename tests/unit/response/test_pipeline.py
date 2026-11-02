@@ -63,7 +63,7 @@ def test_every_learning_fixture_plan_yields_a_checked_response():
         assert response["versions"] == {
             "response_artifact": STUB_PIPELINE_ARTIFACT_ID,
             "prompt": "prompt_v1",
-            "validator": "validator_v1",
+            "validator": "validator_v2",
         }
         modes[name] = response["delivery_mode"]
     assert {plan["teaching_action"]["move"] for plan in plans.values()} == {
