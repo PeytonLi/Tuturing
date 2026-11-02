@@ -59,5 +59,43 @@ the way to measure the gap; a human read of the quoted failures is in the final 
 **Case sets.** B's 9 valid plan fixtures and the 8 smoke cases are tiny and all about one
 coin problem. The MathDial sample is 30 turns per mapped move (90 of 1,618 test turns, at
 most one turn per problem and move); its plans carry no approved hint, facts or example.
-`evaluation/response/probability_cases_v1.jsonl` did not exist when this ran; it is listed
-in the config and will be included by a rerun without a code change.
+`evaluation/response/probability_cases_v1.jsonl` did not exist during the first run; it
+was added later and is covered by the follow-up below.
+
+## Follow-up under validator_v2 with the original probability cases (2026-11-02, later)
+
+**Re-scoring.** `benchmark rescore` re-checked every stored text of the three systems (107
+cases each) under validator_v2 from the plans in the configured case sets, with no model
+call; usage, latency and cost are carried over and `validator_version` is stamped on every
+record. The digit-independent item-fidelity check now scores Qwen3.8-27B's three fixture
+substitutions (both CHECK_MASTERY fixtures and the CHALLENGE fixture, coin replaced by a
+die) as `action_faithful` failures, so its delivered-as-model count on the first 107 cases
+drops from 41 to 38; gpt-6.1-sol stays at 40 and the fallback at 43. One caveat: main
+changed the smoke CHALLENGE plan from difficulty medium (action 49) to hard (action 52)
+after the texts were generated, so the three stored smoke-CHALLENGE responses were
+produced under a prompt whose difficulty line differed; the checks do not depend on
+difficulty and no model was re-called for the old case sets.
+
+**Original probability cases (55; all five prototype concepts, all eight moves; synthetic,
+reviewer status pending; one allows reveal).** Delivered as model: fallback 55/55,
+gpt-6.1-sol 33/55, Qwen3.8-27B 19/55 (0 errors each). Item fidelity on the 40 applicable
+cases: fallback 40/40, gpt-6.1-sol 37/40, Qwen3.8-27B 36/40. The per-check table in
+"Results by case set" has the rest. On this set the strict checks are closer to their
+intent than on MathDial, because the plans carry approved hints, facts and examples and
+the learner context is short: gpt-6.1-sol's 22 fallbacks come from 14 action-fidelity, 10
+math and 5 disclosure flags (overlapping), spread over HINT, PROBE, REFLECT and
+WORKED_EXAMPLE plans; Qwen3.8-27B's 36 come from 25 action-fidelity, 16 math and 11
+disclosure flags, and it also asked two questions where one was allowed in 8 cases and hit
+the 384-token cap twice.
+
+**Second deployment.** `accounts/peli/deployments/tut-bench-qwen38-20261102-223910`, the
+same 1x H100 80 GB BF16 shape (`sva2n3mh`, version `k9aui8v2`), min 0 / max 1 replicas,
+300 s scale-to-zero; the free `validateOnly` dry run passed first; created 22:39:10Z,
+serving 22:41:47Z, pilot of 3 then 52 cases at concurrency 4, deletion requested 22:42:17Z
+(first DELETE 400 while a replica was active, retry with `ignoreChecks` 200) and verified
+22:42:48Z by GET (`state: DELETED`) and a `showDeleted` listing; no live deployment
+remained. 3.6 minutes, $0.48 upper bound. Spend for this follow-up: gpt-6.1-sol $0.0833
+(55 cases), Qwen GPU $0.4844; running total for the whole benchmark $1.29 of the $25 cap.
+
+**Review.** The published review sheet and its supplement are unchanged; no rows were added
+for the probability cases.
