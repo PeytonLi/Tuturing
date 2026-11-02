@@ -219,3 +219,11 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 **On D10:** Xueming directed both the smoke and the full run on Qwen3.8-27B. The assistant treats that as confirming D10's base model for the hackathon run unless Xueming says otherwise; D10's file is left unchanged until the results are in.
 
+## 2026-11-02 — SFT blocked by Fireworks dataset uploads; options put to Xueming
+
+**Source:** the SFT agent's final report, saved as `experiments/response/sft_smoke_v1/report.md`; merge `e2fafff`.
+
+**Facts:** Fireworks returned HTTP 403 "dataset uploads are temporarily disabled, please contact Fireworks AI to get access" for `accounts/peli` (not verified). No job ran and nothing was spent. The tooling, configs, converted data, mask checks and evaluation plan are on `main`; a smoke job is estimated at $0.81 and the full mix job at $1.93 once uploads work. Managed LoRA fine-tuning does apply to Qwen3.8-27B; D10's "serverless training pool" wording is inaccurate (proposed edits in the report).
+
+**Options sent to Xueming:** (A) Peyton gets uploads enabled; (B) fine-tune an OpenAI model now with the working OpenAI key, serving without a deployment, which replaces D10's open-weight choice for the demo; (C) skip SFT and demo gpt-6.1-sol behind the validator. The assistant recommended B now with A in parallel and is preparing B at no cost; nothing is uploaded or trained until Xueming approves.
+

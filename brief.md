@@ -74,6 +74,7 @@ Xueming decided that Person A owns SFT (capture `cap_7c410346-63da-4a59-9c26-bfb
 
 - Smoke SFT (started 2026-11-02, branch `a/sft-smoke-v1`): Qwen3.8-27B LoRA on Fireworks, `original_v1` train split only, $20 budget, evaluated on the validation split against prompt-only Qwen.
 - Full SFT (requested 2026-11-02, queued behind the smoke checks on the same branch): Qwen3.8-27B LoRA on `mix_v1`, at most 3 epochs, checkpoint chosen on validation, one final run on the probability test split, $40 budget.
+- Both SFT runs are blocked: Fireworks refuses dataset uploads on Peyton's account (HTTP 403, account not verified). Nothing was spent. Options A (Peyton unblocks), B (OpenAI fine-tune now) and C (no SFT, gpt-6.1-sol behind the validator) are with Xueming; B is being prepared without spend.
 
 ## Open questions
 
