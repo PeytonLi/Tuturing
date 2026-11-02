@@ -1,0 +1,21 @@
+seed: 20250115
+# Top-level episodes is ignored when dagger_mixes is present.
+episodes: 300
+split: train
+holdout_fraction: 0.1
+epochs: 10
+batch_size: 256
+learning_rate: 0.001
+gamma: 0.99
+run_name: bc_dagger
+simulator_config: configs/learning/simulator_proto_v2.yaml
+dagger_mixes:
+  - behavior: rules
+    episodes: 300
+    teacher_prob: 1.0
+  - behavior: random
+    episodes: 300
+    teacher_prob: 0.5
+  - behavior: "checkpoint:experiments/learning/runs/bc_rules3_seed0/bc.pt"
+    episodes: 300
+    teacher_prob: 0.0
