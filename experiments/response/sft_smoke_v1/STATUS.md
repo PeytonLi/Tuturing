@@ -1,13 +1,15 @@
 # SFT on Fireworks: status
 
-Updated 2026-11-02 23:33 UTC.
+Updated 2026-11-02 23:35 UTC (final for this session).
 
 ## Blocked: no job was submitted, $0.00 spent
 
 Fireworks refuses dataset uploads for `accounts/peli`. A managed SFT job can only train
 on an uploaded dataset, so neither job A (original_v1) nor job B (mix_v1) can start, on
 `qwen3p8-27b` or on the `qwen3p5-9b` fallback. Changing the base model does not help: the
-refusal is for the whole account, not for one model.
+refusal is for the whole account, not for one model. The last retry, at 23:31:05 UTC, was
+refused the same way. At 23:32 the account had no datasets, jobs, models or deployments of
+ours.
 
 | Call (2026-11-02 UTC) | Result |
 |---|---|
