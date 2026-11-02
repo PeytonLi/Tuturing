@@ -47,32 +47,54 @@ record without A editing B's file.
 
 | Situation | PRD text | Choice |
 |---|---|---|
-| `request_id` reused with different content (8.2 step 2 "returns a conflict") | no code named | `409 STATE_CONFLICT`, `retryable: false`; the original request's stored result is unchanged. Proposed addition for v1.1: a dedicated `REQUEST_CONFLICT` code so clients can tell it from a stale version. |
+| `request_id` reused with different content (8.2 step 2 "returns a conflict") | no code named | `409 STATE_CONFLICT`, `retryable: false`; the original request's stored result is unchanged. Proposed addition for v1.1: a dedicated `REQUEST_CONFLICT` code so clients can tell it from a stale version. B's service makes the same choice for its idempotency keys. |
 | Another request of the same session still in flight | one pending plan, competing request gets `409 STATE_CONFLICT` (8.3) | `409 STATE_CONFLICT`, `retryable: true`; B's reservation is the tie-breaker when two requests reach it. |
-| Learner stops before any response was committed | `Evidence.source_response_id` is a required ID | the stop evidence uses `source_response_id: "session-start"`; B to confirm or add an explicit stop operation to `observe-and-plan`. |
-| Crash after B committed, before A stored the commit | recovery queries plan status (8.3) | `GET /internal/v1/plans/{plan_id}` must return `content_hash`, `state_version` and `public_state` when committed; the public result needs the state and the PRD lists only "status and hash". |
+| Learner stops before any response was committed | `Evidence.source_response_id` is a required ID; B accepts evidence only after a committed response | the public stop answers `409 STATE_CONFLICT` ("send the first turn before stopping, or abandon the session"). Proposed for B: accept `explicit_request: "stop"` evidence, or a dedicated stop flag, before the first commit. |
+| Crash after B committed, before A stored the commit | recovery queries plan status (8.3) | B's `GET /internal/v1/plans/{plan_id}` returns `status`, `content_hash` and `response_id` only. A derives the public state after the commit (`based_on_state_version + 1`, `teaching_turns + 1`, the plan's `concept_id` and `goal_concept_id`, `status: active`) and logs a warning. Proposed for B: return `state_version` and `public_state` for a committed plan, or add a session-read endpoint. |
 | Unexpected internal failure | no `INTERNAL_ERROR` code | `503 LEARNING_UNAVAILABLE`, `retryable: true`; the durable request record makes the retry resume. |
-| Unknown session or another caller's session | `FORBIDDEN` 403 | `403 FORBIDDEN` for both, so session IDs cannot be probed. |
-| Unknown route or method | no `NOT_FOUND` code | `422 INVALID_SCHEMA` "unknown operation"; a non-`/v1/` prefix gives `400 UNSUPPORTED_VERSION`. |
+| Unknown session or another caller's session | `FORBIDDEN` 403 | `403 FORBIDDEN` for both, so session IDs cannot be probed. (B's service answers `422 INVALID_SCHEMA` for an unknown session or plan on the internal side.) |
+| Unknown route or method | no `NOT_FOUND` code | `422 INVALID_SCHEMA` "unknown operation"; a non-`/v1/` prefix gives `400 UNSUPPORTED_VERSION`. Same choice as B's internal transport. |
+| Content hash | 9.4: SHA-256 of the text plus the canonical effective action | A keeps the PRD formula (`packages/response/hashing.py`, pinned by `generate_response_hash_pin.json`). `docs/learning_service.md` describes the hash as SHA-256 of the text alone; B checks only the format, so both sides agree at runtime, but the document and the PRD should be reconciled. |
 
-## Wire shapes A assumes for B's prose-only internal endpoints
+## B's internal wire shapes as implemented (apps/learning_service, docs/learning_service.md)
 
-The PRD defines `CommitPlanRequest`/`CommitPlanResponse`, `TeachingPlan`, `SessionEnd` and
-`Evidence` but describes the other internal bodies in prose. `apps/public_api/clients.py` sends:
+`apps/public_api/clients.py` matches B's running service, not the prose of PRD 9.5:
 
-- `POST /internal/v1/sessions`: `{schema_version, session_id, request_id, learner_pseudonym,
-  goal_concept_id, pace_preference}` and expects `{schema_version, public_state}`.
-- `POST /internal/v1/observe-and-plan`: `{schema_version, session_id, request_id,
-  expected_state_version, evidence}` (`evidence: null` on the first turn) and expects a
-  `TeachingPlan` (with `based_on_state_version == expected_state_version`) or a `SessionEnd`.
-- `GET /internal/v1/plans/{plan_id}`: `{schema_version, plan_id, status: pending | committed |
-  canceled, content_hash, state_version, public_state}` with nulls when not committed.
-- `POST /internal/v1/cancel-plan`: `{schema_version, session_id, plan_id, request_id}` and
-  expects `{schema_version, plan_id, status: "canceled"}`.
-- Every call carries `X-Trace-Id` and `Authorization: Bearer` from `TUTOR_LEARNING_SERVICE_TOKEN`.
+- Every call: `Authorization: Bearer $TUTOR_LEARNING_SERVICE_TOKEN`, `X-Trace-Id` (1 to 128 ASCII
+  characters). Every POST: `Content-Type: application/json`, `Content-Length` (no chunked
+  bodies, at most 65,536 bytes) and `Idempotency-Key` equal to the body's `request_id`; commit-plan
+  has no `request_id`, so its key is the public request's ID. Success is HTTP 200, creation
+  included; unknown routes are `422 INVALID_SCHEMA`.
+- `POST /internal/v1/sessions`: `{schema_version, request_id, goal_concept_id, pace_preference}`
+  returns `{schema_version, session_id, public_state}`. B allocates the session ID (`s-<hex>`);
+  the public API adopts it as the public session ID instead of allocating its own.
+- `POST /internal/v1/observe-and-plan`: `{schema_version, request_id, session_id,
+  expected_state_version, evidence}` returns `{"kind": "plan", "teaching_plan": TeachingPlan}` or
+  `{"kind": "session_end", "session_end": SessionEnd}`. Evidence must be null before the first
+  committed response and afterwards must name the last committed `response_id` and that plan's
+  `problem_instance_id`; a `requested_concept_id` outside B's enabled set is `422 INVALID_SCHEMA`.
+- `POST /internal/v1/commit-plan`: `CommitPlanRequest` returns `CommitPlanResponse` with the full
+  `PublicState`.
+- `GET /internal/v1/plans/{plan_id}`: `{schema_version, plan_id, session_id, status, content_hash,
+  response_id}`; `status` is `pending`, `committed` or `canceled` (expiry is reported as canceled).
+- `POST /internal/v1/cancel-plan`: `{schema_version, request_id, session_id, plan_id}` returns the
+  same plan-status record.
 
-B owns these shapes. Once B's mock ships, the stand-in in
-`tests/integration/response/learning_standin.py` is deleted and the tests run against the mock.
+Person A's stand-in (`tests/integration/response/learning_standin.py`) mirrors these shapes for
+fast unit tests; `tests/integration/response/test_smoke_workflow.py` runs the public API against
+B's real service.
+
+## Findings for B's review (observed on 2026-11-02 against `apps/learning_service`)
+
+1. A learner message such as "skip to Bayes" produces evidence with `requested_concept_id: C10`,
+   which B rejects with `422 INVALID_SCHEMA` because C10 is not enabled. The public API returns
+   that 422 for a legitimate learner message. Either B should treat an unsupported requested
+   concept as "no target" (A's preference), or B should publish the enabled set so the extractor
+   can filter.
+2. "change the topic" without a recognizable concept gives `explicit_request: change_goal` with a
+   null target, which B also rejects with 422. Same remedy.
+3. Plan status lacks the state after a commit (table above), so crash recovery derives it.
+4. A stop before the first committed response cannot be expressed (table above).
 
 ## Impact
 
