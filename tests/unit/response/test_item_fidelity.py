@@ -9,6 +9,7 @@ import copy
 
 import pytest
 
+from packages.learning.actions import encode_strategist
 from packages.response.fallbacks import render_fallback
 from packages.response.item_fidelity import (
     ITEM_FIDELITY_VERSION,
@@ -169,7 +170,7 @@ def test_the_plans_own_family_and_numbers_are_allowed():
     plan = copy.deepcopy(plan)
     plan["content"]["approved_facts"] = ["Each outcome is equally likely."]
     assert not item_fidelity(plan, two_coins).passed
-    assert item_fidelity(plan, two_coins).new_quantities == ("2 coin", "2 head")
+    assert item_fidelity(plan, two_coins).new_quantities == ("2 coin",)  # heads: companion
     dialogue = copy.deepcopy(plan)
     dialogue["response_context"]["recent_dialogue"] = [
         {"role": "student", "text": "Is this like rolling a die?"}
@@ -222,6 +223,152 @@ def test_normalization_helpers():
         ("6", "die"), ("3", "marble"),
     ]
     assert quantity_phrases("one coin flip with two outcomes") == []
+    assert quantity_phrases("two fair coins and three red marbles") == [
+        ("2", "coin"), ("3", "marble"),
+    ]
+    # Instructional nouns, sentence boundaries and companions never form a phrase.
+    assert quantity_phrases("separate two things in your head") == []
+    assert quantity_phrases("in three moves. A bag contains 4 red marbles.") == [("4", "marble")]
+    assert quantity_phrases("two heads in a row, three steps, four ways, five ideas") == []
+
+
+# Original SFT records (data/response/original_v1) that validator_v2 rejected before the
+# quantity rule was narrowed and head/tail became companions; all three embed the stem.
+ORIGINAL_RECORDS = {
+    "c02d-001": {
+        "move": "PROBE",
+        "difficulty": "hard",
+        "pace": "detailed",
+        "stem": (
+            "A spinners experiment has 1 favorable outcomes out of 8 equally likely outcomes. "
+            "Find the probability."
+        ),
+        "facts": [
+            "A probability is between zero and one.",
+            "Equally likely outcomes have equal probability.",
+        ],
+        "fingerprints": ["1/8"],
+        "tutor": (
+            "Here is a spinner problem: A spinners experiment has 1 favorable outcomes out of "
+            "8 equally likely outcomes. Find the probability."
+        ),
+        "message": "can i get a hint first?",
+        "reply": (
+            "Before any hint, I'd like to see your starting point, because the right hint "
+            "depends on where you are. Here is the problem again: A spinners experiment has 1 "
+            "favorable outcomes out of 8 equally likely outcomes. Find the probability. Read "
+            "it once more and separate two things in your head: the collection of all equally "
+            "likely outcomes, which is the total, and the subset of those outcomes the event "
+            "is asking about, which is the favorable group. Then tell me what you count as the "
+            "total number of equally likely outcomes and how many of them you treat as "
+            "favorable, and say briefly how you decided?"
+        ),
+    },
+    "c08a-176": {
+        "move": "PRACTICE",
+        "difficulty": "easy",
+        "pace": "detailed",
+        "stem": (
+            "A dice experiment has 1 favorable outcomes out of 4 equally likely outcomes. "
+            "Find the probability."
+        ),
+        "facts": ["A path probability is the product of its conditional branch probabilities."],
+        "fingerprints": ["1/4"],
+        "tutor": "We'll practise the multiplication rule and probability trees with dice.",
+        "message": "slow down, trees confuse me",
+        "reply": (
+            "Slowly, then, and we'll keep the tree small in your head. Here is the problem: A "
+            "dice experiment has 1 favorable outcomes out of 4 equally likely outcomes. Find "
+            "the probability. Picture the experiment as a tree: it starts at a root, splits "
+            "into branches at each stage, and every complete route from the root to a tip is "
+            "one outcome. A path probability is the product of its conditional branch "
+            "probabilities, which means you multiply along a single route to get that route's "
+            "chance. Here you don't even need to multiply, because the problem already tells "
+            "you that the complete paths are equally likely and how many there are: that "
+            "number is the total, and it goes underneath. The favorable count is how many of "
+            "those paths the event wants, and it goes on top. So the probability is favorable "
+            "paths over all paths. Count the two groups, write the fraction, and give it a try."
+        ),
+    },
+    "p11-d": {
+        "move": "PRACTICE",
+        "difficulty": "medium",
+        "pace": "detailed",
+        "stem": (
+            "A marbles experiment has 4 favorable outcomes out of 6 equally likely outcomes. "
+            "Find the probability."
+        ),
+        "facts": ["A sample space lists all possible outcomes.", "An event is a set of outcomes."],
+        "fingerprints": ["2/3"],
+        "tutor": (
+            "A sample space lists all possible outcomes, and an event is a set of outcomes "
+            "from that list."
+        ),
+        "message": "ok",
+        "reply": (
+            "Here is a marbles problem to put that to work, in three moves. A marbles "
+            "experiment has 4 favorable outcomes out of 6 equally likely outcomes. Find the "
+            "probability. First, list: write down every outcome the experiment can produce, "
+            "each once, because a sample space lists all possible outcomes. Second, mark: pick "
+            "out the outcomes that belong to the event, since an event is a set of outcomes "
+            "from that list, and check that your marked count matches the favorable count the "
+            "problem states. Third, compare: the marked count goes on top, the length of the "
+            "whole list underneath, as a fraction. Give it a try and send the fraction with "
+            "your two counts."
+        ),
+    },
+}
+
+
+def record_plan(record):
+    plan = lane_plan("probe" if record["move"] == "PROBE" else "practice")
+    plan["teaching_action"] = {
+        "action_id": encode_strategist(record["move"], record["difficulty"], record["pace"]),
+        "move": record["move"],
+        "difficulty": record["difficulty"],
+        "pace": record["pace"],
+    }
+    plan["content"]["problem_stem"] = record["stem"]
+    plan["content"]["approved_facts"] = record["facts"]
+    plan["constraints"]["max_words"] = 250
+    plan["constraints"]["forbidden_answer_fingerprints"] = record["fingerprints"]
+    plan["response_context"] = {
+        "last_student_message": record["message"],
+        "recent_dialogue": [
+            {"role": "tutor", "text": record["tutor"]},
+            {"role": "student", "text": record["message"]},
+        ],
+        "qualified_misconception_summary": None,
+    }
+    return plan
+
+
+@pytest.mark.parametrize("record_id", sorted(ORIGINAL_RECORDS))
+def test_original_sft_records_with_the_embedded_stem_pass(record_id):
+    record = ORIGINAL_RECORDS[record_id]
+    plan = record_plan(record)
+    result = item_fidelity(plan, record["reply"])
+    assert result.applicable and result.passed, result.reasons
+    assert result.coverage == 1.0
+    assert result.new_objects == () and result.new_quantities == ()
+    assert all(checks(plan, record["reply"]).values())
+
+
+def test_a_counted_scenario_noun_the_plan_lacks_still_fails():
+    plan = learning_plans()["teaching_plan_practice"]
+    text = (
+        "A fair coin is flipped once. What is the probability of heads? Now picture three "
+        "red marbles in a bag instead and give it a try."
+    )
+    result = item_fidelity(plan, text)
+    assert not result.passed
+    assert "marble" in result.new_objects and "bag" in result.new_objects
+    assert "3 marble" in result.new_quantities
+    assert checks(plan, text)["action_faithful"] is False
+    plan = record_plan(ORIGINAL_RECORDS["p11-d"])
+    text = ORIGINAL_RECORDS["p11-d"]["reply"] + " Or try it with two fair dice."
+    result = item_fidelity(plan, text)
+    assert not result.passed and result.new_quantities == ("2 die",)
 
 
 def test_substituted_item_is_never_repaired_and_always_falls_back():

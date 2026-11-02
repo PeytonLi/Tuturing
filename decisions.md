@@ -159,3 +159,17 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 **Facts:** `action_faithful` now includes a digit-independent item-fidelity check for item-presenting and item-referring moves: the reply must reuse enough of the issued stem's content words (or the item's numbers, or the permitted hint) and must not introduce a competing scenario or quantity that the plan does not contain. It is not repairable, so a substituted item always falls back. Calibration on the review-sheet texts: 0 of 11 fallback, 0 of 11 gpt-6.1-sol fixture and 0 of 30 MathDial replies flagged; 4 of 11 Qwen fixture replies flagged, all genuine substitutions. Known limits: the lexicon covers probability devices rather than arbitrary story objects, WORKED_EXAMPLE is not yet covered, and the benchmark report still shows the pre-v2 numbers.
 
+## 2026-11-02 — Skip the human MathDial move audit; model-made mapping, merged into the SFT data
+
+**User direction:** “we skip human labeling for MathDial move audit, claude code you help do the mapping and merge into our datasets.” (Lark message in the Tuturing topic.)
+
+**What changes:** D09's decision rule required Xueming and Peyton to label the 200-turn audit independently and reach 80 percent agreement before MathDial's mapped moves could be used. Xueming waives that for the hackathon. The mapping is now produced by models: a turn-level move label for every usable MathDial teacher turn, calibrated against the 200 model-drafted labels already in `evaluation/response/mathdial_mapping_audit_200_model_draft.csv`, with the agreement between the draft act mapping and the turn-level labels reported. MathDial examples then enter the SFT mix at the PRD's proposed 40 percent, labeled `action_label_source: mapped` with the labeling model recorded, never as human labels.
+
+**Assistant note:** this keeps MathDial out of Peyton's Strategist behavior cloning unless Peyton separately accepts model labels; D09's reviewer line stays with Peyton. Labeling API spend comes out of the $25 benchmark cap.
+
+## 2026-11-02 — Item-fidelity false positives fixed; main pushed at 512 tests
+
+**Source:** the response-service agent's follow-up report; merges `9457fa4` and `3120ad3`.
+
+**Facts:** the four rejections under `validator_v2` were false positives: "in your head" matched the coin family's `head`, and "in three moves. A marbles experiment" let a number cross a sentence boundary into the stem's noun. The quantity rule now requires a scenario object noun in the same sentence, and `head`/`tail` count only alongside a coin anchor. The four Qwen substitutions still fail. `build_original_sft` accepts 371 of 371 under `validator_v2`. Main was pushed after the full CPU smoke (512 tests, both validators, content validation, a ten-episode simulate).
+
