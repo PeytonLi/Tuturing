@@ -146,3 +146,9 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 **Facts:** the extractor was rewritten as `extractor_rules_v2`, tuned on the development split only, with the test split frozen by hash before tuning. It never emits `correct` or `incorrect`; `confidence` now means answer-commitment confidence (0.9, 0.85, 0.6 or 0), and B's engine drops grades below 0.80, so a learner message with several numbers does not update mastery. Both semantics are to be confirmed with Peyton at the first integration review (PRD 21.3). Two known test failures remain for a later version.
 
+
+## 2026-11-02 — Strategist final evaluation: no v3 simulator, rules v3, BC chosen (all simulated)
+
+**Source:** docs/results/strategist_final_v1.md (Person B Strategist evaluation session).
+
+**Facts:** an always-worked-example baseline loses to rules on validation, so simulator v2 stays (no v3). The worked-example collapse came from a rules loop: after two unsuccessful hints, rules repeated WORKED_EXAMPLE indefinitely. Rules v3 adds a public-evidence misconception branch (PROBE, then WORKED_EXAMPLE or EXPLAIN_CONCEPT) and follows a worked example with independent PRACTICE. Public misconception evidence fills the existing 25 slots of features_v1 (no contract change), and the learning service uses the same helper. Checkpoint rule, declared before test: highest validation mean gain, with ties going to rules. BC (`bc_rules3_seed0`) was chosen. Its edge over rules is +0.004 on validation (CI crosses zero) and +0.005 on the single test run. Simulator uncalibrated, no human data.
