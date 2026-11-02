@@ -1,10 +1,11 @@
 {
   "api_call_counts": {
+    "fireworks_qwen_on_demand_scored_cases": 30,
     "fireworks_qwen_preflight": 1,
     "openai_4000_token_preflight": 1,
     "openai_one_token_preflight_failed_for_output_limit": 1,
     "openai_scored_cases": 90,
-    "total": 93
+    "total": 123
   },
   "benchmark": "decision_benchmark_v1",
   "case_count": 30,
@@ -2827,20 +2828,545 @@
       "status": "completed"
     },
     "qwen3p8_27b": {
-      "cases": [],
-      "categories": {},
-      "forbidden_case_ids": null,
-      "model_id": "accounts/fireworks/models/qwen3p8-27b",
-      "overall": null,
-      "preflight_error": {
-        "code": "NOT_FOUND",
-        "http_status": 404,
-        "message": "Model not found, inaccessible, and/or not deployed",
-        "response_body": "{\"error\":{\"message\":\"Model not found, inaccessible, and/or not deployed\",\"param\":\"model\",\"code\":\"NOT_FOUND\",\"type\":\"error\"},\"request_id\":\"chatcmpl-9b7d9fb7afd14dd7915967e9bc4cca1d\"}"
+      "base_model_id": "accounts/fireworks/models/qwen3p8-27b",
+      "cases": [
+        {
+          "case_id": "DC01",
+          "category": "known_topic_readiness",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHALLENGE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC02",
+          "category": "known_topic_readiness",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC03",
+          "category": "known_topic_readiness",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHECK_MASTERY",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC04",
+          "category": "known_topic_readiness",
+          "difficulty": "medium",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC05",
+          "category": "known_topic_readiness",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC06",
+          "category": "confident_misconception",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC07",
+          "category": "confident_misconception",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC08",
+          "category": "confident_misconception",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC09",
+          "category": "confident_misconception",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC10",
+          "category": "confident_misconception",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC11",
+          "category": "uncertain_skip",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHECK_MASTERY",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC12",
+          "category": "uncertain_skip",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC13",
+          "category": "uncertain_skip",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC14",
+          "category": "uncertain_skip",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC15",
+          "category": "uncertain_skip",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHECK_MASTERY",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC16",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC17",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC18",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC19",
+          "category": "prerequisite_gap",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC20",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC21",
+          "category": "faster_pace",
+          "difficulty": "medium",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC22",
+          "category": "faster_pace",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": false,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC23",
+          "category": "faster_pace",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHALLENGE",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC24",
+          "category": "faster_pace",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": true,
+          "pace": "detailed",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC25",
+          "category": "faster_pace",
+          "difficulty": "medium",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC26",
+          "category": "return_after_remediation",
+          "difficulty": "easy",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "WORKED_EXAMPLE",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC27",
+          "category": "return_after_remediation",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC28",
+          "category": "return_after_remediation",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC29",
+          "category": "return_after_remediation",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC30",
+          "category": "return_after_remediation",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHECK_MASTERY",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        }
+      ],
+      "categories": {
+        "confident_misconception": {
+          "cases": 5,
+          "difficulty_ok_rate": null,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.4,
+          "pace_ok_rate": null,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "faster_pace": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.8,
+          "pace_ok_rate": 1.0,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "known_topic_readiness": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 1.0,
+          "pace_ok_rate": 1.0,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "prerequisite_gap": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.8,
+          "pace_ok_rate": null,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "return_after_remediation": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.8,
+          "pace_ok_rate": null,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "uncertain_skip": {
+          "cases": 5,
+          "difficulty_ok_rate": null,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 1.0,
+          "pace_ok_rate": 1.0,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        }
+      },
+      "deployment": {
+        "deployment_shape": "accounts/fireworks/deploymentShapes/sva2n3mh/versions/k9aui8v2",
+        "hardware": "1x NVIDIA H100 80GB BF16",
+        "lifecycle": "Temporary on-demand deployment; deleted after the run.",
+        "serverless_inference": {
+          "available": false,
+          "http_status": 404
+        }
+      },
+      "deployment_note": "Qwen was scored on a temporary on-demand deployment because serverless inference is not offered; the deployment was deleted after the run.",
+      "forbidden_case_ids": [],
+      "model_id": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
+      "overall": {
+        "cases": 30,
+        "difficulty_ok_rate": 1.0,
+        "forbidden_count": 0,
+        "forbidden_rate": 0.0,
+        "illegal_count": 0,
+        "illegal_rate": 0.0,
+        "move_ok_rate": 0.8,
+        "pace_ok_rate": 1.0,
+        "parse_failure_count": 0,
+        "parse_failure_rate": 0.0,
+        "truncated_output_count": 0
       },
       "provider": "Fireworks",
-      "run_count": 0,
-      "status": "unavailable"
+      "request_configuration": {
+        "max_tokens": 8192,
+        "model_string": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
+        "provider": "Fireworks on-demand deployment",
+        "run_count": 1,
+        "run_date": "2026-11-02",
+        "temperature": 0
+      },
+      "run_count": 1,
+      "status": "completed"
     },
     "random": {
       "cases": [
@@ -5561,408 +6087,408 @@
     },
     {
       "acceptable_move_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.8,
+        "mean": 0.8,
+        "min": 0.8
       },
-      "case_count": 0,
+      "case_count": 30,
       "category": "overall",
       "difficulty_ok_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
       },
-      "forbidden_case_ids": null,
+      "forbidden_case_ids": [],
       "forbidden_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "forbidden_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
       "illegal_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "illegal_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
-      "model_id": "accounts/fireworks/models/qwen3p8-27b",
+      "model_id": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
       "pace_ok_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
       },
       "parse_failure_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "parse_failure_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
       "policy": "qwen3p8-27b",
-      "status": "unavailable",
+      "status": "completed",
       "truncated_output_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       }
     },
     {
       "acceptable_move_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.4,
+        "mean": 0.4,
+        "min": 0.4
       },
-      "case_count": 0,
+      "case_count": 5,
       "category": "confident_misconception",
       "difficulty_ok_rate": {
         "max": null,
         "mean": null,
         "min": null
       },
-      "forbidden_case_ids": null,
+      "forbidden_case_ids": [],
       "forbidden_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "forbidden_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
       "illegal_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "illegal_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
-      "model_id": "accounts/fireworks/models/qwen3p8-27b",
+      "model_id": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
       "pace_ok_rate": {
         "max": null,
         "mean": null,
         "min": null
       },
       "parse_failure_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "parse_failure_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
       "policy": "qwen3p8-27b",
-      "status": "unavailable",
+      "status": "completed",
       "truncated_output_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       }
     },
     {
       "acceptable_move_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.8,
+        "mean": 0.8,
+        "min": 0.8
       },
-      "case_count": 0,
+      "case_count": 5,
       "category": "faster_pace",
       "difficulty_ok_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
       },
-      "forbidden_case_ids": null,
+      "forbidden_case_ids": [],
       "forbidden_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "forbidden_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
       "illegal_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "illegal_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
-      "model_id": "accounts/fireworks/models/qwen3p8-27b",
+      "model_id": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
       "pace_ok_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
       },
       "parse_failure_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "parse_failure_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
       "policy": "qwen3p8-27b",
-      "status": "unavailable",
+      "status": "completed",
       "truncated_output_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       }
     },
     {
       "acceptable_move_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
       },
-      "case_count": 0,
+      "case_count": 5,
       "category": "known_topic_readiness",
       "difficulty_ok_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
       },
-      "forbidden_case_ids": null,
+      "forbidden_case_ids": [],
       "forbidden_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "forbidden_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
       "illegal_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "illegal_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
-      "model_id": "accounts/fireworks/models/qwen3p8-27b",
+      "model_id": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
       "pace_ok_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
       },
       "parse_failure_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "parse_failure_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
       "policy": "qwen3p8-27b",
-      "status": "unavailable",
+      "status": "completed",
       "truncated_output_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       }
     },
     {
       "acceptable_move_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.8,
+        "mean": 0.8,
+        "min": 0.8
       },
-      "case_count": 0,
+      "case_count": 5,
       "category": "prerequisite_gap",
       "difficulty_ok_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
       },
-      "forbidden_case_ids": null,
+      "forbidden_case_ids": [],
       "forbidden_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "forbidden_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
       "illegal_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "illegal_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
-      "model_id": "accounts/fireworks/models/qwen3p8-27b",
+      "model_id": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
       "pace_ok_rate": {
         "max": null,
         "mean": null,
         "min": null
       },
       "parse_failure_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "parse_failure_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
       "policy": "qwen3p8-27b",
-      "status": "unavailable",
+      "status": "completed",
       "truncated_output_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       }
     },
     {
       "acceptable_move_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.8,
+        "mean": 0.8,
+        "min": 0.8
       },
-      "case_count": 0,
+      "case_count": 5,
       "category": "return_after_remediation",
       "difficulty_ok_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
       },
-      "forbidden_case_ids": null,
+      "forbidden_case_ids": [],
       "forbidden_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "forbidden_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
       "illegal_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "illegal_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
-      "model_id": "accounts/fireworks/models/qwen3p8-27b",
+      "model_id": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
       "pace_ok_rate": {
         "max": null,
         "mean": null,
         "min": null
       },
       "parse_failure_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "parse_failure_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
       "policy": "qwen3p8-27b",
-      "status": "unavailable",
+      "status": "completed",
       "truncated_output_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       }
     },
     {
       "acceptable_move_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
       },
-      "case_count": 0,
+      "case_count": 5,
       "category": "uncertain_skip",
       "difficulty_ok_rate": {
         "max": null,
         "mean": null,
         "min": null
       },
-      "forbidden_case_ids": null,
+      "forbidden_case_ids": [],
       "forbidden_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "forbidden_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
       "illegal_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "illegal_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
-      "model_id": "accounts/fireworks/models/qwen3p8-27b",
+      "model_id": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
       "pace_ok_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
       },
       "parse_failure_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       },
       "parse_failure_rate": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
       },
       "policy": "qwen3p8-27b",
-      "status": "unavailable",
+      "status": "completed",
       "truncated_output_count": {
-        "max": null,
-        "mean": null,
-        "min": null
+        "max": 0,
+        "mean": 0,
+        "min": 0
       }
     }
   ],
