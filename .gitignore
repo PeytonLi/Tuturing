@@ -19,3 +19,12 @@ build/
 !.env.example
 Thumbs.db
 .DS_Store
+
+# Xueming's agent workspace: conversation source records stay on the Mac mini, never in the shared repo
+/journal/
+
+# Ignored per PRD section 11.1
+
+# Python
+*.pyc
+.mypy_cache/
