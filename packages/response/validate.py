@@ -1,7 +1,7 @@
 """Deterministic response checks against an issued teaching plan."""
 
-from fractions import Fraction
 import re
+from fractions import Fraction
 
 from packages.response.numbers import extract_numbers
 from packages.response.shapes import is_valid
@@ -188,7 +188,9 @@ def run_checks(plan, text, effective_move):
         "schema_valid": bool(shape_ok),
         "action_faithful": bool(action_faithful),
         "math_supported": bool(_math_supported(plan, text)) if isinstance(text, str) else False,
-        "disclosure_allowed": bool(_disclosure_allowed(plan, text)) if isinstance(text, str) else False,
+        "disclosure_allowed": (
+            bool(_disclosure_allowed(plan, text)) if isinstance(text, str) else False
+        ),
         "length_valid": bool(
             isinstance(text, str)
             and word_count(text) <= plan.get("constraints", {}).get("max_words", -1)

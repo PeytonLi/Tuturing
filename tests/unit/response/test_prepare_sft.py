@@ -1,4 +1,3 @@
-import copy
 import json
 from collections import Counter
 
@@ -101,7 +100,10 @@ def test_prepare_uses_prior_turns_strips_prefixes_and_excludes_generic_and_empty
     assert "FUTURE_STUDENT_PRIVATE" not in serialized
     assert "FUTURE_TEACHER_PRIVATE" not in serialized
     assert "Let's continue from the earlier turn." not in serialized
-    assert any(turn["text"] == "Let me try." for turn in late_probe["plan"]["response_context"]["recent_dialogue"])
+    assert any(
+        turn["text"] == "Let me try."
+        for turn in late_probe["plan"]["response_context"]["recent_dialogue"]
+    )
     assert assignments[7] == next(
         item["split"] for item in accepted
         if item["example_id"] == "mathdial:train:0000:t00"
@@ -142,8 +144,16 @@ def test_opening_student_solution_turn_can_be_disabled():
     accepted_open, _, _, _ = build_examples(rows, config, mapping)
     config["include_student_solution_as_opening_turn"] = False
     accepted_closed, _, _, _ = build_examples(rows, config, mapping)
-    focus_open = next(item for item in accepted_open if item["plan"]["teaching_action"]["move"] == "HINT")
-    focus_closed = next(item for item in accepted_closed if item["plan"]["teaching_action"]["move"] == "HINT")
+    focus_open = next(
+        item
+        for item in accepted_open
+        if item["plan"]["teaching_action"]["move"] == "HINT"
+    )
+    focus_closed = next(
+        item
+        for item in accepted_closed
+        if item["plan"]["teaching_action"]["move"] == "HINT"
+    )
     assert focus_open["plan"]["response_context"]["recent_dialogue"][0]["text"] == (
         "I subtracted the wrong amounts."
     )

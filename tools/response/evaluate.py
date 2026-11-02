@@ -1,7 +1,8 @@
 """Evaluate deterministic or OpenAI-compatible response generation on JSONL cases.
 
 Usage with the Fireworks small-model defaults:
-    TUTOR_LLM_API_KEY=<key> python -m tools.response.evaluate --config configs/response/eval_frozen.yaml
+    TUTOR_LLM_API_KEY=<key> python -m tools.response.evaluate
+        --config configs/response/eval_frozen.yaml
 
 The config targets https://api.fireworks.ai/inference/v1 and
 accounts/fireworks/models/qwen3p8-27b. Environment variables
@@ -10,16 +11,16 @@ always comes from TUTOR_LLM_API_KEY.
 """
 
 import argparse
-from collections import Counter, defaultdict
-from datetime import datetime, timezone
 import json
 import os
-from pathlib import Path
 import urllib.request
+from collections import Counter, defaultdict
+from datetime import UTC, datetime
+from pathlib import Path
 
 import yaml
 
-from packages.response.fallbacks import FallbackUnavailable, render_fallback
+from packages.response.fallbacks import render_fallback
 from packages.response.hashing import content_hash
 from packages.response.prompt import PROMPT_VERSION, compile_prompt
 from packages.response.validate import VALIDATOR_VERSION, run_checks
@@ -153,7 +154,7 @@ def evaluate(cases, responder, out_dir, *, model=None, base_url=None, limit=None
         "per_check": per_check,
         "per_move": per_move,
         "errors": errors,
-        "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat(),
     }
     (out_path / "report.json").write_text(
         json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
@@ -172,7 +173,14 @@ def evaluate(cases, responder, out_dir, *, model=None, base_url=None, limit=None
     markdown.extend(
         f"| {name} | {per_check[name]:.3f} |" for name in CHECK_NAMES
     )
-    markdown.extend(["", "## Per move", "", "| Move | N | All pass | " + " | ".join(CHECK_NAMES) + " |"])
+    markdown.extend(
+        [
+            "",
+            "## Per move",
+            "",
+            "| Move | N | All pass | " + " | ".join(CHECK_NAMES) + " |",
+        ]
+    )
     markdown.append("|---|---:|---:|" + "---:|" * len(CHECK_NAMES))
     for move, values in per_move.items():
         cells = " | ".join(f"{values['per_check'][name]:.3f}" for name in CHECK_NAMES)
@@ -182,7 +190,10 @@ def evaluate(cases, responder, out_dir, *, model=None, base_url=None, limit=None
     (out_path / "report.md").write_text("\n".join(markdown) + "\n", encoding="utf-8")
     with (out_path / "results.jsonl").open("w", encoding="utf-8", newline="\n") as stream:
         for row in rows:
-            record = {key: row[key] for key in ("example_id", "move", "text", "checks", "content_hash")}
+            record = {
+                key: row[key]
+                for key in ("example_id", "move", "text", "checks", "content_hash")
+            }
             record["error"] = row["_error"]
             if row["_usage"] is not None:
                 record["usage"] = row["_usage"]

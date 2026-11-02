@@ -1,8 +1,8 @@
 """Rule-based extraction of observable student evidence."""
 
-from datetime import datetime, timezone
 import hashlib
 import re
+from datetime import UTC, datetime
 
 from packages.response.numbers import extract_numbers
 
@@ -20,10 +20,30 @@ _HEDGED = re.compile(r"(?i)\?|\bmaybe\b|\bis it\b|\bi think\b")
 _REQUESTS = (
     ("stop", re.compile(r"\b(stop|quit|i'?m done|end (the )?session|exit)\b", re.I)),
     ("skip", re.compile(r"\bskip\b|\bmove on\b|\bnext (topic|concept|one)\b|\bskip to\b", re.I)),
-    ("change_goal", re.compile(r"\b(change|switch)( the)? (goal|topic)\b|\bdifferent (goal|topic)\b|\blearn about something else\b", re.I)),
-    ("answer", re.compile(r"\b(just )?(tell|give|show) me the (answer|solution)\b|\bwhat'?s the answer\b|\bjust tell me\b|\breveal\b", re.I)),
+    (
+        "change_goal",
+        re.compile(
+            r"\b(change|switch)( the)? (goal|topic)\b|\bdifferent (goal|topic)\b"
+            r"|\blearn about something else\b",
+            re.I,
+        ),
+    ),
+    (
+        "answer",
+        re.compile(
+            r"\b(just )?(tell|give|show) me the (answer|solution)\b"
+            r"|\bwhat'?s the answer\b|\bjust tell me\b|\breveal\b",
+            re.I,
+        ),
+    ),
     ("hint", re.compile(r"\bhint\b|\bclue\b|\bi'?m stuck\b|\bhelp me\b", re.I)),
-    ("faster", re.compile(r"\bfaster\b|\bspeed (it )?up\b|\bquicker\b|\bhurry\b|\btoo slow\b", re.I)),
+    (
+        "faster",
+        re.compile(
+            r"\bfaster\b|\bspeed (it )?up\b|\bquicker\b|\bhurry\b|\btoo slow\b",
+            re.I,
+        ),
+    ),
     ("slower", re.compile(r"\bslower\b|\bslow down\b|\btoo fast\b", re.I)),
 )
 _CONCEPT_KEYWORDS = (
@@ -131,16 +151,15 @@ def extract(
     raw_message_ref=None,
 ):
     plan = last_plan or {}
-    context = plan.get("response_context", {})
     session_id = session_id or plan.get("session_id") or "unknown_session"
     trace_id = trace_id or plan.get("trace_id") or "unknown_trace"
-    observed_at = observed_at or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    observed_at = observed_at or datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     raw_message_ref = raw_message_ref or (
         "msg_" + hashlib.sha256(message.encode("utf-8")).hexdigest()[:16]
     )
     event_id = event_id or (
         "ev_" + hashlib.sha256(
-            f"{session_id}|{last_response_id}|{message}".encode("utf-8")
+            f"{session_id}|{last_response_id}|{message}".encode()
         ).hexdigest()[:16]
     )
 

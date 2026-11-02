@@ -5,7 +5,6 @@ import pytest
 from packages.evidence_extractor.extract import extract
 from packages.response.shapes import REQUIRED_KEYS, is_valid
 
-
 FIXTURE_PATH = (
     Path(__file__).parents[1]
     / "response"

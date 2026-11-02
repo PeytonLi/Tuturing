@@ -1,15 +1,12 @@
 import json
-from pathlib import Path
 import re
-
-import pytest
+from pathlib import Path
 
 from packages.response.prompt import compile_prompt
 from tools.response.evaluate import evaluate, load_cases
-from tools.response.make_smoke_cases import build_smoke_cases
 from tools.response.train_sft import (
-    build_loss_mask,
     build_lora_kwargs,
+    build_loss_mask,
     build_sft_config_kwargs,
     check_config,
     load_config,
@@ -77,7 +74,13 @@ def test_openai_compatible_evaluation_uses_expected_http_request(monkeypatch, tm
 
         def read(self):
             return json.dumps({
-                "choices": [{"message": {"content": "A clue: count the non-blue sections. What next?"}}],
+                "choices": [
+                    {
+                        "message": {
+                            "content": "A clue: count the non-blue sections. What next?"
+                        }
+                    }
+                ],
                 "usage": {"prompt_tokens": 12, "completion_tokens": 10},
             }).encode()
 

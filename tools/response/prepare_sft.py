@@ -1,13 +1,13 @@
 """Prepare provenance-tracked, turn-level MathDial SFT examples."""
 
 import argparse
-from collections import Counter, defaultdict
-from datetime import datetime, timezone
 import hashlib
 import json
-from pathlib import Path
 import re
 import urllib.request
+from collections import Counter, defaultdict
+from datetime import UTC, datetime
+from pathlib import Path
 
 import yaml
 
@@ -253,7 +253,9 @@ def _teaching_plan(dialogue_id, example_id, row, move, recent_dialogue, last_stu
             "max_words": config["max_words"],
             "max_questions": 1,
             "must_request_student_attempt": False,
-            "forbidden_answer_fingerprints": [] if reveal else ([final_answer] if final_answer else []),
+            "forbidden_answer_fingerprints": (
+                [] if reveal else ([final_answer] if final_answer else [])
+            ),
         },
         "response_context": {
             "last_student_message": last_student,
@@ -308,7 +310,11 @@ def build_examples(rows_by_official, config, move_map):
                     if item["text"]
                 ]
                 last_student = next(
-                    (item["text"] for item in reversed(recent_dialogue) if item["role"] == "student"),
+                    (
+                        item["text"]
+                        for item in reversed(recent_dialogue)
+                        if item["role"] == "student"
+                    ),
                     "",
                 )
                 mapping_entry = mapping.get(act) if act else None
@@ -480,7 +486,7 @@ def prepare(config_path):
         "publisher_url": "https://huggingface.co/datasets/eth-nlped/mathdial",
         "revision": config["revision"],
         "download_urls": download_urls,
-        "download_date": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        "download_date": datetime.now(UTC).replace(microsecond=0).isoformat(),
         "files": downloads,
         "license": {
             "name": config["license"]["name"],
@@ -543,8 +549,10 @@ def prepare(config_path):
         ],
         "notes": [
             "SFT checks are null and not computed; mapped labels are draft_unaudited.",
-            "External MathDial concepts use navigation action_id -1 because they have no catalogue index.",
-            "MathDial HINT and EXPLAIN_CONCEPT plans lack the corresponding PRD 9.3 approved hint/facts.",
+            "External MathDial concepts use navigation action_id -1 because they have no "
+            "catalogue index.",
+            "MathDial HINT and EXPLAIN_CONCEPT plans lack the corresponding PRD 9.3 "
+            "approved hint/facts.",
             "Only EXPLAIN_CONCEPT plans include ground_truth, as reveal_solution.",
         ],
     }
@@ -555,7 +563,10 @@ def prepare(config_path):
         encoding="utf-8",
     )
     print(f"raw_counts: {json.dumps(raw_counts, sort_keys=True)}")
-    print(f"accepted per split: {json.dumps({split: len(rows) for split, rows in split_records.items()}, sort_keys=True)}")
+    accepted_per_split = {
+        split: len(rows) for split, rows in split_records.items()
+    }
+    print(f"accepted per split: {json.dumps(accepted_per_split, sort_keys=True)}")
     print(f"rejected by reason: {json.dumps(manifest['rejected_count_by_reason'], sort_keys=True)}")
     print(f"mapped move per split: {json.dumps(counts_per_split_and_move, sort_keys=True)}")
     print(f"dialogues/qids per split: {json.dumps(counts_per_split, sort_keys=True)}")

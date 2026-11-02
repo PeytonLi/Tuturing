@@ -351,7 +351,10 @@ def inspect_masks(cfg, count, cases_path=None):
         tokens = (
             converter(result["input_ids"])
             if converter
-            else [tokenizer.decode([token], skip_special_tokens=False) for token in result["input_ids"]]
+            else [
+                tokenizer.decode([token], skip_special_tokens=False)
+                for token in result["input_ids"]
+            ]
         )
         print(" ".join(
             f"[{mask}] {token!r}"

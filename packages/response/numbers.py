@@ -1,8 +1,8 @@
 """Conservative extraction of number tokens from learner-facing text."""
 
+import re
 from dataclasses import dataclass
 from fractions import Fraction
-import re
 
 
 @dataclass(frozen=True)
