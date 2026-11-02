@@ -112,9 +112,15 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 ## 2026-11-02 — Fireworks key replaced; Qwen3.8-27B run started on Peyton's account
 
-**User direction:** “use this for fireworks key instead …” (Lark message in the Tuturing topic at about 21:55 UTC; the key value is stored only in `~/.config/tuturing/llm.env`).
+**User direction:** “use this for fireworks key instead …” (Lark message in the Tuturing topic on 2026-11-02; the key value is stored only in `~/.config/tuturing/llm.env`).
 
 **Facts:** the new key resolves to Fireworks account `accounts/peli`, Peyton's. The free deployment dry run passed there, and the live deployment list was empty. The list also shows two deleted deployments of the same model created from that account earlier the same day, before this session used it. The benchmark agent was told to run the Qwen3.8-27B entry with the same safeguards (pilot first, $25 total cap including GPU hours, deletion verified afterward) and to add the Qwen replies as a supplement to the review sheet without reshuffling the 62 replies Xueming is already rating.
 
 **Assistant note:** the response service merge (`afdd0e3`) left one open labeling choice: template-stub output is reported as `delivery_mode: model`. Xueming was asked; the assistant proposed `fallback` as the more honest label and will apply it unless Xueming objects.
+
+## 2026-11-02 — Template-stub output is labeled `fallback`
+
+**User direction:** “pick "fallback"” (Lark message in the Tuturing topic), answering the assistant's question from the response service merge.
+
+**Implementation (commit `e497294`):** responders declare their own delivery label. The template stub says `fallback`, including when its CHECK_MASTERY template goes through the one permitted repair, because a template is a verified fallback realization and never model text (PRD 8.4). Only a language-model responder yields `model` or `repaired`. The runbook and tests were updated; 237 tests pass.
 
