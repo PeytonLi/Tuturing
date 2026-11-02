@@ -1,0 +1,52 @@
+[project]
+name = "adaptive-ai-tutor"
+version = "0.1.0"
+description = "Prototype foundation for an adaptive AI tutor"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "jsonschema>=4.23",
+  "numpy>=2.1",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+learning = ["torch>=2.5"]
+response-train = [
+  "accelerate>=1.2",
+  "datasets>=3.2",
+  "peft>=0.14",
+  "transformers>=4.47",
+  "trl>=0.13",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3",
+  "ruff>=0.8",
+]
+
+[tool.uv]
+package = true
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[tool.setuptools.packages.find]
+include = ["apps*", "packages*", "tools*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
