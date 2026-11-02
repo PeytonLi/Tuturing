@@ -3,7 +3,7 @@
 import copy
 import hashlib
 import json
-from collections import defaultdict, deque
+from collections import Counter, defaultdict, deque
 from dataclasses import asdict
 from datetime import UTC, datetime, timedelta
 from uuid import uuid4
@@ -262,7 +262,8 @@ class LearningEngine:
                 skip_diagnostic_done=False,
                 active_item=None,
                 previous_move="NONE",
-                used_assessment=[],
+                used_assessment={},
+                assessment_family_reuse_counts={},
                 used_teaching=[],
                 last_response_id=None,
                 last_plan=None,
@@ -605,9 +606,12 @@ class LearningEngine:
         if move in {"PROBE", "PRACTICE", "CHALLENGE", "CHECK_MASTERY"}:
             bank = EventRandomBank()
             seed = self.config.get("seed", 0)
-            used_assessment, used_teaching = (
-                set(state["used_assessment"]),
+            assessment_family_uses, used_teaching = (
+                Counter(state["used_assessment"]),
                 set(state["used_teaching"]),
+            )
+            assessment_family_reuse_counts = Counter(
+                state.get("assessment_family_reuse_counts", {})
             )
             family, instance, item_id = _next_item(
                 state["current_concept_id"],
@@ -616,8 +620,9 @@ class LearningEngine:
                 seed,
                 count,
                 bank,
-                used_assessment,
-                used_teaching,
+                assessment_family_uses=assessment_family_uses,
+                assessment_family_reuse_counts=assessment_family_reuse_counts,
+                used_teaching_families=used_teaching,
             )
             sample_seed = int(
                 bank.rng(scenario["scenario_id"], seed, count, "item_parameters").integers(0, 2**31)
@@ -635,7 +640,9 @@ class LearningEngine:
             if family.role == "teaching":
                 used_teaching.add(family.template_family_id)
             state.update(
-                used_assessment=sorted(used_assessment), used_teaching=sorted(used_teaching)
+                used_assessment=dict(assessment_family_uses),
+                assessment_family_reuse_counts=dict(assessment_family_reuse_counts),
+                used_teaching=sorted(used_teaching),
             )
         elif move == "HINT" and item:
             item["hint_level"] = min(3, item["hint_level"] + 1)

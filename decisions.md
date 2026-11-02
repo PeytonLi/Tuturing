@@ -87,3 +87,17 @@ POSTs require a nonempty ASCII Idempotency-Key of at most 128 characters. Chunke
 supported; POSTs require Content-Length and at most 65,536 bytes of finite JSON. The server closes
 each response connection, so an unread rejected body cannot become the next request.
 `docs/learning_service.md` records a real local transport run with a development-only token.
+
+## 2026-11-02 — Episode helper compatibility after simulator v2 merge
+
+**Source:** Follow-up request to adapt the learning service after merging origin/main.
+
+`_next_item` now consumes assessment-family usage and per-concept reuse counters, not an
+assessment-family set. The engine persists both counters in the proposed plan snapshot and
+promotes them only on commit. Cancellation and expiry still consume no teaching turn or family
+usage. The existing `used_assessment` field now holds a count mapping. Legacy lists in sessions
+and pending plan snapshots are accepted as one recorded use per listed family; earlier unrecorded
+PROBE usage cannot be inferred from that list. Missing legacy reuse counters start empty.
+Other imported episode helpers are unchanged. New train assessment families enter the existing
+train-only allowlist automatically. Simulator v2 student/reward settings and training configs are
+not used by the live engine; its rules config and checkpoint loading remain unchanged.

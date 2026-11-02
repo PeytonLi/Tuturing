@@ -425,3 +425,89 @@ def test_idempotency_after_restart_and_atomic_event_log(tmp_path):
         (3, "teaching_committed"),
     ]
     engine.close()
+
+
+class ProbeStrategist:
+    policy_version = "probe_test_v1"
+
+    def act(self, observation, mask, context):
+        return encode_strategist("PROBE", "easy", "normal")
+
+
+def test_assessment_usage_survives_restart_and_cancellation(tmp_path):
+    path = tmp_path / "families.sqlite"
+    engine = LearningEngine({}, path, strategist=ProbeStrategist())
+    try:
+        sid = create(engine)
+        ev = None
+        selected = []
+        for turn in range(2):
+            plan = observe(engine, sid, turn, ev, f"observe-{turn}")["teaching_plan"]
+            selected.append(plan["template_family_id"])
+            commit(engine, plan, f"commit-{turn}")
+            ev = evidence(engine, plan, answer="not-an-answer", event=f"e-{turn}")
+        assert selected == ["c01_assess_01", "c01_assess_04"]
+        before = state(engine, sid)
+        assert before["used_assessment"] == dict.fromkeys(selected, 1)
+        assert before["assessment_family_reuse_counts"] == {}
+        third = observe(engine, sid, 2, ev, "third")
+        engine.close()
+        engine = LearningEngine({}, path, strategist=ProbeStrategist())
+        assert observe(engine, sid, 2, ev, "third") == third
+        cancel(engine, third["teaching_plan"])
+        assert state(engine, sid)["used_assessment"] == before["used_assessment"]
+        assert state(engine, sid)["assessment_family_reuse_counts"] == {}
+        plan = observe(engine, sid, 2, ev, "replacement")["teaching_plan"]
+        assert plan["template_family_id"] == selected[0]
+        commit(engine, plan, "commit-replacement")
+        assert state(engine, sid)["used_assessment"] == {selected[0]: 2, selected[1]: 1}
+        assert state(engine, sid)["assessment_family_reuse_counts"] == {"C01": 1}
+        ev = evidence(engine, plan, answer="not-an-answer", event="e-third")
+        plan = observe(engine, sid, 3, ev, "fourth")["teaching_plan"]
+        assert plan["template_family_id"] == selected[1]
+        commit(engine, plan, "commit-fourth")
+        assert state(engine, sid)["used_assessment"] == dict.fromkeys(selected, 2)
+        assert state(engine, sid)["assessment_family_reuse_counts"] == {"C01": 2}
+    finally:
+        engine.close()
+
+
+@pytest.mark.parametrize("legacy_location", ["session", "pending_plan"])
+def test_legacy_assessment_family_lists(engine, legacy_location):
+    sid = create(engine)
+    ev = None
+    version = 0
+    if legacy_location == "pending_plan":
+        plan = observe(engine, sid)["teaching_plan"]
+    with engine.store.transaction() as db:
+        if legacy_location == "session":
+            stored = json.loads(
+                db.execute("SELECT state_json FROM sessions WHERE session_id=?", (sid,)).fetchone()[
+                    0
+                ]
+            )
+        else:
+            stored = json.loads(
+                db.execute(
+                    "SELECT state_json FROM plans WHERE plan_id=?", (plan["plan_id"],)
+                ).fetchone()[0]
+            )
+        stored["used_assessment"] = ["c01_assess_01"]
+        del stored["assessment_family_reuse_counts"]
+        if legacy_location == "session":
+            engine._save(db, stored)
+        else:
+            db.execute(
+                "UPDATE plans SET state_json=? WHERE plan_id=?",
+                (json.dumps(stored), plan["plan_id"]),
+            )
+    if legacy_location == "pending_plan":
+        commit(engine, plan)
+        version = 1
+        ev = evidence(engine, plan, answer="not-an-answer")
+    engine.strategist = ProbeStrategist()
+    result = observe(engine, sid, version, ev, "next")["teaching_plan"]
+    assert result["template_family_id"] == "c01_assess_04"
+    commit(engine, result, "next-commit")
+    assert state(engine, sid)["used_assessment"] == {"c01_assess_01": 1, "c01_assess_04": 1}
+    assert state(engine, sid)["assessment_family_reuse_counts"] == {}
