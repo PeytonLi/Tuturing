@@ -46,3 +46,9 @@ Workspace-level decisions and their rationale, with dates and sources. Product a
 
 **Implementation (assistant):** The benchmark's required models are now OpenAI `gpt-6.1-sol` and `accounts/fireworks/models/qwen3p8-27b` on an on-demand Fireworks deployment. The agent creates the deployment only once the harness is ready, deletes it after the run, and records proof of deletion. Other paid models were dropped. The $25 total cap now also covers the deployment's GPU hours and still awaits Xueming's confirmation.
 
+## 2026-11-02 — Person A owns SFT
+
+**User direction:** “send me what to review, when it's ready. 4. we own the sft” — the second part answers the open question on who edits Person A's files. Source: capture `cap_7c410346-63da-4a59-9c26-bfb410856672`.
+
+**Consequences:** SFT is Person A's, as PRD section 2 and `OWNERS.md` already assign: the SFT configs, `tools/response/train_sft.py`, SFT data and decision records D09 and D10. Xueming's agents maintain these from now on, and the earlier hands-off rule for the files Peyton's agent was editing no longer applies to new work. D10's base-model choice is still unconfirmed; the benchmark of `gpt-6.1-sol` and Qwen3.8-27B is meant to inform it. Peyton's agent is outside this workspace, so Peyton has to relay the change to it.
+

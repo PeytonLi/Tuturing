@@ -67,11 +67,12 @@ Xueming authorized running every Person A item in parallel and asked for dataset
 
 Keys live in `~/.config/tuturing/llm.env` (mode 600), outside Git. Both keys answered free model-list calls with HTTP 200.
 
+Xueming decided that Person A owns SFT (capture `cap_7c410346-63da-4a59-9c26-bfb410856672`): the SFT configs, trainer, SFT data and D09/D10 are maintained by Xueming's agents from now on. Xueming asked to be sent review items as each workstream finishes.
+
 ## Open questions
 
 - D10 on `main` switches the SFT base model from the PRD's `Qwen/Qwen2.5-7B-Instruct` to `Qwen/Qwen3.8-27B` on Fireworks and is marked "accepted by lead". PRD 2.3 makes SFT selection a Person A decision, so Xueming should confirm it. Fireworks lists the model as LoRA-tunable but not serverless, so benchmarking and serving it need a paid dedicated deployment. Xueming approved a deployment so the benchmark can include it; the results are meant to inform this decision.
 - The $25 benchmark spend cap is an assistant default that Xueming has not confirmed.
-- Who edits Person A files: Peyton's agent is still committing to A's SFT config, trainer and D10.
 - Anthropic and Google keys are absent, so Claude and Gemini are not in the benchmark yet.
 - Hackathon deadline and demo format are not recorded anywhere in the repository.
 - When will Peyton ship B's mock learning service?
