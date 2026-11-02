@@ -152,3 +152,11 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 **Source:** docs/results/strategist_final_v1.md (Person B Strategist evaluation session).
 
 **Facts:** an always-worked-example baseline loses to rules on validation, so simulator v2 stays (no v3). The worked-example collapse came from a rules loop: after two unsuccessful hints, rules repeated WORKED_EXAMPLE indefinitely. Rules v3 adds a public-evidence misconception branch (PROBE, then WORKED_EXAMPLE or EXPLAIN_CONCEPT) and follows a worked example with independent PRACTICE. Public misconception evidence fills the existing 25 slots of features_v1 (no contract change), and the learning service uses the same helper. Checkpoint rule, declared before test: highest validation mean gain, with ties going to rules. BC (`bc_rules3_seed0`) was chosen. Its edge over rules is +0.004 on validation (CI crosses zero) and +0.005 on the single test run. Simulator uncalibrated, no human data.
+||||||| 7a2b9c8
+
+## 2026-11-02 — validator_v2 item-fidelity check merged
+
+**Source:** the response-service agent's final report; merge `bd32b5b` (480 tests pass).
+
+**Facts:** `action_faithful` now includes a digit-independent item-fidelity check for item-presenting and item-referring moves: the reply must reuse enough of the issued stem's content words (or the item's numbers, or the permitted hint) and must not introduce a competing scenario or quantity that the plan does not contain. It is not repairable, so a substituted item always falls back. Calibration on the review-sheet texts: 0 of 11 fallback, 0 of 11 gpt-6.1-sol fixture and 0 of 30 MathDial replies flagged; 4 of 11 Qwen fixture replies flagged, all genuine substitutions. Known limits: the lexicon covers probability devices rather than arbitrary story objects, WORKED_EXAMPLE is not yet covered, and the benchmark report still shows the pre-v2 numbers.
+

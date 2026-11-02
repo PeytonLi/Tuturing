@@ -153,6 +153,51 @@ Tests: `tests/unit/response/test_pipeline.py`, `test_responders.py` (against a l
 OpenAI-compatible server; no real API is ever called), `test_service_config.py`,
 `test_publish_stub.py` and `tests/integration/response/test_service_http.py`.
 
+## Item fidelity (validator_v2)
+
+benchmark_v1 found that Qwen3.8-27B replaced the issued coin problem with a six-sided die on
+both CHECK_MASTERY fixtures and the CHALLENGE fixture and passed every check, because the
+coin stem has no digits for the number heuristics to anchor on. validator_v2 folds a
+digit-independent item-fidelity check (`packages/response/item_fidelity.py`) into
+`action_faithful` for the moves that carry an item: PRACTICE, CHALLENGE, CHECK_MASTERY, HINT
+and PROBE with an item. The six-check contract is unchanged, and because `action_faithful`
+is never repairable, a substituted item always falls back to the verified rendering.
+
+Both signals work on normalized content words (lowercase, punctuation stripped, stopwords
+dropped, light suffix stemming):
+
+- **Presence.** PRACTICE, CHALLENGE and CHECK_MASTERY must reuse at least 50% of the stem's
+  content words (a heavy paraphrase of a protected check falls back by design, PRD 14.2).
+  HINT and PROBE must reuse at least 25% of them, or three of them, or one of the stem's
+  numbers; a HINT may instead reuse at least 50% of the permitted hint's words, since the
+  approved hint is the plan's own realization of the item.
+- **No competing scenario.** The reply may not introduce a scenario family (coin, die,
+  cards, spinner, raffle, each container or drawn object such as bag, jar, box, urn, marble,
+  ball, bead, counter, tile, and each colour) or a quantity phrase such as `3 red marbles`
+  or `six-sided die` that the stem, approved facts, hint, worked example, previous step,
+  concept names, misconception summary and recent dialogue do not already contain. A family
+  the plan mentions is allowed as a whole, so "tails" is fine in a reply about a coin that
+  only named heads.
+
+Calibration on the benchmark_v1 review-sheet texts (the only responses with text in the
+repository; MathDial plans were approximated from the sheet's stem and last learner message,
+without the rest of the dialogue):
+
+| Set | Applicable replies | Fail item fidelity |
+|---|---:|---:|
+| Fallback renderer, B's 9 fixture plans and the 5 smoke item plans | 11 | 0 |
+| gpt-6.1-sol, B fixtures and smoke | 11 | 0 |
+| Qwen3.8-27B, B fixtures and smoke | 11 | 4 (the three die substitutions and the smoke CHALLENGE marble substitution) |
+| gpt-6.1-sol, MathDial (false positives) | 15 | 0 |
+| Qwen3.8-27B, MathDial (false positives) | 15 | 0 |
+
+Before the number rule for referring moves, 3 of 15 gpt-6.1-sol and 2 of 15 Qwen MathDial
+replies were flagged: all referred to the item through its numbers only ("What is 30 times
+3?"). The check is a heuristic over the plan's own words: it cannot see a substitution that
+reuses the stem's vocabulary, and the scenario lexicon covers probability devices, not
+arbitrary story objects. `tools.response.benchmark` reruns under validator_v2 will show the
+die substitutions as `action_faithful` failures.
+
 ## Limitations
 
 - The template stub cannot adapt wording to the learner message; the model profile is
