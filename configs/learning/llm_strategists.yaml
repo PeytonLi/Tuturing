@@ -1,0 +1,17 @@
+gpt_6_1_sol:
+  base_url: https://api.openai.com/v1
+  model: gpt-6.1-sol
+  api_key_env: OPENAI_API_KEY
+  max_tokens_field: max_completion_tokens
+  max_tokens: 4000
+  temperature: null
+  prompt: evaluation/learning/llm_strategist_prompt_v1.txt
+
+qwen3p8_27b_base:
+  base_url: https://api.fireworks.ai/inference/v1
+  model_env: TUTOR_QWEN_MODEL
+  api_key_env: FIREWORKS_API_KEY
+  max_tokens_field: max_tokens
+  max_tokens: 8192
+  temperature: 0
+  prompt: evaluation/learning/llm_strategist_prompt_v1.txt

@@ -3,21 +3,19 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import re
 import urllib.error
 import urllib.request
 from collections import defaultdict
 from pathlib import Path
 
 from packages.learning.actions import (
-    DIFFICULTIES,
-    PACES,
     decode_strategist,
     encode_strategist,
     strategist_mask,
 )
 from packages.learning.features import build_features
 from packages.learning.scheduler import skip_diagnostic_due
+from packages.policies.llm import legal_action_text, parse_first_json_object
 from packages.policies.network import NetworkStrategist
 from packages.policies.rules import (
     AlwaysHintStrategist,
@@ -144,38 +142,6 @@ def case_state_to_inputs(state: dict) -> tuple[dict, list[float], list[bool], di
     if sum(mask) == 0:
         raise ValueError("decision case produced an empty strategist mask")
     return mapped, observation, mask, context
-
-
-def legal_action_text(mask: list[bool]) -> str:
-    legal = [decode_strategist(index) for index, allowed in enumerate(mask) if allowed]
-    lines = []
-    for move in sorted({item[0] for item in legal}):
-        group = [item for item in legal if item[0] == move]
-        difficulties = sorted({item[1] for item in group}, key=DIFFICULTIES.index)
-        paces = sorted({item[2] for item in group}, key=PACES.index)
-        lines.append(
-            f"{move}: difficulties={', '.join(difficulties)}; paces={', '.join(paces)}"
-        )
-    return "\n".join(lines)
-
-
-def parse_first_json_object(text: str) -> dict:
-    text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
-    leading = text.lstrip()
-    if leading.startswith("<think>"):
-        first_object = text.find("{")
-        text = text[first_object:] if first_object >= 0 else ""
-    decoder = json.JSONDecoder()
-    for index, char in enumerate(text):
-        if char != "{":
-            continue
-        try:
-            value, _ = decoder.raw_decode(text[index:])
-        except json.JSONDecodeError:
-            continue
-        if isinstance(value, dict):
-            return value
-    raise ValueError("reply contains no JSON object")
 
 
 def llm_action(case: dict, mask: list[bool]) -> tuple[int | None, bool, bool]:

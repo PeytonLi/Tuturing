@@ -173,3 +173,8 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 **Facts:** the four rejections under `validator_v2` were false positives: "in your head" matched the coin family's `head`, and "in three moves. A marbles experiment" let a number cross a sentence boundary into the stem's noun. The quantity rule now requires a scenario object noun in the same sentence, and `head`/`tail` count only alongside a coin anchor. The four Qwen substitutions still fail. `build_original_sft` accepts 371 of 371 under `validator_v2`. Main was pushed after the full CPU smoke (512 tests, both validators, content validation, a ten-episode simulate).
 
+## 2026-11-02 — Full-session LLM Strategist reference path
+
+**Source:** Person B full-session LLM Strategist evaluation handoff.
+
+This adds a simulated, validation-only reference path for LLM Teaching Strategists. No paid model runs or test-split runs are part of this change. Truncated, unparsable, illegal, or HTTP-failed replies fall back to `RulesStrategist`; evaluation reports the fallback rate. The frozen BC checkpoint remains the selected policy, with no selection change.
