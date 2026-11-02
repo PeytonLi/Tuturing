@@ -179,9 +179,13 @@ def test_oversized_body_is_refused_before_it_is_read(server):
     body = json.loads(rest.decode("utf-8"))
     assert_error(body, "INVALID_SCHEMA")
     assert "262144" in body["message"]
-    status, body = call(server, raw=b"{}" * 140_000)
-    assert status == 422
-    assert_error(body, "INVALID_SCHEMA")
+    # A client that streams the whole oversized body before reading still gets the error, not
+    # a connection reset (the server lingers and discards what it refused). Repeated because
+    # the reset was timing-dependent before the lingering close.
+    for _ in range(5):
+        status, body = call(server, raw=b"{}" * 140_000)
+        assert status == 422
+        assert_error(body, "INVALID_SCHEMA")
 
 
 @pytest.mark.parametrize(

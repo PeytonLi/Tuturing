@@ -5,12 +5,13 @@ message. It never decides what to teach: it verifies the plan, compiles the prom
 responder, runs the six response checks, repairs once for length or question count only,
 and otherwise delivers a verified fallback or a retryable error (PRD 8.2 step 4, 9.4, 14).
 
-Two responders exist behind one interface:
+Two responders exist behind one interface, in three shipped profiles:
 
 | Responder | Artifact | Config | What it does |
 |---|---|---|---|
 | `template_stub` | `response_stub_pipeline_v1` | `configs/response/serve_stub.yaml` | The deterministic CPU templates in `packages/response/stub.py` behind the verified pipeline. No model, no network, no credential. |
-| `openai_compatible` | `prompt_only_openai_compatible_v1` | `configs/response/serve_openai_compatible.yaml` | Any OpenAI-compatible `/chat/completions` server (local llama.cpp `llama-server`, vLLM, or a hosted provider), greedy decoding, 384-token cap, standard library HTTP client. |
+| `openai_compatible` | `prompt_only_openai_compatible_v1` | `configs/response/serve_openai_compatible.yaml` | Any OpenAI-compatible `/chat/completions` server (Qwen3.8-27B on a Fireworks deployment, local llama.cpp `llama-server`, vLLM). Greedy decoding (`temperature: 0`), `max_tokens`, `reasoning_effort: none`: the body benchmark_v1 used for Qwen. |
+| `openai_compatible` | `prompt_only_gpt61sol_v1` | `configs/response/serve_gpt61sol.yaml` | OpenAI `gpt-6.1-sol`: `max_completion_tokens`, temperature omitted (the model accepts only its default, so decoding is not deterministic), `reasoning_effort: low`. |
 
 ## Loading the stub (Person B)
 
@@ -113,7 +114,7 @@ this with sentinel strings.
 
 ## Configuration
 
-Both configs share one layout (`apps/response_service/config.py` validates it; unknown keys,
+All configs share one layout (`apps/response_service/config.py` validates it; unknown keys,
 placeholders and version pins that disagree with the code are rejected at startup):
 
 ```yaml
@@ -124,19 +125,77 @@ artifact:   {id, compatible_ids}
 responder:  {kind: template_stub}
             # or
             {kind: openai_compatible, base_url_env | base_url, model_env | model,
-             api_key_env, api_key_required, request_timeout_s, extra_body}
+             api_key_env, api_key_required, request_timeout_s,
+             decoding: {token_param, temperature, reasoning_effort}, extra_body}
 generation: {internal_deadline_ms, max_output_tokens, max_repairs}
 versions:   {prompt, validator, fallback}
 ```
 
 Environment variables used by `serve_openai_compatible.yaml`: `TUTOR_LLM_BASE_URL`,
 `TUTOR_LLM_MODEL`, `TUTOR_LLM_API_KEY` (optional for a local server because
-`api_key_required: false`) and `TUTOR_RESPONSE_SERVICE_TOKEN`. Keys are read from the
-environment at startup and are never printed, logged or written. The client refuses
-redirects so the key cannot follow one to another host.
+`api_key_required: false`) and `TUTOR_RESPONSE_SERVICE_TOKEN`. `serve_gpt61sol.yaml` pins
+the base URL and model and reads `OPENAI_API_KEY` (the name used in
+`~/.config/tuturing/llm.env`; `set -a; . ~/.config/tuturing/llm.env; set +a` exports it
+without printing) and `TUTOR_RESPONSE_SERVICE_TOKEN`; it requires the service token even on
+loopback because every request spends money. Keys are read from the environment at startup
+and are never printed, logged or written. The client refuses redirects so the key cannot
+follow one to another host.
 
 A local llama.cpp server works with
-`llama-server -m <model.gguf> --port 8080` and `TUTOR_LLM_BASE_URL=http://127.0.0.1:8080/v1`.
+`llama-server -m <model.gguf> --port 8080` and `TUTOR_LLM_BASE_URL=http://127.0.0.1:8080/v1`
+(delete `reasoning_effort` from the decoding block if the server rejects it).
+
+### Decoding per model
+
+`responder.decoding` uses the vocabulary of `configs/response/benchmark_v1.yaml`:
+
+| Key | Values | Default | Sent as |
+|---|---|---|---|
+| `token_param` | `max_tokens` or `max_completion_tokens` | `max_tokens` | that field, set to `generation.max_output_tokens` (at most 384, PRD 14.1) |
+| `temperature` | a number in [0, 2], or `null` | `0` (greedy) | `temperature`; `null` omits the field for models that accept only their default |
+| `reasoning_effort` | a short lowercase name (`none`, `low`, ...) or `null` | `null` | `reasoning_effort` when set |
+
+The output cap stays in `generation.max_output_tokens`. For a reasoning model the cap sent as
+`max_completion_tokens` covers reasoning plus the visible reply, which is stricter than PRD
+14.1; a reply cut off at the cap is repaired once or falls back. `extra_body` adds any other
+provider field (for example `chat_template_kwargs`), but a config that sets a field twice is
+rejected at startup with an error naming where the field belongs: `temperature`,
+`max_tokens`, `max_completion_tokens` and `reasoning_effort` belong in `decoding`; `model`,
+`messages`, `stream` and `n` are set by the responder; `top_p` and `seed` are sampling
+controls serving does not take. `/healthz` and `serve --check` report the decoding in use
+(`greedy`, `provider_default_temperature` or, for the stub, `deterministic`).
+
+### Provider configuration errors are never silent
+
+A provider that refuses the configured request format no longer looks like an ordinary
+fallback. `OpenAICompatibleResponder` classifies HTTP errors:
+
+| Provider answer | Classified as | Attempt outcome |
+|---|---|---|
+| 400 or 422 for a parameter (for example `temperature` or `max_tokens` unsupported) | `invalid_parameter`, with the provider's `param` and `code` | `config_error` |
+| 401, 403, 404 (bad key, no access, wrong URL or model) | `unauthorized`, `forbidden`, `not_found` | `config_error` |
+| 400 `context_length_exceeded` or a content-filter code | request-specific | `error` |
+| 429, 5xx, timeouts, network failures | transient | `error` or `timeout` |
+
+The learner still receives the verified fallback. The request's log line is written at
+WARNING with a top-level `responder_config_error`, for example
+`HTTP 400 invalid_parameter param=temperature code=unsupported_value`, and the attempt trail
+carries the same detail. Only the status, reason, parameter name and error code are logged:
+never the provider's message, learner text or the key. `GET /internal/v1/health` reports
+`status: degraded` with `responder_config_errors` (count, last detail, last time) once any
+rejection has occurred since startup.
+
+To test a profile against its provider before serving, ask explicitly:
+
+```bash
+uv run python -m tools.response.serve --config configs/response/serve_gpt61sol.yaml --check --probe
+```
+
+`--probe` sends one request in the configured format (same token field, temperature,
+`reasoning_effort` and `extra_body`) with a synthetic two-message prompt, prints `accepted`
+or the classified rejection with the provider's message after removing key-like strings, and
+exits 3 if the provider refuses. It costs a few tokens, so it never runs without `--probe`
+and never in tests; `--check` alone opens no connection.
 
 ## Smoke gate
 
@@ -216,3 +275,9 @@ die substitutions as `action_faithful` failures.
   recovery and the public API retry demonstration live in `apps/public_api`.
 - The `prompt_only_openai_compatible_v1` artifact id does not pin the model; a frozen release
   must set `model` in the config and use a new artifact id.
+- `prompt_only_gpt61sol_v1` cannot decode greedily (the model rejects `temperature: 0`), so
+  two requests with different `request_id` values for the same plan may get different text;
+  PRD 14.1 treats that as a separately reported stochastic experiment. Only the idempotency
+  cache makes a retry of the same `request_id` identical.
+- A provider config rejection is reported on every affected request, but nothing stops the
+  service from sending the next request in the same format; fix the config and restart.

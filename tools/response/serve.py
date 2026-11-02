@@ -3,7 +3,13 @@
     uv run python -m tools.response.serve --config configs/response/serve_stub.yaml
 
 ``--check`` validates the config, resolves the named environment variables and builds the
-pipeline without binding a port. ``--host`` and ``--port`` override the config.
+pipeline without binding a port or contacting any model. ``--check --probe`` additionally
+sends one minimal request in the configured format (same token field, temperature,
+reasoning_effort and extra_body, a synthetic two-message prompt) and reports whether the
+provider accepts it; it costs a few tokens, so it runs only when asked and never in tests.
+``--host`` and ``--port`` override the config.
+
+Exit codes: 0 ok, 2 configuration error, 3 the probe was rejected or failed.
 """
 
 from __future__ import annotations
@@ -12,6 +18,7 @@ import argparse
 import json
 import logging
 import sys
+import urllib.parse
 
 from apps.response_service.config import ConfigError, load_config
 from apps.response_service.server import (
@@ -24,6 +31,18 @@ from apps.response_service.server import (
 from packages.response.responders import ResponderConfigError
 
 
+def probe(responder, max_tokens: int) -> dict:
+    """One real-format request through the configured responder; never prints the key."""
+    send = getattr(responder, "probe", None)
+    if not callable(send):
+        return {"status": "skipped", "detail": f"{responder.kind} has no remote endpoint"}
+    host = urllib.parse.urlsplit(responder.base_url).hostname
+    print(
+        f"probe: sending one request to {host} for model {responder.model}", file=sys.stderr
+    )
+    return send(max_tokens=max_tokens)
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n", 1)[0])
     parser.add_argument("--config", required=True, help="service config YAML")
@@ -32,7 +51,14 @@ def main(argv=None) -> int:
     parser.add_argument(
         "--check", action="store_true", help="validate the config and exit without serving"
     )
+    parser.add_argument(
+        "--probe",
+        action="store_true",
+        help="with --check: send one minimal real-format request to the model endpoint",
+    )
     args = parser.parse_args(argv)
+    if args.probe and not args.check:
+        parser.error("--probe only runs together with --check")
     logging.basicConfig(
         level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s"
     )
@@ -48,7 +74,11 @@ def main(argv=None) -> int:
     summary = describe_service(config, service)
     if args.check:
         print(json.dumps(summary, indent=2, sort_keys=True))
-        return 0
+        if not args.probe:
+            return 0
+        result = probe(service.pipeline.responder, config.max_output_tokens)
+        print(json.dumps({"probe": result}, indent=2, sort_keys=True))
+        return 0 if result["status"] in {"accepted", "skipped"} else 3
     server = make_server(config, service)
     host, port = server.server_address[:2]
     LOGGER.info(json.dumps({"event": "serving", **summary, "port": port}, sort_keys=True))
