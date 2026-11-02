@@ -1,0 +1,706 @@
+{
+  "consecutive_post_score_gain": {
+    "confident_misconception/EXPLAIN_CONCEPT": [
+      0.018033079277825412,
+      0.03334077761588279,
+      0.046325927377680126,
+      0.0573352852359318,
+      0.06667241902819869,
+      0.07459363065723291,
+      0.08131615132198933,
+      0.0870232534272441
+    ],
+    "confident_misconception/HINT": [
+      0.00011650165524887208,
+      0.00018614429378611033,
+      0.00022783722963647904,
+      0.0002528197156595902,
+      0.0002677972448043356,
+      0.0002767794594056257,
+      0.0002821672399052408,
+      0.000285399350998875
+    ],
+    "confident_misconception/PRACTICE": [
+      0.00038833885082956767,
+      0.0006184715545263606,
+      0.0007555311060138918,
+      0.0008374024558967144,
+      0.0008863946981244393,
+      0.0009157431700970823,
+      0.0009333354070856281,
+      0.0009438846907326164
+    ],
+    "confident_misconception/WORKED_EXAMPLE": [
+      0.018128222296278657,
+      0.03351485004613204,
+      0.04655998139873583,
+      0.057616784139921176,
+      0.0669902389834752,
+      0.07493968336511514,
+      0.08168422048818641,
+      0.08740866671950043
+    ],
+    "knowledgeable_concise/EXPLAIN_CONCEPT": [
+      0.0003657445165985329,
+      0.0005830279666421351,
+      0.0007118092347309585,
+      0.0007877148203230788,
+      0.0008331624263428794,
+      0.0008601811305022322,
+      0.0008763800933575266,
+      0.0008860354450009955
+    ],
+    "knowledgeable_concise/HINT": [
+      0.0001785563277672503,
+      0.0002852606393219947,
+      0.00034912926947549606,
+      0.00038739516458736133,
+      0.0004103348302548404,
+      0.0004240914825230607,
+      0.00043234290233446713,
+      0.0004372928287696165
+    ],
+    "knowledgeable_concise/PRACTICE": [
+      0.0005951877592241816,
+      0.0009475283580296944,
+      0.0011572391420266042,
+      0.0012824611095315762,
+      0.0013573777787472964,
+      0.0014022500746318845,
+      0.0014291455294628674,
+      0.0014452727612558852
+    ],
+    "knowledgeable_concise/WORKED_EXAMPLE": [
+      0.00044798017151643333,
+      0.0007115978975950749,
+      0.0008661681652383435,
+      0.0009570892253708479,
+      0.0010107642677185324,
+      0.0010429183610803571,
+      0.0010621925145839956,
+      0.0010737504249005796
+    ],
+    "novice_missing_prereqs/EXPLAIN_CONCEPT": [
+      0.003670559234586071,
+      0.005747899672318404,
+      0.006965743900381016,
+      0.00767984230216479,
+      0.008102205089452641,
+      0.008354681034027367,
+      0.008505559415572923,
+      0.008595965564842788
+    ],
+    "novice_missing_prereqs/HINT": [
+      0.0007865484074113035,
+      0.0012554642973300516,
+      0.0015357362204327773,
+      0.0017035129629806803,
+      0.0018040402292787403,
+      0.0018643066993923407,
+      0.001900448636464045,
+      0.0019221273418066048
+    ],
+    "novice_missing_prereqs/PRACTICE": [
+      0.002621828024704339,
+      0.004161445344771051,
+      0.005073426999497592,
+      0.005616427766008156,
+      0.0059407323377875685,
+      0.006134779105069559,
+      0.006251014760985896,
+      0.00632068700670478
+    ],
+    "novice_missing_prereqs/WORKED_EXAMPLE": [
+      0.004194924839526938,
+      0.006562408788428123,
+      0.007939176255849141,
+      0.008747548388860207,
+      0.009228385951625031,
+      0.00951566294686172,
+      0.009687040217529941,
+      0.009789709796369183
+    ]
+  },
+  "label": "simulated",
+  "one_step": [
+    {
+      "mean_mastery_delta": 0.0013444186290291799,
+      "mean_post_score_delta": 7.766777016591425e-05,
+      "move": "CHALLENGE",
+      "profile": "confident_misconception",
+      "state": "after_incorrect",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0013444186290291799,
+      "mean_post_score_delta": 7.766777016591425e-05,
+      "move": "CHALLENGE",
+      "profile": "confident_misconception",
+      "state": "fresh",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0013444186290291799,
+      "mean_post_score_delta": 7.766777016591425e-05,
+      "move": "CHALLENGE",
+      "profile": "confident_misconception",
+      "state": "surfaced",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "CHECK_MASTERY",
+      "profile": "confident_misconception",
+      "state": "after_incorrect",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "CHECK_MASTERY",
+      "profile": "confident_misconception",
+      "state": "fresh",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "CHECK_MASTERY",
+      "profile": "confident_misconception",
+      "state": "surfaced",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.007421259268565579,
+      "mean_post_score_delta": 0.01803307927782542,
+      "move": "EXPLAIN_CONCEPT",
+      "profile": "confident_misconception",
+      "state": "after_incorrect",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.007421259268565579,
+      "mean_post_score_delta": 0.01803307927782542,
+      "move": "EXPLAIN_CONCEPT",
+      "profile": "confident_misconception",
+      "state": "fresh",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.007421259268565579,
+      "mean_post_score_delta": 0.041504764962039836,
+      "move": "EXPLAIN_CONCEPT",
+      "profile": "confident_misconception",
+      "state": "surfaced",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.008066511774175077,
+      "mean_post_score_delta": 0.00046600662099548175,
+      "move": "HINT",
+      "profile": "confident_misconception",
+      "state": "after_incorrect",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0020166279435437696,
+      "mean_post_score_delta": 0.00011650165524887208,
+      "move": "HINT",
+      "profile": "confident_misconception",
+      "state": "fresh",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.008066511774175077,
+      "mean_post_score_delta": 0.00046600662099548175,
+      "move": "HINT",
+      "profile": "confident_misconception",
+      "state": "surfaced",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.006722093145145897,
+      "mean_post_score_delta": 0.00038833885082956767,
+      "move": "PRACTICE",
+      "profile": "confident_misconception",
+      "state": "after_incorrect",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.006722093145145897,
+      "mean_post_score_delta": 0.00038833885082956767,
+      "move": "PRACTICE",
+      "profile": "confident_misconception",
+      "state": "fresh",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.006722093145145897,
+      "mean_post_score_delta": 0.00038833885082956767,
+      "move": "PRACTICE",
+      "profile": "confident_misconception",
+      "state": "surfaced",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "PROBE",
+      "profile": "confident_misconception",
+      "state": "after_incorrect",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "PROBE",
+      "profile": "confident_misconception",
+      "state": "fresh",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "PROBE",
+      "profile": "confident_misconception",
+      "state": "surfaced",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0053776745161167126,
+      "mean_post_score_delta": 0.00031067108066365354,
+      "move": "REFLECT",
+      "profile": "confident_misconception",
+      "state": "after_incorrect",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0026888372580583632,
+      "mean_post_score_delta": 0.0001553355403318285,
+      "move": "REFLECT",
+      "profile": "confident_misconception",
+      "state": "fresh",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0053776745161167126,
+      "mean_post_score_delta": 0.00031067108066365354,
+      "move": "REFLECT",
+      "profile": "confident_misconception",
+      "state": "surfaced",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.008765677897594762,
+      "mean_post_score_delta": 0.018128222296278654,
+      "move": "WORKED_EXAMPLE",
+      "profile": "confident_misconception",
+      "state": "after_incorrect",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.008765677897594762,
+      "mean_post_score_delta": 0.018128222296278654,
+      "move": "WORKED_EXAMPLE",
+      "profile": "confident_misconception",
+      "state": "fresh",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.008765677897594762,
+      "mean_post_score_delta": 0.04162320831154288,
+      "move": "WORKED_EXAMPLE",
+      "profile": "confident_misconception",
+      "state": "surfaced",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.004137862130676685,
+      "mean_post_score_delta": 0.0007142253110690183,
+      "move": "CHALLENGE",
+      "profile": "knowledgeable_concise",
+      "state": "after_incorrect",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.004137862130676685,
+      "mean_post_score_delta": 0.0007142253110690183,
+      "move": "CHALLENGE",
+      "profile": "knowledgeable_concise",
+      "state": "fresh",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.004137862130676685,
+      "mean_post_score_delta": 0.0007142253110690183,
+      "move": "CHALLENGE",
+      "profile": "knowledgeable_concise",
+      "state": "surfaced",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "CHECK_MASTERY",
+      "profile": "knowledgeable_concise",
+      "state": "after_incorrect",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "CHECK_MASTERY",
+      "profile": "knowledgeable_concise",
+      "state": "fresh",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "CHECK_MASTERY",
+      "profile": "knowledgeable_concise",
+      "state": "surfaced",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.002121491466480041,
+      "mean_post_score_delta": 0.0003657445165985329,
+      "move": "EXPLAIN_CONCEPT",
+      "profile": "knowledgeable_concise",
+      "state": "after_incorrect",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.002121491466480041,
+      "mean_post_score_delta": 0.0003657445165985329,
+      "move": "EXPLAIN_CONCEPT",
+      "profile": "knowledgeable_concise",
+      "state": "fresh",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.002121491466480041,
+      "mean_post_score_delta": 0.0003657445165985329,
+      "move": "EXPLAIN_CONCEPT",
+      "profile": "knowledgeable_concise",
+      "state": "surfaced",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.004137862130676685,
+      "mean_post_score_delta": 0.0007142253110690183,
+      "move": "HINT",
+      "profile": "knowledgeable_concise",
+      "state": "after_incorrect",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.0010344655326691699,
+      "mean_post_score_delta": 0.0001785563277672503,
+      "move": "HINT",
+      "profile": "knowledgeable_concise",
+      "state": "fresh",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.004137862130676685,
+      "mean_post_score_delta": 0.0007142253110690183,
+      "move": "HINT",
+      "profile": "knowledgeable_concise",
+      "state": "surfaced",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.0034482184422305806,
+      "mean_post_score_delta": 0.0005951877592241816,
+      "move": "PRACTICE",
+      "profile": "knowledgeable_concise",
+      "state": "after_incorrect",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.0034482184422305806,
+      "mean_post_score_delta": 0.0005951877592241816,
+      "move": "PRACTICE",
+      "profile": "knowledgeable_concise",
+      "state": "fresh",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.0034482184422305806,
+      "mean_post_score_delta": 0.0005951877592241816,
+      "move": "PRACTICE",
+      "profile": "knowledgeable_concise",
+      "state": "surfaced",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "PROBE",
+      "profile": "knowledgeable_concise",
+      "state": "after_incorrect",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "PROBE",
+      "profile": "knowledgeable_concise",
+      "state": "fresh",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "PROBE",
+      "profile": "knowledgeable_concise",
+      "state": "surfaced",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.002758574753784464,
+      "mean_post_score_delta": 0.0004761502073793461,
+      "move": "REFLECT",
+      "profile": "knowledgeable_concise",
+      "state": "after_incorrect",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.0013792873768922276,
+      "mean_post_score_delta": 0.00023807510368966444,
+      "move": "REFLECT",
+      "profile": "knowledgeable_concise",
+      "state": "fresh",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.002758574753784464,
+      "mean_post_score_delta": 0.0004761502073793461,
+      "move": "REFLECT",
+      "profile": "knowledgeable_concise",
+      "state": "surfaced",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.0025987740591580143,
+      "mean_post_score_delta": 0.00044798017151643333,
+      "move": "WORKED_EXAMPLE",
+      "profile": "knowledgeable_concise",
+      "state": "after_incorrect",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.0025987740591580143,
+      "mean_post_score_delta": 0.00044798017151643333,
+      "move": "WORKED_EXAMPLE",
+      "profile": "knowledgeable_concise",
+      "state": "fresh",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.0025987740591580143,
+      "mean_post_score_delta": 0.00044798017151643333,
+      "move": "WORKED_EXAMPLE",
+      "profile": "knowledgeable_concise",
+      "state": "surfaced",
+      "students": 100
+    },
+    {
+      "mean_mastery_delta": 0.003106237239050801,
+      "mean_post_score_delta": 0.0005243656049408693,
+      "move": "CHALLENGE",
+      "profile": "novice_missing_prereqs",
+      "state": "after_incorrect",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.003106237239050801,
+      "mean_post_score_delta": 0.0005243656049408693,
+      "move": "CHALLENGE",
+      "profile": "novice_missing_prereqs",
+      "state": "fresh",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.003106237239050801,
+      "mean_post_score_delta": 0.0005243656049408693,
+      "move": "CHALLENGE",
+      "profile": "novice_missing_prereqs",
+      "state": "surfaced",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "CHECK_MASTERY",
+      "profile": "novice_missing_prereqs",
+      "state": "after_incorrect",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "CHECK_MASTERY",
+      "profile": "novice_missing_prereqs",
+      "state": "fresh",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "CHECK_MASTERY",
+      "profile": "novice_missing_prereqs",
+      "state": "surfaced",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.021743660673355595,
+      "mean_post_score_delta": 0.00367055923458607,
+      "move": "EXPLAIN_CONCEPT",
+      "profile": "novice_missing_prereqs",
+      "state": "after_incorrect",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.021743660673355595,
+      "mean_post_score_delta": 0.00367055923458607,
+      "move": "EXPLAIN_CONCEPT",
+      "profile": "novice_missing_prereqs",
+      "state": "fresh",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.021743660673355595,
+      "mean_post_score_delta": 0.00367055923458607,
+      "move": "EXPLAIN_CONCEPT",
+      "profile": "novice_missing_prereqs",
+      "state": "surfaced",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.018637423434304797,
+      "mean_post_score_delta": 0.0031461936296452043,
+      "move": "HINT",
+      "profile": "novice_missing_prereqs",
+      "state": "after_incorrect",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.004659355858576196,
+      "mean_post_score_delta": 0.0007865484074113035,
+      "move": "HINT",
+      "profile": "novice_missing_prereqs",
+      "state": "fresh",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.018637423434304797,
+      "mean_post_score_delta": 0.0031461936296452043,
+      "move": "HINT",
+      "profile": "novice_missing_prereqs",
+      "state": "surfaced",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.015531186195253994,
+      "mean_post_score_delta": 0.0026218280247043385,
+      "move": "PRACTICE",
+      "profile": "novice_missing_prereqs",
+      "state": "after_incorrect",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.015531186195253994,
+      "mean_post_score_delta": 0.0026218280247043385,
+      "move": "PRACTICE",
+      "profile": "novice_missing_prereqs",
+      "state": "fresh",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.015531186195253994,
+      "mean_post_score_delta": 0.0026218280247043385,
+      "move": "PRACTICE",
+      "profile": "novice_missing_prereqs",
+      "state": "surfaced",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "PROBE",
+      "profile": "novice_missing_prereqs",
+      "state": "after_incorrect",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "PROBE",
+      "profile": "novice_missing_prereqs",
+      "state": "fresh",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.0,
+      "mean_post_score_delta": 0.0,
+      "move": "PROBE",
+      "profile": "novice_missing_prereqs",
+      "state": "surfaced",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.012424948956203195,
+      "mean_post_score_delta": 0.002097462419763468,
+      "move": "REFLECT",
+      "profile": "novice_missing_prereqs",
+      "state": "after_incorrect",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.006212474478101602,
+      "mean_post_score_delta": 0.0010487312098817346,
+      "move": "REFLECT",
+      "profile": "novice_missing_prereqs",
+      "state": "fresh",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.012424948956203195,
+      "mean_post_score_delta": 0.002097462419763468,
+      "move": "REFLECT",
+      "profile": "novice_missing_prereqs",
+      "state": "surfaced",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.02484989791240639,
+      "mean_post_score_delta": 0.0041949248395269385,
+      "move": "WORKED_EXAMPLE",
+      "profile": "novice_missing_prereqs",
+      "state": "after_incorrect",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.02484989791240639,
+      "mean_post_score_delta": 0.0041949248395269385,
+      "move": "WORKED_EXAMPLE",
+      "profile": "novice_missing_prereqs",
+      "state": "fresh",
+      "students": 200
+    },
+    {
+      "mean_mastery_delta": 0.02484989791240639,
+      "mean_post_score_delta": 0.0041949248395269385,
+      "move": "WORKED_EXAMPLE",
+      "profile": "novice_missing_prereqs",
+      "state": "surfaced",
+      "students": 200
+    }
+  ],
+  "simulator_config": "configs/learning/simulator_proto_alt.yaml",
+  "split": "validation",
+  "students_per_scenario": 100
+}
