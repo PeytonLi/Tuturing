@@ -1,0 +1,26 @@
+{
+  "kind": "schema",
+  "schema": "TurnResult",
+  "instance": {
+    "request_id": "req-turn-1",
+    "response": {
+      "response_id": "response-52f8838b1acbd8d8176ce1a8",
+      "plan_id": "plan-probe",
+      "text": "Let's check your thinking about this: A fair coin is flipped once. What is the probability of heads? Show how you reason it out.",
+      "delivery_mode": "fallback",
+      "content_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "checks": {
+        "schema_valid": true
+      }
+    },
+    "public_state": {
+      "session_id": "ses-0123456789abcdef01234567",
+      "state_version": 1,
+      "current_concept_id": "C01",
+      "goal_concept_id": "C01",
+      "teaching_turns": 1,
+      "status": "active",
+      "end_reason": null
+    }
+  }
+}

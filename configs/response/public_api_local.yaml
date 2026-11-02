@@ -1,0 +1,27 @@
+# Local CPU-only public API (Person A). Secrets are named by environment variable only.
+# Run: TUTOR_PUBLIC_API_TOKENS="dev=<token>" uv run python -m apps.public_api --config configs/response/public_api_local.yaml
+server:
+  host: 127.0.0.1
+  port: 8080
+auth:
+  tokens_env: TUTOR_PUBLIC_API_TOKENS   # "caller=token,caller2=token2"; values never live in Git
+storage:
+  path: work/public_api/requests.sqlite  # durable request cache and staging; work/ is gitignored
+learning:
+  mode: standin                          # standin = A's test stand-in (tests/integration/response);
+                                         # http = B's learning service at base_url
+  base_url: http://127.0.0.1:8081
+  service_token_env: TUTOR_LEARNING_SERVICE_TOKEN
+  timeout_s: 3
+  standin_plan_ttl_s: 600                # PRD 8.3 proposed ten minute idle timeout
+response:
+  mode: in_process                       # in_process = packages.response.stub; http = response service
+  base_url: http://127.0.0.1:8082
+  service_token_env: TUTOR_RESPONSE_SERVICE_TOKEN
+  response_artifact_id: stub_v1
+  timeout_s: 8
+limits:
+  max_request_bytes: 65536               # PRD 9.5 request limit
+  max_message_chars: 8000                # PRD 9.5 message limit
+  request_deadline_ms: 10000             # PRD 14.3 public default deadline
+  generation_deadline_ms: 8000           # PRD 14.3 internal generation ceiling

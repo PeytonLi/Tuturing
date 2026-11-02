@@ -1,0 +1,13 @@
+{
+  "kind": "schema",
+  "schema": "PublicState",
+  "instance": {
+    "session_id": "ses-0123456789abcdef01234567",
+    "state_version": 2,
+    "current_concept_id": "C01",
+    "goal_concept_id": "C01",
+    "teaching_turns": 2,
+    "status": "active",
+    "end_reason": null
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "kind": "schema",
+  "schema": "Error",
+  "http_status": 429,
+  "instance": {
+    "schema_version": "1.0",
+    "request_id": "req-error",
+    "trace_id": "trc-fixture",
+    "code": "RATE_LIMITED",
+    "message": "Too many requests; retry after the Retry-After delay.",
+    "retryable": true,
+    "current_state_version": null
+  }
+}

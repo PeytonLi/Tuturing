@@ -1,0 +1,14 @@
+{
+  "kind": "schema",
+  "schema": "Error",
+  "http_status": 409,
+  "instance": {
+    "schema_version": "1.0",
+    "request_id": "req-error",
+    "trace_id": "trc-fixture",
+    "code": "PLAN_EXPIRED",
+    "message": "The reserved teaching plan expired before delivery; refresh the session and send a new turn.",
+    "retryable": false,
+    "current_state_version": null
+  }
+}

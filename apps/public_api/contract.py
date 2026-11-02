@@ -377,8 +377,7 @@ def _exchange_problems(
             problems.append(f"missing path parameter {name}")
         else:
             problems.extend(
-                f"path.{name}: {issue}"
-                for issue in contract.public_issues("Id", path_params[name])
+                f"path.{name}: {issue}" for issue in contract.public_issues("Id", path_params[name])
             )
     request_uri = contract.request_schema_uri(operation_id)
     if request_uri is None and request is not None:

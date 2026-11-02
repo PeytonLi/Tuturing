@@ -1,0 +1,23 @@
+{
+  "kind": "schema",
+  "schema": "TurnResult",
+  "instance": {
+    "request_id": "req-turn-1",
+    "session_end": {
+      "schema_version": "1.0",
+      "session_id": "ses-0123456789abcdef01234567",
+      "state_version": 1,
+      "reason": "learner_stop",
+      "summary_content_id": "summary-1",
+      "public_state": {
+        "session_id": "ses-0123456789abcdef01234567",
+        "state_version": 1,
+        "current_concept_id": "C01",
+        "goal_concept_id": "C01",
+        "teaching_turns": 0,
+        "status": "active",
+        "end_reason": null
+      }
+    }
+  }
+}
