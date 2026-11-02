@@ -332,9 +332,12 @@ class ResponsePipeline:
         )
         if draft is None:
             return None
+        # A responder labels its own output: "model" for a language model, "fallback" for
+        # the template stub. A repaired template is still template text, so it stays "fallback".
+        primary_mode = getattr(self.responder, "delivery_mode", "model")
         checks, accepted = self._judge("model", draft, plan, action, attempts)
         if accepted:
-            return draft.text, "model", checks
+            return draft.text, primary_mode, checks
         if self.settings.max_repairs < 1 or not is_repairable(checks, truncated=draft.truncated):
             return None
         limits = RepairLimits(
@@ -358,7 +361,8 @@ class ResponsePipeline:
         if repaired is None:
             return None
         checks, accepted = self._judge("repair", repaired, plan, action, attempts)
-        return (repaired.text, "repaired", checks) if accepted else None
+        repaired_mode = "repaired" if primary_mode == "model" else primary_mode
+        return (repaired.text, repaired_mode, checks) if accepted else None
 
     def _from_fallback(self, plan, action, attempts):
         try:

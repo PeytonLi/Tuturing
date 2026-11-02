@@ -70,10 +70,9 @@ def test_every_learning_fixture_plan_yields_a_checked_response():
         "PROBE", "HINT", "EXPLAIN_CONCEPT", "WORKED_EXAMPLE", "PRACTICE", "CHALLENGE",
         "CHECK_MASTERY", "REFLECT",
     }
-    # The stub's CHECK_MASTERY template asks two questions, so it needs the one repair.
-    assert modes.pop("teaching_plan_check_mastery") == "repaired"
-    assert modes.pop("protected_check_mastery") == "repaired"
-    assert set(modes.values()) == {"model"}
+    # Template output is always labeled fallback, including the CHECK_MASTERY template,
+    # which asks two questions and goes through the one repair (decision 2026-11-02).
+    assert set(modes.values()) == {"fallback"}
 
 
 @pytest.mark.parametrize("source", ["learning_plan", "response_request"])

@@ -258,7 +258,7 @@ def test_logs_never_contain_learner_text_plan_content_or_the_token(server, caplo
     accepted = next(entry for entry in entries if entry["request_id"] == "http-log-ok")
     assert accepted["status"] == 200
     assert accepted["move"] == "PRACTICE"
-    assert accepted["delivery_mode"] == "model"
+    assert accepted["delivery_mode"] == "fallback"
     assert accepted["checks"]["disclosure_allowed"] is True
     assert accepted["attempts"] == [{"stage": "model", "outcome": "accepted"}]
     rejected = next(entry for entry in entries if entry["request_id"] == "http-log-bad")
@@ -278,7 +278,7 @@ def test_loopback_stub_without_a_token_serves_unauthenticated_requests():
             token=None,
         )
         assert status == 200
-        assert body["delivery_mode"] == "model"
+        assert body["delivery_mode"] == "fallback"
         status, health = call(server, token=None, path="/healthz", method="GET")
         assert health["auth"] == "none"
     finally:

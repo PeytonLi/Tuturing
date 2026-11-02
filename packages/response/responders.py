@@ -79,6 +79,9 @@ class TemplateStubResponder:
     kind = "template_stub"
     version = TEMPLATE_STUB_VERSION
     io_bound = False
+    # Template output is a verified fallback realization, never model text (PRD 8.4);
+    # decision recorded in decisions.md on 2026-11-02.
+    delivery_mode = "fallback"
 
     def generate(self, messages, *, plan, max_tokens, timeout_s) -> ResponderOutput:
         return ResponderOutput(text=render_template(plan))
@@ -161,6 +164,7 @@ class OpenAICompatibleResponder:
 
     kind = "openai_compatible"
     version = OPENAI_COMPATIBLE_VERSION
+    delivery_mode = "model"
     io_bound = True
 
     def __init__(

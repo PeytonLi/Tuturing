@@ -28,9 +28,10 @@ B can use the stub three ways. All three realize the same plan with the same che
    `generate_request["response_artifact_id"]` must be `response_stub_pipeline_v1` or
    `response_stub_v1`. Invalid plans raise `packages.response.errors.GenerationError` with the
    PRD 9.5 code (`INVALID_SCHEMA` for an independent plan with a `reveal_solution`).
-   `delivery_mode` is `model` when the template passes as is, `repaired` when the one
-   permitted repair was needed (the CHECK_MASTERY template asks two questions), `fallback`
-   otherwise.
+   `delivery_mode` is always `fallback` for template output, including the CHECK_MASTERY
+   template, which asks two questions and goes through the one permitted repair: a template
+   is a verified fallback realization, never model text (PRD 8.4; decision of 2026-11-02).
+   Only a language-model responder yields `model` or `repaired`.
 3. **Over HTTP.** Start the service and post `GenerateRequest` objects:
    ```bash
    uv run python -m tools.response.serve --config configs/response/serve_stub.yaml
