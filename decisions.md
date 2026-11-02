@@ -173,6 +173,15 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 **Facts:** the four rejections under `validator_v2` were false positives: "in your head" matched the coin family's `head`, and "in three moves. A marbles experiment" let a number cross a sentence boundary into the stem's noun. The quantity rule now requires a scenario object noun in the same sentence, and `head`/`tail` count only alongside a coin anchor. The four Qwen substitutions still fail. `build_original_sft` accepts 371 of 371 under `validator_v2`. Main was pushed after the full CPU smoke (512 tests, both validators, content validation, a ten-episode simulate).
 
+## 2026-11-02 — Benchmark re-scored under validator_v2 with the probability set
+
+**Source:** the benchmark agent's final report; merge `ab53f8e`; report in `experiments/response/benchmark_v1/report.md`.
+
+**Facts:** stored outputs were re-scored without new calls; the new `rescore` subcommand recomputes checks from stored texts. Qwen's three fixture substitutions now fail `action_faithful`. On the 55 synthetic probability cases (eight moves, five concepts): fallback 55/55, gpt-6.1-sol 33/55, Qwen3.8-27B 19/55 delivered as model; Qwen asked two questions in 8 cases and hit the token cap twice. The second Qwen deployment ran 22:39 to 22:42 UTC and was verified deleted; this run cost $0.57, all time $1.29. The three smoke CHALLENGE texts predate the fixture's change to hard difficulty; the checks do not depend on it.
+
+**Reading for D10 (assistant):** prompt-only, the frontier model passes the strict checks far more often than Qwen3.8-27B on our own probability items, and the gap is driven by action fidelity and math support, which SFT targets. This is evidence for the decision, not the decision.
+
+
 ## 2026-11-02 — Full-session LLM Strategist reference path
 
 **Source:** Person B full-session LLM Strategist evaluation handoff.

@@ -162,6 +162,12 @@ class DeploymentRun:
             raise DeploymentError(
                 f"state file already tracks live deployment {self.state['name']}; delete it first"
             )
+        if self.state.get("deployment_id") and self.state_path.exists():
+            # Keep the previous deployment's record for the report and the ledger audit.
+            archive = self.state_path.with_name(
+                f"{self.state_path.stem}.{self.state['deployment_id']}.json"
+            )
+            self.state_path.replace(archive)
         account = self.account()
         deployment_id = self._new_id()
         self.state = {

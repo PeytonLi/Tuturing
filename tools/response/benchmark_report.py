@@ -107,6 +107,14 @@ def summarize(records):
             and r["disclosed_fingerprints_in_context"]
         ),
     })
+    # Only texts that were produced: an unavailable fallback has no reply to judge.
+    fidelity = [r for r in records if r.get("item_fidelity_applicable") and not r["error"]]
+    summary["item_fidelity_applicable"] = len(fidelity)
+    summary["item_fidelity_pass"] = sum(1 for r in fidelity if r.get("item_fidelity_pass"))
+    summary["item_fidelity_fail"] = len(fidelity) - summary["item_fidelity_pass"]
+    summary["validator_versions"] = ";".join(
+        sorted({str(r.get("validator_version", "?")) for r in records})
+    )
     return summary
 
 
@@ -175,8 +183,15 @@ def _check_table(rows, label):
 
 def _failure_examples(records, model_label, per_check=2, width=320):
     lines = []
-    for name in CHECK_NAMES:
-        failed = [r for r in records if name in r["failed_checks"]]
+    for name in (*CHECK_NAMES, "item_fidelity"):
+        if name == "item_fidelity":
+            failed = [
+                r for r in records
+                if r.get("item_fidelity_applicable") and not r.get("item_fidelity_pass")
+                and not r["error"]
+            ]
+        else:
+            failed = [r for r in records if name in r["failed_checks"]]
         if not failed:
             continue
         lines.append(f"**{model_label}, `{name}` ({len(failed)} failures):**")
@@ -186,7 +201,10 @@ def _failure_examples(records, model_label, per_check=2, width=320):
             if len(text) > width:
                 text = text[:width] + "..."
             detail = ""
-            if name == "math_supported":
+            if name == "item_fidelity":
+                reasons = "; ".join(record.get("item_fidelity_reasons") or [])
+                detail = f" Reasons: {reasons}."
+            elif name == "math_supported":
                 detail = (
                     f" Unsupported numbers: {record['unsupported_numbers']}; from the "
                     f"learner's own message: {record['unsupported_numbers_from_learner']}."
@@ -427,7 +445,8 @@ def build_report(config, ctx):
         "mean_input_tokens", "mean_output_tokens", "mean_reasoning_tokens",
         "mean_visible_output_tokens", "mean_words", "over_visible_token_cap", "think_stripped",
         "cost_usd", "cost_usd_per_case", "math_unsupported_only_learner_numbers",
-        "disclosure_fingerprint_in_context",
+        "disclosure_fingerprint_in_context", "item_fidelity_applicable", "item_fidelity_pass",
+        "item_fidelity_fail", "validator_versions",
     ]
     for name, rows, extra in (
         ("results_by_model.csv", by_model, []),
@@ -458,6 +477,10 @@ def build_report(config, ctx):
                 "unsupported_numbers_from_learner": ";".join(
                     record["unsupported_numbers_from_learner"]),
                 "disclosed_fingerprints": ";".join(record["disclosed_fingerprints"]),
+                "item_fidelity_applicable": int(bool(record.get("item_fidelity_applicable"))),
+                "item_fidelity_pass": int(bool(record.get("item_fidelity_pass"))),
+                "item_fidelity_reasons": " | ".join(record.get("item_fidelity_reasons") or []),
+                "validator_version": record.get("validator_version", ""),
                 "run_tag": record["run_tag"], "started_at": record["started_at"],
             }
             for name in CHECK_NAMES:
@@ -546,15 +569,34 @@ def build_report(config, ctx):
         "Diagnostics on the strict checks (counts of failing cases): ",
         "",
         "| Model | math failures where every flagged number came from the learner's message | "
-        "disclosure flags whose fingerprint already appears in the stem or learner text |",
-        "|---|---:|---:|",
+        "disclosure flags whose fingerprint already appears in the stem or learner text | "
+        "item-fidelity failures (validator_v2, digit-independent, part of action_faithful) |",
+        "|---|---:|---:|---:|",
     ]
     for row in by_model:
         lines.append(
             f"| {row['label']} | {row['math_unsupported_only_learner_numbers']} of "
             f"{row['math_supported_applicable'] - row['math_supported_pass']} | "
             f"{row['disclosure_fingerprint_in_context']} of "
-            f"{row['disclosure_allowed_applicable'] - row['disclosure_allowed_pass']} |"
+            f"{row['disclosure_allowed_applicable'] - row['disclosure_allowed_pass']} | "
+            f"{_pct(row['item_fidelity_fail'], row['item_fidelity_applicable'])} |"
+        )
+    lines += [
+        "",
+        "Item fidelity applies to PRACTICE, CHALLENGE, CHECK_MASTERY and HINT plans with a "
+        "problem stem and to PROBE plans with a stem and a problem instance; the denominator "
+        "is that count among records that produced a text (an unavailable fallback has none). "
+        "A failure means the reply dropped the issued problem or introduced another scenario. "
+        "Validator versions in the records: "
+        + ", ".join(f"{row['label']}: {row['validator_versions']}" for row in by_model) + ".",
+        "",
+        "| Model / case set | Item fidelity pass |",
+        "|---|---:|",
+    ]
+    for row in by_set_rows:
+        lines.append(
+            f"| {row['label']} / {row['case_set']} | "
+            f"{_pct(row['item_fidelity_pass'], row['item_fidelity_applicable'])} |"
         )
     lines += ["", "## Results by move", "", *_check_table(
         [{**row, "label": f"{row['label']} / {row['move']}"} for row in by_move_rows],
