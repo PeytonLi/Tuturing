@@ -13,7 +13,7 @@ value is supported."), so sampling ran at the default temperature and is not det
 Reasoning tokens are recorded separately (mean 3.7 per case, maximum 102); no visible reply
 exceeded the PRD 14.1 cap of 384 tokens and no length or question-count check failed.
 
-**Qwen3.8-27B (D10 base) was not benchmarked.** `GET
+**Qwen3.8-27B (D10 base) on a Fireworks on-demand deployment.** `GET
 /v1/accounts/fireworks/models/qwen3p8-27b` reports `supportsServerless: false`,
 `supportsLora: true`, `supervisedLoraTunable: true` and `supportsServerlessTraining: false`,
 so the model needs a dedicated deployment to benchmark and to serve (and D10's "serverless
@@ -21,12 +21,31 @@ training pool" claim deserves a check against that last flag). The validated dep
 shapes for it are 1x H100 80 GB BF16 (`accounts/fireworks/deploymentShapes/sva2n3mh`,
 context 131072), 1x B200 BF16 and 2x B300 BF16; the entry uses the 1x H100 shape at the
 list price of $8.00 per GPU hour with scale-to-zero after 5 minutes and a 75-minute hard
-limit ($10 reserve). The free dry run (`validateOnly=true`) on account
-`accounts/xueming-r9e8nrrxg6ml` returned HTTP 400 `code 9: "payment method is required"`,
-so no deployment was created, the account's deployment list is empty (verified by GET with
-`showDeleted=true`) and GPU spend is $0. Once a payment method is on the account, one
-command runs the pilot, the full set and the deletion: `uv run python -m
-tools.response.benchmark run --models qwen3.8-27b-fw-h100 --manage-deployment`.
+limit ($10 reserve). A first attempt on account `accounts/xueming-r9e8nrrxg6ml` stopped at
+the free dry run with HTTP 400 `code 9: "payment method is required"` and created nothing.
+With a key for `accounts/peli` the dry run passed and the harness created
+`accounts/peli/deployments/tut-bench-qwen38-20261102-213251` (1x NVIDIA_H100_80GB, BF16,
+shape version `k9aui8v2`, GLOBAL placement, min 0 / max 1 replicas, 300 s scale-to-zero) at
+21:32:51Z; a replica served the warm-up request at 21:35:28Z; the 3-case pilot and the
+other 104 cases ran at concurrency 4 (0.6 s per case, 0 errors); the deletion was requested
+at 21:36:11Z (the first DELETE returned 400 while replicas were active, the retry with
+`ignoreChecks` returned 200) and verified at 21:36:42Z by GET (`state: DELETED`,
+`deleteTime 21:36:11Z`) and by a `showDeleted` listing. Billable upper bound: 3.8 minutes
+of create-to-verified-deletion wall time, $0.51 at list price. Decoding was
+`temperature 0`, `max_tokens 384`, `reasoning_effort: none`; no `<think>` text appeared
+and no reasoning tokens were reported.
+
+**What the automated checks missed (human read of the fixture cases).** On B's two
+CHECK_MASTERY fixtures and the CHALLENGE fixture, Qwen3.8-27B replaced the verified coin
+problem with a six-sided die of its own ("Consider a standard six-sided die. List the
+complete sample space...") and every automated check passed, because the coin stem has no
+digits for `action_faithful` or `math_supported` to anchor on. That is a protected-check
+item substitution, which PRD 14.1 treats as critical, and it reached delivery mode
+`model`. On the smoke CHALLENGE and WORKED_EXAMPLE it also invented marble problems, which
+the number check did catch. gpt-6.1-sol kept the issued problem in all 17 fixture and smoke
+cases. The validator needs a stem-overlap check that does not depend on digits before any
+prompt-only model is trusted on a protected check; until then the review sheet is the
+only measure of this failure.
 
 **Reading the automated results.** Two of the three strict checks over-report on dialogue
 data: `math_supported` accepts only numbers from the plan's approved content, so a tutor
