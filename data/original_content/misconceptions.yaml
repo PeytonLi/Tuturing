@@ -1,0 +1,102 @@
+schema_version: misconceptions_v1
+misconceptions:
+- misconception_id: M01
+  index: 0
+  active: true
+  description: Treating unequal outcomes as equally likely
+- misconception_id: M02
+  index: 1
+  active: true
+  description: Confusing an event with a single outcome
+- misconception_id: M03
+  index: 2
+  active: true
+  description: Assigning probability above one
+- misconception_id: M04
+  index: 3
+  active: true
+  description: Subtracting the wrong complement
+- misconception_id: M05
+  index: 4
+  active: true
+  description: Reversing conditional probabilities
+- misconception_id: M06
+  index: 5
+  active: true
+  description: Using the wrong conditional denominator
+- misconception_id: M07
+  index: 6
+  active: true
+  description: Assuming independence without evidence
+- misconception_id: M08
+  index: 7
+  active: true
+  description: Multiplying along incompatible tree paths
+- misconception_id: M09
+  index: 8
+  active: false
+  description: Inactive reserved misconception slot 09.
+- misconception_id: M10
+  index: 9
+  active: false
+  description: Inactive reserved misconception slot 10.
+- misconception_id: M11
+  index: 10
+  active: false
+  description: Inactive reserved misconception slot 11.
+- misconception_id: M12
+  index: 11
+  active: false
+  description: Inactive reserved misconception slot 12.
+- misconception_id: M13
+  index: 12
+  active: false
+  description: Inactive reserved misconception slot 13.
+- misconception_id: M14
+  index: 13
+  active: false
+  description: Inactive reserved misconception slot 14.
+- misconception_id: M15
+  index: 14
+  active: false
+  description: Inactive reserved misconception slot 15.
+- misconception_id: M16
+  index: 15
+  active: false
+  description: Inactive reserved misconception slot 16.
+- misconception_id: M17
+  index: 16
+  active: false
+  description: Inactive reserved misconception slot 17.
+- misconception_id: M18
+  index: 17
+  active: false
+  description: Inactive reserved misconception slot 18.
+- misconception_id: M19
+  index: 18
+  active: false
+  description: Inactive reserved misconception slot 19.
+- misconception_id: M20
+  index: 19
+  active: false
+  description: Inactive reserved misconception slot 20.
+- misconception_id: M21
+  index: 20
+  active: false
+  description: Inactive reserved misconception slot 21.
+- misconception_id: M22
+  index: 21
+  active: false
+  description: Inactive reserved misconception slot 22.
+- misconception_id: M23
+  index: 22
+  active: false
+  description: Inactive reserved misconception slot 23.
+- misconception_id: M24
+  index: 23
+  active: false
+  description: Inactive reserved misconception slot 24.
+- misconception_id: M25
+  index: 24
+  active: false
+  description: Inactive reserved misconception slot 25.
