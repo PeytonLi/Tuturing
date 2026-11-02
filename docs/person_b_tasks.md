@@ -11,10 +11,10 @@ MathDial is not part of your RL. Its only possible role is a Strategist head sta
 ## What is already set up in this repo
 
 - Contracts, plus valid and invalid examples, in contracts/.
-- Five prototype concepts (C01, C02, C03, C06, C08), 8 misconceptions, and 35 problem families with exact solvers. Each concept has 4 teaching families and 3 assessment families.
+- Five prototype concepts (C01, C02, C03, C06, C08), 8 misconceptions, and 50 problem families with exact solvers. Each concept has 4 teaching families and 6 assessment families (two per split).
 - The BKT belief tracker, the 140-number observation, action encodings and masks.
 - The rules Navigator, the rules Strategist and the boundary scheduler.
-- The simulator, with 3 student profiles and 30 scenarios split 20 train, 5 validation and 5 test. All its parameters are labeled assumptions in configs/learning/simulator_proto_v1.yaml.
+- The simulator, with 3 student profiles and 30 scenarios split 20 train, 5 validation and 5 test. All parameters in configs/learning/simulator_proto_v2.yaml (the default, with base dropout lowered) are labeled assumptions; simulator_proto_v1.yaml is kept.
 - The reward from PRD 16.1 in configs/learning/reward_v1.yaml.
 - The collector, which turns sessions into transition records.
 - PPO, behavior cloning from the rules Strategist, the evaluation tool, and the decision case scorer.

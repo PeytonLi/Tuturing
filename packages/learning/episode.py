@@ -102,6 +102,7 @@ class EpisodeResult:
     private_diagnostics: list[dict]
     terminal_components: dict[str, float]
     final_beliefs: dict[str, ConceptBelief] = field(repr=False)
+    assessment_family_reuse_count: int = 0
 
     @property
     def transitions(self) -> list[dict]:
@@ -288,7 +289,8 @@ def _next_item(
     episode_seed: int,
     turn: int,
     bank: EventRandomBank,
-    used_assessment_families: set[str],
+    assessment_family_uses: Counter[str],
+    assessment_family_reuse_counts: Counter[str],
     used_teaching_families: set[str],
 ) -> tuple[TemplateFamily, dict, str]:
     allowlist = set(scenario["template_family_allowlist"])
@@ -299,21 +301,26 @@ def _next_item(
             family
             for family in families_for(concept_id, role="assessment", split=assessment_split)
             if family.template_family_id in allowlist
-            and (
-                move != "CHECK_MASTERY" or family.template_family_id not in used_assessment_families
-            )
         ]
         if not families:
-            families = [
-                family
-                for family in families_for(concept_id, role="assessment", split=assessment_split)
-                if family.template_family_id in allowlist
-            ]
-        if not families:
             raise ValueError(f"assessment family exhausted for {concept_id} ({scenario['split']})")
-        selected = sorted(families, key=lambda family: family.template_family_id)[0]
-        if move == "CHECK_MASTERY":
-            used_assessment_families.add(selected.template_family_id)
+        unused_families = [
+            family
+            for family in families
+            if assessment_family_uses[family.template_family_id] == 0
+        ]
+        if unused_families:
+            selected = min(unused_families, key=lambda family: family.template_family_id)
+        else:
+            selected = min(
+                families,
+                key=lambda family: (
+                    assessment_family_uses[family.template_family_id],
+                    family.template_family_id,
+                ),
+            )
+            assessment_family_reuse_counts[concept_id] += 1
+        assessment_family_uses[selected.template_family_id] += 1
     else:
         selected = None
         families = [
@@ -593,7 +600,8 @@ def run_episode(
     no_diagnostic_yet = True
     skip_deadline: int | None = None
     skip_diagnostic_done = False
-    used_assessment_families: set[str] = set()
+    assessment_family_uses: Counter[str] = Counter()
+    assessment_family_reuse_counts: Counter[str] = Counter()
     used_teaching_families: set[str] = set()
     repeated_pattern_evidence: dict[tuple[str, ...], int] = {}
     learner_evidence_count = 0
@@ -797,7 +805,8 @@ def run_episode(
                 episode_seed,
                 turn,
                 random_bank,
-                used_assessment_families,
+                assessment_family_uses,
+                assessment_family_reuse_counts,
                 used_teaching_families,
             )
             active_item = {
@@ -1298,6 +1307,7 @@ def run_episode(
         private_diagnostics=diagnostics,
         terminal_components=terminal_reward_components.to_dict(),
         final_beliefs=beliefs,
+        assessment_family_reuse_count=sum(assessment_family_reuse_counts.values()),
     )
 
 
@@ -1387,6 +1397,9 @@ def write_run(results: list[EpisodeResult], output_dir: str | Path, *, manifest:
         "mean_gain": sum(result.gain for result in results) / len(results),
         "mean_turns": sum(result.turns for result in results) / len(results),
         "dropout_rate": sum(result.dropout for result in results) / len(results),
+        "assessment_family_reuse_count": sum(
+            result.assessment_family_reuse_count for result in results
+        ),
         "move_histogram": dict(sorted(moves.items())),
         "end_reason_counts": dict(sorted(Counter(result.end_reason for result in results).items())),
         "profile_summaries": profile_summaries,
