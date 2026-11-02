@@ -110,3 +110,11 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 **Assistant note:** the automated checks over-report on dialogue data (numbers from the learner's own message count as unsupported math; answer fingerprints already in the stem count as disclosure). Whether to relax the validator is a Person A decision for Xueming; the blinded human review measures the gap meanwhile.
 
+## 2026-11-02 — Fireworks key replaced; Qwen3.8-27B run started on Peyton's account
+
+**User direction:** “use this for fireworks key instead …” (Lark message in the Tuturing topic at about 21:55 UTC; the key value is stored only in `~/.config/tuturing/llm.env`).
+
+**Facts:** the new key resolves to Fireworks account `accounts/peli`, Peyton's. The free deployment dry run passed there, and the live deployment list was empty. The list also shows two deleted deployments of the same model created from that account earlier the same day, before this session used it. The benchmark agent was told to run the Qwen3.8-27B entry with the same safeguards (pilot first, $25 total cap including GPU hours, deletion verified afterward) and to add the Qwen replies as a supplement to the review sheet without reshuffling the 62 replies Xueming is already rating.
+
+**Assistant note:** the response service merge (`afdd0e3`) left one open labeling choice: template-stub output is reported as `delivery_mode: model`. Xueming was asked; the assistant proposed `fallback` as the more honest label and will apply it unless Xueming objects.
+

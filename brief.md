@@ -75,7 +75,8 @@ Xueming decided that Person A owns SFT (capture `cap_7c410346-63da-4a59-9c26-bfb
 
 - D10 on `main` switches the SFT base model from the PRD's `Qwen/Qwen2.5-7B-Instruct` to `Qwen/Qwen3.8-27B` on Fireworks and is marked "accepted by lead". PRD 2.3 makes SFT selection a Person A decision, so Xueming should confirm it. Fireworks lists the model as LoRA-tunable but not serverless, so benchmarking and serving it need a paid dedicated deployment. Xueming approved a deployment so the benchmark can include it; the results are meant to inform this decision.
 - The $25 benchmark spend cap is an assistant default that Xueming has not confirmed.
-- The Fireworks account needs a payment method before the Qwen3.8-27B deployment can run; one command then runs the pilot, the full set and the deletion.
+- The Qwen3.8-27B benchmark run started on 2026-11-02 at about 22:00 UTC on Peyton's Fireworks account; results and spend pending.
+- Should template-stub output carry `delivery_mode: model` or `fallback`? Proposed: `fallback`, pending Xueming's objection.
 - Anthropic and Google keys are absent, so Claude and Gemini are not in the benchmark yet.
 - Hackathon deadline and demo format are not recorded anywhere in the repository.
 - When will Peyton ship B's mock learning service?
