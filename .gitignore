@@ -5,6 +5,7 @@
 /data/sft/
 /artifacts/
 /experiments/**/runs/
+/experiments/**/evals/
 .pytest_cache/
 .ruff_cache/
 __pycache__/
