@@ -17,6 +17,7 @@ import hmac
 import json
 import logging
 import os
+import socket
 import socketserver
 import threading
 import time
@@ -39,6 +40,8 @@ GENERATE_PATH = "/internal/v1/generate"
 HEALTH_PATHS = ("/internal/v1/health", "/healthz")
 SERVER_VERSION = "tuturing-response-service/1.0"
 MAX_SESSION_LOCKS = 4096
+LINGER_SECONDS = 2.0
+LINGER_MAX_BYTES = 8 * 1024 * 1024
 
 
 class ResponseService:
@@ -329,12 +332,27 @@ def _handler_class(service: ResponseService):
 
         def do_POST(self):
             if self.path.split("?", 1)[0] != GENERATE_PATH:
-                self._reply(404, {"message": "not found"}, close=True)
+                self._reply(404, {"message": "not found"}, close=True, unread=self._declared())
                 return
-            status, body, close = service.handle_generate(self.headers, self.rfile.read)
-            self._reply(status, body, close=close)
+            consumed = 0
 
-        def _reply(self, status: int, body: dict, *, close: bool):
+            def read(size):
+                nonlocal consumed
+                data = self.rfile.read(size)
+                consumed += len(data)
+                return data
+
+            status, body, close = service.handle_generate(self.headers, read)
+            unread = self._declared() - consumed if close else 0
+            self._reply(status, body, close=close, unread=unread)
+
+        def _declared(self) -> int:
+            try:
+                return max(0, int(self.headers.get("Content-Length") or 0))
+            except ValueError:
+                return 0
+
+        def _reply(self, status: int, body: dict, *, close: bool, unread: int = 0):
             payload = json.dumps(body, ensure_ascii=False, sort_keys=True).encode("utf-8")
             self.send_response(status)
             self.send_header("Content-Type", "application/json; charset=utf-8")
@@ -345,6 +363,33 @@ def _handler_class(service: ResponseService):
                 self.close_connection = True
             self.end_headers()
             self.wfile.write(payload)
+            if close and unread > 0:
+                self._linger(unread)
+
+        def _linger(self, remaining: int):
+            """Lingering close for a refused body the client may still be sending.
+
+            The response is already written; half-close, then discard incoming bytes for a
+            bounded time so the client reads the error instead of a connection reset.
+            """
+            try:
+                self.wfile.flush()
+                self.connection.shutdown(socket.SHUT_WR)
+                self.connection.settimeout(0.2)
+            except OSError:
+                return
+            deadline = time.monotonic() + LINGER_SECONDS
+            remaining = min(remaining, LINGER_MAX_BYTES)
+            while remaining > 0 and time.monotonic() < deadline:
+                try:
+                    chunk = self.connection.recv(min(65_536, remaining))
+                except TimeoutError:
+                    continue
+                except OSError:
+                    return
+                if not chunk:
+                    return
+                remaining -= len(chunk)
 
     return Handler
 
