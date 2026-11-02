@@ -181,11 +181,6 @@ def _public_state(
     stack: list[str],
     misconceptions: dict[str, float] | None = None,
 ) -> dict:
-    public_misconceptions = {
-        f"M{index:02d}": float(misconceptions.get(f"M{index:02d}", 0.0))
-        for index in range(1, 26)
-        if misconceptions and misconceptions.get(f"M{index:02d}", 0.0) != 0.0
-    }
     concepts = []
     for index in range(1, 16):
         concept_id = f"C{index:02d}"
@@ -204,7 +199,6 @@ def _public_state(
             float((misconceptions or {}).get(f"M{index:02d}", 0.0))
             for index in range(1, 26)
         ],
-        "public_misconceptions": public_misconceptions,
         "current_concept_id": current,
         "goal_concept_id": goal,
         "active_target_concept_id": active_target,
@@ -534,7 +528,7 @@ def _build_plan(
             "content": "content_proto_v1",
             "state_estimator": "bkt_v1",
             "navigator": "rules_navigator_v1",
-            "strategist": "rules_strategist_v1",
+            "strategist": "rules_strategist_v2",
             "mask": "mask_v1",
             "feature": "features_v1",
         },

@@ -94,12 +94,14 @@ class RulesStrategist:
         pace = str(context.get("pace_preference", "normal"))
         if pace not in PACES:
             pace = "normal"
-        misconceptions = context.get("public_misconceptions", context.get("misconceptions"))
-        probability = (
-            max((float(value) for value in misconceptions.values()), default=0.0)
-            if isinstance(misconceptions, dict)
-            else 0.0
-        )
+        misconceptions = context.get("misconceptions", {})
+        if isinstance(misconceptions, dict):
+            misconception_values = misconceptions.values()
+        elif isinstance(misconceptions, (list, tuple)) and len(misconceptions) == 25:
+            misconception_values = misconceptions
+        else:
+            misconception_values = ()
+        probability = max((float(value) for value in misconception_values), default=0.0)
         likely_misconception = probability >= 0.5
         confirmed_misconception = probability >= 0.75 or (
             likely_misconception

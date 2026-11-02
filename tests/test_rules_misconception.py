@@ -85,7 +85,7 @@ def _rules_move(**overrides):
     context = {
         "mastery": 0.5,
         "pace_preference": "normal",
-        "public_misconceptions": {},
+        "misconceptions": {},
         "meaningful_error": False,
         "independent_failure_streak": 0,
         "no_diagnostic_yet": False,
@@ -96,10 +96,10 @@ def _rules_move(**overrides):
 
 
 def test_rules_strategist_responds_to_likely_and_confirmed_misconceptions():
-    assert _rules_move(public_misconceptions={"M05": 0.6}) == "PROBE"
+    assert _rules_move(misconceptions={"M05": 0.6}) == "PROBE"
     assert (
         _rules_move(
-            public_misconceptions={"M05": 0.85},
+            misconceptions={"M05": 0.85},
             mastery=0.3,
             previous_move="PRACTICE",
         )
@@ -107,7 +107,7 @@ def test_rules_strategist_responds_to_likely_and_confirmed_misconceptions():
     )
     assert (
         _rules_move(
-            public_misconceptions={"M05": 0.85},
+            misconceptions={"M05": 0.85},
             mastery=0.5,
             previous_move="PRACTICE",
         )
@@ -115,7 +115,7 @@ def test_rules_strategist_responds_to_likely_and_confirmed_misconceptions():
     )
     assert (
         _rules_move(
-            public_misconceptions={"M05": 0.85},
+            misconceptions={"M05": 0.85},
             previous_move="EXPLAIN_CONCEPT",
         )
         == "PRACTICE"
@@ -128,11 +128,15 @@ def test_rules_strategist_legacy_contexts_and_mask_fallback():
     assert _rules_move(wants_certification=True) == "CHECK_MASTERY"
     assert _rules_move(repeated_unsuccessful_hints=True) == "WORKED_EXAMPLE"
     assert _rules_move(misconceptions=[0.0] * 25, meaningful_error=True) == "HINT"
+    dict_move = _rules_move(misconceptions={"M05": 0.6})
+    list_values = [0.0] * 25
+    list_values[4] = 0.6
+    assert _rules_move(misconceptions=list_values) == dict_move == "PROBE"
 
     context = {
         "mastery": 0.5,
         "pace_preference": "normal",
-        "public_misconceptions": {"M05": 0.6},
+        "misconceptions": {"M05": 0.6},
     }
     practice = encode_strategist("PRACTICE", "medium", "normal")
     mask = [False] * 72
@@ -193,7 +197,7 @@ def test_public_state_keeps_zero_default_and_maps_misconceptions_by_id():
         stack=[],
     )
     assert state["misconceptions"] == [0.0] * 25
-    assert state["public_misconceptions"] == {}
+    assert "public_misconceptions" not in state
 
     state = _public_state(
         beliefs,
@@ -217,7 +221,7 @@ def test_public_state_keeps_zero_default_and_maps_misconceptions_by_id():
     assert len(state["misconceptions"]) == 25
     assert state["misconceptions"][4] == 0.6
     assert state["misconceptions"][24] == 0.85
-    assert state["public_misconceptions"] == {"M05": 0.6, "M25": 0.85}
+    assert "public_misconceptions" not in state
 
 
 def test_move_diagnostic_probe_and_worked_example_values_for_validation_student():

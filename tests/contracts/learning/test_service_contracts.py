@@ -94,7 +94,7 @@ def test_error_http_map_and_rules_factory():
         LEARNING_UNAVAILABLE=503,
         DEADLINE_EXCEEDED=504,
     )
-    assert build_strategist({"strategist": "rules"}).policy_version == "rules_strategist_v1"
+    assert build_strategist({"strategist": "rules"}).policy_version == "rules_strategist_v2"
 
 
 def test_checkpoint_factory_uses_greedy_masked_policy(tmp_path):
