@@ -33,6 +33,11 @@ from packages.learning.episode import (
 )
 from packages.learning.features import build_features
 from packages.learning.grader import grade_answer
+from packages.learning.pace import ensure_state as ensure_pace_state
+from packages.learning.pace import initial_state as initial_pace_state
+from packages.learning.pace import lean_faster, lean_slower
+from packages.learning.pace import select as select_pace
+from packages.learning.pace import update as update_pace
 from packages.learning.scheduler import GoalStack, boundary_reasons
 from packages.policies.rules import RulesNavigator, RulesStrategist
 from packages.simulator.randomness import EventRandomBank
@@ -281,6 +286,7 @@ class LearningEngine:
                     goal_change=False,
                 ),
                 public_misconceptions={},
+                pace_estimator=initial_pace_state(body["pace_preference"]),
             )
             self._save(db, state)
             self._event(db, state["session_id"], "session_created", self._public(state))
@@ -362,6 +368,7 @@ class LearningEngine:
         item = self._item(state["active_item"])
         plan = state["last_plan"]
         correctness = "unknown"
+        independent_correct = None
         if item and plan["problem_instance_id"] == item["item_id"]:
             if evidence["normalized_answer"] is not None:
                 correctness = grade_answer(
@@ -390,6 +397,7 @@ class LearningEngine:
             self._pack_beliefs(state, beliefs)
             if assistance == "none" and correctness in {"correct", "incorrect"}:
                 correct = correctness == "correct"
+                independent_correct = correct
                 state["success_streak"] = state["success_streak"] + 1 if correct else 0
                 state["failure_streak"] = state["failure_streak"] + 1 if not correct else 0
                 state["meaningful_error"] = not correct
@@ -398,6 +406,7 @@ class LearningEngine:
             if plan["teaching_action"]["move"] == "HINT" and correctness == "correct":
                 state["unsuccessful_hints"] = 0
         requests = state["requests"]
+        requests["faster"] = requests["slower"] = False
         if request in {"skip", "faster", "slower", "stop", "answer"}:
             requests[request] = True
         if request == "hint":
@@ -406,13 +415,33 @@ class LearningEngine:
             requests["goal"] = target
             if target is not None:
                 state["goal_concept_id"] = target
-        if request in {"faster", "slower"}:
-            state["pace"] = "concise" if request == "faster" else "detailed"
+        cues = (evidence.get("extensions") or {}).get("pace_cues")
+        pace_state = update_pace(
+            ensure_pace_state(state.get("pace_estimator"), state["pace"]),
+            request=request if request in {"faster", "slower"} else None,
+            correct=independent_correct,
+            used_hint=request == "hint",
+            asked_answer=request == "answer",
+            success_streak=state["success_streak"],
+            failure_streak=state["failure_streak"],
+            cues=cues if isinstance(cues, dict) else None,
+            current=state["pace"],
+        )
+        state["pace"], state["pace_estimator"] = select_pace(pace_state, state["pace"])
         if request == "change_goal":
             state["goal_concept_id"] = target
             requests.update(goal=target, goal_change=True)
         state["applied_evidence"].append(evidence["event_id"])
         self._event(db, state["session_id"], "evidence_applied", evidence)
+
+    @staticmethod
+    def _pace_leans(state):
+        estimator = state.get("pace_estimator")
+        if estimator is None:
+            return {}
+        return dict(
+            pace_lean_faster=lean_faster(estimator), pace_lean_slower=lean_slower(estimator)
+        )
 
     def _context(self, state, beliefs, item, stack):
         nav = state["navigation_action_id"]
@@ -435,6 +464,7 @@ class LearningEngine:
             explicit_slower=state["requests"]["slower"],
             stack=stack.stack,
             misconceptions=state.get("public_misconceptions", {}),
+            **self._pace_leans(state),
         )
         public["remaining_budget"] = state["teaching_budget"] - state["teaching_turns"]
         context = _active_context(
