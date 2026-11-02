@@ -528,7 +528,7 @@ def _build_plan(
             "content": "content_proto_v1",
             "state_estimator": "bkt_v1",
             "navigator": "rules_navigator_v1",
-            "strategist": "rules_strategist_v2",
+            "strategist": "rules_strategist_v3",
             "mask": "mask_v1",
             "feature": "features_v1",
         },

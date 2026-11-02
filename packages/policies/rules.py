@@ -85,7 +85,7 @@ class RulesNavigator:
 
 
 class RulesStrategist:
-    policy_version = "rules_strategist_v2"
+    policy_version = "rules_strategist_v3"
 
     def act(self, observation: list[float], mask: list[bool], context: dict) -> int:
         difficulty = str(context.get("active_item_difficulty", "medium"))
@@ -121,7 +121,11 @@ class RulesStrategist:
             context.get("repeated_unsuccessful_hints")
             or int(context.get("unsuccessful_hint_count", 0)) >= 2
         ):
-            move = "WORKED_EXAMPLE"
+            move = (
+                "PRACTICE"
+                if context.get("previous_move") == "WORKED_EXAMPLE"
+                else "WORKED_EXAMPLE"
+            )
         elif likely_misconception and not confirmed_misconception:
             move = "PROBE"
         elif confirmed_misconception and context.get("previous_move") not in {

@@ -127,6 +127,14 @@ def test_rules_strategist_legacy_contexts_and_mask_fallback():
     assert _rules_move(meaningful_error=True) == "HINT"
     assert _rules_move(wants_certification=True) == "CHECK_MASTERY"
     assert _rules_move(repeated_unsuccessful_hints=True) == "WORKED_EXAMPLE"
+    assert (
+        _rules_move(unsuccessful_hint_count=2, previous_move="HINT")
+        == "WORKED_EXAMPLE"
+    )
+    assert (
+        _rules_move(unsuccessful_hint_count=2, previous_move="WORKED_EXAMPLE")
+        == "PRACTICE"
+    )
     assert _rules_move(misconceptions=[0.0] * 25, meaningful_error=True) == "HINT"
     dict_move = _rules_move(misconceptions={"M05": 0.6})
     list_values = [0.0] * 25
@@ -143,7 +151,7 @@ def test_rules_strategist_legacy_contexts_and_mask_fallback():
     mask[practice] = True
     action = RulesStrategist().act([0.0] * 140, mask, context)
     assert action == practice
-    assert RulesStrategist.policy_version == "rules_strategist_v2"
+    assert RulesStrategist.policy_version == "rules_strategist_v3"
 
 
 def test_decision_benchmark_passes_public_misconceptions_to_rules_strategist():
