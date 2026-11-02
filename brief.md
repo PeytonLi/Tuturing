@@ -43,13 +43,25 @@ The contract and fixture freeze comes first. Day-one lists:
 - Lark topic group **Tuturing** (`oc_454768961d023702c1b8895f7238be31`): Felix (Codex) and Felix-Claude are members. Xueming requested Felix-Claude as admin (capture `cap_110977ab-8071-4187-9e12-6a71a0af9e4d`); its group-admin role was granted and verified through Lark, and its Workspace project binding was added on 2026-11-02. See decisions.md for setup details.
 - `tuturing` is in the Workspace execution focus, so authorized tasks run unattended.
 
+## Our side: Person A (2026-11-02)
+
+- Xueming: "we will be person A and my teammate is pushing setup" (capture `cap_f7092820-6b99-45d1-9140-729c3649ca5d`). Workspace agents build only Person A's paths; Person B's side is Peyton's.
+- Peyton's agent pushed the setup as two branches based on `ea8c388`. Neither was on `main` when checked at 2026-11-02 20:23 UTC:
+  - `devin/1793649093-scaffold-a-b-workstreams`: Python 3.12 with uv and `uv.lock`, `OWNERS.md`, both contracts with valid and invalid fixtures, action and feature specs, B's content, belief, rules policies, simulator and episode collector, and A's CPU response stub with the independent-reveal rejection.
+  - `devin/1793649184-person-a-response-lane`: A's prompt compiler with snapshots for all eight moves, fallbacks, validators, content hashing, evidence extractor, MathDial SFT preparation with a 200-row mapping audit, SFT training and evaluation utilities, and decision records D09 (MathDial move mapping, proposed) and D10 (base model, see open questions).
+- A trial merge of `origin/main` with both branches had no conflicts. On that tree, on CPU with only the base dependencies: `pytest` passed (62 tests), both `validate_contracts` commands passed, `validate_content` passed (15 concepts, 35 families, 30 scenarios) and a 10-episode `simulate` smoke completed.
+- Still missing for A's day-one list (PRD 21.1) and gates G0/G4: `contracts/public_v1.openapi.yaml`; the public API in `apps/public_api` (durable request keys, response staging, a retry returning the same response ID and hash); `apps/response_service` and `tools.response.serve` (`configs/response/serve_stub.yaml` is a placeholder); 30 original response examples with a source and split manifest (only eight synthetic smoke cases exist); the published stub artifact with loading instructions for B; the CPU ten-session smoke workflow.
+- B's mock observe/commit/status/conflict service is not in the setup yet. A's retry demonstration and the ten-session smoke depend on it.
+- Contract placement differs from PRD 2.2 and 21.1: `Error` and `PublicState` are defined in B's `learning_v1.schema.json`, not in A's contracts. `response_v1.schema.json` embeds identical generated copies of `TeachingPlan`, `TeachingAction` and `NavigationAction` from the shared generator `tools/dev/generate_contract_assets.py`. Both points belong to the contract freeze (G0).
+
 ## Open questions
 
-- Which PRD owner is Xueming (Person A or Person B)? This decides which workstream the workspace agents execute; the ownership rule forbids building the other side.
+- D10 on the response-lane branch switches the SFT base model from the PRD's `Qwen/Qwen2.5-7B-Instruct` to `Qwen/Qwen3.8-27B`, trained and served through Fireworks, and is marked "accepted by lead". PRD 2.3 makes SFT selection a Person A decision, so Xueming should confirm it. It also adds a Fireworks account, API key and spending.
 - Hackathon deadline and demo format are not recorded anywhere in the repository.
+- When will Peyton ship B's mock learning service?
 
 ## Proposed next steps (assistant proposal, not a decision)
 
-1. Once the owner side is confirmed, run the matching day-one list (21.1 or 21.2) as one bounded workspace task whose completion condition is that side's day-one acceptance plus a passing `validate_contracts` run; include the root skeleton (`OWNERS.md`, `pyproject.toml`, lock, `docs/decisions/`) if Xueming is A, since A owns root tooling.
-2. Follow with the M1 week-1 task for that side (A: prompt compiler, validators, fallbacks, evidence extractor, CPU ten-session demo against B's mock; B: rules baseline end to end with BKT and the G1/G2/G4 checks against A's stub or a local stand-in).
-3. Hold the first integration review (21.3) with Peyton before either side trains anything.
+1. After the setup lands on `main`, pull it and run A's remaining day-one items as one bounded workspace task: the public OpenAPI contract (settling with Peyton where `Error` and `PublicState` live), the response service and `serve` entrypoint, public API idempotency and staging tested against B's fixture plans through a stand-in until B's mock ships, 30 original examples with a split manifest, and the stub artifact with loading instructions. Completion condition: PRD 21.1 day-one acceptance with green `pytest` and `validate_contracts`.
+2. Then M1 for A: the CPU ten-session demo (G4) and the G2 fallback and disclosure report.
+3. Hold the first integration review (21.3) with Peyton before either side trains anything; settle D10 and the contract placement there or earlier.
