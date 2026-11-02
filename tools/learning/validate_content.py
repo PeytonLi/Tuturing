@@ -25,6 +25,13 @@ EXPECTED_GROUPS = {
     ),
     "test": Counter({"prerequisite_gap": 2, "misconception": 1, "knowledgeable": 1, "mixed": 1}),
 }
+EXPECTED_PACE_SPLITS = Counter({"train": 4, "validation": 1, "test": 1})
+PACE_SCENARIOS_PATH = "data/scenarios/proto_v1_pace.yaml"
+SIMULATOR_CONFIGS = (
+    "configs/learning/simulator_proto_v1.yaml",
+    "configs/learning/simulator_proto_v2.yaml",
+    "configs/learning/simulator_proto_alt.yaml",
+)
 
 
 def _acyclic(edges: list[dict], concept_ids: set[str]) -> bool:
@@ -47,6 +54,36 @@ def _acyclic(edges: list[dict], concept_ids: set[str]) -> bool:
         return True
 
     return all(visit(node) for node in concept_ids)
+
+
+def _check_scenario(scenario: dict, scenario_validator, family_ids: set[str]) -> str:
+    scenario_validator.validate(scenario)
+    group = scenario["scenario_family_id"].split("-")[2]
+    allowed = set(scenario["template_family_allowlist"])
+    if not allowed <= family_ids:
+        raise ValueError(f"scenario {scenario['scenario_id']} has unknown template families")
+    if any(FAMILIES[family_id].split != scenario["split"] for family_id in allowed):
+        raise ValueError(f"scenario {scenario['scenario_id']} crosses content splits")
+    if any(FAMILIES[family_id].role not in {"teaching", "assessment"} for family_id in allowed):
+        raise ValueError(f"scenario {scenario['scenario_id']} has an invalid teaching pool")
+    for concept_id in ENABLED:
+        assessment_families = {
+            family_id
+            for family_id in allowed
+            if FAMILIES[family_id].concept_id == concept_id
+            and FAMILIES[family_id].role == "assessment"
+            and FAMILIES[family_id].split == scenario["split"]
+        }
+        if len(assessment_families) < 2:
+            raise ValueError(
+                f"scenario {scenario['scenario_id']} must allow at least two "
+                f"{scenario['split']} assessment families for {concept_id}"
+            )
+    if group == "mixed":
+        requests = {event["explicit_request"] for event in scenario["public_history"]}
+        if not requests & {"faster", "skip"}:
+            raise ValueError(f"mixed scenario {scenario['scenario_id']} lacks an early request")
+    return group
 
 
 def validate_content(config_path: str = "configs/learning/prototype.yaml") -> dict:
@@ -226,45 +263,46 @@ def validate_content(config_path: str = "configs/learning/prototype.yaml") -> di
     group_counts = {split: Counter() for split in ("train", "validation", "test")}
     group_totals = Counter()
     for scenario in scenarios:
-        scenario_validator.validate(scenario)
-        group = scenario["scenario_family_id"].split("-")[2]
+        group = _check_scenario(scenario, scenario_validator, family_ids)
         group_counts[scenario["split"]][group] += 1
         group_totals[group] += 1
-        allowed = set(scenario["template_family_allowlist"])
-        if not allowed <= family_ids:
-            raise ValueError(f"scenario {scenario['scenario_id']} has unknown template families")
-        if any(FAMILIES[family_id].split != scenario["split"] for family_id in allowed):
-            raise ValueError(f"scenario {scenario['scenario_id']} crosses content splits")
-        if any(FAMILIES[family_id].role not in {"teaching", "assessment"} for family_id in allowed):
-            raise ValueError(f"scenario {scenario['scenario_id']} has an invalid teaching pool")
-        for concept_id in ENABLED:
-            assessment_families = {
-                family_id
-                for family_id in allowed
-                if FAMILIES[family_id].concept_id == concept_id
-                and FAMILIES[family_id].role == "assessment"
-                and FAMILIES[family_id].split == scenario["split"]
-            }
-            if len(assessment_families) < 2:
-                raise ValueError(
-                    f"scenario {scenario['scenario_id']} must allow at least two "
-                    f"{scenario['split']} assessment families for {concept_id}"
-                )
-        if group == "mixed":
-            requests = {event["explicit_request"] for event in scenario["public_history"]}
-            if not requests & {"faster", "skip"}:
-                raise ValueError(f"mixed scenario {scenario['scenario_id']} lacks an early request")
     if group_totals != Counter(
         {"prerequisite_gap": 12, "misconception": 6, "knowledgeable": 6, "mixed": 6}
     ):
         raise ValueError(f"unexpected overall scenario family mix: {group_totals}")
     if group_counts != EXPECTED_GROUPS:
         raise ValueError(f"scenario groups are not proportionally distributed: {group_counts}")
+    pace_scenarios = yaml.safe_load((ROOT / PACE_SCENARIOS_PATH).read_text(encoding="utf-8"))[
+        "scenarios"
+    ]
+    frozen_ids = {scenario["scenario_id"] for scenario in scenarios}
+    pace_ids = [scenario["scenario_id"] for scenario in pace_scenarios]
+    if len(set(pace_ids)) != len(pace_ids) or frozen_ids & set(pace_ids):
+        raise ValueError("pace scenario ids must be unique and must not reuse frozen ids")
+    pace_splits = Counter()
+    simulator_profiles = {
+        path: set(yaml.safe_load((ROOT / path).read_text(encoding="utf-8"))["profiles"])
+        for path in SIMULATOR_CONFIGS
+    }
+    for scenario in [*scenarios, *pace_scenarios]:
+        for path, profiles in simulator_profiles.items():
+            if scenario["profile_id"] not in profiles:
+                raise ValueError(f"{scenario['scenario_id']} profile is missing from {path}")
+    for scenario in pace_scenarios:
+        if _check_scenario(scenario, scenario_validator, family_ids) != "detailed":
+            raise ValueError(f"pace scenario {scenario['scenario_id']} is not in the detailed set")
+        if scenario["profile_id"] != "careful_detailed":
+            raise ValueError(f"pace scenario {scenario['scenario_id']} must use careful_detailed")
+        pace_splits[scenario["split"]] += 1
+    if pace_splits != EXPECTED_PACE_SPLITS:
+        raise ValueError(f"pace scenario splits must be 4/1/1: {dict(pace_splits)}")
     return {
         "concepts": len(concepts),
         "families": len(FAMILIES),
         "sampled_instances": len(FAMILIES) * 200,
         "scenarios": len(scenarios),
+        "pace_scenarios": len(pace_scenarios),
+        "pace_scenario_splits": dict(pace_splits),
         "scenario_splits": dict(Counter(scenario["split"] for scenario in scenarios)),
         "scenario_groups": dict(group_totals),
     }
@@ -280,6 +318,10 @@ def main() -> None:
         f"{report['sampled_instances']} sampled instances, {report['scenarios']} scenarios"
     )
     print(f"scenario splits: {report['scenario_splits']}; groups: {report['scenario_groups']}")
+    print(
+        f"pace scenarios: {report['pace_scenarios']} careful_detailed, "
+        f"splits {report['pace_scenario_splits']}"
+    )
 
 
 if __name__ == "__main__":

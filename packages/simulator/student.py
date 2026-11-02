@@ -6,6 +6,7 @@ from pathlib import Path
 
 import yaml
 
+from packages.learning.actions import PACES
 from packages.learning.content.templates.families import TemplateFamily
 from packages.simulator.randomness import EventRandomBank
 
@@ -142,6 +143,21 @@ def probability_correct(
     return guess + (1 - guess - slip) * effective_mastery
 
 
+def help_seeking_probability(
+    student: PrivateStudentState, tutor_pace: str | None = None, config: dict | None = None
+) -> float:
+    """Profile help probability, raised for a detail-preferring learner taught too briefly."""
+    probability = student.help_seeking_probability
+    if (
+        tutor_pace in PACES
+        and student.preferred_pace == "detailed"
+        and PACES.index(tutor_pace) < PACES.index(student.preferred_pace)
+    ):
+        bonus = float((config or {}).get("help_seeking", {}).get("detailed_too_concise_bonus", 0.0))
+        probability = min(1.0, probability + bonus)
+    return probability
+
+
 def sample_student_outcome(
     student: PrivateStudentState,
     *,
@@ -157,11 +173,13 @@ def sample_student_outcome(
     graph: dict,
     bank: EventRandomBank,
     config: dict,
+    tutor_pace: str | None = None,
 ) -> StudentOutcome:
     if instance is None or family is None:
         return StudentOutcome("not_applicable", None, assistance, "none", None, False)
     help_rng = bank.rng(scenario["scenario_id"], episode_seed, turn, "help_request")
-    if assistance != "answer_shown" and float(help_rng.random()) < student.help_seeking_probability:
+    help_probability = help_seeking_probability(student, tutor_pace, config)
+    if assistance != "answer_shown" and float(help_rng.random()) < help_probability:
         return StudentOutcome("not_applicable", None, "none", "hint", None, False)
     raw_answer = instance["answer"]
     expected = raw_answer if isinstance(raw_answer, Fraction) else Fraction(raw_answer)

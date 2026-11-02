@@ -403,6 +403,8 @@ def test_public_misconception_features_match_episode_and_service(engine):
         explicit_slower=service_state["requests"]["slower"],
         stack=stack.stack,
         misconceptions=expected_misconceptions,
+        pace_lean_faster=service_state["pace_estimator"]["lean_faster"],
+        pace_lean_slower=service_state["pace_estimator"]["lean_slower"],
     )
     episode_public["remaining_budget"] = (
         service_state["teaching_budget"] - service_state["teaching_turns"]
