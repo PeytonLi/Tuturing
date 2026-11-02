@@ -34,6 +34,36 @@
     "cost_usd": 0.0,
     "cost_basis": "CPU only on the dev VM"
   },
+  "rules_fastready": {
+    "wall_seconds": 13.3,
+    "cost_usd": 0.0,
+    "cost_basis": "CPU only on the dev VM"
+  },
+  "strategist_bc_fastready": {
+    "wall_seconds": 13.3,
+    "cost_usd": 0.0,
+    "cost_basis": "CPU only on the dev VM"
+  },
+  "strategist_bc_gpt_distill": {
+    "wall_seconds": 13.3,
+    "cost_usd": 0.0,
+    "cost_basis": "CPU only at test time; training labels came from paid gpt-6.1-sol calls (see strategist_bc_gpt_distill_training.json)"
+  },
+  "strategist_ppo_reteach_02": {
+    "wall_seconds": 13.3,
+    "cost_usd": 0.0,
+    "cost_basis": "CPU only on the dev VM"
+  },
+  "qwen3p8_27b_base": {
+    "wall_seconds": 1526,
+    "cost_usd": 6.1,
+    "cost_basis": "Fireworks on-demand H100 at $8/GPU-hour: 1 GPU 23:16-23:46 plus 2 extra GPUs ~23:38-23:46, about 46 GPU-minutes"
+  },
+  "nemotron_lightning_3p5_30b": {
+    "wall_seconds": 819,
+    "cost_usd": null,
+    "cost_basis": "Fireworks serverless; 610799 input + 1603519 output tokens; per-token price not verified"
+  },
   "strategist_bc_fidelity": {
     "wall_seconds": null,
     "cost_usd": 0.0,

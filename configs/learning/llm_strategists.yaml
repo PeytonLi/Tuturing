@@ -24,3 +24,12 @@ gpt_6_astra:
   max_tokens: 4000
   temperature: null
   prompt: evaluation/learning/llm_strategist_prompt_v1.txt
+
+nemotron_lightning_3p5_30b:
+  base_url: https://api.fireworks.ai/inference/v1
+  model: accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b
+  api_key_env: FIREWORKS_API_KEY
+  max_tokens_field: max_tokens
+  max_tokens: 8192
+  temperature: 0
+  prompt: evaluation/learning/llm_strategist_prompt_v1.txt
