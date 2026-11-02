@@ -6,9 +6,10 @@ method: lora
 lora_rank: 16
 lora_alpha: 32
 lora_dropout: 0.05
-# See D10: the hybrid-architecture target scope is still open before training.
-lora_target_modules: [q_proj, k_proj, v_proj, o_proj]
-lora_target_modules_scope: decision_pending
+# See docs/decisions/D10_response_base_model.md for the chosen attention scope.
+lora_target_modules: '^(model\.)?(language_model\.)?layers\.\d+\.[^.]+\.(q_proj|k_proj|v_proj|o_proj|in_proj_qkv|out_proj)$'
+lora_target_modules_scope: language_model_attention
+lora_expected_target_count: 160
 precision: bfloat16
 max_sequence_tokens: 4096
 micro_batch_size: 1

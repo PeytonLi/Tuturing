@@ -20,6 +20,7 @@ uv sync --extra learning
 uv run python -m tools.learning.validate_contracts
 uv run python -m tools.response.validate_contracts
 uv run python -m tools.learning.validate_content --config configs/learning/prototype.yaml
+TUTOR_LEARNING_SERVICE_TOKEN=dev uv run python -m tools.learning.serve --config configs/learning/rules.yaml --port 8100
 uv run python -m tools.learning.simulate --config configs/learning/smoke.yaml --episodes 100
 uv run python -m tools.learning.evaluate --config configs/learning/smoke.yaml --split validation --policies rules,random,always_hint --episodes-per-scenario 20
 uv run python -m tools.learning.train_bc --config configs/learning/bc.yaml

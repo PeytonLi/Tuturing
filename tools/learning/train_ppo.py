@@ -18,6 +18,7 @@ from packages.policies.network import (
     torch,
 )
 from packages.policies.returns import duration_aware_gae
+from packages.simulator.student import DEFAULT_SIMULATOR_CONFIG
 
 ROOT = Path(__file__).resolve().parents[2]
 METRIC_FIELDS = (
@@ -202,11 +203,13 @@ def main() -> None:
     parser.add_argument("--seed", type=int)
     parser.add_argument("--init")
     parser.add_argument("--sessions", type=int)
+    parser.add_argument("--run-name")
     args = parser.parse_args()
     config_path = ROOT / args.config
     config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     seed = int(args.seed if args.seed is not None else config["seed"])
     sessions = int(args.sessions if args.sessions is not None else config["sessions"])
+    simulator_config = config.get("simulator_config", DEFAULT_SIMULATOR_CONFIG)
     torch.manual_seed(seed)
     if args.init:
         model = NetworkStrategist(args.init).model
@@ -217,7 +220,7 @@ def main() -> None:
     optimizer = torch.optim.Adam(model.parameters(), lr=float(config["learning_rate"]))
     policy = NetworkStrategist.from_model(model, greedy=False)
     rng = random.Random(seed)
-    run_name = f"{config['run_name']}_seed{seed}_{sessions}"
+    run_name = args.run_name or f"{config['run_name']}_seed{seed}_{sessions}"
     run_dir = ROOT / "experiments/learning/runs" / run_name
     run_dir.mkdir(parents=True, exist_ok=True)
     metrics_path = run_dir / "metrics.csv"
@@ -243,6 +246,7 @@ def main() -> None:
                 strategist=policy,
                 strategist_name="network",
                 run_id=f"{run_name}-update{update}",
+                simulator_config=simulator_config,
             )
             metrics = _ppo_update(model, optimizer, results, config, rng)
             completed += count
@@ -256,6 +260,7 @@ def main() -> None:
                 "init": init,
                 "sessions": completed,
                 "policy": "ppo_strategist",
+                "simulator_config": simulator_config,
             }
             if completed % 500 == 0 or completed == sessions:
                 save_checkpoint(model, run_dir / f"ppo_{completed}.pt", metadata)

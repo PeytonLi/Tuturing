@@ -1,3 +1,4 @@
+import io
 import json
 import random
 import sys
@@ -97,7 +98,7 @@ def test_evaluation_refuses_sealed_test_split(monkeypatch):
     assert error.value.code == 2
 
 
-def test_decision_cases_map_or_report_unmapped_request():
+def test_all_decision_cases_map_to_observations_and_legal_masks():
     cases = [
         json.loads(line)
         for line in (ROOT / "evaluation/learning/decision_cases_v1.jsonl")
@@ -105,28 +106,119 @@ def test_decision_cases_map_or_report_unmapped_request():
         .splitlines()
     ]
     assert len(cases) == 30
-    failed = []
-    mapped = 0
     for case in cases:
-        try:
-            _, observation, mask, _ = score_decisions.case_state_to_inputs(case["state"])
-        except ValueError as error:
-            failed.append((case["case_id"], str(error)))
-            continue
+        _, observation, mask, _ = score_decisions.case_state_to_inputs(case["state"])
         assert len(observation) == 140
         assert any(mask)
-        mapped += 1
-    assert mapped == 29
-    assert failed == [
-        (
-            "DC20",
-            "explicit_request='hint' has no corresponding feature or mask input; "
-            "cannot score this case without inventing semantics",
-        )
-    ]
+    assert len(cases) == 30
 
 
-def test_rules_scorer_stops_on_unmapped_case(monkeypatch):
-    monkeypatch.setattr(sys, "argv", ["score_decisions", "--policy", "rules"])
-    with pytest.raises(ValueError, match="explicit_request='hint'"):
-        score_decisions.main()
+def test_rules_context_maps_dc20_error_and_skip_diagnostic_state():
+    cases = {
+        json.loads(line)["case_id"]: json.loads(line)
+        for line in (ROOT / "evaluation/learning/decision_cases_v1.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    }
+    dc20 = cases["DC20"]
+    _, observation, mask, context = score_decisions.case_state_to_inputs(dc20["state"])
+    assert context["meaningful_error"] is True
+    action_id = score_decisions.RulesStrategist().act(observation, mask, context)
+    assert score_decisions.decode_strategist(action_id)[0] == "HINT"
+
+    _, _, _, after_skip = score_decisions.case_state_to_inputs(cases["DC12"]["state"])
+    _, _, _, after_diagnostic = score_decisions.case_state_to_inputs(
+        cases["DC13"]["state"]
+    )
+    assert after_skip["skip_diagnostic_due"] is True
+    assert after_diagnostic["skip_diagnostic_due"] is False
+
+
+def test_llm_parser_strips_complete_and_unterminated_think_blocks():
+    assert score_decisions.parse_first_json_object(
+        '<think>internal notes {ignored:true}</think>\n{"move":"HINT"}'
+    ) == {"move": "HINT"}
+    assert score_decisions.parse_first_json_object(
+        '<think>unfinished reasoning with brace {json starts here\n{"move":"PROBE"}'
+    ) == {"move": "PROBE"}
+
+
+def test_llm_truncated_output_is_reported_as_parse_failure(monkeypatch):
+    monkeypatch.setenv("TUTOR_LLM_BASE_URL", "https://example.invalid/v1")
+    monkeypatch.setenv("TUTOR_LLM_API_KEY", "test-key")
+    monkeypatch.setenv("TUTOR_LLM_MODEL", "test/model")
+    response = io.BytesIO(
+        json.dumps(
+            {
+                "choices": [
+                    {"message": {"content": '{"move":"HINT"}'}, "finish_reason": "length"}
+                ]
+            }
+        ).encode()
+    )
+    captured = {}
+
+    def fake_urlopen(request, timeout):
+        captured["payload"] = json.loads(request.data)
+        return response
+
+    monkeypatch.setattr(score_decisions.urllib.request, "urlopen", fake_urlopen)
+    case = {"situation": "test", "state": {}, "recent_dialogue": []}
+    action_id, parse_failure, truncated = score_decisions.llm_action(case, [True] * 72)
+    assert action_id is None
+    assert parse_failure is True
+    assert truncated is True
+    assert captured["payload"]["temperature"] == 0
+    assert captured["payload"]["max_tokens"] == 2048
+
+
+def test_llm_openai_payload_switches_are_optional_and_network_free(monkeypatch):
+    monkeypatch.setenv("TUTOR_LLM_BASE_URL", "https://example.invalid/v1")
+    monkeypatch.setenv("TUTOR_LLM_API_KEY", "test-key")
+    monkeypatch.setenv("TUTOR_LLM_MODEL", "test/reasoning-model")
+    monkeypatch.setenv("TUTOR_LLM_OMIT_TEMPERATURE", "1")
+    monkeypatch.setenv("TUTOR_LLM_MAX_TOKENS_FIELD", "max_completion_tokens")
+    monkeypatch.setenv("TUTOR_LLM_MAX_TOKENS", "4000")
+    response = io.BytesIO(
+        json.dumps(
+            {
+                "choices": [
+                    {
+                        "message": {
+                            "content": '{"move":"HINT","difficulty":"easy","pace":"normal"}'
+                        },
+                        "finish_reason": "stop",
+                    }
+                ]
+            }
+        ).encode()
+    )
+    captured = {}
+
+    def fake_urlopen(request, timeout):
+        captured["payload"] = json.loads(request.data)
+        return response
+
+    monkeypatch.setattr(score_decisions.urllib.request, "urlopen", fake_urlopen)
+    case = {"situation": "test", "state": {}, "recent_dialogue": []}
+    action_id, parse_failure, truncated = score_decisions.llm_action(case, [True] * 72)
+    assert action_id is not None
+    assert parse_failure is False
+    assert truncated is False
+    assert "temperature" not in captured["payload"]
+    assert captured["payload"]["max_completion_tokens"] == 4000
+    assert "max_tokens" not in captured["payload"]
+    assert "reasoning_effort" not in captured["payload"]
+
+
+def test_rules_scorer_scores_all_cases(monkeypatch, tmp_path):
+    output = tmp_path / "rules_scores.json"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["score_decisions", "--policy", "rules", "--out", str(output)],
+    )
+    score_decisions.main()
+    report = json.loads(output.read_text(encoding="utf-8"))
+    assert len(report["cases"]) == 30
+    assert report["overall"]["cases"] == 30

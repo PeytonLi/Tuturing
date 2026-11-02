@@ -23,7 +23,7 @@ HTTP requests through `urllib`; no Fireworks SDK dependency is needed. The
 Fireworks Serverless Training service is the intended LoRA SFT path. The
 repository's local `train_sft.py` path is not yet verified for this model.
 
-## Architecture and LoRA scope
+## Architecture and LoRA scope — decided
 
 The checkpoint reports architecture
 `Qwen3_5ForConditionalGeneration`, `model_type: qwen3_5`, and pipeline
@@ -36,21 +36,34 @@ language model has 64 layers under `model.language_model.layers.N`:
   `in_proj_a`, `in_proj_b`, `out_proj`, and `conv1d`.
 - All 64 text layers have MLP `gate_proj`, `up_proj`, and `down_proj`.
 
-The PRD target list `[q_proj, k_proj, v_proj, o_proj]` therefore adapts only
-the 16 full-attention layers. PEFT suffix/name matching may also match modules
-in the MTP layer or vision tower if those module names overlap.
+Adapt the attention projections in all 64 text layers, and only inside the
+language model. Both SFT configs use this full-module-name regex:
 
-The resolved config retains the PRD target list and explicitly records
-`lora_target_modules_scope: decision_pending`. Before any training run, choose
-and record one of these approaches:
+```text
+^(model\.)?(language_model\.)?layers\.\d+\.[^.]+\.(q_proj|k_proj|v_proj|o_proj|in_proj_qkv|out_proj)$
+```
 
-1. Keep the PRD attention projections and scope matching to
-   `model.language_model`; or
-2. Expand the targets to include selected linear-attention projections such
-   as `in_proj_qkv` and `out_proj`, and/or MLP projections.
+The expected target count is **160**: 16 full-attention layers × 4
+projections, plus 48 linear-attention layers × 2 projections. The local
+training path uses `matched_lora_targets` with regex full-match semantics and
+checks the loaded model's `named_modules()` count before LoRA wrapping; it
+stops if the count differs from 160.
 
-That adaptation choice remains open. The current resolved config is not an
-approval to start training with an unscoped suffix match.
+The vision tower, MTP layer, and MLP `gate_proj`, `up_proj`, and `down_proj`
+are excluded from the first run. MLP projections are reserved for a later
+ablation.
+
+This scope was checked against `model.safetensors.index.json` at the pinned
+revision `1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0`: **160 module names
+matched across all 64 text layers**, with no matches outside
+`model.language_model.layers`. The matched full-attention projections were
+`q_proj`, `k_proj`, `v_proj`, and `o_proj`; the matched linear-attention
+projections were `in_proj_qkv` and `out_proj`.
+
+If training runs on Fireworks Serverless Training, confirm that its service
+allows choosing these LoRA target modules and honors this scope before relying
+on it. The hosted service may choose its own targets; that behavior has not
+been verified here.
 
 ## Local training, tokenizer, and memory checks
 

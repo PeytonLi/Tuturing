@@ -7,3 +7,4 @@ batch_size: 256
 learning_rate: 0.001
 gamma: 0.99
 run_name: bc_rules
+simulator_config: configs/learning/simulator_proto_v2.yaml

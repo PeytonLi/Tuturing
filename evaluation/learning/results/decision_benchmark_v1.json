@@ -1,0 +1,6558 @@
+{
+  "api_call_counts": {
+    "fireworks_qwen_on_demand_scored_cases": 30,
+    "fireworks_qwen_preflight": 1,
+    "openai_4000_token_preflight": 1,
+    "openai_one_token_preflight_failed_for_output_limit": 1,
+    "openai_scored_cases": 90,
+    "total": 123
+  },
+  "benchmark": "decision_benchmark_v1",
+  "case_count": 30,
+  "openai_preflights": {
+    "max_completion_tokens_4000": {
+      "finish_reason": "stop",
+      "http_status": 200,
+      "success": true
+    },
+    "one_token": {
+      "http_status": 400,
+      "message": "Could not finish the message because max_tokens or model output limit was reached. Please try again with higher max_tokens.",
+      "success": false
+    }
+  },
+  "policies": {
+    "always_hint": {
+      "cases": [
+        {
+          "case_id": "DC01",
+          "category": "known_topic_readiness",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": true,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC02",
+          "category": "known_topic_readiness",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC03",
+          "category": "known_topic_readiness",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": true,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC04",
+          "category": "known_topic_readiness",
+          "difficulty": "easy",
+          "difficulty_ok": false,
+          "forbidden": true,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC05",
+          "category": "known_topic_readiness",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": true,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC06",
+          "category": "confident_misconception",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC07",
+          "category": "confident_misconception",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC08",
+          "category": "confident_misconception",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC09",
+          "category": "confident_misconception",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC10",
+          "category": "confident_misconception",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC11",
+          "category": "uncertain_skip",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC12",
+          "category": "uncertain_skip",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC13",
+          "category": "uncertain_skip",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC14",
+          "category": "uncertain_skip",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": true,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC15",
+          "category": "uncertain_skip",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC16",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC17",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC18",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC19",
+          "category": "prerequisite_gap",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC20",
+          "category": "prerequisite_gap",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC21",
+          "category": "faster_pace",
+          "difficulty": "medium",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": false,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC22",
+          "category": "faster_pace",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": false,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC23",
+          "category": "faster_pace",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC24",
+          "category": "faster_pace",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC25",
+          "category": "faster_pace",
+          "difficulty": "easy",
+          "difficulty_ok": false,
+          "forbidden": true,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": false,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC26",
+          "category": "return_after_remediation",
+          "difficulty": "easy",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC27",
+          "category": "return_after_remediation",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": true,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC28",
+          "category": "return_after_remediation",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC29",
+          "category": "return_after_remediation",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC30",
+          "category": "return_after_remediation",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        }
+      ],
+      "categories": {
+        "confident_misconception": {
+          "cases": 5,
+          "difficulty_ok_rate": null,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.2,
+          "pace_ok_rate": null,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "faster_pace": {
+          "cases": 5,
+          "difficulty_ok_rate": 0.5,
+          "forbidden_count": 1,
+          "forbidden_rate": 0.2,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.4,
+          "pace_ok_rate": 0.4,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "known_topic_readiness": {
+          "cases": 5,
+          "difficulty_ok_rate": 0.0,
+          "forbidden_count": 4,
+          "forbidden_rate": 0.8,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.2,
+          "pace_ok_rate": 1.0,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "prerequisite_gap": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 1.0,
+          "pace_ok_rate": null,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "return_after_remediation": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 1,
+          "forbidden_rate": 0.2,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.4,
+          "pace_ok_rate": null,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "uncertain_skip": {
+          "cases": 5,
+          "difficulty_ok_rate": null,
+          "forbidden_count": 1,
+          "forbidden_rate": 0.2,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.6,
+          "pace_ok_rate": 1.0,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        }
+      },
+      "forbidden_case_ids": [
+        "DC01",
+        "DC03",
+        "DC04",
+        "DC05",
+        "DC14",
+        "DC25",
+        "DC27"
+      ],
+      "model_id": null,
+      "overall": {
+        "cases": 30,
+        "difficulty_ok_rate": 0.6,
+        "forbidden_count": 7,
+        "forbidden_rate": 0.23333333333333334,
+        "illegal_count": 0,
+        "illegal_rate": 0.0,
+        "move_ok_rate": 0.4666666666666667,
+        "pace_ok_rate": 0.5714285714285714,
+        "parse_failure_count": 0,
+        "parse_failure_rate": 0.0,
+        "truncated_output_count": 0
+      },
+      "run_count": 1,
+      "status": "completed"
+    },
+    "gpt_6_1_sol": {
+      "categories": {
+        "confident_misconception": {
+          "runs": [
+            {
+              "cases": 5,
+              "difficulty_ok_rate": null,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.8,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            {
+              "cases": 5,
+              "difficulty_ok_rate": null,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.8,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            {
+              "cases": 5,
+              "difficulty_ok_rate": null,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.8,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            }
+          ],
+          "summary": {
+            "acceptable_move_rate": {
+              "max": 0.8,
+              "mean": 0.8000000000000002,
+              "min": 0.8
+            },
+            "cases": 5,
+            "difficulty_ok_rate": {
+              "max": null,
+              "mean": null,
+              "min": null
+            },
+            "forbidden_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "forbidden_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "illegal_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "illegal_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "pace_ok_rate": {
+              "max": null,
+              "mean": null,
+              "min": null
+            },
+            "parse_failure_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "parse_failure_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "truncated_output_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            }
+          }
+        },
+        "faster_pace": {
+          "runs": [
+            {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.6,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.6,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.6,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            }
+          ],
+          "summary": {
+            "acceptable_move_rate": {
+              "max": 0.6,
+              "mean": 0.6,
+              "min": 0.6
+            },
+            "cases": 5,
+            "difficulty_ok_rate": {
+              "max": 1.0,
+              "mean": 1.0,
+              "min": 1.0
+            },
+            "forbidden_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "forbidden_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "illegal_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "illegal_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "pace_ok_rate": {
+              "max": 1.0,
+              "mean": 1.0,
+              "min": 1.0
+            },
+            "parse_failure_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "parse_failure_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "truncated_output_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            }
+          }
+        },
+        "known_topic_readiness": {
+          "runs": [
+            {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 1,
+              "forbidden_rate": 0.2,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.8,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 1,
+              "forbidden_rate": 0.2,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.8,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 1,
+              "forbidden_rate": 0.2,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.8,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            }
+          ],
+          "summary": {
+            "acceptable_move_rate": {
+              "max": 0.8,
+              "mean": 0.8000000000000002,
+              "min": 0.8
+            },
+            "cases": 5,
+            "difficulty_ok_rate": {
+              "max": 1.0,
+              "mean": 1.0,
+              "min": 1.0
+            },
+            "forbidden_count": {
+              "max": 1,
+              "mean": 1.0,
+              "min": 1
+            },
+            "forbidden_rate": {
+              "max": 0.2,
+              "mean": 0.20000000000000004,
+              "min": 0.2
+            },
+            "illegal_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "illegal_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "pace_ok_rate": {
+              "max": 1.0,
+              "mean": 1.0,
+              "min": 1.0
+            },
+            "parse_failure_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "parse_failure_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "truncated_output_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            }
+          }
+        },
+        "prerequisite_gap": {
+          "runs": [
+            {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.8,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.8,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 1.0,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            }
+          ],
+          "summary": {
+            "acceptable_move_rate": {
+              "max": 1.0,
+              "mean": 0.8666666666666667,
+              "min": 0.8
+            },
+            "cases": 5,
+            "difficulty_ok_rate": {
+              "max": 1.0,
+              "mean": 1.0,
+              "min": 1.0
+            },
+            "forbidden_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "forbidden_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "illegal_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "illegal_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "pace_ok_rate": {
+              "max": null,
+              "mean": null,
+              "min": null
+            },
+            "parse_failure_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "parse_failure_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "truncated_output_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            }
+          }
+        },
+        "return_after_remediation": {
+          "runs": [
+            {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 1.0,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 1.0,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 1.0,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            }
+          ],
+          "summary": {
+            "acceptable_move_rate": {
+              "max": 1.0,
+              "mean": 1.0,
+              "min": 1.0
+            },
+            "cases": 5,
+            "difficulty_ok_rate": {
+              "max": 1.0,
+              "mean": 1.0,
+              "min": 1.0
+            },
+            "forbidden_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "forbidden_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "illegal_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "illegal_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "pace_ok_rate": {
+              "max": null,
+              "mean": null,
+              "min": null
+            },
+            "parse_failure_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "parse_failure_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "truncated_output_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            }
+          }
+        },
+        "uncertain_skip": {
+          "runs": [
+            {
+              "cases": 5,
+              "difficulty_ok_rate": null,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 1.0,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            {
+              "cases": 5,
+              "difficulty_ok_rate": null,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 1.0,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            {
+              "cases": 5,
+              "difficulty_ok_rate": null,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 1.0,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            }
+          ],
+          "summary": {
+            "acceptable_move_rate": {
+              "max": 1.0,
+              "mean": 1.0,
+              "min": 1.0
+            },
+            "cases": 5,
+            "difficulty_ok_rate": {
+              "max": null,
+              "mean": null,
+              "min": null
+            },
+            "forbidden_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "forbidden_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "illegal_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "illegal_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "pace_ok_rate": {
+              "max": 1.0,
+              "mean": 1.0,
+              "min": 1.0
+            },
+            "parse_failure_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            },
+            "parse_failure_rate": {
+              "max": 0.0,
+              "mean": 0.0,
+              "min": 0.0
+            },
+            "truncated_output_count": {
+              "max": 0,
+              "mean": 0.0,
+              "min": 0
+            }
+          }
+        }
+      },
+      "forbidden_case_ids": [
+        "DC02"
+      ],
+      "forbidden_case_ids_by_run": [
+        {
+          "case_ids": [
+            "DC02"
+          ],
+          "run": 1
+        },
+        {
+          "case_ids": [
+            "DC02"
+          ],
+          "run": 2
+        },
+        {
+          "case_ids": [
+            "DC02"
+          ],
+          "run": 3
+        }
+      ],
+      "model_id": "gpt-6.1-sol",
+      "overall": {
+        "runs": [
+          {
+            "cases": 30,
+            "difficulty_ok_rate": 1.0,
+            "forbidden_count": 1,
+            "forbidden_rate": 0.03333333333333333,
+            "illegal_count": 0,
+            "illegal_rate": 0.0,
+            "move_ok_rate": 0.8333333333333334,
+            "pace_ok_rate": 1.0,
+            "parse_failure_count": 0,
+            "parse_failure_rate": 0.0,
+            "truncated_output_count": 0
+          },
+          {
+            "cases": 30,
+            "difficulty_ok_rate": 1.0,
+            "forbidden_count": 1,
+            "forbidden_rate": 0.03333333333333333,
+            "illegal_count": 0,
+            "illegal_rate": 0.0,
+            "move_ok_rate": 0.8333333333333334,
+            "pace_ok_rate": 1.0,
+            "parse_failure_count": 0,
+            "parse_failure_rate": 0.0,
+            "truncated_output_count": 0
+          },
+          {
+            "cases": 30,
+            "difficulty_ok_rate": 1.0,
+            "forbidden_count": 1,
+            "forbidden_rate": 0.03333333333333333,
+            "illegal_count": 0,
+            "illegal_rate": 0.0,
+            "move_ok_rate": 0.8666666666666667,
+            "pace_ok_rate": 1.0,
+            "parse_failure_count": 0,
+            "parse_failure_rate": 0.0,
+            "truncated_output_count": 0
+          }
+        ],
+        "summary": {
+          "acceptable_move_rate": {
+            "max": 0.8666666666666667,
+            "mean": 0.8444444444444444,
+            "min": 0.8333333333333334
+          },
+          "cases": 30,
+          "difficulty_ok_rate": {
+            "max": 1.0,
+            "mean": 1.0,
+            "min": 1.0
+          },
+          "forbidden_count": {
+            "max": 1,
+            "mean": 1.0,
+            "min": 1
+          },
+          "forbidden_rate": {
+            "max": 0.03333333333333333,
+            "mean": 0.03333333333333333,
+            "min": 0.03333333333333333
+          },
+          "illegal_count": {
+            "max": 0,
+            "mean": 0.0,
+            "min": 0
+          },
+          "illegal_rate": {
+            "max": 0.0,
+            "mean": 0.0,
+            "min": 0.0
+          },
+          "pace_ok_rate": {
+            "max": 1.0,
+            "mean": 1.0,
+            "min": 1.0
+          },
+          "parse_failure_count": {
+            "max": 0,
+            "mean": 0.0,
+            "min": 0
+          },
+          "parse_failure_rate": {
+            "max": 0.0,
+            "mean": 0.0,
+            "min": 0.0
+          },
+          "truncated_output_count": {
+            "max": 0,
+            "mean": 0.0,
+            "min": 0
+          }
+        }
+      },
+      "provider": "OpenAI",
+      "request_configuration": {
+        "base_url": "https://api.openai.com/v1",
+        "effective_temperature": 1,
+        "max_completion_tokens": 4000,
+        "max_token_field": "max_completion_tokens",
+        "reasoning_effort": "not set",
+        "temperature_field": "omitted"
+      },
+      "run_count": 3,
+      "runs": [
+        {
+          "cases": [
+            {
+              "case_id": "DC01",
+              "category": "known_topic_readiness",
+              "difficulty": "hard",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHALLENGE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC02",
+              "category": "known_topic_readiness",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": true,
+              "illegal": false,
+              "move": "EXPLAIN_CONCEPT",
+              "move_ok": false,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC03",
+              "category": "known_topic_readiness",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC04",
+              "category": "known_topic_readiness",
+              "difficulty": "medium",
+              "difficulty_ok": true,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC05",
+              "category": "known_topic_readiness",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC06",
+              "category": "confident_misconception",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC07",
+              "category": "confident_misconception",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "EXPLAIN_CONCEPT",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC08",
+              "category": "confident_misconception",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "EXPLAIN_CONCEPT",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC09",
+              "category": "confident_misconception",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": false,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC10",
+              "category": "confident_misconception",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC11",
+              "category": "uncertain_skip",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC12",
+              "category": "uncertain_skip",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC13",
+              "category": "uncertain_skip",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC14",
+              "category": "uncertain_skip",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC15",
+              "category": "uncertain_skip",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC16",
+              "category": "prerequisite_gap",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "EXPLAIN_CONCEPT",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC17",
+              "category": "prerequisite_gap",
+              "difficulty": "easy",
+              "difficulty_ok": true,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC18",
+              "category": "prerequisite_gap",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "EXPLAIN_CONCEPT",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC19",
+              "category": "prerequisite_gap",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": false,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC20",
+              "category": "prerequisite_gap",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC21",
+              "category": "faster_pace",
+              "difficulty": "medium",
+              "difficulty_ok": true,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PRACTICE",
+              "move_ok": true,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC22",
+              "category": "faster_pace",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": false,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC23",
+              "category": "faster_pace",
+              "difficulty": "hard",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHALLENGE",
+              "move_ok": true,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC24",
+              "category": "faster_pace",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": false,
+              "pace": "detailed",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC25",
+              "category": "faster_pace",
+              "difficulty": "hard",
+              "difficulty_ok": true,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHALLENGE",
+              "move_ok": true,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC26",
+              "category": "return_after_remediation",
+              "difficulty": "easy",
+              "difficulty_ok": true,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC27",
+              "category": "return_after_remediation",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC28",
+              "category": "return_after_remediation",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC29",
+              "category": "return_after_remediation",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC30",
+              "category": "return_after_remediation",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            }
+          ],
+          "categories": {
+            "confident_misconception": {
+              "cases": 5,
+              "difficulty_ok_rate": null,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.8,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            "faster_pace": {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.6,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            "known_topic_readiness": {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 1,
+              "forbidden_rate": 0.2,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.8,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            "prerequisite_gap": {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.8,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            "return_after_remediation": {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 1.0,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            "uncertain_skip": {
+              "cases": 5,
+              "difficulty_ok_rate": null,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 1.0,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            }
+          },
+          "forbidden_case_ids": [
+            "DC02"
+          ],
+          "overall": {
+            "cases": 30,
+            "difficulty_ok_rate": 1.0,
+            "forbidden_count": 1,
+            "forbidden_rate": 0.03333333333333333,
+            "illegal_count": 0,
+            "illegal_rate": 0.0,
+            "move_ok_rate": 0.8333333333333334,
+            "pace_ok_rate": 1.0,
+            "parse_failure_count": 0,
+            "parse_failure_rate": 0.0,
+            "truncated_output_count": 0
+          },
+          "run": 1
+        },
+        {
+          "cases": [
+            {
+              "case_id": "DC01",
+              "category": "known_topic_readiness",
+              "difficulty": "hard",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHALLENGE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC02",
+              "category": "known_topic_readiness",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": true,
+              "illegal": false,
+              "move": "EXPLAIN_CONCEPT",
+              "move_ok": false,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC03",
+              "category": "known_topic_readiness",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC04",
+              "category": "known_topic_readiness",
+              "difficulty": "medium",
+              "difficulty_ok": true,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC05",
+              "category": "known_topic_readiness",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC06",
+              "category": "confident_misconception",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC07",
+              "category": "confident_misconception",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "EXPLAIN_CONCEPT",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC08",
+              "category": "confident_misconception",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC09",
+              "category": "confident_misconception",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": false,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC10",
+              "category": "confident_misconception",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC11",
+              "category": "uncertain_skip",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC12",
+              "category": "uncertain_skip",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC13",
+              "category": "uncertain_skip",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC14",
+              "category": "uncertain_skip",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC15",
+              "category": "uncertain_skip",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC16",
+              "category": "prerequisite_gap",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "EXPLAIN_CONCEPT",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC17",
+              "category": "prerequisite_gap",
+              "difficulty": "easy",
+              "difficulty_ok": true,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC18",
+              "category": "prerequisite_gap",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "EXPLAIN_CONCEPT",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC19",
+              "category": "prerequisite_gap",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": false,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC20",
+              "category": "prerequisite_gap",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC21",
+              "category": "faster_pace",
+              "difficulty": "medium",
+              "difficulty_ok": true,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PRACTICE",
+              "move_ok": true,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC22",
+              "category": "faster_pace",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": false,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC23",
+              "category": "faster_pace",
+              "difficulty": "hard",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHALLENGE",
+              "move_ok": true,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC24",
+              "category": "faster_pace",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": false,
+              "pace": "detailed",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC25",
+              "category": "faster_pace",
+              "difficulty": "hard",
+              "difficulty_ok": true,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHALLENGE",
+              "move_ok": true,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC26",
+              "category": "return_after_remediation",
+              "difficulty": "easy",
+              "difficulty_ok": true,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC27",
+              "category": "return_after_remediation",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC28",
+              "category": "return_after_remediation",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC29",
+              "category": "return_after_remediation",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC30",
+              "category": "return_after_remediation",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            }
+          ],
+          "categories": {
+            "confident_misconception": {
+              "cases": 5,
+              "difficulty_ok_rate": null,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.8,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            "faster_pace": {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.6,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            "known_topic_readiness": {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 1,
+              "forbidden_rate": 0.2,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.8,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            "prerequisite_gap": {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.8,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            "return_after_remediation": {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 1.0,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            "uncertain_skip": {
+              "cases": 5,
+              "difficulty_ok_rate": null,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 1.0,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            }
+          },
+          "forbidden_case_ids": [
+            "DC02"
+          ],
+          "overall": {
+            "cases": 30,
+            "difficulty_ok_rate": 1.0,
+            "forbidden_count": 1,
+            "forbidden_rate": 0.03333333333333333,
+            "illegal_count": 0,
+            "illegal_rate": 0.0,
+            "move_ok_rate": 0.8333333333333334,
+            "pace_ok_rate": 1.0,
+            "parse_failure_count": 0,
+            "parse_failure_rate": 0.0,
+            "truncated_output_count": 0
+          },
+          "run": 2
+        },
+        {
+          "cases": [
+            {
+              "case_id": "DC01",
+              "category": "known_topic_readiness",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC02",
+              "category": "known_topic_readiness",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": true,
+              "illegal": false,
+              "move": "EXPLAIN_CONCEPT",
+              "move_ok": false,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC03",
+              "category": "known_topic_readiness",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC04",
+              "category": "known_topic_readiness",
+              "difficulty": "medium",
+              "difficulty_ok": true,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC05",
+              "category": "known_topic_readiness",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC06",
+              "category": "confident_misconception",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC07",
+              "category": "confident_misconception",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "EXPLAIN_CONCEPT",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC08",
+              "category": "confident_misconception",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "EXPLAIN_CONCEPT",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC09",
+              "category": "confident_misconception",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": false,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC10",
+              "category": "confident_misconception",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC11",
+              "category": "uncertain_skip",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC12",
+              "category": "uncertain_skip",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC13",
+              "category": "uncertain_skip",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC14",
+              "category": "uncertain_skip",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC15",
+              "category": "uncertain_skip",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC16",
+              "category": "prerequisite_gap",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "EXPLAIN_CONCEPT",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC17",
+              "category": "prerequisite_gap",
+              "difficulty": "easy",
+              "difficulty_ok": true,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC18",
+              "category": "prerequisite_gap",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "EXPLAIN_CONCEPT",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC19",
+              "category": "prerequisite_gap",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "HINT",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC20",
+              "category": "prerequisite_gap",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC21",
+              "category": "faster_pace",
+              "difficulty": "medium",
+              "difficulty_ok": true,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PRACTICE",
+              "move_ok": true,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC22",
+              "category": "faster_pace",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": false,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC23",
+              "category": "faster_pace",
+              "difficulty": "hard",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHALLENGE",
+              "move_ok": true,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC24",
+              "category": "faster_pace",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": false,
+              "pace": "detailed",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC25",
+              "category": "faster_pace",
+              "difficulty": "hard",
+              "difficulty_ok": true,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHALLENGE",
+              "move_ok": true,
+              "pace": "concise",
+              "pace_ok": true,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC26",
+              "category": "return_after_remediation",
+              "difficulty": "easy",
+              "difficulty_ok": true,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC27",
+              "category": "return_after_remediation",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PRACTICE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC28",
+              "category": "return_after_remediation",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "PROBE",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC29",
+              "category": "return_after_remediation",
+              "difficulty": "medium",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            },
+            {
+              "case_id": "DC30",
+              "category": "return_after_remediation",
+              "difficulty": "easy",
+              "difficulty_ok": null,
+              "forbidden": false,
+              "illegal": false,
+              "move": "CHECK_MASTERY",
+              "move_ok": true,
+              "pace": "normal",
+              "pace_ok": null,
+              "parse_failure": false,
+              "truncated": false
+            }
+          ],
+          "categories": {
+            "confident_misconception": {
+              "cases": 5,
+              "difficulty_ok_rate": null,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.8,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            "faster_pace": {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.6,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            "known_topic_readiness": {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 1,
+              "forbidden_rate": 0.2,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 0.8,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            "prerequisite_gap": {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 1.0,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            "return_after_remediation": {
+              "cases": 5,
+              "difficulty_ok_rate": 1.0,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 1.0,
+              "pace_ok_rate": null,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            },
+            "uncertain_skip": {
+              "cases": 5,
+              "difficulty_ok_rate": null,
+              "forbidden_count": 0,
+              "forbidden_rate": 0.0,
+              "illegal_count": 0,
+              "illegal_rate": 0.0,
+              "move_ok_rate": 1.0,
+              "pace_ok_rate": 1.0,
+              "parse_failure_count": 0,
+              "parse_failure_rate": 0.0,
+              "truncated_output_count": 0
+            }
+          },
+          "forbidden_case_ids": [
+            "DC02"
+          ],
+          "overall": {
+            "cases": 30,
+            "difficulty_ok_rate": 1.0,
+            "forbidden_count": 1,
+            "forbidden_rate": 0.03333333333333333,
+            "illegal_count": 0,
+            "illegal_rate": 0.0,
+            "move_ok_rate": 0.8666666666666667,
+            "pace_ok_rate": 1.0,
+            "parse_failure_count": 0,
+            "parse_failure_rate": 0.0,
+            "truncated_output_count": 0
+          },
+          "run": 3
+        }
+      ],
+      "status": "completed"
+    },
+    "qwen3p8_27b": {
+      "base_model_id": "accounts/fireworks/models/qwen3p8-27b",
+      "cases": [
+        {
+          "case_id": "DC01",
+          "category": "known_topic_readiness",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHALLENGE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC02",
+          "category": "known_topic_readiness",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC03",
+          "category": "known_topic_readiness",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHECK_MASTERY",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC04",
+          "category": "known_topic_readiness",
+          "difficulty": "medium",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC05",
+          "category": "known_topic_readiness",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC06",
+          "category": "confident_misconception",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC07",
+          "category": "confident_misconception",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC08",
+          "category": "confident_misconception",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC09",
+          "category": "confident_misconception",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC10",
+          "category": "confident_misconception",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC11",
+          "category": "uncertain_skip",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHECK_MASTERY",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC12",
+          "category": "uncertain_skip",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC13",
+          "category": "uncertain_skip",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC14",
+          "category": "uncertain_skip",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC15",
+          "category": "uncertain_skip",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHECK_MASTERY",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC16",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC17",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC18",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC19",
+          "category": "prerequisite_gap",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC20",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC21",
+          "category": "faster_pace",
+          "difficulty": "medium",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC22",
+          "category": "faster_pace",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": false,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC23",
+          "category": "faster_pace",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHALLENGE",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC24",
+          "category": "faster_pace",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": true,
+          "pace": "detailed",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC25",
+          "category": "faster_pace",
+          "difficulty": "medium",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC26",
+          "category": "return_after_remediation",
+          "difficulty": "easy",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "WORKED_EXAMPLE",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC27",
+          "category": "return_after_remediation",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC28",
+          "category": "return_after_remediation",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC29",
+          "category": "return_after_remediation",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC30",
+          "category": "return_after_remediation",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHECK_MASTERY",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        }
+      ],
+      "categories": {
+        "confident_misconception": {
+          "cases": 5,
+          "difficulty_ok_rate": null,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.4,
+          "pace_ok_rate": null,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "faster_pace": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.8,
+          "pace_ok_rate": 1.0,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "known_topic_readiness": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 1.0,
+          "pace_ok_rate": 1.0,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "prerequisite_gap": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.8,
+          "pace_ok_rate": null,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "return_after_remediation": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.8,
+          "pace_ok_rate": null,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "uncertain_skip": {
+          "cases": 5,
+          "difficulty_ok_rate": null,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 1.0,
+          "pace_ok_rate": 1.0,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        }
+      },
+      "deployment": {
+        "deployment_shape": "accounts/fireworks/deploymentShapes/sva2n3mh/versions/k9aui8v2",
+        "hardware": "1x NVIDIA H100 80GB BF16",
+        "lifecycle": "Temporary on-demand deployment; deleted after the run.",
+        "serverless_inference": {
+          "available": false,
+          "http_status": 404
+        }
+      },
+      "deployment_note": "Qwen was scored on a temporary on-demand deployment because serverless inference is not offered; the deployment was deleted after the run.",
+      "forbidden_case_ids": [],
+      "model_id": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
+      "overall": {
+        "cases": 30,
+        "difficulty_ok_rate": 1.0,
+        "forbidden_count": 0,
+        "forbidden_rate": 0.0,
+        "illegal_count": 0,
+        "illegal_rate": 0.0,
+        "move_ok_rate": 0.8,
+        "pace_ok_rate": 1.0,
+        "parse_failure_count": 0,
+        "parse_failure_rate": 0.0,
+        "truncated_output_count": 0
+      },
+      "provider": "Fireworks",
+      "request_configuration": {
+        "max_tokens": 8192,
+        "model_string": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
+        "provider": "Fireworks on-demand deployment",
+        "run_count": 1,
+        "run_date": "2026-11-02",
+        "temperature": 0
+      },
+      "run_count": 1,
+      "status": "completed"
+    },
+    "random": {
+      "cases": [
+        {
+          "case_id": "DC01",
+          "category": "known_topic_readiness",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": true,
+          "illegal": false,
+          "move": "WORKED_EXAMPLE",
+          "move_ok": false,
+          "pace": "concise",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC02",
+          "category": "known_topic_readiness",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": true,
+          "illegal": false,
+          "move": "WORKED_EXAMPLE",
+          "move_ok": false,
+          "pace": "concise",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC03",
+          "category": "known_topic_readiness",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHECK_MASTERY",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": false,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC04",
+          "category": "known_topic_readiness",
+          "difficulty": "medium",
+          "difficulty_ok": true,
+          "forbidden": true,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": false,
+          "pace": "detailed",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC05",
+          "category": "known_topic_readiness",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHECK_MASTERY",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC06",
+          "category": "confident_misconception",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": false,
+          "pace": "concise",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC07",
+          "category": "confident_misconception",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC08",
+          "category": "confident_misconception",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC09",
+          "category": "confident_misconception",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC10",
+          "category": "confident_misconception",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC11",
+          "category": "uncertain_skip",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "detailed",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC12",
+          "category": "uncertain_skip",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": false,
+          "pace": "concise",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC13",
+          "category": "uncertain_skip",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "WORKED_EXAMPLE",
+          "move_ok": true,
+          "pace": "detailed",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC14",
+          "category": "uncertain_skip",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC15",
+          "category": "uncertain_skip",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": true,
+          "illegal": false,
+          "move": "WORKED_EXAMPLE",
+          "move_ok": false,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC16",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "WORKED_EXAMPLE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC17",
+          "category": "prerequisite_gap",
+          "difficulty": "medium",
+          "difficulty_ok": false,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC18",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": true,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": false,
+          "pace": "concise",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC19",
+          "category": "prerequisite_gap",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC20",
+          "category": "prerequisite_gap",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC21",
+          "category": "faster_pace",
+          "difficulty": "easy",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "WORKED_EXAMPLE",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": false,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC22",
+          "category": "faster_pace",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": false,
+          "pace": "detailed",
+          "pace_ok": false,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC23",
+          "category": "faster_pace",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": false,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC24",
+          "category": "faster_pace",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "WORKED_EXAMPLE",
+          "move_ok": true,
+          "pace": "detailed",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC25",
+          "category": "faster_pace",
+          "difficulty": "medium",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "detailed",
+          "pace_ok": false,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC26",
+          "category": "return_after_remediation",
+          "difficulty": "medium",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC27",
+          "category": "return_after_remediation",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "EXPLAIN_CONCEPT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC28",
+          "category": "return_after_remediation",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "detailed",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC29",
+          "category": "return_after_remediation",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": true,
+          "illegal": false,
+          "move": "WORKED_EXAMPLE",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC30",
+          "category": "return_after_remediation",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHECK_MASTERY",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        }
+      ],
+      "categories": {
+        "confident_misconception": {
+          "cases": 5,
+          "difficulty_ok_rate": null,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.2,
+          "pace_ok_rate": null,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "faster_pace": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.4,
+          "pace_ok_rate": 0.4,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "known_topic_readiness": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 3,
+          "forbidden_rate": 0.6,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.4,
+          "pace_ok_rate": 0.0,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "prerequisite_gap": {
+          "cases": 5,
+          "difficulty_ok_rate": 0.0,
+          "forbidden_count": 1,
+          "forbidden_rate": 0.2,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.6,
+          "pace_ok_rate": null,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "return_after_remediation": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 1,
+          "forbidden_rate": 0.2,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.6,
+          "pace_ok_rate": null,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "uncertain_skip": {
+          "cases": 5,
+          "difficulty_ok_rate": null,
+          "forbidden_count": 1,
+          "forbidden_rate": 0.2,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.4,
+          "pace_ok_rate": 1.0,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        }
+      },
+      "forbidden_case_ids": [
+        "DC01",
+        "DC02",
+        "DC04",
+        "DC15",
+        "DC18",
+        "DC29"
+      ],
+      "model_id": null,
+      "overall": {
+        "cases": 30,
+        "difficulty_ok_rate": 0.8,
+        "forbidden_count": 6,
+        "forbidden_rate": 0.2,
+        "illegal_count": 0,
+        "illegal_rate": 0.0,
+        "move_ok_rate": 0.43333333333333335,
+        "pace_ok_rate": 0.42857142857142855,
+        "parse_failure_count": 0,
+        "parse_failure_rate": 0.0,
+        "truncated_output_count": 0
+      },
+      "run_count": 1,
+      "status": "completed"
+    },
+    "rules": {
+      "cases": [
+        {
+          "case_id": "DC01",
+          "category": "known_topic_readiness",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHECK_MASTERY",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC02",
+          "category": "known_topic_readiness",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC03",
+          "category": "known_topic_readiness",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC04",
+          "category": "known_topic_readiness",
+          "difficulty": "medium",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC05",
+          "category": "known_topic_readiness",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC06",
+          "category": "confident_misconception",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC07",
+          "category": "confident_misconception",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC08",
+          "category": "confident_misconception",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC09",
+          "category": "confident_misconception",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC10",
+          "category": "confident_misconception",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC11",
+          "category": "uncertain_skip",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHECK_MASTERY",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC12",
+          "category": "uncertain_skip",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHECK_MASTERY",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC13",
+          "category": "uncertain_skip",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC14",
+          "category": "uncertain_skip",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC15",
+          "category": "uncertain_skip",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": false,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC16",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC17",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PROBE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC18",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC19",
+          "category": "prerequisite_gap",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": false,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC20",
+          "category": "prerequisite_gap",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC21",
+          "category": "faster_pace",
+          "difficulty": "medium",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": false,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC22",
+          "category": "faster_pace",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": false,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC23",
+          "category": "faster_pace",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHECK_MASTERY",
+          "move_ok": true,
+          "pace": "concise",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC24",
+          "category": "faster_pace",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": true,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC25",
+          "category": "faster_pace",
+          "difficulty": "medium",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "CHECK_MASTERY",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": false,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC26",
+          "category": "return_after_remediation",
+          "difficulty": "easy",
+          "difficulty_ok": true,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC27",
+          "category": "return_after_remediation",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC28",
+          "category": "return_after_remediation",
+          "difficulty": "easy",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "HINT",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC29",
+          "category": "return_after_remediation",
+          "difficulty": "hard",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        },
+        {
+          "case_id": "DC30",
+          "category": "return_after_remediation",
+          "difficulty": "medium",
+          "difficulty_ok": null,
+          "forbidden": false,
+          "illegal": false,
+          "move": "PRACTICE",
+          "move_ok": true,
+          "pace": "normal",
+          "pace_ok": null,
+          "parse_failure": false,
+          "truncated": false
+        }
+      ],
+      "categories": {
+        "confident_misconception": {
+          "cases": 5,
+          "difficulty_ok_rate": null,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.2,
+          "pace_ok_rate": null,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "faster_pace": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 1.0,
+          "pace_ok_rate": 0.4,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "known_topic_readiness": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 1.0,
+          "pace_ok_rate": 1.0,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "prerequisite_gap": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.6,
+          "pace_ok_rate": null,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "return_after_remediation": {
+          "cases": 5,
+          "difficulty_ok_rate": 1.0,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 1.0,
+          "pace_ok_rate": null,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        },
+        "uncertain_skip": {
+          "cases": 5,
+          "difficulty_ok_rate": null,
+          "forbidden_count": 0,
+          "forbidden_rate": 0.0,
+          "illegal_count": 0,
+          "illegal_rate": 0.0,
+          "move_ok_rate": 0.6,
+          "pace_ok_rate": 1.0,
+          "parse_failure_count": 0,
+          "parse_failure_rate": 0.0,
+          "truncated_output_count": 0
+        }
+      },
+      "forbidden_case_ids": [],
+      "model_id": null,
+      "overall": {
+        "cases": 30,
+        "difficulty_ok_rate": 1.0,
+        "forbidden_count": 0,
+        "forbidden_rate": 0.0,
+        "illegal_count": 0,
+        "illegal_rate": 0.0,
+        "move_ok_rate": 0.7333333333333333,
+        "pace_ok_rate": 0.5714285714285714,
+        "parse_failure_count": 0,
+        "parse_failure_rate": 0.0,
+        "truncated_output_count": 0
+      },
+      "run_count": 1,
+      "status": "completed"
+    }
+  },
+  "random_policy_seed": 20250115,
+  "result_label": "one-step judged results, not learning outcomes",
+  "results_table": [
+    {
+      "acceptable_move_rate": {
+        "max": 0.7333333333333333,
+        "mean": 0.7333333333333333,
+        "min": 0.7333333333333333
+      },
+      "case_count": 30,
+      "category": "overall",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": 0.5714285714285714,
+        "mean": 0.5714285714285714,
+        "min": 0.5714285714285714
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "rules",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.2,
+        "mean": 0.2,
+        "min": 0.2
+      },
+      "case_count": 5,
+      "category": "confident_misconception",
+      "difficulty_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "rules",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "case_count": 5,
+      "category": "faster_pace",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": 0.4,
+        "mean": 0.4,
+        "min": 0.4
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "rules",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "case_count": 5,
+      "category": "known_topic_readiness",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "rules",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.6,
+        "mean": 0.6,
+        "min": 0.6
+      },
+      "case_count": 5,
+      "category": "prerequisite_gap",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "rules",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "case_count": 5,
+      "category": "return_after_remediation",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "rules",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.6,
+        "mean": 0.6,
+        "min": 0.6
+      },
+      "case_count": 5,
+      "category": "uncertain_skip",
+      "difficulty_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "rules",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.43333333333333335,
+        "mean": 0.43333333333333335,
+        "min": 0.43333333333333335
+      },
+      "case_count": 30,
+      "category": "overall",
+      "difficulty_ok_rate": {
+        "max": 0.8,
+        "mean": 0.8,
+        "min": 0.8
+      },
+      "forbidden_case_ids": [
+        "DC01",
+        "DC02",
+        "DC04",
+        "DC15",
+        "DC18",
+        "DC29"
+      ],
+      "forbidden_count": {
+        "max": 6,
+        "mean": 6,
+        "min": 6
+      },
+      "forbidden_rate": {
+        "max": 0.2,
+        "mean": 0.2,
+        "min": 0.2
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": 0.42857142857142855,
+        "mean": 0.42857142857142855,
+        "min": 0.42857142857142855
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "random",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.2,
+        "mean": 0.2,
+        "min": 0.2
+      },
+      "case_count": 5,
+      "category": "confident_misconception",
+      "difficulty_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "random",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.4,
+        "mean": 0.4,
+        "min": 0.4
+      },
+      "case_count": 5,
+      "category": "faster_pace",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": 0.4,
+        "mean": 0.4,
+        "min": 0.4
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "random",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.4,
+        "mean": 0.4,
+        "min": 0.4
+      },
+      "case_count": 5,
+      "category": "known_topic_readiness",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [
+        "DC01",
+        "DC02",
+        "DC04"
+      ],
+      "forbidden_count": {
+        "max": 3,
+        "mean": 3,
+        "min": 3
+      },
+      "forbidden_rate": {
+        "max": 0.6,
+        "mean": 0.6,
+        "min": 0.6
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "random",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.6,
+        "mean": 0.6,
+        "min": 0.6
+      },
+      "case_count": 5,
+      "category": "prerequisite_gap",
+      "difficulty_ok_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "forbidden_case_ids": [
+        "DC18"
+      ],
+      "forbidden_count": {
+        "max": 1,
+        "mean": 1,
+        "min": 1
+      },
+      "forbidden_rate": {
+        "max": 0.2,
+        "mean": 0.2,
+        "min": 0.2
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "random",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.6,
+        "mean": 0.6,
+        "min": 0.6
+      },
+      "case_count": 5,
+      "category": "return_after_remediation",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [
+        "DC29"
+      ],
+      "forbidden_count": {
+        "max": 1,
+        "mean": 1,
+        "min": 1
+      },
+      "forbidden_rate": {
+        "max": 0.2,
+        "mean": 0.2,
+        "min": 0.2
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "random",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.4,
+        "mean": 0.4,
+        "min": 0.4
+      },
+      "case_count": 5,
+      "category": "uncertain_skip",
+      "difficulty_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "forbidden_case_ids": [
+        "DC15"
+      ],
+      "forbidden_count": {
+        "max": 1,
+        "mean": 1,
+        "min": 1
+      },
+      "forbidden_rate": {
+        "max": 0.2,
+        "mean": 0.2,
+        "min": 0.2
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "random",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.4666666666666667,
+        "mean": 0.4666666666666667,
+        "min": 0.4666666666666667
+      },
+      "case_count": 30,
+      "category": "overall",
+      "difficulty_ok_rate": {
+        "max": 0.6,
+        "mean": 0.6,
+        "min": 0.6
+      },
+      "forbidden_case_ids": [
+        "DC01",
+        "DC03",
+        "DC04",
+        "DC05",
+        "DC14",
+        "DC25",
+        "DC27"
+      ],
+      "forbidden_count": {
+        "max": 7,
+        "mean": 7,
+        "min": 7
+      },
+      "forbidden_rate": {
+        "max": 0.23333333333333334,
+        "mean": 0.23333333333333334,
+        "min": 0.23333333333333334
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": 0.5714285714285714,
+        "mean": 0.5714285714285714,
+        "min": 0.5714285714285714
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "always_hint",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.2,
+        "mean": 0.2,
+        "min": 0.2
+      },
+      "case_count": 5,
+      "category": "confident_misconception",
+      "difficulty_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "always_hint",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.4,
+        "mean": 0.4,
+        "min": 0.4
+      },
+      "case_count": 5,
+      "category": "faster_pace",
+      "difficulty_ok_rate": {
+        "max": 0.5,
+        "mean": 0.5,
+        "min": 0.5
+      },
+      "forbidden_case_ids": [
+        "DC25"
+      ],
+      "forbidden_count": {
+        "max": 1,
+        "mean": 1,
+        "min": 1
+      },
+      "forbidden_rate": {
+        "max": 0.2,
+        "mean": 0.2,
+        "min": 0.2
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": 0.4,
+        "mean": 0.4,
+        "min": 0.4
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "always_hint",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.2,
+        "mean": 0.2,
+        "min": 0.2
+      },
+      "case_count": 5,
+      "category": "known_topic_readiness",
+      "difficulty_ok_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "forbidden_case_ids": [
+        "DC01",
+        "DC03",
+        "DC04",
+        "DC05"
+      ],
+      "forbidden_count": {
+        "max": 4,
+        "mean": 4,
+        "min": 4
+      },
+      "forbidden_rate": {
+        "max": 0.8,
+        "mean": 0.8,
+        "min": 0.8
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "always_hint",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "case_count": 5,
+      "category": "prerequisite_gap",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "always_hint",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.4,
+        "mean": 0.4,
+        "min": 0.4
+      },
+      "case_count": 5,
+      "category": "return_after_remediation",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [
+        "DC27"
+      ],
+      "forbidden_count": {
+        "max": 1,
+        "mean": 1,
+        "min": 1
+      },
+      "forbidden_rate": {
+        "max": 0.2,
+        "mean": 0.2,
+        "min": 0.2
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "always_hint",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.6,
+        "mean": 0.6,
+        "min": 0.6
+      },
+      "case_count": 5,
+      "category": "uncertain_skip",
+      "difficulty_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "forbidden_case_ids": [
+        "DC14"
+      ],
+      "forbidden_count": {
+        "max": 1,
+        "mean": 1,
+        "min": 1
+      },
+      "forbidden_rate": {
+        "max": 0.2,
+        "mean": 0.2,
+        "min": 0.2
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": null,
+      "pace_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "always_hint",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.8666666666666667,
+        "mean": 0.8444444444444444,
+        "min": 0.8333333333333334
+      },
+      "case_count": 30,
+      "category": "overall",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [
+        "DC02"
+      ],
+      "forbidden_count": {
+        "max": 1,
+        "mean": 1.0,
+        "min": 1
+      },
+      "forbidden_rate": {
+        "max": 0.03333333333333333,
+        "mean": 0.03333333333333333,
+        "min": 0.03333333333333333
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": "gpt-6.1-sol",
+      "pace_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "gpt_6.1-sol",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.8,
+        "mean": 0.8000000000000002,
+        "min": 0.8
+      },
+      "case_count": 5,
+      "category": "confident_misconception",
+      "difficulty_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": "gpt-6.1-sol",
+      "pace_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "gpt_6.1-sol",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.6,
+        "mean": 0.6,
+        "min": 0.6
+      },
+      "case_count": 5,
+      "category": "faster_pace",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": "gpt-6.1-sol",
+      "pace_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "gpt_6.1-sol",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.8,
+        "mean": 0.8000000000000002,
+        "min": 0.8
+      },
+      "case_count": 5,
+      "category": "known_topic_readiness",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [
+        "DC02"
+      ],
+      "forbidden_count": {
+        "max": 1,
+        "mean": 1.0,
+        "min": 1
+      },
+      "forbidden_rate": {
+        "max": 0.2,
+        "mean": 0.20000000000000004,
+        "min": 0.2
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": "gpt-6.1-sol",
+      "pace_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "gpt_6.1-sol",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 1.0,
+        "mean": 0.8666666666666667,
+        "min": 0.8
+      },
+      "case_count": 5,
+      "category": "prerequisite_gap",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": "gpt-6.1-sol",
+      "pace_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "gpt_6.1-sol",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "case_count": 5,
+      "category": "return_after_remediation",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": "gpt-6.1-sol",
+      "pace_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "gpt_6.1-sol",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "case_count": 5,
+      "category": "uncertain_skip",
+      "difficulty_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": "gpt-6.1-sol",
+      "pace_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "gpt_6.1-sol",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0.0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.8,
+        "mean": 0.8,
+        "min": 0.8
+      },
+      "case_count": 30,
+      "category": "overall",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
+      "pace_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "qwen3p8-27b",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.4,
+        "mean": 0.4,
+        "min": 0.4
+      },
+      "case_count": 5,
+      "category": "confident_misconception",
+      "difficulty_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
+      "pace_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "qwen3p8-27b",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.8,
+        "mean": 0.8,
+        "min": 0.8
+      },
+      "case_count": 5,
+      "category": "faster_pace",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
+      "pace_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "qwen3p8-27b",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "case_count": 5,
+      "category": "known_topic_readiness",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
+      "pace_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "qwen3p8-27b",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.8,
+        "mean": 0.8,
+        "min": 0.8
+      },
+      "case_count": 5,
+      "category": "prerequisite_gap",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
+      "pace_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "qwen3p8-27b",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 0.8,
+        "mean": 0.8,
+        "min": 0.8
+      },
+      "case_count": 5,
+      "category": "return_after_remediation",
+      "difficulty_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
+      "pace_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "qwen3p8-27b",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    },
+    {
+      "acceptable_move_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "case_count": 5,
+      "category": "uncertain_skip",
+      "difficulty_ok_rate": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "forbidden_case_ids": [],
+      "forbidden_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "forbidden_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "illegal_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "illegal_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "model_id": "accounts/fireworks/models/qwen3p8-27b#accounts/peli/deployments/tuturing-qwen38-bench2",
+      "pace_ok_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "parse_failure_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      },
+      "parse_failure_rate": {
+        "max": 0.0,
+        "mean": 0.0,
+        "min": 0.0
+      },
+      "policy": "qwen3p8-27b",
+      "status": "completed",
+      "truncated_output_count": {
+        "max": 0,
+        "mean": 0,
+        "min": 0
+      }
+    }
+  ],
+  "rules_context_mapping": [
+    {
+      "case_state_source": "active_item.difficulty; defaults to medium when no active item exists",
+      "episode_definition": "active_item.family.difficulty, or medium without an active item.",
+      "rules_key": "active_item_difficulty"
+    },
+    {
+      "case_state_source": "concepts[current_concept_id].mastery; defaults to 0.35 when absent",
+      "episode_definition": "beliefs[current_concept_id].mastery.",
+      "rules_key": "mastery"
+    },
+    {
+      "case_state_source": "pace_preference; defaults to normal",
+      "episode_definition": "scenario/private-student pace preference.",
+      "rules_key": "pace_preference"
+    },
+    {
+      "case_state_source": "Reconstruct the skip deadline from option_type == SKIP_TO_TARGET, teaching_turns, and option_turns; mark done when previous_move == CHECK_MASTERY",
+      "episode_definition": "Call packages.learning.scheduler.skip_diagnostic_due with the episode's skip_diagnostic_deadline and skip_diagnostic_done at the current turn.",
+      "rules_key": "skip_diagnostic_due"
+    },
+    {
+      "case_state_source": "No corresponding case-state quantity; set false",
+      "episode_definition": "Constant false in _active_context.",
+      "rules_key": "unsupported_advancement"
+    },
+    {
+      "case_state_source": "No corresponding case-state quantity; set false",
+      "episode_definition": "Constant false in _active_context.",
+      "rules_key": "wants_certification"
+    },
+    {
+      "case_state_source": "independent_success_streak; defaults to 0",
+      "episode_definition": "Episode's current consecutive independent-correct-answer counter.",
+      "rules_key": "independent_success_streak"
+    },
+    {
+      "case_state_source": "No matching case-state quantity; preserve the policy's falsey absent-key default",
+      "episode_definition": "Not populated by _active_context; RulesStrategist reads it as an optional signal.",
+      "rules_key": "repeated_unsuccessful_hints"
+    },
+    {
+      "case_state_source": "No matching case-state quantity; preserve default 0 (hint_count counts hints sent, not unsuccessful assisted answers)",
+      "episode_definition": "Episode's unsuccessful assisted-answer counter.",
+      "rules_key": "unsuccessful_hint_count"
+    },
+    {
+      "case_state_source": "explicit_request == hint or active_item.answered == incorrect",
+      "episode_definition": "True after an independent incorrect answer or explicit hint request; reset after an independent correct answer. Case state does not carry a separate assistance/independence flag.",
+      "rules_key": "meaningful_error"
+    },
+    {
+      "case_state_source": "No matching streak/history quantity; preserve default 0",
+      "episode_definition": "Episode's current consecutive independent-incorrect-answer counter.",
+      "rules_key": "independent_failure_streak"
+    },
+    {
+      "case_state_source": "Preserve the existing teaching_turns == 0 proxy; case state lacks complete diagnostic history",
+      "episode_definition": "Whether a diagnostic has occurred in the episode.",
+      "rules_key": "no_diagnostic_yet"
+    }
+  ],
+  "source_cases": "evaluation/learning/decision_cases_v1.jsonl"
+}
