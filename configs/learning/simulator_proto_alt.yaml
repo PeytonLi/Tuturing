@@ -58,6 +58,18 @@ profiles:
     ell: [0.04, 0.10]
     help_seeking_probability: 0.15
     preferred_pace: detailed
+  # Train-only strong learners (data/scenarios/proto_v1_strong.yaml); assumptions, not calibrated.
+  strong_all:
+    concept_mastery: [0.65, 0.85]
+    ell: [0.04, 0.10]
+    help_seeking_probability: 0.02
+    preferred_pace: normal
+  strong_goal:
+    concept_mastery: [0.35, 0.55]
+    goal_mastery: [0.7, 0.85]
+    ell: [0.04, 0.10]
+    help_seeking_probability: 0.02
+    preferred_pace: normal
 observation:
   item_format: free_response
   guess: [0.05, 0.10]

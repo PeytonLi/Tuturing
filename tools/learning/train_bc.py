@@ -15,9 +15,12 @@ from packages.policies.network import (
     save_checkpoint,
     torch,
 )
+from packages.policies.rules import KnownAwareRulesStrategist
+from packages.simulator.scenarios import load_scenarios
 from packages.simulator.student import DEFAULT_SIMULATOR_CONFIG
 
 ROOT = Path(__file__).resolve().parents[2]
+TEACHERS = {"rules": lambda: None, "rules_known_aware": KnownAwareRulesStrategist}
 
 
 def discounted_episode_returns(transitions: list[dict], gamma: float) -> list[float]:
@@ -99,6 +102,11 @@ def main() -> None:
         split="train",
         seed=seed,
         strategist_name="rules",
+        strategist=TEACHERS[config.get("teacher", "rules")](),
+        scenarios=load_scenarios(
+            include_pace_scenarios=bool(config.get("include_pace_scenarios", False)),
+            include_strong_scenarios=bool(config.get("include_strong_scenarios", False)),
+        ),
         run_id=f"{config['run_name']}-seed{seed}",
         simulator_config=simulator_config,
     )
@@ -144,6 +152,7 @@ def main() -> None:
         "init": "scratch",
         "policy": "behavior_cloning",
         "simulator_config": simulator_config,
+        "teacher": config.get("teacher", "rules"),
     }
     save_checkpoint(model, run_dir / "bc.pt", metadata)
     metrics = {

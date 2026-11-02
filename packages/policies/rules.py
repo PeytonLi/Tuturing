@@ -6,6 +6,7 @@ from packages.learning.actions import (
     DIFFICULTIES,
     MOVES,
     PACES,
+    decode_strategist,
     encode_navigator,
     encode_strategist,
 )
@@ -157,6 +158,38 @@ class RulesStrategist:
             )
         ]
         return _first_valid(mask, preference)
+
+
+class KnownAwareRulesStrategist(RulesStrategist):
+    """Rules v3, but swaps teaching moves for practice when belief says the concept is known."""
+
+    policy_version = "rules_known_aware_strategist_v1"
+    TEACHING = ("HINT", "EXPLAIN_CONCEPT", "WORKED_EXAMPLE")
+
+    def __init__(self, known_threshold: float = 0.7) -> None:
+        self.known_threshold = known_threshold
+
+    def act(self, observation: list[float], mask: list[bool], context: dict) -> int:
+        action = super().act(observation, mask, context)
+        move, difficulty, pace = decode_strategist(action)
+        misconceptions = context.get("misconceptions", {})
+        if isinstance(misconceptions, dict):
+            values = misconceptions.values()
+        elif isinstance(misconceptions, (list, tuple)) and len(misconceptions) == 25:
+            values = misconceptions
+        else:
+            values = ()
+        likely_misconception = max((float(v) for v in values), default=0.0) >= 0.5
+        if (
+            move in self.TEACHING
+            and float(context.get("mastery", 0.0)) >= self.known_threshold
+            and not likely_misconception
+        ):
+            for candidate in ("PRACTICE", "CHECK_MASTERY"):
+                replacement = encode_strategist(candidate, "hard", pace)
+                if _valid(mask, replacement):
+                    return replacement
+        return action
 
 
 class RandomStrategist:

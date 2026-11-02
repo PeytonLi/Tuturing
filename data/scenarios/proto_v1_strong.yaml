@@ -1,0 +1,202 @@
+schema_version: scenarios_v1
+scenarios:
+- scenario_id: proto-scenario-41
+  scenario_family_id: proto-family-strong-all-41
+  split: train
+  goal_concept_id: C08
+  start_concept_id: C06
+  profile_id: strong_all
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-41
+  public_history: []
+  template_family_allowlist: &id001
+  - c01_teach_01
+  - c01_teach_02
+  - c02_teach_01
+  - c02_teach_02
+  - c03_teach_01
+  - c03_teach_02
+  - c06_teach_01
+  - c06_teach_02
+  - c08_teach_01
+  - c08_teach_02
+  - c01_assess_01
+  - c01_assess_04
+  - c02_assess_01
+  - c02_assess_04
+  - c03_assess_01
+  - c03_assess_04
+  - c06_assess_01
+  - c06_assess_04
+  - c08_assess_01
+  - c08_assess_04
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_strong
+- scenario_id: proto-scenario-42
+  scenario_family_id: proto-family-strong-all-42
+  split: train
+  goal_concept_id: C06
+  start_concept_id: C02
+  profile_id: strong_all
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-42
+  public_history: []
+  template_family_allowlist: *id001
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_strong
+- scenario_id: proto-scenario-43
+  scenario_family_id: proto-family-strong-all-43
+  split: train
+  goal_concept_id: C02
+  start_concept_id: C01
+  profile_id: strong_all
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-43
+  public_history: []
+  template_family_allowlist: *id001
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_strong
+- scenario_id: proto-scenario-44
+  scenario_family_id: proto-family-strong-all-44
+  split: train
+  goal_concept_id: C03
+  start_concept_id: C02
+  profile_id: strong_all
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-44
+  public_history: []
+  template_family_allowlist: *id001
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_strong
+- scenario_id: proto-scenario-45
+  scenario_family_id: proto-family-strong-all-45
+  split: train
+  goal_concept_id: C08
+  start_concept_id: C01
+  profile_id: strong_all
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-45
+  public_history: []
+  template_family_allowlist: *id001
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_strong
+- scenario_id: proto-scenario-46
+  scenario_family_id: proto-family-strong-all-46
+  split: train
+  goal_concept_id: C06
+  start_concept_id: C01
+  profile_id: strong_all
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-46
+  public_history: []
+  template_family_allowlist: *id001
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_strong
+- scenario_id: proto-scenario-47
+  scenario_family_id: proto-family-strong-goal-47
+  split: train
+  goal_concept_id: C08
+  start_concept_id: C06
+  profile_id: strong_goal
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-47
+  public_history: []
+  template_family_allowlist: *id001
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_strong
+- scenario_id: proto-scenario-48
+  scenario_family_id: proto-family-strong-goal-48
+  split: train
+  goal_concept_id: C06
+  start_concept_id: C02
+  profile_id: strong_goal
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-48
+  public_history: []
+  template_family_allowlist: *id001
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_strong
+- scenario_id: proto-scenario-49
+  scenario_family_id: proto-family-strong-goal-49
+  split: train
+  goal_concept_id: C02
+  start_concept_id: C01
+  profile_id: strong_goal
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-49
+  public_history: []
+  template_family_allowlist: *id001
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_strong
+- scenario_id: proto-scenario-50
+  scenario_family_id: proto-family-strong-goal-50
+  split: train
+  goal_concept_id: C03
+  start_concept_id: C02
+  profile_id: strong_goal
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-50
+  public_history: []
+  template_family_allowlist: *id001
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_strong
+- scenario_id: proto-scenario-51
+  scenario_family_id: proto-family-strong-goal-51
+  split: train
+  goal_concept_id: C08
+  start_concept_id: C01
+  profile_id: strong_goal
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-51
+  public_history: []
+  template_family_allowlist: *id001
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_strong
+- scenario_id: proto-scenario-52
+  scenario_family_id: proto-family-strong-goal-52
+  split: train
+  goal_concept_id: C06
+  start_concept_id: C01
+  profile_id: strong_goal
+  simulator_config_id: simulator_proto_v1
+  private_initial_state_ref: private-init-52
+  public_history: []
+  template_family_allowlist: *id001
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: proto_v1_strong

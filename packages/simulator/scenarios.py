@@ -11,12 +11,22 @@ DEFAULT_SCENARIOS_PATH = "data/scenarios/proto_v1.yaml"
 # Extra detail-preferring scenarios kept in a separate file so the frozen 30-scenario set, its
 # split order and its recorded hash stay unchanged; callers opt in with include_pace_scenarios.
 PACE_SCENARIOS_PATH = "data/scenarios/proto_v1_pace.yaml"
+# Train-only strong-learner scenarios (strong_all, strong_goal profiles), opt in with
+# include_strong_scenarios; same reasons as the pace file.
+STRONG_SCENARIOS_PATH = "data/scenarios/proto_v1_strong.yaml"
 
 
 def load_scenarios(
-    path: str | Path = DEFAULT_SCENARIOS_PATH, *, include_pace_scenarios: bool = False
+    path: str | Path = DEFAULT_SCENARIOS_PATH,
+    *,
+    include_pace_scenarios: bool = False,
+    include_strong_scenarios: bool = False,
 ) -> list[dict]:
-    paths = [path, PACE_SCENARIOS_PATH] if include_pace_scenarios else [path]
+    paths = [path]
+    if include_pace_scenarios:
+        paths.append(PACE_SCENARIOS_PATH)
+    if include_strong_scenarios:
+        paths.append(STRONG_SCENARIOS_PATH)
     scenarios = []
     for scenario_path in paths:
         document = yaml.safe_load((ROOT / scenario_path).read_text(encoding="utf-8"))

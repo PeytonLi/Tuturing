@@ -13,5 +13,25 @@
     "wall_seconds": 111,
     "cost_usd": 7.66,
     "cost_basis": "602342 input x $10/M + 32789 output x $50/M (configs/response/benchmark_v1.yaml pricing)"
+  },
+  "strategist_bc_strong_mix": {
+    "wall_seconds": 13.3,
+    "cost_usd": 0.0,
+    "cost_basis": "CPU only on the dev VM"
+  },
+  "strategist_bc_strong_mix_known": {
+    "wall_seconds": 13.3,
+    "cost_usd": 0.0,
+    "cost_basis": "CPU only on the dev VM"
+  },
+  "rules_known_aware": {
+    "wall_seconds": 13.3,
+    "cost_usd": 0.0,
+    "cost_basis": "CPU only on the dev VM"
+  },
+  "rules": {
+    "wall_seconds": 13.3,
+    "cost_usd": 0.0,
+    "cost_basis": "CPU only on the dev VM"
   }
 }
