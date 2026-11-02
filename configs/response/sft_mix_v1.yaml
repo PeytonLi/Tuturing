@@ -1,0 +1,17 @@
+dataset_id: mix_v1
+out_dir: data/sft/mix_v1            # ignored by Git, like every generated SFT file
+manifest_path: data/manifests/response/mix_v1.json
+seed: 20261102
+# PRD 13.2 proposed mix; the MathDial count follows the original count, capped by what passes.
+shares:
+  original: 0.6
+  mathdial: 0.4
+# Repeat every original example this many times per split (reported as repeated exposure).
+original_repeats: 1
+sources:
+  original:
+    dir: data/sft/original_v1
+    manifest: data/manifests/response/original_v1.json
+  mathdial:
+    dir: data/sft/mathdial_v1
+    manifest: data/manifests/response/mathdial_v1.json
