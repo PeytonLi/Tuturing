@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "request_id": "request-1",
+  "trace_id": "trace-1",
+  "code": "STATE_CONFLICT",
+  "message": "State version is stale.",
+  "retryable": true,
+  "current_state_version": 3
+}

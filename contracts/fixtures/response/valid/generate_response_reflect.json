@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "request_id": "request-reflect",
+  "plan_id": "plan-reflect",
+  "response_id": "response-ce0c44c2d951b1a522e93372",
+  "text": "Think about this previous step: You listed the sample space. What led you to it?",
+  "effective_move": {
+    "action_id": 67,
+    "move": "REFLECT",
+    "difficulty": "medium",
+    "pace": "normal"
+  },
+  "delivery_mode": "fallback",
+  "content_hash": "2fd9de29b02b831a6f2467b63734c0cbf87e6b7d85d9ef768db02eb33b8c15cb",
+  "checks": {
+    "schema_valid": true,
+    "action_faithful": true,
+    "math_supported": true,
+    "disclosure_allowed": true,
+    "length_valid": true,
+    "question_count_valid": true
+  },
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 15,
+    "elapsed_ms": 0
+  },
+  "versions": {
+    "response_artifact": "stub_v1",
+    "prompt": "stub_prompt_v1",
+    "validator": "stub_validator_v1"
+  }
+}
