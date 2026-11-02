@@ -1,9 +1,14 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import csv
 import json
+import math
 import random
+import shlex
+import subprocess
+import sys
 from pathlib import Path
 
 import yaml
@@ -32,6 +37,7 @@ METRIC_FIELDS = (
     "approx_kl",
     "clip_frac",
     "value_loss",
+    "anchor_kl",
 )
 
 
@@ -45,7 +51,65 @@ def episode_reward(result) -> float:
     return reward
 
 
-def _ppo_update(model, optimizer, samples, config, rng):
+def _git_sha() -> str | None:
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=ROOT,
+            capture_output=True,
+            check=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    return result.stdout.strip() or None
+
+
+def _run_command() -> str:
+    return shlex.join(["python", "-m", "tools.learning.train_ppo", *sys.argv[1:]])
+
+
+def _make_reference_model(model, bc_anchor_coef: float, init: str | None):
+    if not math.isfinite(bc_anchor_coef) or bc_anchor_coef < 0:
+        raise ValueError("bc_anchor_coef must be a finite non-negative number")
+    if bc_anchor_coef == 0:
+        return None
+    if not init:
+        raise ValueError("bc_anchor_coef > 0 requires --init")
+    reference_model = copy.deepcopy(model)
+    reference_model.eval()
+    for parameter in reference_model.parameters():
+        parameter.requires_grad_(False)
+    return reference_model
+
+
+def _masked_policy_kl(model, reference_model, observations, masks, actor_rows):
+    if not actor_rows.any():
+        return torch.zeros((), dtype=torch.float32)
+    eligible_observations = observations[actor_rows]
+    eligible_masks = masks[actor_rows]
+    current_logits, _ = model(eligible_observations)
+    with torch.no_grad():
+        reference_logits, _ = reference_model(eligible_observations)
+        reference_logits = reference_model.mask_logits(
+            reference_logits, eligible_masks
+        )
+    current_log_probs = torch.log_softmax(
+        model.mask_logits(current_logits, eligible_masks), dim=-1
+    )
+    reference_log_probs = torch.log_softmax(reference_logits, dim=-1)
+    current_probs = current_log_probs.exp()
+    return (current_probs * (current_log_probs - reference_log_probs)).sum(
+        dim=-1
+    ).mean()
+
+
+def _ppo_update(model, optimizer, samples, config, rng, reference_model=None):
+    bc_anchor_coef = float(config.get("bc_anchor_coef", 0.0))
+    if not math.isfinite(bc_anchor_coef) or bc_anchor_coef < 0:
+        raise ValueError("bc_anchor_coef must be a finite non-negative number")
+    if bc_anchor_coef > 0 and reference_model is None:
+        raise ValueError("bc_anchor_coef > 0 requires a reference model")
     gamma = float(config["gamma"])
     lam = float(config["lam"])
     observations = []
@@ -159,12 +223,23 @@ def _ppo_update(model, optimizer, samples, config, rng):
                 entropy_mean = torch.zeros((), dtype=torch.float32)
                 approx_kl = torch.zeros((), dtype=torch.float32)
                 clip_frac = torch.zeros((), dtype=torch.float32)
+            anchor_kl = torch.zeros((), dtype=torch.float32)
+            if bc_anchor_coef > 0:
+                anchor_kl = _masked_policy_kl(
+                    model,
+                    reference_model,
+                    obs_tensor[indexes],
+                    mask_tensor[indexes],
+                    actor_rows,
+                )
             value_loss = torch.nn.functional.mse_loss(values, returns_tensor[indexes])
             loss = (
                 policy_loss
                 + float(config["value_coef"]) * value_loss
                 - float(config["entropy_coef"]) * entropy_mean
             )
+            if bc_anchor_coef > 0:
+                loss = loss + bc_anchor_coef * anchor_kl
             optimizer.zero_grad()
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), float(config["max_grad_norm"]))
@@ -175,9 +250,10 @@ def _ppo_update(model, optimizer, samples, config, rng):
                     float(approx_kl.detach()),
                     float(clip_frac.detach()),
                     float(value_loss.detach()),
+                    float(anchor_kl.detach()),
                 )
             )
-    means = [sum(row[i] for row in records) / len(records) for i in range(4)]
+    means = [sum(row[i] for row in records) / len(records) for i in range(5)]
     disclosure_count = sum(
         int(item["reward_components"]["disclosure_penalty"] < 0)
         for result in episode_stats
@@ -194,6 +270,7 @@ def _ppo_update(model, optimizer, samples, config, rng):
         "approx_kl": means[1],
         "clip_frac": means[2],
         "value_loss": means[3],
+        "anchor_kl": means[4],
     }
 
 
@@ -210,6 +287,11 @@ def main() -> None:
     seed = int(args.seed if args.seed is not None else config["seed"])
     sessions = int(args.sessions if args.sessions is not None else config["sessions"])
     simulator_config = config.get("simulator_config", DEFAULT_SIMULATOR_CONFIG)
+    bc_anchor_coef = float(config.get("bc_anchor_coef", 0.0))
+    if not math.isfinite(bc_anchor_coef) or bc_anchor_coef < 0:
+        raise ValueError("bc_anchor_coef must be a finite non-negative number")
+    if bc_anchor_coef > 0 and not args.init:
+        raise ValueError("bc_anchor_coef > 0 requires --init")
     torch.manual_seed(seed)
     if args.init:
         model = NetworkStrategist(args.init).model
@@ -217,12 +299,38 @@ def main() -> None:
     else:
         model = StrategistActorCritic(seed=seed)
         init = "scratch"
+    reference_model = _make_reference_model(model, bc_anchor_coef, args.init)
     optimizer = torch.optim.Adam(model.parameters(), lr=float(config["learning_rate"]))
     policy = NetworkStrategist.from_model(model, greedy=False)
     rng = random.Random(seed)
     run_name = args.run_name or f"{config['run_name']}_seed{seed}_{sessions}"
     run_dir = ROOT / "experiments/learning/runs" / run_name
     run_dir.mkdir(parents=True, exist_ok=True)
+    resolved_config = dict(config)
+    resolved_config.update(
+        {
+            "seed": seed,
+            "sessions": sessions,
+            "simulator_config": simulator_config,
+            "split": "train",
+            "run_name": run_name,
+            "init": str(Path(args.init).resolve()) if args.init else None,
+            "bc_anchor_coef": bc_anchor_coef,
+        }
+    )
+    (run_dir / "run_manifest.json").write_text(
+        json.dumps(
+            {
+                "command": _run_command(),
+                "git_sha": _git_sha(),
+                "resolved_config": resolved_config,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     metrics_path = run_dir / "metrics.csv"
     updates = (sessions + int(config["episodes_per_update"]) - 1) // int(
         config["episodes_per_update"]
@@ -248,7 +356,14 @@ def main() -> None:
                 run_id=f"{run_name}-update{update}",
                 simulator_config=simulator_config,
             )
-            metrics = _ppo_update(model, optimizer, results, config, rng)
+            metrics = _ppo_update(
+                model,
+                optimizer,
+                results,
+                config,
+                rng,
+                reference_model=reference_model,
+            )
             completed += count
             row = {"update": update, "sessions": completed, **metrics}
             writer.writerow(row)

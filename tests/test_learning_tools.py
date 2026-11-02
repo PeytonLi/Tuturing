@@ -1,20 +1,22 @@
+import csv
 import io
 import json
 import random
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
 from packages.learning.actions import encode_strategist
-from packages.learning.episode import load_scenarios, simulate_episodes
+from packages.learning.episode import load_scenarios, run_episode, simulate_episodes
 from packages.policies.network import (
     NetworkStrategist,
     StrategistActorCritic,
     save_checkpoint,
     torch,
 )
-from packages.policies.rules import AlwaysWorkedExampleStrategist
+from packages.policies.rules import AlwaysWorkedExampleStrategist, RulesStrategist
 from tools.learning import evaluate, score_decisions, train_bc, train_ppo
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -165,6 +167,42 @@ def test_network_strategist_loads_versioned_checkpoint(tmp_path):
     assert 0 <= action < 72
 
 
+def test_dagger_labels_match_rules_and_teacher_mix_replays_rules_actions():
+    scenario = next(
+        row for row in load_scenarios() if row["split"] == "train"
+    )
+    episode_seed = 31
+    strategist = train_bc.DaggerStrategist(
+        RulesStrategist(),
+        teacher_prob=1.0,
+        seed=episode_seed,
+        record_label_inputs=True,
+    )
+    dagger_result = run_episode(
+        scenario,
+        run_id="dagger-rules-test",
+        episode_seed=episode_seed,
+        strategist=strategist,
+    )
+    rules_result = run_episode(
+        scenario,
+        run_id="plain-rules-test",
+        episode_seed=episode_seed,
+        strategist=RulesStrategist(),
+    )
+
+    assert len(strategist.labels) == len(dagger_result.strategist_transitions)
+    assert len(strategist.label_inputs) == len(dagger_result.strategist_transitions)
+    assert strategist.labels == [
+        RulesStrategist().act(observation, mask, context)
+        for observation, mask, context in strategist.label_inputs
+    ]
+    assert strategist.actions == strategist.labels
+    assert [
+        transition["action_id"] for transition in dagger_result.strategist_transitions
+    ] == [transition["action_id"] for transition in rules_result.strategist_transitions]
+
+
 def test_one_behavior_cloning_epoch_reduces_small_batch_loss():
     model = StrategistActorCritic(seed=0)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
@@ -201,7 +239,88 @@ def test_ppo_smoke_runs_two_updates_and_writes_metrics(monkeypatch):
     train_ppo.main()
     metrics = ROOT / "experiments/learning/runs/ppo_smoke_seed0_32/metrics.csv"
     assert metrics.is_file()
-    assert len(metrics.read_text(encoding="utf-8").splitlines()) == 3
+    with metrics.open(encoding="utf-8") as handle:
+        rows = list(csv.DictReader(handle))
+    assert len(rows) == 2
+    assert all(float(row["anchor_kl"]) == 0.0 for row in rows)
+    manifest_path = metrics.parent / "run_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest["command"].startswith("python -m tools.learning.train_ppo")
+    assert manifest["git_sha"] is None or isinstance(manifest["git_sha"], str)
+    assert manifest["resolved_config"]["sessions"] == 32
+
+
+def test_zero_anchor_coefficient_does_not_create_a_reference(monkeypatch):
+    model = StrategistActorCritic(seed=0)
+    monkeypatch.setattr(
+        train_ppo.copy,
+        "deepcopy",
+        lambda value: pytest.fail("zero anchor coefficient must not copy the model"),
+    )
+    assert train_ppo._make_reference_model(model, 0.0, None) is None
+
+
+def test_anchor_coefficient_requires_an_initial_checkpoint():
+    with pytest.raises(ValueError, match="requires --init"):
+        train_ppo._make_reference_model(StrategistActorCritic(seed=0), 0.1, None)
+
+
+def test_ppo_anchor_kl_is_zero_at_initialization_and_positive_after_perturbation():
+    observation = [0.0] * 140
+    transitions = [
+        {
+            "observation": observation,
+            "action_mask": [True, True] + [False] * 70,
+            "action_id": 0,
+            "actor_eligible": True,
+            "reward": 1.0,
+            "terminated": True,
+            "next_observation": observation,
+            "reward_components": {"disclosure_penalty": 0.0},
+        },
+        {
+            "observation": [0.1] * 140,
+            "action_mask": [True, True] + [False] * 70,
+            "action_id": 1,
+            "actor_eligible": False,
+            "reward": 0.0,
+            "terminated": True,
+            "next_observation": [0.1] * 140,
+            "reward_components": {"disclosure_penalty": 0.0},
+        },
+    ]
+    sample = SimpleNamespace(
+        strategist_transitions=transitions,
+        navigator_transitions=[],
+        terminal_components={},
+        gain=0.0,
+        dropout=False,
+    )
+    config = {
+        "gamma": 0.99,
+        "lam": 0.95,
+        "epochs": 1,
+        "minibatch_size": 2,
+        "clip": 0.2,
+        "value_coef": 0.5,
+        "entropy_coef": 0.0,
+        "max_grad_norm": 0.5,
+        "bc_anchor_coef": 0.1,
+    }
+    model = StrategistActorCritic(seed=0)
+    reference = train_ppo._make_reference_model(model, 0.1, "init.pt")
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.0)
+    initial_metrics = train_ppo._ppo_update(
+        model, optimizer, [sample], config, random.Random(0), reference_model=reference
+    )
+    assert initial_metrics["anchor_kl"] == pytest.approx(0.0, abs=1e-7)
+
+    with torch.no_grad():
+        model.policy_head.bias[0] += 2.0
+    perturbed_metrics = train_ppo._ppo_update(
+        model, optimizer, [sample], config, random.Random(0), reference_model=reference
+    )
+    assert perturbed_metrics["anchor_kl"] > 0.0
 
 
 def test_evaluation_refuses_sealed_test_split(monkeypatch):
