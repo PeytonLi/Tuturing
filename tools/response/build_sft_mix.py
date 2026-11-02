@@ -9,6 +9,13 @@ their own qid-level family split) in a per-move round robin until the mix
 reaches the configured share. Protected-assessment MathDial examples never
 reach this tool: prepare_sft already rejects them (see the leak review).
 
+Before sampling, a MathDial example must pass the configured admission rules
+(PRD 13.2 step 6): the response checks that do not depend on plan content a
+MathDial plan lacks (supported numbers, disclosure, length, question count),
+and, for the moves that present the issued item, validator_v2's item fidelity,
+because a MathDial turn that poses a new problem under PRACTICE, CHALLENGE or
+CHECK_MASTERY would teach item substitution.
+
     python -m tools.response.build_sft_mix --config configs/response/sft_mix_v1.yaml
 """
 
@@ -21,6 +28,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
+
+from packages.response.item_fidelity import PRESENTING_MOVES, item_faithful
+from packages.response.validate import VALIDATOR_VERSION, run_checks
 
 ROOT = Path(__file__).resolve().parents[2]
 TOOL_VERSION = "tools.response.build_sft_mix v1"
@@ -57,6 +67,40 @@ def concept_of(example):
     return example["plan"].get("concept_id")
 
 
+def mathdial_rejection(example, rules):
+    """Return why a MathDial example may not enter the mix, or None when it is admitted."""
+    plan = example["plan"]
+    move = move_of(example)
+    text = example["completion"][0]["content"]
+    if move in set(rules.get("excluded_moves") or ()):
+        return f"excluded_move:{move}"
+    required = rules.get("required_checks") or ()
+    if required:
+        checks = run_checks(plan, text, plan["teaching_action"])
+        for name in required:
+            if not checks[name]:
+                return f"failed_check:{name}"
+    if rules.get("presenting_moves_keep_item") and move in PRESENTING_MOVES:
+        if not item_faithful(plan, text, move):
+            return "new_item_under_presenting_move"
+    return None
+
+
+def admit_mathdial(examples, rules):
+    """Split MathDial examples into (admitted, rejection counts, rejection counts per move)."""
+    admitted = []
+    reasons = Counter()
+    by_move = defaultdict(Counter)
+    for example in examples:
+        reason = mathdial_rejection(example, rules)
+        if reason is None:
+            admitted.append(example)
+        else:
+            reasons[reason] += 1
+            by_move[move_of(example)][reason] += 1
+    return admitted, reasons, by_move
+
+
 def sample_by_move(examples, count, rng):
     """Draw ``count`` examples in a per-move round robin so rare moves are covered first."""
     by_move = defaultdict(list)
@@ -88,11 +132,14 @@ def build_split(original, mathdial, config, rng):
     shares = config["shares"]
     kept_original = sorted(original, key=lambda item: item["example_id"])
     exposures = [example for _ in range(repeats) for example in kept_original]
+    admitted, rejected, rejected_by_move = admit_mathdial(
+        mathdial, config.get("mathdial_admission") or {}
+    )
     target = min(
         mathdial_target(len(exposures), shares["original"], shares["mathdial"]),
-        len(mathdial),
+        len(admitted),
     )
-    chosen_mathdial = sample_by_move(mathdial, target, rng)
+    chosen_mathdial = sample_by_move(admitted, target, rng)
     records = [*exposures, *chosen_mathdial]
     rng.shuffle(records)
     total = len(records)
@@ -102,6 +149,11 @@ def build_split(original, mathdial, config, rng):
         "original_exposures": len(exposures),
         "original_repeats": repeats,
         "mathdial_available": len(mathdial),
+        "mathdial_admitted": len(admitted),
+        "mathdial_rejected_by_reason": dict(sorted(rejected.items())),
+        "mathdial_rejected_by_move": {
+            move: dict(sorted(counts.items())) for move, counts in sorted(rejected_by_move.items())
+        },
         "mathdial_target": mathdial_target(len(exposures), shares["original"], shares["mathdial"]),
         "mathdial_sampled": len(chosen_mathdial),
         "mix": {
@@ -112,6 +164,7 @@ def build_split(original, mathdial, config, rng):
             "original": dict(sorted(Counter(move_of(item) for item in kept_original).items())),
             "mathdial": dict(sorted(Counter(move_of(item) for item in chosen_mathdial).items())),
             "mathdial_available": dict(sorted(Counter(move_of(item) for item in mathdial).items())),
+            "mathdial_admitted": dict(sorted(Counter(move_of(item) for item in admitted).items())),
         },
         "concepts": {
             "original": dict(sorted(Counter(concept_of(item) for item in kept_original).items())),
@@ -168,6 +221,10 @@ def build(config_path):
         "config": {"path": str(config_path.relative_to(ROOT)), "sha256": sha256_file(config_path)},
         "seed": int(config.get("seed", 20261102)),
         "shares_target": config["shares"],
+        "mathdial_admission": {
+            **(config.get("mathdial_admission") or {}),
+            "validator_version": VALIDATOR_VERSION,
+        },
         "rule": (
             "Every original example of a split is used (repeated original_repeats times); "
             "MathDial examples of the same split are drawn in a per-move round robin until "
@@ -181,6 +238,8 @@ def build(config_path):
             "examples": sum(stats["total"] for stats in per_split.values()),
             "original_exposures": sum(stats["original_exposures"] for stats in per_split.values()),
             "mathdial_sampled": sum(stats["mathdial_sampled"] for stats in per_split.values()),
+            "mathdial_admitted": sum(stats["mathdial_admitted"] for stats in per_split.values()),
+            "mathdial_available": sum(stats["mathdial_available"] for stats in per_split.values()),
         },
         "repeated_exposure": {
             split: stats["repeated_exposure"] for split, stats in per_split.items()
@@ -189,7 +248,12 @@ def build(config_path):
         "notes": [
             "Original examples are synthetic and pending review; MathDial labels are model-made "
             "(action_label_source mapped), never human labels.",
-            "The mix is capped by what passes: the MathDial count follows the original count.",
+            "The mix is capped by what passes: the MathDial count follows the original count, "
+            "so most admitted MathDial examples stay unused; raising original_repeats uses more "
+            "of them and is reported as repeated exposure.",
+            "MathDial records keep prepare_sft's null checks and extensions block; they do not "
+            "validate against SFTExample (leak review open point 4); the trainer reads only "
+            "prompt and completion.",
         ],
     }
     manifest_path = ROOT / config["manifest_path"]

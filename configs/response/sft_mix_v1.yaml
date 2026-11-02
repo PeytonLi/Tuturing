@@ -8,6 +8,18 @@ shares:
   mathdial: 0.4
 # Repeat every original example this many times per split (reported as repeated exposure).
 original_repeats: 1
+# Admission rules for MathDial targets (PRD 13.2 step 6), applied before sampling.
+mathdial_admission:
+  # Response checks that do not depend on content MathDial plans lack. action_faithful is not
+  # required: MathDial plans carry no permitted hint, approved facts, previous step or worked
+  # example (D09 limitations), so almost every MathDial target fails its move heuristics.
+  required_checks: [math_supported, disclosure_allowed, length_valid, question_count_valid]
+  # PRACTICE, CHALLENGE and CHECK_MASTERY must keep the issued problem (validator_v2 item
+  # fidelity); MathDial turns under these labels mostly pose a new problem, which would teach
+  # item substitution.
+  presenting_moves_keep_item: true
+  # A MathDial plan has no approved worked example, so the target's example is unverified.
+  excluded_moves: [WORKED_EXAMPLE]
 sources:
   original:
     dir: data/sft/original_v1

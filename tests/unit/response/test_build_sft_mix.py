@@ -5,6 +5,7 @@ from pathlib import Path
 import yaml
 
 from tools.response import build_sft_mix as mixer
+from tools.response.prepare_sft import _teaching_plan
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -98,7 +99,10 @@ def test_build_writes_split_files_and_manifest(tmp_path, monkeypatch):
         rows = mixer.read_jsonl(tmp_path / "data/sft/mix_test" / f"{split}.jsonl")
         assert len(rows) == 20
         assert sum(row["source_id"] == "mathdial" for row in rows) == 8
-    assert manifest["totals"] == {"examples": 60, "original_exposures": 36, "mathdial_sampled": 24}
+    assert manifest["totals"] == {
+        "examples": 60, "original_exposures": 36, "mathdial_sampled": 24,
+        "mathdial_admitted": 90, "mathdial_available": 90,
+    }
     assert manifest["sources"]["mathdial"]["action_label_source"] == "mapped"
     assert manifest["sources"]["mathdial"]["mapping"] == {"status": "model_labeled"}
     assert len(manifest["output_files"]) == 3
@@ -106,6 +110,49 @@ def test_build_writes_split_files_and_manifest(tmp_path, monkeypatch):
     assert [item["sha256"] for item in again["output_files"]] == [
         item["sha256"] for item in manifest["output_files"]
     ]
+
+
+def _mathdial_example(example_id, move, text):
+    row = {
+        "qid": 1,
+        "question": "Tom has 12 apples and eats 5. How many apples are left?",
+        "ground_truth": "12 - 5 = 7\n7",
+    }
+    plan = _teaching_plan("mathdial:train:0001", example_id, row, move, [], "", {"max_words": 150})
+    return {"example_id": example_id, "source_id": "mathdial", "plan": plan,
+            "completion": [{"role": "assistant", "content": text}]}
+
+
+def test_mathdial_admission_rules_follow_the_committed_config():
+    rules = yaml.safe_load((ROOT / "configs/response/sft_mix_v1.yaml").read_text())[
+        "mathdial_admission"
+    ]
+    examples = [
+        _mathdial_example("keep_hint", "HINT", "Look at how many apples Tom eats."),
+        _mathdial_example(
+            "keep_practice", "PRACTICE",
+            "Try it again: Tom has 12 apples and eats 5. How many apples are left?",
+        ),
+        _mathdial_example("unsupported", "HINT", "He had 12, so 12 x 3 = 36 apples in all."),
+        _mathdial_example("discloses", "HINT", "So 7 apples are left."),
+        _mathdial_example("two_questions", "PROBE", "How many did he eat? How many are left?"),
+        _mathdial_example(
+            "new_item", "PRACTICE",
+            "Now try this one: Sam has 3 pears and gives away 2. How many pears remain?",
+        ),
+        _mathdial_example("worked", "WORKED_EXAMPLE", "If Ann has 4 plums and eats 1, 3 remain."),
+    ]
+    admitted, reasons, by_move = mixer.admit_mathdial(examples, rules)
+    assert [item["example_id"] for item in admitted] == ["keep_hint", "keep_practice"]
+    assert reasons == {
+        "failed_check:math_supported": 1,
+        "failed_check:disclosure_allowed": 1,
+        "failed_check:question_count_valid": 1,
+        "new_item_under_presenting_move": 1,
+        "excluded_move:WORKED_EXAMPLE": 1,
+    }
+    assert by_move["PRACTICE"] == {"new_item_under_presenting_move": 1}
+    assert mixer.admit_mathdial(examples, {})[0] == examples
 
 
 def test_committed_config_is_consistent():
