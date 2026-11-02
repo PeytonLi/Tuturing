@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 RESULTS = Path("evaluation/learning/results/knowledge_v1")
 ARMS = [
     ("qwen3p8_27b_base", "Base Qwen 3.8 27B", "#c98b5b"),
-    ("strategist_bc", "Our Strategist (+ Qwen writes)", "#4f8a6e"),
+    ("strategist_bc", "Our trained Strategist", "#4f8a6e"),
     ("gpt_6_1_sol", "gpt-6.1-sol", "#5b7fc9"),
 ]
 TYPES = [
@@ -127,7 +127,7 @@ def main():
 
     cost_panels = [
         ("cost_usd", "Cost of the full run (USD)", "${:.2f}", "USD"),
-        ("seconds_per_session", "Wall time per 16-turn session", "{:.1f}s", "seconds"),
+        ("seconds_per_session", "Wall time per session (16 run in parallel)", "{:.1f}s", "seconds"),
         ("calls", "Model calls", "{:.0f}", "calls"),
     ]
     fig, axes = plt.subplots(1, 3, figsize=(15, 4.5))
