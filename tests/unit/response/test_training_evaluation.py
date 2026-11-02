@@ -10,6 +10,7 @@ from tools.response.train_sft import (
     build_sft_config_kwargs,
     check_config,
     load_config,
+    matched_lora_targets,
     to_prompt_completion,
 )
 
@@ -190,7 +191,12 @@ def test_sft_config_placeholders_missing_keys_and_resolved_config():
     assert check_config(resolved) == []
     assert resolved["base_model"] == "Qwen/Qwen3.8-27B"
     assert resolved["fireworks_model"] == "accounts/fireworks/models/qwen3p8-27b"
-    assert resolved["lora_target_modules_scope"] == "decision_pending"
+    assert resolved["lora_target_modules_scope"] == "language_model_attention"
+    assert resolved["lora_expected_target_count"] == 160
+    assert resolved["lora_target_modules"] == (
+        r"^(model\.)?(language_model\.)?layers\.\d+\.[^.]+\."
+        r"(q_proj|k_proj|v_proj|o_proj|in_proj_qkv|out_proj)$"
+    )
     invalid_nested = dict(resolved)
     invalid_nested["package_pins"] = {
         **resolved["package_pins"],
@@ -198,6 +204,13 @@ def test_sft_config_placeholders_missing_keys_and_resolved_config():
     }
     assert any("configuration contains REQUIRED_RESOLVED_COMMIT" in error
                for error in check_config(invalid_nested))
+
+    invalid_regex = dict(resolved, lora_target_modules="[")
+    assert any("lora_target_modules must be a valid regex" in error
+               for error in check_config(invalid_regex))
+    invalid_count = dict(resolved, lora_expected_target_count=True)
+    assert any("lora_expected_target_count must be a positive integer" in error
+               for error in check_config(invalid_count))
 
 
 def test_sft_kwargs_and_prompt_completion_projection():
@@ -215,11 +228,15 @@ def test_sft_kwargs_and_prompt_completion_projection():
     assert kwargs["model_init_kwargs"] == {
         "revision": cfg["base_model_revision"], "dtype": "bfloat16"
     }
+    assert build_lora_kwargs(cfg)["target_modules"] == cfg["lora_target_modules"]
     assert build_lora_kwargs(cfg) == {
         "r": 16,
         "lora_alpha": 32,
         "lora_dropout": 0.05,
-        "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj"],
+        "target_modules": (
+            r"^(model\.)?(language_model\.)?layers\.\d+\.[^.]+\."
+            r"(q_proj|k_proj|v_proj|o_proj|in_proj_qkv|out_proj)$"
+        ),
         "bias": "none",
         "task_type": "CAUSAL_LM",
     }
@@ -231,6 +248,66 @@ def test_sft_kwargs_and_prompt_completion_projection():
         "prompt": [{"role": "user", "content": "x"}],
         "completion": [{"role": "assistant", "content": "y"}],
     }
+
+
+def test_lora_target_matching_scopes_to_text_attention_projections():
+    names = []
+    for index in range(64):
+        layer = f"model.language_model.layers.{index}"
+        if index % 4 == 3:
+            names.extend(
+                f"{layer}.self_attn.{projection}_proj"
+                for projection in ("q", "k", "v", "o")
+            )
+        else:
+            names.extend(
+                f"{layer}.linear_attn.{projection}"
+                for projection in (
+                    "in_proj_qkv",
+                    "in_proj_z",
+                    "in_proj_a",
+                    "in_proj_b",
+                    "out_proj",
+                    "conv1d",
+                )
+            )
+        names.extend(
+            f"{layer}.mlp.{projection}_proj" for projection in ("gate", "up", "down")
+        )
+    decoys = [
+        "model.visual.blocks.0.attn.qkv",
+        "model.visual.blocks.0.attn.proj",
+        "model.visual.merger.out_proj",
+        "mtp.layers.0.self_attn.q_proj",
+        "model.language_model.mtp.layers.0.self_attn.k_proj",
+    ]
+    names.extend(decoys)
+    target_regex = load_config(
+        "configs/response/sft_resolved_qwen3.8-27b.yaml"
+    )["lora_target_modules"]
+    matched = matched_lora_targets(names, target_regex)
+    assert len(matched) == 160
+    assert all(name.startswith("model.language_model.layers.") for name in matched)
+    assert not set(matched).intersection(decoys)
+    assert not any(".mlp." in name for name in matched)
+
+    text_only_names = [
+        f"model.layers.0.self_attn.{projection}_proj"
+        for projection in ("q", "k", "v", "o")
+    ] + [
+        "model.layers.1.linear_attn.in_proj_qkv",
+        "model.layers.1.linear_attn.out_proj",
+    ]
+    assert len(matched_lora_targets(text_only_names, target_regex)) == 6
+
+    suffix_matches = matched_lora_targets(
+        ["model.layers.0.self_attn.q_proj", "model.visual.q_proj"],
+        ["q_proj"],
+    )
+    assert suffix_matches == [
+        "model.layers.0.self_attn.q_proj",
+        "model.visual.q_proj",
+    ]
 
 
 class TinyTokenizer:
