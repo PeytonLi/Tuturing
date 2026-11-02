@@ -150,13 +150,15 @@ def test_unsupported_versions_and_artifacts_are_rejected():
     newer = make_request(plan)
     newer["schema_version"] = "2.0"
     newer_plan = make_request(dict(plan, schema_version="2.0"))
-    other_artifact = make_request(plan, artifact="response_stub_v1")
+    other_artifact = make_request(plan, artifact="some_other_artifact_v9")
     for request in (newer, newer_plan, other_artifact):
         with pytest.raises(GenerationError) as info:
             stub_pipeline().generate(request)
         assert (info.value.code, info.value.http_status) == ("UNSUPPORTED_VERSION", 400)
         assert not info.value.retryable
     assert STUB_PIPELINE_ARTIFACT_ID in info.value.message
+    legacy = stub_pipeline().generate(make_request(plan, artifact="response_stub_v1"))
+    assert legacy["versions"]["response_artifact"] == STUB_PIPELINE_ARTIFACT_ID
     with pytest.raises(GenerationError) as info:
         stub_pipeline().generate(["not", "an", "object"])
     assert info.value.code == "INVALID_SCHEMA"

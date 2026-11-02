@@ -47,6 +47,7 @@ from packages.response.validate import VALIDATOR_VERSION, run_checks
 PIPELINE_VERSION = "pipeline_v1"
 INTERNAL_DEADLINE_CEILING_MS = 8000
 STUB_PIPELINE_ARTIFACT_ID = "response_stub_pipeline_v1"
+LEGACY_STUB_ARTIFACT_ID = "response_stub_v1"  # what packages.simulator.response_adapter sends
 MAX_REPORTED_PROBLEMS = 5
 
 
@@ -376,5 +377,11 @@ class ResponsePipeline:
 
 
 def stub_pipeline(artifact_id: str = STUB_PIPELINE_ARTIFACT_ID) -> ResponsePipeline:
-    """The CPU stub: existing stub templates behind the full verified pipeline."""
-    return ResponsePipeline(TemplateStubResponder(), PipelineSettings(artifact_id=artifact_id))
+    """The CPU stub: existing stub templates behind the full verified pipeline.
+
+    It also accepts requests addressed to the legacy stub artifact that B's adapter names.
+    """
+    settings = PipelineSettings(
+        artifact_id=artifact_id, compatible_artifact_ids=(LEGACY_STUB_ARTIFACT_ID,)
+    )
+    return ResponsePipeline(TemplateStubResponder(), settings)

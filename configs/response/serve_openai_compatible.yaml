@@ -1,0 +1,41 @@
+# Response service, prompt-only model profile: any OpenAI-compatible chat-completions server
+# (a local llama.cpp llama-server, vLLM, or a hosted provider) behind the verified pipeline.
+# This config names environment variables only; it holds no URL, model name or key.
+#
+#   export TUTOR_LLM_BASE_URL=http://127.0.0.1:8080/v1   # llama-server example
+#   export TUTOR_LLM_MODEL=local-model                   # whatever the server expects
+#   export TUTOR_LLM_API_KEY=...                         # hosted providers; omit locally
+#   export TUTOR_RESPONSE_SERVICE_TOKEN=...              # bearer token for this service
+#   uv run python -m tools.response.serve --config configs/response/serve_openai_compatible.yaml
+#
+# Decoding is greedy (temperature 0) with at most 384 output tokens (PRD 14.1). Every reply
+# is buffered and checked before delivery; a reply that leaks a protected answer is replaced
+# by the verified fallback. A frozen release must pin the model under a distinct artifact id.
+schema_version: 1
+service:
+  host: 127.0.0.1
+  port: 8081
+  auth:
+    token_env: TUTOR_RESPONSE_SERVICE_TOKEN
+    allow_unauthenticated_loopback: false
+  max_request_bytes: 262144
+  max_concurrent: 4
+  idempotency_cache_size: 1024
+artifact:
+  id: prompt_only_openai_compatible_v1
+  compatible_ids: []
+responder:
+  kind: openai_compatible
+  base_url_env: TUTOR_LLM_BASE_URL
+  model_env: TUTOR_LLM_MODEL
+  api_key_env: TUTOR_LLM_API_KEY
+  api_key_required: false        # unset variable: no Authorization header (local server)
+  request_timeout_s: 8
+generation:
+  internal_deadline_ms: 8000
+  max_output_tokens: 384
+  max_repairs: 1
+versions:
+  prompt: prompt_v1
+  validator: validator_v1
+  fallback: fallback_v1

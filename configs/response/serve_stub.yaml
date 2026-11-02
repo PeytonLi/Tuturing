@@ -1,11 +1,34 @@
-responder: fallback
-prompt_version: prompt_v1
-validator_version: validator_v1
-fallback_version: fallback_v1
-max_output_tokens: 384
-decoding:
-  strategy: greedy
-  temperature: 0
-internal_deadline_ms: 8000
-retry_once: true
-status: placeholder
+# Response service, CPU stub profile (PRD 11.2, 14 and 21.1 item 7).
+#
+#   uv run python -m tools.response.serve --config configs/response/serve_stub.yaml
+#
+# The deterministic templates in packages/response/stub.py run behind the full verified
+# pipeline: plan rules, prompt compilation, the six checks, one repair for length or
+# question count, then a verified fallback. Every value here is final; none is a secret.
+schema_version: 1
+service:
+  host: 127.0.0.1
+  port: 8081
+  auth:
+    # Name of the environment variable holding the service bearer token; the token itself
+    # never goes in a config. When the variable is unset and the host is a loopback
+    # address, the stub serves unauthenticated so the CPU smoke needs no credential.
+    token_env: TUTOR_RESPONSE_SERVICE_TOKEN
+    allow_unauthenticated_loopback: true
+  max_request_bytes: 262144      # PRD 9.5: internal generation requests are at most 256 KB
+  max_concurrent: 4              # admission limit; requests beyond it get 429 RATE_LIMITED
+  idempotency_cache_size: 1024   # same request_id and content: same response; else 409
+artifact:
+  id: response_stub_pipeline_v1
+  compatible_ids:                # other response_artifact_id values this service accepts
+    - response_stub_v1
+responder:
+  kind: template_stub
+generation:
+  internal_deadline_ms: 8000     # PRD 14.3 ceiling; a request's deadline_ms can only lower it
+  max_output_tokens: 384         # PRD 14.1 cap; enforced for model responders
+  max_repairs: 1                 # at most one repair, for word cap or question count only
+versions:                        # the service refuses to start if the code disagrees
+  prompt: prompt_v1
+  validator: validator_v1
+  fallback: fallback_v1
