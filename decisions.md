@@ -209,3 +209,7 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 **Source:** Person B full-session LLM Strategist evaluation handoff.
 
 This adds a simulated, validation-only reference path for LLM Teaching Strategists. No paid model runs or test-split runs are part of this change. Truncated, unparsable, illegal, or HTTP-failed replies fall back to `RulesStrategist`; evaluation reports the fallback rate. The frozen BC checkpoint remains the selected policy, with no selection change.
+
+## 2026-11-02: Hidden-knowledge Strategist comparison (knowledge_v1)
+
+Peyton asked for a comparison showing that the tutor adapts in real time to what a student actually knows, and said the headline is improvement over base Qwen 3.8 toward a frontier model, with rules dropped as an arm. `data/scenarios/knowledge_v1.yaml` adds 9 hidden learner types (missing basics, already knows it, six single misconceptions M02/M04/M05/M06/M07/M08, and a strong learner hiding M05). They run on `configs/learning/simulator_knowledge_v1.yaml`, a copy of simulator_proto_v2 with test-only profiles, all at normal pace. `tools/learning/knowledge_eval.py` runs one policy for 6 sessions per type, and `tools/learning/knowledge_report.py` draws the graphs. `sample_student` now honours `weak_prerequisites_of_start` and `goal_mastery` on any profile. All results are simulated and uncalibrated. The LLM arms use the shared Strategist prompt, and every fallback-to-rules turn is reported.
