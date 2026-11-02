@@ -58,5 +58,10 @@
     "wall_seconds": 1526,
     "cost_usd": 6.1,
     "cost_basis": "Fireworks on-demand H100 at $8/GPU-hour: 1 GPU 23:16-23:46 plus 2 extra GPUs ~23:38-23:46, about 46 GPU-minutes"
+  },
+  "nemotron_lightning_3p5_30b": {
+    "wall_seconds": 819,
+    "cost_usd": null,
+    "cost_basis": "Fireworks serverless; 610799 input + 1603519 output tokens; per-token price not verified"
   }
 }

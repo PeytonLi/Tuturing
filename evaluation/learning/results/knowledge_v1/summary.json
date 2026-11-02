@@ -303,6 +303,47 @@
         "event_vs_outcome": 1.0,
         "strong_but_reverses": 1.0
       }
+    },
+    "nemotron_lightning_3p5_30b": {
+      "gain": 0.08066960128009082,
+      "fixed": 0.6904761904761905,
+      "turn_fixed": 4.931034482758621,
+      "wasted_known": 0.15555555555555556,
+      "probe_share_mis": 0.4828655141155141,
+      "dropout": 0.4074074074074074,
+      "calls": 627,
+      "fallback_rate": 0.06379585326953748,
+      "fallbacks": {
+        "truncated": 22,
+        "parse_failure": 18,
+        "illegal": 0,
+        "http_error": 0
+      },
+      "prompt_tokens": 610799,
+      "completion_tokens": 1603519,
+      "wall_seconds": 819,
+      "seconds_per_session": 15.166666666666666,
+      "cost_usd": null,
+      "by_type": {
+        "missing_basics": 0.021333078912161917,
+        "already_knows": 0.0017163720758034406,
+        "reverses_conditionals": 0.12240766467629693,
+        "wrong_denominator": 0.03353418301925652,
+        "assumes_independence": 0.07215660099412465,
+        "tree_paths": 0.06279487877654157,
+        "complement_slip": 0.0795508797710129,
+        "event_vs_outcome": 0.15789529953673323,
+        "strong_but_reverses": 0.1746374537588862
+      },
+      "fixed_by_type": {
+        "reverses_conditionals": 0.8333333333333334,
+        "wrong_denominator": 0.8333333333333334,
+        "assumes_independence": 0.6666666666666666,
+        "tree_paths": 0.5,
+        "complement_slip": 0.6666666666666666,
+        "event_vs_outcome": 0.6666666666666666,
+        "strong_but_reverses": 0.6666666666666666
+      }
     }
   },
   "gap_closed": 1.5018105634102004
