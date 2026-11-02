@@ -1,0 +1,11 @@
+status: draft_unaudited
+mappings:
+  probing:
+    move: PROBE
+  focus:
+    move: HINT
+  telling:
+    move: EXPLAIN_CONCEPT
+  generic:
+    exclude: true
+    reason: generic_act

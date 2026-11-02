@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "plan_id": "plan_fx_challenge_0006",
+  "session_id": "sess_fx_challenge_0006",
+  "trace_id": "trace_fx_challenge_0006",
+  "based_on_state_version": 8,
+  "option_id": "option_fx_challenge_0006",
+  "navigation_action": {"action_id": 7, "operation": "STAY", "target_concept_id": "C08"},
+  "teaching_action": {"action_id": 49, "move": "CHALLENGE", "difficulty": "medium", "pace": "normal"},
+  "actor_eligible": true,
+  "concept_id": "C08",
+  "goal_concept_id": "C08",
+  "problem_instance_id": "problem_fx_challenge_0006",
+  "template_family_id": "family_fx_challenge_0006",
+  "assessment_mode": "practice",
+  "assistance": "none",
+  "content_bundle_id": "bundle_fx_challenge_0006",
+  "content": {
+    "concept_name": "Multiplication rule and probability trees",
+    "goal_name": "Use a probability tree",
+    "problem_stem": "A jar contains 2 green and 5 yellow beads. One bead is drawn and replaced before a second draw. What is the probability both beads are green?",
+    "approved_facts": [],
+    "permitted_hint": null,
+    "worked_example": null,
+    "reveal_solution": null,
+    "previous_step": null
+  },
+  "constraints": {
+    "reveal_allowed": false,
+    "max_words": 150,
+    "max_questions": 1,
+    "must_request_student_attempt": true,
+    "forbidden_answer_fingerprints": ["4/49"]
+  },
+  "response_context": {
+    "last_student_message": "I want a harder one.",
+    "recent_dialogue": [{"role": "student", "text": "I want a harder one."}],
+    "qualified_misconception_summary": null
+  },
+  "versions": {
+    "graph": "graph_proto_v1",
+    "content": "content_proto_v1",
+    "state_estimator": "state_proto_v1",
+    "navigator": "navigator_proto_v1",
+    "strategist": "strategist_proto_v1",
+    "mask": "mask_proto_v1",
+    "feature": "feature_proto_v1"
+  },
+  "expires_at": "2099-01-01T00:00:00Z"
+}
