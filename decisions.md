@@ -52,3 +52,25 @@ Workspace-level decisions and their rationale, with dates and sources. Product a
 
 **Consequences:** SFT is Person A's, as PRD section 2 and `OWNERS.md` already assign: the SFT configs, `tools/response/train_sft.py`, SFT data and decision records D09 and D10. Xueming's agents maintain these from now on, and the earlier hands-off rule for the files Peyton's agent was editing no longer applies to new work. D10's base-model choice is still unconfirmed; the benchmark of `gpt-6.1-sol` and Qwen3.8-27B is meant to inform it. Peyton's agent is outside this workspace, so Peyton has to relay the change to it.
 
+## 2026-11-02 — Person B transaction engine implementation
+
+**Source:** Person B learning-service handoff in this agent session; PRD sections 8 and 9.
+
+**Implementation choices:** SQLite stores the full session snapshot as JSON and pending intervention
+snapshots separately, so cancellation retains evidence but never commits option/item assignments.
+Observe returns either `{kind: "plan", teaching_plan: ...}` or
+`{kind: "session_end", session_end: ...}`. Live sessions sample only the original `train` families;
+held-out validation/test families remain reserved. Items persist their family and sample seed.
+Plan counters, rather than delivered turn counts, identify reservations and sampled instances.
+The rules runtime defaults to `work/learning.sqlite3` under the existing ignored `work/` directory.
+Callers must create its parent directory before opening that path.
+
+`PROBE` and `CHECK_MASTERY` are independent assessments in this runtime; requested answers cannot
+reveal an independent assessment. Both extractor assistance and committed-plan assistance gate BKT.
+Explicit skip targets become the goal, matching the episode initializer's request semantics;
+live goal changes update the goal and trigger the scheduler without inventing a navigation action.
+Navigator streaks reset at option boundaries, as in `run_episode`. Policy failures retain already
+accepted evidence, but unsuccessful operations are not cached. Exact successful idempotent retries
+take precedence over the ended-session guard; fresh mutations on ended sessions are rejected.
+Idempotency conflicts precede lookup of a different, potentially unknown session in a reused key's
+body. No HTTP or Person A implementation is included.
