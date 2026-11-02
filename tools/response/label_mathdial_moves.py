@@ -19,6 +19,7 @@ import argparse
 import csv
 import hashlib
 import json
+import math
 import random
 import re
 import threading
@@ -517,6 +518,28 @@ def label_agreement(records, calibration):
     }
 
 
+def wilson_interval(agree, n, z=1.96):
+    """Wilson score interval for an agreement rate, as [low, high], or None when n is 0."""
+    if not n:
+        return None
+    rate = agree / n
+    denominator = 1 + z * z / n
+    centre = rate + z * z / (2 * n)
+    half = z * math.sqrt(rate * (1 - rate) / n + z * z / (4 * n * n))
+    return [round((centre - half) / denominator, 4), round((centre + half) / denominator, 4)]
+
+
+def repeat_consistency(first, second, ids):
+    """How often two label stores give the same label on the turns both labeled."""
+    shared = [example_id for example_id in ids if example_id in first and example_id in second]
+    same = sum(first[example_id]["label"] == second[example_id]["label"] for example_id in shared)
+    return {
+        "rows": len(shared),
+        "same_label": same,
+        "rate": round(same / len(shared), 4) if shared else None,
+    }
+
+
 def fit_tokens(records):
     """Least-squares fit prompt_tokens = a + b * words over labeled records, plus mean output."""
     points = [
@@ -855,13 +878,16 @@ def report(config, model, turns, universe, source, *, log=print):
     pilots = {}
     for path in sorted(directory.glob("pilot_*.json")):
         summary = json.loads(path.read_text(encoding="utf-8"))
-        pilots[f"{summary.get('run_tag', summary['model'])}@{summary['prompt_version']}"] = {
+        entry = {
             key: summary.get(key) for key in (
                 "model", "run_tag", "prompt_version", "agreement", "n_evaluated", "cost_usd",
                 "prices_usd_per_m", "labeled", "meets_threshold", "adjustments",
                 "request_parameters", "token_fit", "status_counts",
             )
         }
+        overall = summary["agreement"]["overall"]
+        entry["agreement_wilson_95"] = wilson_interval(overall["agree"], overall["n"])
+        pilots[f"{summary.get('run_tag', summary['model'])}@{summary['prompt_version']}"] = entry
     full_summary = None
     full_path = directory / f"full_{prompt_version}_{tag}.json"
     if full_path.exists():
@@ -942,6 +968,11 @@ def report(config, model, turns, universe, source, *, log=print):
                 **act_mapping_agreement(calibration, move_map_v1),
             },
             "chosen_model_agreement_in_full_run": label_agreement(store.records, evaluated),
+            "repeat_consistency_pilot_vs_full": repeat_consistency(
+                LabelStore(directory / f"pilot_{prompt_version}_{tag}.jsonl").records,
+                store.records,
+                sorted(evaluated),
+            ),
         },
         "model_selection": {
             "threshold": config["agreement_threshold"],

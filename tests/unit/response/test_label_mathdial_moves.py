@@ -210,6 +210,17 @@ def test_few_shot_examples_are_held_out_of_the_agreement(tmp_path):
     assert plain_version == "prompt_v9" and plain_ids == [] and "{examples}" not in plain_text
 
 
+def test_wilson_interval_and_repeat_consistency():
+    low, high = labeler.wilson_interval(146, 182)
+    assert low == pytest.approx(0.7376, abs=1e-3) and high == pytest.approx(0.8538, abs=1e-3)
+    assert labeler.wilson_interval(0, 0) is None
+    first = {"a": {"label": "HINT"}, "b": {"label": "PROBE"}, "c": {"label": "HINT"}}
+    second = {"a": {"label": "HINT"}, "b": {"label": "HINT"}}
+    assert labeler.repeat_consistency(first, second, ["a", "b", "c"]) == {
+        "rows": 2, "same_label": 1, "rate": 0.5,
+    }
+
+
 def test_key_file_parsing_never_echoes_the_value(tmp_path):
     env = tmp_path / "llm.env"
     env.write_text("# keys\nexport OTHER=1\nOPENAI_API_KEY=\"sk-secret-value\"\n", encoding="utf-8")
@@ -261,6 +272,10 @@ def test_pilot_full_and_report_run_against_the_fake_server(tmp_path, monkeypatch
     assert manifest["counts_per_label"] == {"EXCLUDE": 1, "HINT": 1, "PROBE": 1, "REFLECT": 1}
     assert manifest["status_counts"] == {"labeled": 3, "labeled_after_retry": 1}
     assert manifest["model_selection"]["chosen_model"] == "fake"
+    repeat = manifest["calibration"]["repeat_consistency_pilot_vs_full"]
+    assert repeat["rows"] == 2 and 0 <= repeat["same_label"] <= 2
+    pilot_entry = next(iter(manifest["model_selection"]["pilots"].values()))
+    assert pilot_entry["agreement_wilson_95"] == labeler.wilson_interval(1, 2)
     assert "sk-test" not in json.dumps(manifest)
     rows = [json.loads(line) for line in (tmp_path / "labels.jsonl").read_text().splitlines()]
     assert len(rows) == 4
