@@ -614,6 +614,9 @@ def _make_navigator_transition(
     }
 
 
+RETEACH_MOVES = ("HINT", "EXPLAIN_CONCEPT", "WORKED_EXAMPLE")
+
+
 def run_episode(
     scenario: dict,
     *,
@@ -625,6 +628,7 @@ def run_episode(
     bank: EventRandomBank | None = None,
     simulator_config: str | Path = DEFAULT_SIMULATOR_CONFIG,
     text_path: object | None = None,
+    reteach_shaping: dict | None = None,
 ) -> EpisodeResult:
     if not 1 <= horizon <= HORIZON:
         raise ValueError("episode horizon must be between one and sixteen turns")
@@ -1068,6 +1072,13 @@ def run_episode(
             ),
             unproductive_repetition=unproductive_repetition,
         )
+        if reteach_shaping and mastery_before.get(current, 0.0) >= float(
+            reteach_shaping.get("mastery_threshold", 0.8)
+        ):
+            if move in RETEACH_MOVES:
+                turn_reward.shaping -= float(reteach_shaping.get("cost", 0.0))
+            elif move in ("CHECK_MASTERY", "CHALLENGE"):
+                turn_reward.shaping += float(reteach_shaping.get("bonus", 0.0))
         dropout_rng = random_bank.rng(scenario["scenario_id"], episode_seed, turn, "dropout")
         stop_rng = random_bank.rng(scenario["scenario_id"], episode_seed, turn, "stop_request")
         pace_mismatch = selected_pace != private.preferred_pace
@@ -1447,6 +1458,7 @@ def simulate_episodes(
     scenarios: list[dict] | None = None,
     run_id: str = "local",
     simulator_config: str | Path = DEFAULT_SIMULATOR_CONFIG,
+    reteach_shaping: dict | None = None,
 ) -> list[EpisodeResult]:
     if episodes < 1:
         raise ValueError("episodes must be positive")
@@ -1467,6 +1479,7 @@ def simulate_episodes(
                 strategist=strategist,
                 horizon=min(int(scenario["teaching_horizon"]), HORIZON),
                 simulator_config=simulator_config,
+                reteach_shaping=reteach_shaping,
             )
         )
     return results
