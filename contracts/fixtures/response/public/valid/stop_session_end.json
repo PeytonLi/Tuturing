@@ -1,0 +1,36 @@
+{
+  "kind": "exchange",
+  "operation": "stopSession",
+  "path_params": {
+    "session_id": "ses-0123456789abcdef01234567"
+  },
+  "headers": {
+    "Authorization": "Bearer <token from TUTOR_PUBLIC_API_TOKENS>"
+  },
+  "request": {
+    "request_id": "req-stop-1",
+    "expected_state_version": 2
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "request_id": "req-stop-1",
+      "session_end": {
+        "schema_version": "1.0",
+        "session_id": "ses-0123456789abcdef01234567",
+        "state_version": 3,
+        "reason": "learner_stop",
+        "summary_content_id": "summary-ses-0123456789abcdef01234567",
+        "public_state": {
+          "session_id": "ses-0123456789abcdef01234567",
+          "state_version": 3,
+          "current_concept_id": "C01",
+          "goal_concept_id": "C01",
+          "teaching_turns": 2,
+          "status": "ended",
+          "end_reason": "learner_stop"
+        }
+      }
+    }
+  }
+}

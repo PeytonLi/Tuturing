@@ -1,0 +1,13 @@
+{
+  "kind": "schema",
+  "schema": "Error",
+  "instance": {
+    "schema_version": "1.0",
+    "request_id": "req",
+    "trace_id": "trc-fixture",
+    "code": "NOT_A_CODE",
+    "message": "unknown",
+    "retryable": false,
+    "current_state_version": null
+  }
+}

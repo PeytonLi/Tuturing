@@ -1,0 +1,9 @@
+{
+  "kind": "schema",
+  "schema": "CreateSessionRequest",
+  "instance": {
+    "request_id": "req",
+    "goal_concept_id": "C01",
+    "pace_preference": "fast"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "kind": "exchange",
+  "operation": "postTurn",
+  "path_params": {
+    "session_id": "ses-0123456789abcdef01234567"
+  },
+  "headers": {
+    "Authorization": "Bearer <token from TUTOR_PUBLIC_API_TOKENS>"
+  },
+  "request": {
+    "request_id": "req-turn-2",
+    "expected_state_version": 1,
+    "source_response_id": "response-52f8838b1acbd8d8176ce1a8",
+    "message": "a different message",
+    "session_id": "ses-0123456789abcdef01234567"
+  },
+  "response": {
+    "status": 409,
+    "body": {
+      "schema_version": "1.0",
+      "request_id": "req-turn-2",
+      "trace_id": "trc-fixture",
+      "code": "STATE_CONFLICT",
+      "message": "request_id was already used with different content; use a new request_id",
+      "retryable": false,
+      "current_state_version": 2
+    }
+  }
+}

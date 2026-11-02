@@ -1,0 +1,14 @@
+{
+  "kind": "schema",
+  "schema": "Error",
+  "http_status": 400,
+  "instance": {
+    "schema_version": "1.0",
+    "request_id": "req-error",
+    "trace_id": "trc-fixture",
+    "code": "UNSUPPORTED_VERSION",
+    "message": "Only contract major version 1 is supported.",
+    "retryable": false,
+    "current_state_version": null
+  }
+}

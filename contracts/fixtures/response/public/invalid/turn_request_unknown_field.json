@@ -1,0 +1,11 @@
+{
+  "kind": "schema",
+  "schema": "TurnRequest",
+  "instance": {
+    "request_id": "req-turn-1",
+    "expected_state_version": 0,
+    "source_response_id": null,
+    "message": "",
+    "unexpected": "not allowed"
+  }
+}
