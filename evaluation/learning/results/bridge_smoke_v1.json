@@ -2,14 +2,14 @@
   "artifacts": {
     "traces": {
       "full_rows": 1131,
-      "full_sha256": "bf48f861c59f7c85e77e33938ff90bc6a372ff650bfeeebce4490f40c39f03f6",
+      "full_sha256": "a8caba39e3317d970b459cfe7f395b39ba79e2754b941c4fdbc0a62a02c92d2b",
       "path": "evaluation/learning/results/bridge_smoke_v1.traces.jsonl.gz",
       "rows": 1131,
       "sampled": false,
-      "sha256": "bf48f861c59f7c85e77e33938ff90bc6a372ff650bfeeebce4490f40c39f03f6"
+      "sha256": "a8caba39e3317d970b459cfe7f395b39ba79e2754b941c4fdbc0a62a02c92d2b"
     },
     "turns": {
-      "sha256": "079fb1f7ce25a365410afb9d727a21672dceae668556d59f1613f3cbe1f41052"
+      "sha256": "edf4e251c122aa08dda3e552ce0e03a46af037e9898d8261141fcbc5028f1e24"
     }
   },
   "label": "SIMULATED",
@@ -2816,10 +2816,10 @@
       "seed": 20250115,
       "simulator_config": "configs/learning/simulator_proto_v2.yaml",
       "simulator_config_sha256": "b8af3e431f4c09150f6d163c012efd9c39ae9e953ac2640203fdecd7ec85b067",
-      "source_commit": "3855612f5150e3480033fdd5dee03243f06aba0f",
+      "source_commit": "71dc24503d211a89a64110333f098489b75decf2",
       "source_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "split": "validation",
-      "started_at": "2026-11-02T22:32:16.508184+00:00",
+      "started_at": "2026-11-02T22:38:39.446970+00:00",
       "text_path_source_sha256": "d548764358f05c20a25f288579e7c52d179e574500617d0ee2171f9aab50d0ba",
       "text_realizer": {
         "base": {
@@ -5654,10 +5654,10 @@
       "seed": 20250115,
       "simulator_config": "configs/learning/simulator_proto_v2.yaml",
       "simulator_config_sha256": "b8af3e431f4c09150f6d163c012efd9c39ae9e953ac2640203fdecd7ec85b067",
-      "source_commit": "3855612f5150e3480033fdd5dee03243f06aba0f",
+      "source_commit": "71dc24503d211a89a64110333f098489b75decf2",
       "source_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "split": "validation",
-      "started_at": "2026-11-02T22:30:28.173062+00:00",
+      "started_at": "2026-11-02T22:36:48.936808+00:00",
       "text_path_source_sha256": "d548764358f05c20a25f288579e7c52d179e574500617d0ee2171f9aab50d0ba",
       "text_realizer": {
         "artifact_id": "response_stub_pipeline_v1",
