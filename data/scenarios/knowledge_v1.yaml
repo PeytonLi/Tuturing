@@ -1,0 +1,339 @@
+# Hidden-knowledge test set, from tools/dev/generate_knowledge_scenarios.py.
+schema_version: scenarios_v1
+learner_types:
+- scenario_id: knowledge-01
+  learner_type: missing_basics
+  hidden_knowledge: Starts on conditional probability but never learned sample spaces
+    and basic probability.
+  adaptive_behavior: Notice repeated failure despite hints, drop difficulty, explain
+    or show a worked example.
+- scenario_id: knowledge-02
+  learner_type: already_knows
+  hidden_knowledge: Already knows the goal topic.
+  adaptive_behavior: Check mastery or challenge quickly; do not spend turns re-teaching.
+- scenario_id: knowledge-03
+  learner_type: reverses_conditionals
+  hidden_knowledge: Confidently computes P(B|A) when asked for P(A|B).
+  adaptive_behavior: Probe to surface the wrong idea, then target it with a worked
+    example or explanation.
+- scenario_id: knowledge-04
+  learner_type: wrong_denominator
+  hidden_knowledge: Divides by the whole population instead of the conditioning event.
+  adaptive_behavior: Probe, then target the denominator error.
+- scenario_id: knowledge-05
+  learner_type: assumes_independence
+  hidden_knowledge: Multiplies plain probabilities on trees, as if events were independent.
+  adaptive_behavior: Probe, then target the independence assumption.
+- scenario_id: knowledge-06
+  learner_type: tree_paths
+  hidden_knowledge: Multiplies along branches that do not form one path.
+  adaptive_behavior: Probe, then target the tree-path error.
+- scenario_id: knowledge-07
+  learner_type: complement_slip
+  hidden_knowledge: Subtracts the wrong complement.
+  adaptive_behavior: Probe, then target the complement error.
+- scenario_id: knowledge-08
+  learner_type: event_vs_outcome
+  hidden_knowledge: Treats an event as a single outcome.
+  adaptive_behavior: Probe, then target the event and outcome confusion.
+- scenario_id: knowledge-09
+  learner_type: strong_but_reverses
+  hidden_knowledge: Strong overall and gets easy items right, but still reverses conditionals.
+  adaptive_behavior: 'Not be fooled by early streaks: probe and fix the hidden error
+    before moving on.'
+scenarios:
+- scenario_id: knowledge-01
+  scenario_family_id: knowledge-family-missing_basics
+  split: validation
+  goal_concept_id: C08
+  start_concept_id: C06
+  profile_id: k_missing_basics
+  simulator_config_id: simulator_knowledge_v1
+  private_initial_state_ref: knowledge-init-01
+  public_history: []
+  template_family_allowlist:
+  - c01_teach_01
+  - c01_teach_02
+  - c02_teach_01
+  - c02_teach_02
+  - c03_teach_01
+  - c03_teach_02
+  - c06_teach_01
+  - c06_teach_02
+  - c08_teach_01
+  - c08_teach_02
+  - c01_assess_01
+  - c01_assess_04
+  - c02_assess_01
+  - c02_assess_04
+  - c03_assess_01
+  - c03_assess_04
+  - c06_assess_01
+  - c06_assess_04
+  - c08_assess_01
+  - c08_assess_04
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: knowledge_v1
+- scenario_id: knowledge-02
+  scenario_family_id: knowledge-family-already_knows
+  split: validation
+  goal_concept_id: C08
+  start_concept_id: C06
+  profile_id: k_already_knows
+  simulator_config_id: simulator_knowledge_v1
+  private_initial_state_ref: knowledge-init-02
+  public_history: []
+  template_family_allowlist:
+  - c01_teach_01
+  - c01_teach_02
+  - c02_teach_01
+  - c02_teach_02
+  - c03_teach_01
+  - c03_teach_02
+  - c06_teach_01
+  - c06_teach_02
+  - c08_teach_01
+  - c08_teach_02
+  - c01_assess_01
+  - c01_assess_04
+  - c02_assess_01
+  - c02_assess_04
+  - c03_assess_01
+  - c03_assess_04
+  - c06_assess_01
+  - c06_assess_04
+  - c08_assess_01
+  - c08_assess_04
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: knowledge_v1
+- scenario_id: knowledge-03
+  scenario_family_id: knowledge-family-reverses_conditionals
+  split: validation
+  goal_concept_id: C08
+  start_concept_id: C06
+  profile_id: k_reverses_conditionals
+  simulator_config_id: simulator_knowledge_v1
+  private_initial_state_ref: knowledge-init-03
+  public_history: []
+  template_family_allowlist:
+  - c01_teach_01
+  - c01_teach_02
+  - c02_teach_01
+  - c02_teach_02
+  - c03_teach_01
+  - c03_teach_02
+  - c06_teach_01
+  - c06_teach_02
+  - c08_teach_01
+  - c08_teach_02
+  - c01_assess_01
+  - c01_assess_04
+  - c02_assess_01
+  - c02_assess_04
+  - c03_assess_01
+  - c03_assess_04
+  - c06_assess_01
+  - c06_assess_04
+  - c08_assess_01
+  - c08_assess_04
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: knowledge_v1
+- scenario_id: knowledge-04
+  scenario_family_id: knowledge-family-wrong_denominator
+  split: validation
+  goal_concept_id: C08
+  start_concept_id: C06
+  profile_id: k_wrong_denominator
+  simulator_config_id: simulator_knowledge_v1
+  private_initial_state_ref: knowledge-init-04
+  public_history: []
+  template_family_allowlist:
+  - c01_teach_01
+  - c01_teach_02
+  - c02_teach_01
+  - c02_teach_02
+  - c03_teach_01
+  - c03_teach_02
+  - c06_teach_01
+  - c06_teach_02
+  - c08_teach_01
+  - c08_teach_02
+  - c01_assess_01
+  - c01_assess_04
+  - c02_assess_01
+  - c02_assess_04
+  - c03_assess_01
+  - c03_assess_04
+  - c06_assess_01
+  - c06_assess_04
+  - c08_assess_01
+  - c08_assess_04
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: knowledge_v1
+- scenario_id: knowledge-05
+  scenario_family_id: knowledge-family-assumes_independence
+  split: validation
+  goal_concept_id: C08
+  start_concept_id: C06
+  profile_id: k_assumes_independence
+  simulator_config_id: simulator_knowledge_v1
+  private_initial_state_ref: knowledge-init-05
+  public_history: []
+  template_family_allowlist:
+  - c01_teach_01
+  - c01_teach_02
+  - c02_teach_01
+  - c02_teach_02
+  - c03_teach_01
+  - c03_teach_02
+  - c06_teach_01
+  - c06_teach_02
+  - c08_teach_01
+  - c08_teach_02
+  - c01_assess_01
+  - c01_assess_04
+  - c02_assess_01
+  - c02_assess_04
+  - c03_assess_01
+  - c03_assess_04
+  - c06_assess_01
+  - c06_assess_04
+  - c08_assess_01
+  - c08_assess_04
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: knowledge_v1
+- scenario_id: knowledge-06
+  scenario_family_id: knowledge-family-tree_paths
+  split: validation
+  goal_concept_id: C08
+  start_concept_id: C06
+  profile_id: k_tree_paths
+  simulator_config_id: simulator_knowledge_v1
+  private_initial_state_ref: knowledge-init-06
+  public_history: []
+  template_family_allowlist:
+  - c01_teach_01
+  - c01_teach_02
+  - c02_teach_01
+  - c02_teach_02
+  - c03_teach_01
+  - c03_teach_02
+  - c06_teach_01
+  - c06_teach_02
+  - c08_teach_01
+  - c08_teach_02
+  - c01_assess_01
+  - c01_assess_04
+  - c02_assess_01
+  - c02_assess_04
+  - c03_assess_01
+  - c03_assess_04
+  - c06_assess_01
+  - c06_assess_04
+  - c08_assess_01
+  - c08_assess_04
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: knowledge_v1
+- scenario_id: knowledge-07
+  scenario_family_id: knowledge-family-complement_slip
+  split: validation
+  goal_concept_id: C03
+  start_concept_id: C02
+  profile_id: k_complement_slip
+  simulator_config_id: simulator_knowledge_v1
+  private_initial_state_ref: knowledge-init-07
+  public_history: []
+  template_family_allowlist:
+  - c01_teach_01
+  - c01_teach_02
+  - c02_teach_01
+  - c02_teach_02
+  - c03_teach_01
+  - c03_teach_02
+  - c01_assess_01
+  - c01_assess_04
+  - c02_assess_01
+  - c02_assess_04
+  - c03_assess_01
+  - c03_assess_04
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: knowledge_v1
+- scenario_id: knowledge-08
+  scenario_family_id: knowledge-family-event_vs_outcome
+  split: validation
+  goal_concept_id: C02
+  start_concept_id: C01
+  profile_id: k_event_vs_outcome
+  simulator_config_id: simulator_knowledge_v1
+  private_initial_state_ref: knowledge-init-08
+  public_history: []
+  template_family_allowlist:
+  - c01_teach_01
+  - c01_teach_02
+  - c02_teach_01
+  - c02_teach_02
+  - c01_assess_01
+  - c01_assess_04
+  - c02_assess_01
+  - c02_assess_04
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: knowledge_v1
+- scenario_id: knowledge-09
+  scenario_family_id: knowledge-family-strong_but_reverses
+  split: validation
+  goal_concept_id: C08
+  start_concept_id: C06
+  profile_id: k_strong_but_reverses
+  simulator_config_id: simulator_knowledge_v1
+  private_initial_state_ref: knowledge-init-09
+  public_history: []
+  template_family_allowlist:
+  - c01_teach_01
+  - c01_teach_02
+  - c02_teach_01
+  - c02_teach_02
+  - c03_teach_01
+  - c03_teach_02
+  - c06_teach_01
+  - c06_teach_02
+  - c08_teach_01
+  - c08_teach_02
+  - c01_assess_01
+  - c01_assess_04
+  - c02_assess_01
+  - c02_assess_04
+  - c03_assess_01
+  - c03_assess_04
+  - c06_assess_01
+  - c06_assess_04
+  - c08_assess_01
+  - c08_assess_04
+  teaching_horizon: 16
+  provenance:
+    author: Person B
+    reviewed: false
+    revision: knowledge_v1

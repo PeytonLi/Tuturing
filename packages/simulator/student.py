@@ -74,7 +74,7 @@ def sample_student(
     rng = random_bank.rng(scenario["scenario_id"], episode_seed, -1, "profile_initialization")
     concept_ids = [f"C{index:02d}" for index in range(1, 16)]
     goal = scenario["goal_concept_id"]
-    if profile_id == "novice_missing_prereqs":
+    if profile_id == "novice_missing_prereqs" or profile.get("weak_prerequisites_of_start"):
         mastery = {concept_id: float(rng.uniform(0.35, 0.70)) for concept_id in concept_ids}
         prerequisites = _proto_prerequisites()
         related = {scenario["start_concept_id"]}
@@ -90,7 +90,7 @@ def sample_student(
     else:
         low, high = profile["concept_mastery"]
         mastery = {concept_id: float(rng.uniform(low, high)) for concept_id in concept_ids}
-        if profile_id == "knowledgeable_concise":
+        if profile_id == "knowledgeable_concise" or "goal_mastery" in profile:
             mastery[goal] = _range_sample(rng, profile["goal_mastery"])
     rates = {concept_id: _range_sample(rng, profile["ell"]) for concept_id in concept_ids}
     guesses = {
