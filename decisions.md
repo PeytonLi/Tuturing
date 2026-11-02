@@ -29,3 +29,26 @@ Workspace-level decisions and their rationale, with dates and sources. Product a
 
 **Assistant notes:** Peyton's agent had already pushed the setup on two branches (see brief.md, "Our side: Person A"). The response lane on one of them is Person A code, so Xueming's side maintains it once merged. Decisions recorded there, such as D10's base-model switch, are Person A decisions under PRD 2.3 and still need Xueming's confirmation; this file does not record one.
 
+## 2026-11-02 — Run all Person A items in parallel; build datasets and benchmark frontier and open models
+
+**User direction:** “go ahead, do them in parallel. whatever needs me. i think we should create the datasets and benchmark it with frontier models and open-sourced models too.” Source: capture `cap_5db17ad4-fe00-4f06-b3b7-1b975ea4fe64`. Xueming then supplied OpenAI and Fireworks API keys in the Lark topic; their values are never recorded in the repository.
+
+**Implementation choices (assistant):**
+
+- Five agents run in parallel from the Tuturing topic, each in its own git worktree and branch: `a/public-api-v1`, `a/response-service-v1`, `a/datasets-v1`, `a/benchmark-v1` and `a/extractor-v1`. Workspace tasks were not used because the Workspace dispatches one managed task per project at a time (platform `docs/operations.md`), which would serialize work Xueming asked to run in parallel. The coordinating session merges the branches into `main` after the CPU smoke passes.
+- Agents change only Person A paths, leave the SFT config, trainer and D10 files to Peyton's agent, flag model-written data as synthetic and pending review, and never fill the human audit labels.
+- Keys are stored in `~/.config/tuturing/llm.env` (mode 600), outside Git. Benchmark API spend is capped at $25 total across OpenAI and Fireworks; the cap is an assistant default awaiting Xueming's confirmation. Small open models also run locally through llama.cpp on the Mac mini at no cost.
+- Fireworks control-plane metadata shows Qwen3.8-27B (D10's choice) supports LoRA but not serverless inference, so benchmarking or serving it needs a paid dedicated deployment. No deployment was created.
+
+## 2026-11-02 — Benchmark models: gpt-6.1-sol and Qwen3.8-27B on a Fireworks deployment
+
+**User direction:** “for frontier model benchmark use gpt6.1sol, for opensourced model use Qwen3.8-27B. we do deloy is fine.” Source: Lark message in the Tuturing topic at about 20:45 UTC, sent while the previous turn was running; its capture had not been exported when this was recorded.
+
+**Implementation (assistant):** The benchmark's required models are now OpenAI `gpt-6.1-sol` and `accounts/fireworks/models/qwen3p8-27b` on an on-demand Fireworks deployment. The agent creates the deployment only once the harness is ready, deletes it after the run, and records proof of deletion. Other paid models were dropped. The $25 total cap now also covers the deployment's GPU hours and still awaits Xueming's confirmation.
+
+## 2026-11-02 — Person A owns SFT
+
+**User direction:** “send me what to review, when it's ready. 4. we own the sft” — the second part answers the open question on who edits Person A's files. Source: capture `cap_7c410346-63da-4a59-9c26-bfb410856672`.
+
+**Consequences:** SFT is Person A's, as PRD section 2 and `OWNERS.md` already assign: the SFT configs, `tools/response/train_sft.py`, SFT data and decision records D09 and D10. Xueming's agents maintain these from now on, and the earlier hands-off rule for the files Peyton's agent was editing no longer applies to new work. D10's base-model choice is still unconfirmed; the benchmark of `gpt-6.1-sol` and Qwen3.8-27B is meant to inform it. Peyton's agent is outside this workspace, so Peyton has to relay the change to it.
+
