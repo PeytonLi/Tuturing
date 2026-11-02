@@ -106,7 +106,7 @@ def main():
         ("fallback_rate", "Turns where the model reply was unusable", "{:.0%}",
          "share of calls"),
     ]
-    fig, axes = plt.subplots(2, 3, figsize=(15, 8))
+    fig, axes = plt.subplots(2, 3, figsize=(22, 9))
     for ax, (k, title, fmt, yl) in zip(axes.flat, panels, strict=True):
         bar(ax, arms, [rows[a[0]][k] for a in arms], title, fmt, yl)
     fig.suptitle("Hidden-knowledge test set: 9 learner types x 6 sessions (simulated, not human data)")
@@ -118,7 +118,7 @@ def main():
         ("fixed_by_type", "Wrong idea fixed by learner type", "fixed_by_type.png"),
     ]:
         types = [t for t in TYPES if all(t in rows[a[0]][metric] for a in arms)]
-        fig, ax = plt.subplots(figsize=(14, 5))
+        fig, ax = plt.subplots(figsize=(20, 5.5))
         width = 0.8 / max(1, len(arms))
         for i, (key, label, color) in enumerate(arms):
             xs = [j + i * width for j in range(len(types))]
@@ -136,7 +136,7 @@ def main():
         ("seconds_per_session", "Wall time per session (16 run in parallel)", "{:.1f}s", "seconds"),
         ("calls", "Model calls", "{:.0f}", "calls"),
     ]
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4.5))
+    fig, axes = plt.subplots(1, 3, figsize=(22, 5))
     for ax, (k, title, fmt, yl) in zip(axes.flat, cost_panels, strict=True):
         vals = [rows[a[0]][k] if rows[a[0]][k] is not None else float("nan") for a in arms]
         bar(ax, arms, vals, title, fmt, yl)
