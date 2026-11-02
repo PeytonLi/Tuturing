@@ -40,7 +40,7 @@ The contract and fixture freeze comes first. Day-one lists:
 
 - Xueming asked to initialize the repository as a project that must execute fast (Personal Workspace capture `cap_4d37b006-5c9d-4541-b5dc-f82fceec5f89`, linked here as `cap_09da8dc3-bd37-47c4-bfc6-4168a3469f66`; setup receipt `cap_ce17386a-d4be-47bb-a271-115e8c20aede`).
 - Project `tuturing` is registered in the Workspace with this shared repository (`PeytonLi/Tuturing`, Xueming has write access); checkout at `/Users/xuemingxu/workspace/projects/tuturing`. `journal/` stays local; see decisions.md.
-- Lark topic group **Tuturing** (`oc_454768961d023702c1b8895f7238be31`): Felix (Codex) is a member and bound to this directory; Felix-Claude must be added by the owner in group settings → Bots, then `node scripts/add-bot.mjs cli_aa52cde0b578c08b claude-code` in the platform repository mirrors its binding.
+- Lark topic group **Tuturing** (`oc_454768961d023702c1b8895f7238be31`): Felix (Codex) and Felix-Claude are members. Xueming requested Felix-Claude as admin (capture `cap_110977ab-8071-4187-9e12-6a71a0af9e4d`); its group-admin role was granted and verified through Lark, and its Workspace project binding was added on 2026-11-02. See decisions.md for setup details.
 - `tuturing` is in the Workspace execution focus, so authorized tasks run unattended.
 
 ## Open questions
