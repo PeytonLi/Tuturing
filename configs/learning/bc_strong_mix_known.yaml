@@ -1,0 +1,12 @@
+seed: 20250115
+episodes: 450
+split: train
+holdout_fraction: 0.1
+epochs: 10
+batch_size: 256
+learning_rate: 0.001
+gamma: 0.99
+run_name: bc_strong_mix_known
+simulator_config: configs/learning/simulator_proto_v2.yaml
+include_strong_scenarios: true
+teacher: rules_known_aware

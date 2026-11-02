@@ -25,18 +25,19 @@ def masked_logits(logits: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
 
 
 class StrategistActorCritic(nn.Module):
-    def __init__(self, *, seed: int | None = None) -> None:
+    def __init__(self, *, seed: int | None = None, hidden: tuple[int, ...] = (128, 128)) -> None:
         super().__init__()
         if seed is not None:
             torch.manual_seed(seed)
-        self.trunk = nn.Sequential(
-            nn.Linear(OBSERVATION_SIZE, 128),
-            nn.Tanh(),
-            nn.Linear(128, 128),
-            nn.Tanh(),
-        )
-        self.policy_head = nn.Linear(128, STRATEGIST_ACTIONS)
-        self.value_head = nn.Linear(128, 1)
+        self.hidden = tuple(int(width) for width in hidden)
+        layers: list[nn.Module] = []
+        width_in = OBSERVATION_SIZE
+        for width in self.hidden:
+            layers.extend([nn.Linear(width_in, width), nn.Tanh()])
+            width_in = width
+        self.trunk = nn.Sequential(*layers)
+        self.policy_head = nn.Linear(width_in, STRATEGIST_ACTIONS)
+        self.value_head = nn.Linear(width_in, 1)
 
     def forward(self, obs: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         if obs.ndim == 1:
@@ -117,7 +118,7 @@ class NetworkStrategist:
             raise FileNotFoundError(f"checkpoint metadata not found: {self.metadata_path}")
         self.metadata = json.loads(self.metadata_path.read_text(encoding="utf-8"))
         self._validate_metadata(self.metadata)
-        self.model = StrategistActorCritic()
+        self.model = StrategistActorCritic(hidden=tuple(self.metadata.get("hidden", (128, 128))))
         state = torch.load(self.checkpoint_path, map_location="cpu", weights_only=True)
         self.model.load_state_dict(state)
         self.model.eval()

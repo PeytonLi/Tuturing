@@ -1,0 +1,14 @@
+seed: 20250115
+split: train
+holdout_fraction: 0.1
+batch_size: 256
+learning_rate: 0.001
+gamma: 0.99
+simulator_config: configs/learning/simulator_proto_v2.yaml
+include_strong_scenarios: true
+teacher: rules_known_aware
+episodes: 3600
+epochs: 80
+patience: 10
+hidden: [512, 512, 256]
+run_name: bc_fidelity_wide
