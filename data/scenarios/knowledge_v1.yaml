@@ -52,26 +52,21 @@ scenarios:
   private_initial_state_ref: knowledge-init-01
   public_history: []
   template_family_allowlist:
-  - c01_teach_01
-  - c01_teach_02
-  - c02_teach_01
-  - c02_teach_02
-  - c03_teach_01
-  - c03_teach_02
-  - c06_teach_01
-  - c06_teach_02
-  - c08_teach_01
-  - c08_teach_02
-  - c01_assess_01
-  - c01_assess_04
-  - c02_assess_01
-  - c02_assess_04
-  - c03_assess_01
-  - c03_assess_04
-  - c06_assess_01
-  - c06_assess_04
-  - c08_assess_01
-  - c08_assess_04
+  - c01_teach_03
+  - c02_teach_03
+  - c03_teach_03
+  - c06_teach_03
+  - c08_teach_03
+  - c01_assess_02
+  - c01_assess_05
+  - c02_assess_02
+  - c02_assess_05
+  - c03_assess_02
+  - c03_assess_05
+  - c06_assess_02
+  - c06_assess_05
+  - c08_assess_02
+  - c08_assess_05
   teaching_horizon: 16
   provenance:
     author: Person B
@@ -87,26 +82,21 @@ scenarios:
   private_initial_state_ref: knowledge-init-02
   public_history: []
   template_family_allowlist:
-  - c01_teach_01
-  - c01_teach_02
-  - c02_teach_01
-  - c02_teach_02
-  - c03_teach_01
-  - c03_teach_02
-  - c06_teach_01
-  - c06_teach_02
-  - c08_teach_01
-  - c08_teach_02
-  - c01_assess_01
-  - c01_assess_04
-  - c02_assess_01
-  - c02_assess_04
-  - c03_assess_01
-  - c03_assess_04
-  - c06_assess_01
-  - c06_assess_04
-  - c08_assess_01
-  - c08_assess_04
+  - c01_teach_03
+  - c02_teach_03
+  - c03_teach_03
+  - c06_teach_03
+  - c08_teach_03
+  - c01_assess_02
+  - c01_assess_05
+  - c02_assess_02
+  - c02_assess_05
+  - c03_assess_02
+  - c03_assess_05
+  - c06_assess_02
+  - c06_assess_05
+  - c08_assess_02
+  - c08_assess_05
   teaching_horizon: 16
   provenance:
     author: Person B
@@ -122,26 +112,21 @@ scenarios:
   private_initial_state_ref: knowledge-init-03
   public_history: []
   template_family_allowlist:
-  - c01_teach_01
-  - c01_teach_02
-  - c02_teach_01
-  - c02_teach_02
-  - c03_teach_01
-  - c03_teach_02
-  - c06_teach_01
-  - c06_teach_02
-  - c08_teach_01
-  - c08_teach_02
-  - c01_assess_01
-  - c01_assess_04
-  - c02_assess_01
-  - c02_assess_04
-  - c03_assess_01
-  - c03_assess_04
-  - c06_assess_01
-  - c06_assess_04
-  - c08_assess_01
-  - c08_assess_04
+  - c01_teach_03
+  - c02_teach_03
+  - c03_teach_03
+  - c06_teach_03
+  - c08_teach_03
+  - c01_assess_02
+  - c01_assess_05
+  - c02_assess_02
+  - c02_assess_05
+  - c03_assess_02
+  - c03_assess_05
+  - c06_assess_02
+  - c06_assess_05
+  - c08_assess_02
+  - c08_assess_05
   teaching_horizon: 16
   provenance:
     author: Person B
@@ -157,26 +142,21 @@ scenarios:
   private_initial_state_ref: knowledge-init-04
   public_history: []
   template_family_allowlist:
-  - c01_teach_01
-  - c01_teach_02
-  - c02_teach_01
-  - c02_teach_02
-  - c03_teach_01
-  - c03_teach_02
-  - c06_teach_01
-  - c06_teach_02
-  - c08_teach_01
-  - c08_teach_02
-  - c01_assess_01
-  - c01_assess_04
-  - c02_assess_01
-  - c02_assess_04
-  - c03_assess_01
-  - c03_assess_04
-  - c06_assess_01
-  - c06_assess_04
-  - c08_assess_01
-  - c08_assess_04
+  - c01_teach_03
+  - c02_teach_03
+  - c03_teach_03
+  - c06_teach_03
+  - c08_teach_03
+  - c01_assess_02
+  - c01_assess_05
+  - c02_assess_02
+  - c02_assess_05
+  - c03_assess_02
+  - c03_assess_05
+  - c06_assess_02
+  - c06_assess_05
+  - c08_assess_02
+  - c08_assess_05
   teaching_horizon: 16
   provenance:
     author: Person B
@@ -192,26 +172,21 @@ scenarios:
   private_initial_state_ref: knowledge-init-05
   public_history: []
   template_family_allowlist:
-  - c01_teach_01
-  - c01_teach_02
-  - c02_teach_01
-  - c02_teach_02
-  - c03_teach_01
-  - c03_teach_02
-  - c06_teach_01
-  - c06_teach_02
-  - c08_teach_01
-  - c08_teach_02
-  - c01_assess_01
-  - c01_assess_04
-  - c02_assess_01
-  - c02_assess_04
-  - c03_assess_01
-  - c03_assess_04
-  - c06_assess_01
-  - c06_assess_04
-  - c08_assess_01
-  - c08_assess_04
+  - c01_teach_03
+  - c02_teach_03
+  - c03_teach_03
+  - c06_teach_03
+  - c08_teach_03
+  - c01_assess_02
+  - c01_assess_05
+  - c02_assess_02
+  - c02_assess_05
+  - c03_assess_02
+  - c03_assess_05
+  - c06_assess_02
+  - c06_assess_05
+  - c08_assess_02
+  - c08_assess_05
   teaching_horizon: 16
   provenance:
     author: Person B
@@ -227,26 +202,21 @@ scenarios:
   private_initial_state_ref: knowledge-init-06
   public_history: []
   template_family_allowlist:
-  - c01_teach_01
-  - c01_teach_02
-  - c02_teach_01
-  - c02_teach_02
-  - c03_teach_01
-  - c03_teach_02
-  - c06_teach_01
-  - c06_teach_02
-  - c08_teach_01
-  - c08_teach_02
-  - c01_assess_01
-  - c01_assess_04
-  - c02_assess_01
-  - c02_assess_04
-  - c03_assess_01
-  - c03_assess_04
-  - c06_assess_01
-  - c06_assess_04
-  - c08_assess_01
-  - c08_assess_04
+  - c01_teach_03
+  - c02_teach_03
+  - c03_teach_03
+  - c06_teach_03
+  - c08_teach_03
+  - c01_assess_02
+  - c01_assess_05
+  - c02_assess_02
+  - c02_assess_05
+  - c03_assess_02
+  - c03_assess_05
+  - c06_assess_02
+  - c06_assess_05
+  - c08_assess_02
+  - c08_assess_05
   teaching_horizon: 16
   provenance:
     author: Person B
@@ -262,18 +232,21 @@ scenarios:
   private_initial_state_ref: knowledge-init-07
   public_history: []
   template_family_allowlist:
-  - c01_teach_01
-  - c01_teach_02
-  - c02_teach_01
-  - c02_teach_02
-  - c03_teach_01
-  - c03_teach_02
-  - c01_assess_01
-  - c01_assess_04
-  - c02_assess_01
-  - c02_assess_04
-  - c03_assess_01
-  - c03_assess_04
+  - c01_teach_03
+  - c02_teach_03
+  - c03_teach_03
+  - c06_teach_03
+  - c08_teach_03
+  - c01_assess_02
+  - c01_assess_05
+  - c02_assess_02
+  - c02_assess_05
+  - c03_assess_02
+  - c03_assess_05
+  - c06_assess_02
+  - c06_assess_05
+  - c08_assess_02
+  - c08_assess_05
   teaching_horizon: 16
   provenance:
     author: Person B
@@ -289,14 +262,21 @@ scenarios:
   private_initial_state_ref: knowledge-init-08
   public_history: []
   template_family_allowlist:
-  - c01_teach_01
-  - c01_teach_02
-  - c02_teach_01
-  - c02_teach_02
-  - c01_assess_01
-  - c01_assess_04
-  - c02_assess_01
-  - c02_assess_04
+  - c01_teach_03
+  - c02_teach_03
+  - c03_teach_03
+  - c06_teach_03
+  - c08_teach_03
+  - c01_assess_02
+  - c01_assess_05
+  - c02_assess_02
+  - c02_assess_05
+  - c03_assess_02
+  - c03_assess_05
+  - c06_assess_02
+  - c06_assess_05
+  - c08_assess_02
+  - c08_assess_05
   teaching_horizon: 16
   provenance:
     author: Person B
@@ -312,26 +292,21 @@ scenarios:
   private_initial_state_ref: knowledge-init-09
   public_history: []
   template_family_allowlist:
-  - c01_teach_01
-  - c01_teach_02
-  - c02_teach_01
-  - c02_teach_02
-  - c03_teach_01
-  - c03_teach_02
-  - c06_teach_01
-  - c06_teach_02
-  - c08_teach_01
-  - c08_teach_02
-  - c01_assess_01
-  - c01_assess_04
-  - c02_assess_01
-  - c02_assess_04
-  - c03_assess_01
-  - c03_assess_04
-  - c06_assess_01
-  - c06_assess_04
-  - c08_assess_01
-  - c08_assess_04
+  - c01_teach_03
+  - c02_teach_03
+  - c03_teach_03
+  - c06_teach_03
+  - c08_teach_03
+  - c01_assess_02
+  - c01_assess_05
+  - c02_assess_02
+  - c02_assess_05
+  - c03_assess_02
+  - c03_assess_05
+  - c06_assess_02
+  - c06_assess_05
+  - c08_assess_02
+  - c08_assess_05
   teaching_horizon: 16
   provenance:
     author: Person B

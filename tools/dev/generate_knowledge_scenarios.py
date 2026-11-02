@@ -86,9 +86,8 @@ CASES = {
 
 
 def allowlist(start: str, goal: str) -> list[str]:
-    concepts = [c for c in TAUGHT if c <= goal] if goal != "C08" else list(TAUGHT)
-    names = [f"{c.lower()}_teach_0{i}" for c in concepts for i in (1, 2)]
-    return names + [f"{c.lower()}_assess_0{i}" for c in concepts for i in (1, 4)]
+    names = [f"{c.lower()}_teach_03" for c in TAUGHT]
+    return names + [f"{c.lower()}_assess_0{i}" for c in TAUGHT for i in (2, 5)]
 
 
 def main():
