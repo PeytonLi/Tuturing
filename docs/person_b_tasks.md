@@ -25,18 +25,18 @@ MathDial is not part of your RL. Its only possible role is a Strategist head sta
 2. Review the simulator assumptions. Each one is a guess. Change the ones you disagree with before training anything, and write down why.
 3. Review the 30 decision cases in evaluation/learning/decision_cases_v1.jsonl. Fix any acceptable or forbidden list you disagree with. This is your first benchmark.
 4. Score random, the rules Strategist, the small model (Qwen 3.8 27B, accounts/fireworks/models/qwen3p8-27b on Fireworks) and a frontier model on the decision cases with tools.learning.score_decisions. Point TUTOR_LLM_BASE_URL, TUTOR_LLM_API_KEY and TUTOR_LLM_MODEL at an OpenAI-compatible endpoint. For Fireworks, the base URL is https://api.fireworks.ai/inference/v1.
-5. Run the sanity checks: always-HINT must not beat the rules Strategist on every profile, and random should be clearly worse. If either fails, the simulator gives away the answer by construction. Fix the simulator, not the policy.
-6. Train: behavior cloning from the rules Strategist first, then PPO for 2,500 sessions per seed with 5 seeds. Also train one from scratch.
-7. Evaluate random, rules, behavior cloning only, PPO, and the LLM Strategists on the validation split. Keep the test split sealed until everything is frozen. Then run it once.
-8. Run a second simulator setting, with different learning dynamics or profile ranges, to check the result isn't a quirk of one simulator.
-9. Write the outcome report: gain with confidence intervals, disclosures, dropout, and turns used, plus the simulator's limitations. Label every result as simulated.
+5. Run the sanity checks: always-HINT must not beat the rules Strategist on every profile, and random should be clearly worse. If either fails, the simulator gives away the answer by construction. Fix the simulator, not the policy. Status: done (simulated). Always-hint is below rules on every profile, and random is clearly worse overall and on novices. On knowledgeable learners it is a near tie. See docs/results/strategist_final_v1.md.
+6. Train: behavior cloning from the rules Strategist first, then PPO for 2,500 sessions per seed with 5 seeds. Also train one from scratch. Status: done on v2 with rules v3. BC, PPO seeds 0 to 4, scratch and one entropy variant.
+7. Evaluate random, rules, behavior cloning only, PPO, and the LLM Strategists on the validation split. Keep the test split sealed until everything is frozen. Then run it once. Status: done for the non-LLM policies (LLM Strategists are not run here). Test split run once, and BC is the chosen checkpoint.
+8. Run a second simulator setting, with different learning dynamics or profile ranges, to check the result isn't a quirk of one simulator. Status: done with simulator_proto_alt.yaml, and the ranking holds.
+9. Write the outcome report: gain with confidence intervals, disclosures, dropout, and turns used, plus the simulator's limitations. Label every result as simulated. Status: done, in docs/results/strategist_final_v1.md.
 
 ## What you owe Person A
 
 - Done: the internal learning service hand-off, with startup and endpoint examples in [the learning service guide](learning_service.md).
 - Valid teaching plan examples for every move, with content A can render.
 - Problem templates, hint ladders, worked examples and approved facts for every enabled concept. A's original SFT examples and math checks depend on these.
-- Once PPO runs, which moves and paces the Strategist picks most, so A can make sure those have enough SFT examples.
+- Done: Once PPO runs, which moves and paces the Strategist picks most, so A can make sure those have enough SFT examples. See the Person A section of docs/results/strategist_final_v1.md.
 - Hand-labels for the 200-turn MathDial mapping audit, and your approval of what each mapped move means. A owns and maintains the mapping guide. You don't write it, but nothing mapped from MathDial is used to imitate teaching decisions until you approve it.
 
 ## Later, not now

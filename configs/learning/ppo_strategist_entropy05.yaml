@@ -1,0 +1,16 @@
+# One documented change for seed 0 only (Step 3): entropy coefficient 0.01 -> 0.05 because BC-initialized PPO still put 73-88% of validation turns on WORKED_EXAMPLE. Everything else equals ppo_strategist.yaml.
+seed: 20250115
+sessions: 2500
+episodes_per_update: 32
+epochs: 4
+minibatch_size: 256
+learning_rate: 0.0003
+clip: 0.2
+entropy_coef: 0.05
+value_coef: 0.5
+max_grad_norm: 0.5
+gamma: 0.99
+lam: 0.95
+split: train
+run_name: ppo_strategist_entropy05
+simulator_config: configs/learning/simulator_proto_v2.yaml

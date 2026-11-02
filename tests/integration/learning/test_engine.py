@@ -1,5 +1,6 @@
 import copy
 import json
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from threading import Barrier
@@ -8,7 +9,13 @@ import pytest
 
 from apps.learning_service.engine import LearningEngine, ServiceError
 from apps.learning_service.schemas import validate
-from packages.learning.actions import encode_strategist
+from packages.learning.actions import decode_navigator, encode_strategist
+from packages.learning.episode import (
+    _public_state,
+    update_public_misconceptions,
+)
+from packages.learning.features import build_features, feature_order
+from packages.learning.scheduler import GoalStack
 
 
 @pytest.fixture
@@ -331,6 +338,136 @@ def test_incorrect_grader_overrides_extractor(engine):
     belief = state(engine, sid)["beliefs"]["C01"]
     assert belief["mastery"] < 0.35
     assert belief["independent_incorrect"] == 1
+
+
+def test_public_misconception_features_match_episode_and_service(engine):
+    sid = create(engine, goal="C06")
+    first_plan = observe(engine, sid)["teaching_plan"]
+    commit(engine, first_plan)
+    committed_state = state(engine, sid)
+    item = engine._item(committed_state["active_item"])
+    assert item is not None
+    assert "M05" in item["family"].error_generators
+    error_answer = item["family"].generate_error("M05", item["instance"])
+    next_result = observe(
+        engine,
+        sid,
+        1,
+        evidence(engine, first_plan, answer=str(error_answer), event="misconception"),
+        "next",
+    )
+    assert next_result["kind"] == "plan"
+
+    service_state = state(engine, sid)
+    expected_misconceptions = update_public_misconceptions(
+        {},
+        family=item["family"],
+        instance=item["instance"],
+        normalized_answer=str(error_answer),
+        correctness="incorrect",
+        move=first_plan["teaching_action"]["move"],
+    )
+    assert service_state["public_misconceptions"] == expected_misconceptions
+    beliefs = engine._beliefs(service_state)
+    stack = GoalStack(
+        stack=service_state["stack"],
+        visit_index=service_state["visit_index"],
+        last_pair_visit={
+            tuple(key): value for key, value in service_state["last_pair_visit"]
+        },
+        pair_visits=defaultdict(
+            int, {tuple(key): value for key, value in service_state["pair_visits"]}
+        ),
+    )
+    service_item = engine._item(service_state["active_item"])
+    service_public, _ = engine._context(service_state, beliefs, service_item, stack)
+    navigation = service_state["navigation_action_id"]
+    operation, index = (
+        decode_navigator(navigation) if navigation is not None else (None, None)
+    )
+    episode_public = _public_state(
+        beliefs,
+        current=service_state["current_concept_id"],
+        goal=service_state["goal_concept_id"],
+        turn=service_state["teaching_turns"],
+        active_item=service_item,
+        active_option_type=operation,
+        active_target=f"C{index + 1:02d}" if index is not None else None,
+        previous_move=service_state["previous_move"],
+        option_turns=service_state["option_turns"],
+        success_streak=service_state["success_streak"],
+        failure_streak=service_state["failure_streak"],
+        hint_count=service_state["hint_count"],
+        explicit_skip=service_state["requests"]["skip"],
+        explicit_faster=service_state["requests"]["faster"],
+        explicit_slower=service_state["requests"]["slower"],
+        stack=stack.stack,
+        misconceptions=expected_misconceptions,
+    )
+    episode_public["remaining_budget"] = (
+        service_state["teaching_budget"] - service_state["teaching_turns"]
+    )
+    service_features = build_features(service_public)
+    episode_features = build_features(episode_public)
+    assert service_features == episode_features
+    misconception_start = feature_order().index("misconception_probability_M01")
+    misconception_end = feature_order().index("misconception_probability_M25") + 1
+    assert service_features[misconception_start:misconception_end] == [
+        expected_misconceptions.get(f"M{index:02d}", 0.0)
+        for index in range(1, 26)
+    ]
+    m05_index = feature_order().index("misconception_probability_M05")
+    assert service_features[m05_index] > 0.0
+
+    cancel(engine, next_result["teaching_plan"], "cancel-for-decay")
+
+    class PracticeStrategist:
+        policy_version = "test_practice_v1"
+
+        def act(self, observation, mask, context):
+            return encode_strategist("PRACTICE", context["active_item_difficulty"], "normal")
+
+    engine.strategist = PracticeStrategist()
+    decay_result = observe(
+        engine,
+        sid,
+        1,
+        evidence(
+            engine,
+            first_plan,
+            answer=str(error_answer),
+            event="misconception",
+        ),
+        "replan-for-decay",
+    )
+    assert decay_result["kind"] == "plan"
+    decay_plan = decay_result["teaching_plan"]
+    commit(engine, decay_plan, "commit-decay")
+    second_state = state(engine, sid)
+    second_item = engine._item(second_state["active_item"])
+    assert second_item is not None
+    assert "M05" in second_item["family"].error_generators
+    expected_after_correct = update_public_misconceptions(
+        expected_misconceptions,
+        family=second_item["family"],
+        instance=second_item["instance"],
+        normalized_answer=str(second_item["instance"]["answer"]),
+        correctness="correct",
+        move=decay_plan["teaching_action"]["move"],
+    )
+    observe(
+        engine,
+        sid,
+        2,
+        evidence(
+            engine,
+            decay_plan,
+            answer=str(second_item["instance"]["answer"]),
+            event="correct",
+        ),
+        "decay",
+    )
+    assert state(engine, sid)["public_misconceptions"] == expected_after_correct
 
 
 def test_certified_goal_ends_before_another_plan(engine):
