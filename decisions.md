@@ -52,3 +52,52 @@ Workspace-level decisions and their rationale, with dates and sources. Product a
 
 **Consequences:** SFT is Person A's, as PRD section 2 and `OWNERS.md` already assign: the SFT configs, `tools/response/train_sft.py`, SFT data and decision records D09 and D10. Xueming's agents maintain these from now on, and the earlier hands-off rule for the files Peyton's agent was editing no longer applies to new work. D10's base-model choice is still unconfirmed; the benchmark of `gpt-6.1-sol` and Qwen3.8-27B is meant to inform it. Peyton's agent is outside this workspace, so Peyton has to relay the change to it.
 
+## 2026-11-02 — Person B transaction engine implementation
+
+**Source:** Person B learning-service handoff in this agent session; PRD sections 8 and 9.
+
+**Implementation choices:** SQLite stores the full session snapshot as JSON and pending intervention
+snapshots separately, so cancellation retains evidence but never commits option/item assignments.
+Observe returns either `{kind: "plan", teaching_plan: ...}` or
+`{kind: "session_end", session_end: ...}`. Live sessions sample only the original `train` families;
+held-out validation/test families remain reserved. Items persist their family and sample seed.
+Plan counters, rather than delivered turn counts, identify reservations and sampled instances.
+The rules runtime defaults to `work/learning.sqlite3` under the existing ignored `work/` directory.
+The store creates its parent directory automatically, including when used without the HTTP server.
+
+`PROBE` and `CHECK_MASTERY` are independent assessments in this runtime; requested answers cannot
+reveal an independent assessment. Both extractor assistance and committed-plan assistance gate BKT.
+Explicit skip targets become the goal, matching the episode initializer's request semantics;
+live goal changes update the goal and trigger the scheduler without inventing a navigation action.
+Navigator streaks reset at option boundaries, as in `run_episode`. Policy failures retain already
+accepted evidence, but unsuccessful operations are not cached. Exact successful idempotent retries
+take precedence over the ended-session guard; fresh mutations on ended sessions are rejected.
+Idempotency conflicts precede lookup of a different, potentially unknown session in a reused key's
+body. No HTTP or Person A implementation is included.
+
+## 2026-11-02 — Internal learning HTTP hand-off
+
+**Source:** Follow-up Person B learning-service handoff in this agent session.
+
+The stdlib HTTP server authenticates before reading any body. Missing or invalid trace IDs are
+authentication failures (401), as requested. Error correlation IDs use `unknown` when absent or
+invalid so even rejected requests receive contract-valid Error records. Unknown GET/POST routes
+return 422 `INVALID_SCHEMA`. Successful requests return 200, including session creation.
+POSTs require a nonempty ASCII Idempotency-Key of at most 128 characters. Chunked requests are not
+supported; POSTs require Content-Length and at most 65,536 bytes of finite JSON. The server closes
+each response connection, so an unread rejected body cannot become the next request.
+`docs/learning_service.md` records a real local transport run with a development-only token.
+
+## 2026-11-02 — Episode helper compatibility after simulator v2 merge
+
+**Source:** Follow-up request to adapt the learning service after merging origin/main.
+
+`_next_item` now consumes assessment-family usage and per-concept reuse counters, not an
+assessment-family set. The engine persists both counters in the proposed plan snapshot and
+promotes them only on commit. Cancellation and expiry still consume no teaching turn or family
+usage. The existing `used_assessment` field now holds a count mapping. Legacy lists in sessions
+and pending plan snapshots are accepted as one recorded use per listed family; earlier unrecorded
+PROBE usage cannot be inferred from that list. Missing legacy reuse counters start empty.
+Other imported episode helpers are unchanged. New train assessment families enter the existing
+train-only allowlist automatically. Simulator v2 student/reward settings and training configs are
+not used by the live engine; its rules config and checkpoint loading remain unchanged.

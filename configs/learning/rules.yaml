@@ -1,0 +1,6 @@
+strategist: rules
+teaching_budget: 16
+pending_plan_timeout_seconds: 600
+db_path: work/learning.sqlite3
+enabled_concepts: [C01, C02, C03, C06, C08]
+seed: 20250115
