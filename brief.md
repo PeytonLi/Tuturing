@@ -55,15 +55,30 @@ The contract and fixture freeze comes first. Day-one lists:
 - B's mock observe/commit/status/conflict service is not on `main` yet, and `apps/learning_service` is empty. A's retry demonstration and the ten-session smoke depend on it.
 - Contract placement differs from PRD 2.2 and 21.1: `Error` and `PublicState` are defined in B's `learning_v1.schema.json`, not in A's contracts. `response_v1.schema.json` embeds identical generated copies of `TeachingPlan`, `TeachingAction` and `NavigationAction` from the shared generator `tools/dev/generate_contract_assets.py`. Both points belong to the contract freeze (G0).
 
+## In flight (2026-11-02)
+
+Xueming authorized running every Person A item in parallel and asked for datasets plus a benchmark of frontier and open-source models (capture `cap_5db17ad4-fe00-4f06-b3b7-1b975ea4fe64`). Five agents run from the Tuturing topic, each on its own branch in its own worktree. The coordinating session merges them into `main` after the CPU smoke passes.
+
+- `a/public-api-v1`: `contracts/public_v1.openapi.yaml` with public fixtures, a D11 proposal on where `Error` and `PublicState` live, and `apps/public_api` with idempotency, staging and recovery, tested against an A-owned transaction stand-in until B's mock ships.
+- `a/response-service-v1`: the generation pipeline with one repair and a verified fallback, an OpenAI-compatible responder, `apps/response_service`, `tools.response.serve`, and the stub artifact manifest and runbook for B.
+- `a/datasets-v1`: MathDial prep with a leak review, model-drafted audit labels in a separate file, at least 300 synthetic original probability examples pending review with frozen splits, the probability benchmark case set and a review packet.
+- `a/benchmark-v1`: a model-matrix benchmark with local llama.cpp models plus OpenAI and Fireworks serverless models within a $25 total cap, a report and a blinded review sheet.
+- `a/extractor-v1`: a messy-message extraction eval set, extractor improvements and a confusion-matrix report.
+
+Keys live in `~/.config/tuturing/llm.env` (mode 600), outside Git. Both keys answered free model-list calls with HTTP 200.
+
 ## Open questions
 
-- D10, now on `main`, switches the SFT base model from the PRD's `Qwen/Qwen2.5-7B-Instruct` to `Qwen/Qwen3.8-27B`, trained and served through Fireworks, and is marked "accepted by lead". PRD 2.3 makes SFT selection a Person A decision, so Xueming should confirm it. It also adds a Fireworks account, API key and spending.
+- D10 on `main` switches the SFT base model from the PRD's `Qwen/Qwen2.5-7B-Instruct` to `Qwen/Qwen3.8-27B` on Fireworks and is marked "accepted by lead". PRD 2.3 makes SFT selection a Person A decision, so Xueming should confirm it. Fireworks lists the model as LoRA-tunable but not serverless, so benchmarking and serving it need a paid dedicated deployment. The benchmark results are meant to inform this decision.
+- The $25 benchmark spend cap is an assistant default that Xueming has not confirmed.
+- Who edits Person A files: Peyton's agent is still committing to A's SFT config, trainer and D10.
+- Anthropic and Google keys are absent, so Claude and Gemini are not in the benchmark yet.
 - Hackathon deadline and demo format are not recorded anywhere in the repository.
 - When will Peyton ship B's mock learning service?
 
-## Proposed next steps (assistant proposal, not a decision)
+## Next (assistant proposal, not a decision)
 
-1. Once Xueming authorizes it, run A's remaining day-one items as one bounded workspace task: the public OpenAPI contract (settling with Peyton where `Error` and `PublicState` live), the response service and `serve` entrypoint, public API idempotency and staging tested against B's fixture plans until B's mock ships, 30 original examples with a split manifest, and the stub artifact with loading instructions. Completion condition: PRD 21.1 day-one acceptance with green `pytest` and `validate_contracts`.
-2. In parallel, the data items from `docs/person_a_tasks.md`: read 20 prepared MathDial examples for leaks, label A's half of the 200-turn mapping audit, and measure the evidence extractor on messy messages.
-3. Build the demo path first. If an LLM API key is available, a prompt-only model behind the response service gives natural replies before any SFT; SFT follows the D10 decision.
-4. Hold the first integration review (21.3) with Peyton before either side trains anything; settle D10 and the contract placement there or earlier.
+1. Merge the five branches into `main` as each passes the CPU smoke, add the new A-owned `data/response/` to `OWNERS.md`, and rerun the combined smoke.
+2. Xueming reviews the dataset and benchmark review packets and fills `label_person_a` in the mapping audit. Peyton fills `label_person_b` and reviews D11.
+3. Decide D10 with the benchmark results, then run the SFT smoke.
+4. Hold the first integration review (PRD 21.3) with Peyton before either side trains anything.
