@@ -1,0 +1,5689 @@
+{
+  "artifacts": {
+    "traces": {
+      "path": "evaluation/learning/results/bridge_smoke_v1.traces.jsonl.gz",
+      "rows": 17428,
+      "sha256": "33189e97f422362e7a860d2bf4681981754941995d12ff7305ff136e368cabae"
+    },
+    "turns": {
+      "path": "evaluation/learning/results/bridge_smoke_v1.turns.jsonl.gz",
+      "rows": 17428,
+      "sha256": "33189e97f422362e7a860d2bf4681981754941995d12ff7305ff136e368cabae"
+    }
+  },
+  "label": "SIMULATED",
+  "smokes": {
+    "degraded": {
+      "bridge_source_sha256": "b376e77eaf6bc87ec58e3a4effb28f6920251ed4c262742729867cda73ba3637",
+      "call_estimate": {
+        "actual_model_calls": 0,
+        "max_calls_budget": 0,
+        "maximum_primary_calls": 0,
+        "maximum_repair_calls": 0,
+        "maximum_turns_per_path": 4800,
+        "maximum_verbalizer_calls": 0,
+        "note": "Nominal count follows stub decisions; text may change decisions and length. Upper bounds include every turn up to each scenario horizon, including repairs.",
+        "planned_primary_calls_at_stub_trajectory": 0,
+        "planned_verbalizer_calls_at_stub_trajectory": 0,
+        "structured_rehearsal_turns": 4357
+      },
+      "checkpoint_sha256": null,
+      "content_fidelity_rule": "PRD line 895: content_fidelity=0 for unsupported or contradictory delivered content. Here any failed independent A check or item-identity check sets content_realized=False; otherwise the simulator's configured stub_realized coefficient (at most 1) and seeded failure process apply. Extraction disagreement is separate from content fidelity.",
+      "dependency_lock_sha256": "0d43ba121fecce1327a88b57f643f951e81a01768f8d769e6466f3fde53dd5d6",
+      "dry_run": false,
+      "episodes": 300,
+      "g8": {
+        "automated_critical_candidates": 1008,
+        "eligible_test_budget": false,
+        "flagged_traces": 8714,
+        "human_critical_failures": 0,
+        "outcome_threshold_met": true,
+        "paired_uncertainty_published": true,
+        "real_text_run": false,
+        "review_complete": false,
+        "reviewed_traces": 0,
+        "rule": "test pairs>=300 AND real replies AND all flagged traces reviewed with no critical failures AND text-minus-structured mean>=-0.02; publish paired bootstrap 95% CI (CI crossing -0.02 is reported, not an extra PRD gate)",
+        "status": "FAIL"
+      },
+      "label": "SIMULATED",
+      "navigator": "rules",
+      "paired_text_minus_structured": {
+        "ci_95": [
+          -0.005688397812501537,
+          -0.003295396280224413
+        ],
+        "mean": -0.004299461858755805
+      },
+      "pairs": [
+        {
+          "difference": -0.0023845815777348567,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250115,
+          "structured_gain": 0.02730170066433593,
+          "structured_turns": 16,
+          "text_gain": 0.024917119086601075,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.015897287674687455,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250116,
+          "structured_gain": 0.048026308683313534,
+          "structured_turns": 16,
+          "text_gain": 0.03212902100862608,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0033196191071787617,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250117,
+          "structured_gain": 0.16364003510936864,
+          "structured_turns": 16,
+          "text_gain": 0.16032041600218988,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250118,
+          "structured_gain": 0.0004304779733566577,
+          "structured_turns": 2,
+          "text_gain": 0.0004304779733566577,
+          "text_turns": 2
+        },
+        {
+          "difference": -0.00447356224497053,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250119,
+          "structured_gain": 0.1546113601480877,
+          "structured_turns": 16,
+          "text_gain": 0.15013779790311718,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0014910952098708963,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250120,
+          "structured_gain": 0.014546569677204801,
+          "structured_turns": 16,
+          "text_gain": 0.013055474467333905,
+          "text_turns": 16
+        },
+        {
+          "difference": -9.61377394287366e-05,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250121,
+          "structured_gain": 0.029357494263102635,
+          "structured_turns": 16,
+          "text_gain": 0.029261356523673898,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0009410818054167158,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250122,
+          "structured_gain": 0.0009410818054167158,
+          "structured_turns": 3,
+          "text_gain": 0.0,
+          "text_turns": 3
+        },
+        {
+          "difference": -0.0012957926215244608,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250123,
+          "structured_gain": 0.004750707058320813,
+          "structured_turns": 16,
+          "text_gain": 0.0034549144367963525,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0004153323597428926,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250124,
+          "structured_gain": 0.0031975122861414573,
+          "structured_turns": 6,
+          "text_gain": 0.0027821799263985647,
+          "text_turns": 6
+        },
+        {
+          "difference": -0.023698795991776767,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250125,
+          "structured_gain": 0.047616801134419906,
+          "structured_turns": 16,
+          "text_gain": 0.02391800514264314,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.005079129680597982,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250126,
+          "structured_gain": 0.03002263255783899,
+          "structured_turns": 10,
+          "text_gain": 0.02494350287724101,
+          "text_turns": 10
+        },
+        {
+          "difference": -0.003880750591335247,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250127,
+          "structured_gain": 0.15017413605558666,
+          "structured_turns": 16,
+          "text_gain": 0.1462933854642514,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0026726385932182573,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250128,
+          "structured_gain": 0.00688437379537421,
+          "structured_turns": 16,
+          "text_gain": 0.004211735202155953,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.002197443149699052,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250129,
+          "structured_gain": 0.15324024369763364,
+          "structured_turns": 16,
+          "text_gain": 0.1510428005479346,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.004464742127521959,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250130,
+          "structured_gain": 0.029896986702038275,
+          "structured_turns": 16,
+          "text_gain": 0.025432244574516316,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.018985889289093782,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250131,
+          "structured_gain": 0.05311367367033859,
+          "structured_turns": 16,
+          "text_gain": 0.03412778438124481,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0025140998375686174,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250132,
+          "structured_gain": 0.14181913767942697,
+          "structured_turns": 16,
+          "text_gain": 0.13930503784185835,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.002240929472713149,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250133,
+          "structured_gain": 0.02126118669986321,
+          "structured_turns": 16,
+          "text_gain": 0.01902025722715006,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00023226492482475436,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250134,
+          "structured_gain": 0.1664712689349724,
+          "structured_turns": 16,
+          "text_gain": 0.16623900401014766,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00011863990289551207,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250135,
+          "structured_gain": 0.020834772323570838,
+          "structured_turns": 16,
+          "text_gain": 0.020716132420675326,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0013369608672981204,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250136,
+          "structured_gain": 0.03402038107434091,
+          "structured_turns": 7,
+          "text_gain": 0.03268342020704279,
+          "text_turns": 7
+        },
+        {
+          "difference": -0.003874278007464149,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250137,
+          "structured_gain": 0.18075213457620065,
+          "structured_turns": 16,
+          "text_gain": 0.1768778565687365,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0030001220352160463,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250138,
+          "structured_gain": 0.02659778717944511,
+          "structured_turns": 16,
+          "text_gain": 0.023597665144229063,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250139,
+          "structured_gain": 0.0,
+          "structured_turns": 2,
+          "text_gain": 0.0,
+          "text_turns": 2
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250140,
+          "structured_gain": 0.026369328644884116,
+          "structured_turns": 16,
+          "text_gain": 0.026369328644884116,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.012251075273432221,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250141,
+          "structured_gain": 0.037368797263464204,
+          "structured_turns": 16,
+          "text_gain": 0.025117721990031983,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.002028559917636591,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250142,
+          "structured_gain": 0.005103072957690635,
+          "structured_turns": 16,
+          "text_gain": 0.0030745130400540444,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00031777492015105935,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250143,
+          "structured_gain": 0.01301932976854947,
+          "structured_turns": 16,
+          "text_gain": 0.012701554848398411,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.006292590744230275,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250144,
+          "structured_gain": 0.16947537403954804,
+          "structured_turns": 16,
+          "text_gain": 0.16318278329531777,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250145,
+          "structured_gain": 0.023739794929110825,
+          "structured_turns": 16,
+          "text_gain": 0.023739794929110825,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.012355791140521322,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250146,
+          "structured_gain": 0.041634328268993825,
+          "structured_turns": 16,
+          "text_gain": 0.029278537128472504,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0015884068562235232,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250147,
+          "structured_gain": 0.1589913320309953,
+          "structured_turns": 16,
+          "text_gain": 0.15740292517477178,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.002349491341283483,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250148,
+          "structured_gain": 0.008451754961236402,
+          "structured_turns": 16,
+          "text_gain": 0.006102263619952919,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0022243740052674266,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250149,
+          "structured_gain": 0.15223066753766876,
+          "structured_turns": 16,
+          "text_gain": 0.15000629353240133,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00010908738121878647,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250150,
+          "structured_gain": 0.02420781891049467,
+          "structured_turns": 16,
+          "text_gain": 0.024098731529275885,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.020775248362738086,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250151,
+          "structured_gain": 0.05896170131391415,
+          "structured_turns": 16,
+          "text_gain": 0.038186452951176064,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0003546151750850046,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250152,
+          "structured_gain": 0.16285188738807063,
+          "structured_turns": 16,
+          "text_gain": 0.16249727221298563,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.001272329860038779,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250153,
+          "structured_gain": 0.004265458235440334,
+          "structured_turns": 16,
+          "text_gain": 0.0029931283754015547,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0011307378465697515,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250154,
+          "structured_gain": 0.0029729317126210852,
+          "structured_turns": 16,
+          "text_gain": 0.0018421938660513337,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0037420425638768906,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250155,
+          "structured_gain": 0.02426780001649137,
+          "structured_turns": 10,
+          "text_gain": 0.02052575745261448,
+          "text_turns": 10
+        },
+        {
+          "difference": -0.00044440038467563614,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250156,
+          "structured_gain": 0.024036006757388928,
+          "structured_turns": 16,
+          "text_gain": 0.023591606372713292,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00048673715210667545,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250157,
+          "structured_gain": 0.13737088699100353,
+          "structured_turns": 16,
+          "text_gain": 0.13688414983889685,
+          "text_turns": 16
+        },
+        {
+          "difference": -1.6149081594862835e-05,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250158,
+          "structured_gain": 0.008476324757897002,
+          "structured_turns": 16,
+          "text_gain": 0.00846017567630214,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0009661213727583107,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250159,
+          "structured_gain": 0.1371617326667722,
+          "structured_turns": 16,
+          "text_gain": 0.1361956112940139,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.005590022942176587,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250160,
+          "structured_gain": 0.026302725787516718,
+          "structured_turns": 16,
+          "text_gain": 0.02071270284534013,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250161,
+          "structured_gain": 0.0028505074664260666,
+          "structured_turns": 2,
+          "text_gain": 0.0028505074664260666,
+          "text_turns": 2
+        },
+        {
+          "difference": -0.0005185502048065116,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250162,
+          "structured_gain": 0.002752129898126787,
+          "structured_turns": 8,
+          "text_gain": 0.0022335796933202756,
+          "text_turns": 8
+        },
+        {
+          "difference": -0.001086573833262161,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250163,
+          "structured_gain": 0.014643867853248449,
+          "structured_turns": 16,
+          "text_gain": 0.013557294019986288,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0037501305990413902,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250164,
+          "structured_gain": 0.13360321187045016,
+          "structured_turns": 16,
+          "text_gain": 0.12985308127140877,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250165,
+          "structured_gain": 0.027871291774800355,
+          "structured_turns": 16,
+          "text_gain": 0.027871291774800355,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.037042172165692167,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250166,
+          "structured_gain": 0.07469670247250748,
+          "structured_turns": 16,
+          "text_gain": 0.037654530306815315,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0009130193118698227,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250167,
+          "structured_gain": 0.12159543089636282,
+          "structured_turns": 16,
+          "text_gain": 0.120682411584493,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0036615167038032137,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250168,
+          "structured_gain": 0.010220179347259162,
+          "structured_turns": 16,
+          "text_gain": 0.006558662643455948,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.002482313373741385,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250169,
+          "structured_gain": 0.15860462478333223,
+          "structured_turns": 16,
+          "text_gain": 0.15612231140959085,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0009526791327218453,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250170,
+          "structured_gain": 0.029350592845827028,
+          "structured_turns": 16,
+          "text_gain": 0.028397913713105183,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0006797339769029076,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250171,
+          "structured_gain": 0.035299666418279085,
+          "structured_turns": 16,
+          "text_gain": 0.03461993244137618,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0016247226181244079,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250172,
+          "structured_gain": 0.14165724861445034,
+          "structured_turns": 10,
+          "text_gain": 0.14003252599632593,
+          "text_turns": 10
+        },
+        {
+          "difference": -0.0035472856765595973,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250173,
+          "structured_gain": 0.016861933494700665,
+          "structured_turns": 16,
+          "text_gain": 0.013314647818141068,
+          "text_turns": 16
+        },
+        {
+          "difference": -4.52661023011558e-05,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250174,
+          "structured_gain": 0.16944452643878596,
+          "structured_turns": 16,
+          "text_gain": 0.1693992603364848,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.007556936034492756,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250175,
+          "structured_gain": 0.033485317212522625,
+          "structured_turns": 14,
+          "text_gain": 0.02592838117802987,
+          "text_turns": 14
+        },
+        {
+          "difference": -0.016631938124322565,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250176,
+          "structured_gain": 0.06457020473876127,
+          "structured_turns": 16,
+          "text_gain": 0.0479382666144387,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.002850136988391483,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250177,
+          "structured_gain": 0.14781980135155298,
+          "structured_turns": 16,
+          "text_gain": 0.1449696643631615,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.001798763358502986,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250178,
+          "structured_gain": 0.005416169876631738,
+          "structured_turns": 16,
+          "text_gain": 0.003617406518128752,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.004505314962900464,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250179,
+          "structured_gain": 0.15969268747292215,
+          "structured_turns": 16,
+          "text_gain": 0.15518737251002168,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.007789282020446764,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250180,
+          "structured_gain": 0.016981852922809015,
+          "structured_turns": 16,
+          "text_gain": 0.009192570902362251,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250181,
+          "structured_gain": 0.02628895224396466,
+          "structured_turns": 6,
+          "text_gain": 0.02628895224396466,
+          "text_turns": 6
+        },
+        {
+          "difference": -0.002968715884051454,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250182,
+          "structured_gain": 0.15754071482519327,
+          "structured_turns": 16,
+          "text_gain": 0.15457199894114182,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0021246096604662368,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250183,
+          "structured_gain": 0.008754636497271595,
+          "structured_turns": 16,
+          "text_gain": 0.006630026836805358,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.003690879103544764,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250184,
+          "structured_gain": 0.1617222516711389,
+          "structured_turns": 16,
+          "text_gain": 0.15803137256759414,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00036373240971998566,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250185,
+          "structured_gain": 0.013799849846861445,
+          "structured_turns": 16,
+          "text_gain": 0.01343611743714146,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0009450882021050377,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250186,
+          "structured_gain": 0.0280712079842505,
+          "structured_turns": 16,
+          "text_gain": 0.027126119782145464,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0018989624418867534,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250187,
+          "structured_gain": 0.16257061578301424,
+          "structured_turns": 16,
+          "text_gain": 0.16067165334112748,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0009845733898731224,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250188,
+          "structured_gain": 0.006504831639875364,
+          "structured_turns": 12,
+          "text_gain": 0.005520258250002241,
+          "text_turns": 12
+        },
+        {
+          "difference": -2.784941363562221e-05,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250189,
+          "structured_gain": 0.003379430474874101,
+          "structured_turns": 16,
+          "text_gain": 0.003351581061238479,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250190,
+          "structured_gain": 0.03446044957352257,
+          "structured_turns": 16,
+          "text_gain": 0.03446044957352257,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.011204225320416428,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250191,
+          "structured_gain": 0.0442080071398242,
+          "structured_turns": 16,
+          "text_gain": 0.033003781819407774,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00012519343439537645,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250192,
+          "structured_gain": 0.16249867011569236,
+          "structured_turns": 16,
+          "text_gain": 0.16237347668129698,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250193,
+          "structured_gain": 0.01841159481198662,
+          "structured_turns": 16,
+          "text_gain": 0.01841159481198662,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250194,
+          "structured_gain": 0.16138089409882928,
+          "structured_turns": 16,
+          "text_gain": 0.16138089409882928,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.01022533920160984,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250195,
+          "structured_gain": 0.023523965459094853,
+          "structured_turns": 16,
+          "text_gain": 0.013298626257485013,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0047130931477228355,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250196,
+          "structured_gain": 0.06822202565048757,
+          "structured_turns": 16,
+          "text_gain": 0.06350893250276474,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00012310644456631215,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250197,
+          "structured_gain": 0.14162545853272207,
+          "structured_turns": 16,
+          "text_gain": 0.14150235208815576,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0011267320221005628,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250198,
+          "structured_gain": 0.014425463071207567,
+          "structured_turns": 16,
+          "text_gain": 0.013298731049107004,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.003996796493742072,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250199,
+          "structured_gain": 0.15473189860759118,
+          "structured_turns": 16,
+          "text_gain": 0.1507351021138491,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.009228061731842485,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250200,
+          "structured_gain": 0.02565105118563238,
+          "structured_turns": 16,
+          "text_gain": 0.016422989453789893,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.007252198305107926,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250201,
+          "structured_gain": 0.030112602226996243,
+          "structured_turns": 16,
+          "text_gain": 0.022860403921888317,
+          "text_turns": 16
+        },
+        {
+          "difference": -2.3383748049943254e-05,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250202,
+          "structured_gain": 0.1370375518852547,
+          "structured_turns": 16,
+          "text_gain": 0.13701416813720477,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0014592958936985867,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250203,
+          "structured_gain": 0.014029565979139569,
+          "structured_turns": 16,
+          "text_gain": 0.012570270085440982,
+          "text_turns": 16
+        },
+        {
+          "difference": -9.604294135212577e-06,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250204,
+          "structured_gain": 0.1657057598407085,
+          "structured_turns": 16,
+          "text_gain": 0.1656961555465733,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.008832692421026245,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250205,
+          "structured_gain": 0.026645595336938888,
+          "structured_turns": 16,
+          "text_gain": 0.017812902915912643,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00338637551580645,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250206,
+          "structured_gain": 0.039725266386753,
+          "structured_turns": 16,
+          "text_gain": 0.03633889087094655,
+          "text_turns": 16
+        },
+        {
+          "difference": -4.470431398495567e-05,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250207,
+          "structured_gain": 0.1688665379029,
+          "structured_turns": 16,
+          "text_gain": 0.16882183358891503,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.006924269089074286,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250208,
+          "structured_gain": 0.01689578151515625,
+          "structured_turns": 16,
+          "text_gain": 0.009971512426081963,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0006940034078432855,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250209,
+          "structured_gain": 0.0035317456337423114,
+          "structured_turns": 16,
+          "text_gain": 0.002837742225899026,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0020051558615790666,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250210,
+          "structured_gain": 0.02584921747496205,
+          "structured_turns": 16,
+          "text_gain": 0.023844061613382983,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250211,
+          "structured_gain": 0.02092480753427267,
+          "structured_turns": 12,
+          "text_gain": 0.02092480753427267,
+          "text_turns": 12
+        },
+        {
+          "difference": -0.0024329501755622485,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250212,
+          "structured_gain": 0.00882383687097385,
+          "structured_turns": 16,
+          "text_gain": 0.006390886695411602,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0011155306441612556,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250213,
+          "structured_gain": 0.005860243719191471,
+          "structured_turns": 16,
+          "text_gain": 0.004744713075030216,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.004017559149835537,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250214,
+          "structured_gain": 0.16587505400954208,
+          "structured_turns": 16,
+          "text_gain": 0.16185749485970655,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.005914758644033569,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250215,
+          "structured_gain": 0.02204423312918785,
+          "structured_turns": 16,
+          "text_gain": 0.016129474485154283,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.007052128327944163,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250216,
+          "structured_gain": 0.044256574746127875,
+          "structured_turns": 16,
+          "text_gain": 0.03720444641818371,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0011398465003892855,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250217,
+          "structured_gain": 0.00766696844201889,
+          "structured_turns": 15,
+          "text_gain": 0.0065271219416296045,
+          "text_turns": 15
+        },
+        {
+          "difference": -0.0004684937507273279,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250218,
+          "structured_gain": 0.007302221350881988,
+          "structured_turns": 16,
+          "text_gain": 0.00683372760015466,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0008090635805534374,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250219,
+          "structured_gain": 0.004177336831389433,
+          "structured_turns": 15,
+          "text_gain": 0.003368273250835996,
+          "text_turns": 15
+        },
+        {
+          "difference": -0.002520435213813954,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250220,
+          "structured_gain": 0.01529796047458154,
+          "structured_turns": 5,
+          "text_gain": 0.012777525260767586,
+          "text_turns": 5
+        },
+        {
+          "difference": -0.0047174931915615614,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250221,
+          "structured_gain": 0.031007194546281036,
+          "structured_turns": 16,
+          "text_gain": 0.026289701354719475,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0018978033570023478,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250222,
+          "structured_gain": 0.16517888859933427,
+          "structured_turns": 16,
+          "text_gain": 0.16328108524233192,
+          "text_turns": 16
+        },
+        {
+          "difference": -7.598903395811263e-05,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250223,
+          "structured_gain": 0.02190566234468183,
+          "structured_turns": 16,
+          "text_gain": 0.02182967331072372,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250224,
+          "structured_gain": 0.1677264494997687,
+          "structured_turns": 16,
+          "text_gain": 0.1677264494997687,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.006419194345377632,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250225,
+          "structured_gain": 0.01902784363782062,
+          "structured_turns": 16,
+          "text_gain": 0.012608649292442986,
+          "text_turns": 16
+        },
+        {
+          "difference": -9.641200358312396e-05,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250226,
+          "structured_gain": 0.029474460341399833,
+          "structured_turns": 16,
+          "text_gain": 0.02937804833781671,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0022155897257707946,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250227,
+          "structured_gain": 0.16387848527346807,
+          "structured_turns": 16,
+          "text_gain": 0.16166289554769728,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250228,
+          "structured_gain": 0.0008868852733027177,
+          "structured_turns": 2,
+          "text_gain": 0.0008868852733027177,
+          "text_turns": 2
+        },
+        {
+          "difference": -0.0005187607734252753,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250229,
+          "structured_gain": 0.15454459597656667,
+          "structured_turns": 16,
+          "text_gain": 0.1540258352031414,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.004265316682994846,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250230,
+          "structured_gain": 0.028524567642333687,
+          "structured_turns": 16,
+          "text_gain": 0.02425925095933884,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00458757519950731,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250231,
+          "structured_gain": 0.029858006874082132,
+          "structured_turns": 16,
+          "text_gain": 0.025270431674574823,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250232,
+          "structured_gain": 0.0,
+          "structured_turns": 1,
+          "text_gain": 0.0,
+          "text_turns": 1
+        },
+        {
+          "difference": -0.005739624686917466,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250233,
+          "structured_gain": 0.021527662306764506,
+          "structured_turns": 16,
+          "text_gain": 0.01578803761984704,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.004219868250222358,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250234,
+          "structured_gain": 0.1767895075059651,
+          "structured_turns": 16,
+          "text_gain": 0.17256963925574273,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.015694439518132153,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250235,
+          "structured_gain": 0.026808132289089237,
+          "structured_turns": 16,
+          "text_gain": 0.011113692770957084,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250236,
+          "structured_gain": 0.01215772662725595,
+          "structured_turns": 2,
+          "text_gain": 0.01215772662725595,
+          "text_turns": 2
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250237,
+          "structured_gain": 0.16029114986267473,
+          "structured_turns": 16,
+          "text_gain": 0.16029114986267473,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00108070444737296,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250238,
+          "structured_gain": 0.005340594001784327,
+          "structured_turns": 16,
+          "text_gain": 0.004259889554411367,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00039911558246619183,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250239,
+          "structured_gain": 0.17533469038122265,
+          "structured_turns": 16,
+          "text_gain": 0.17493557479875646,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.003198543262425746,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250240,
+          "structured_gain": 0.03446665171177116,
+          "structured_turns": 16,
+          "text_gain": 0.03126810844934541,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.015846795246775236,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250241,
+          "structured_gain": 0.03247007133131585,
+          "structured_turns": 16,
+          "text_gain": 0.016623276084540617,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0006579569109073091,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250242,
+          "structured_gain": 0.16187091886912844,
+          "structured_turns": 16,
+          "text_gain": 0.16121296195822113,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250243,
+          "structured_gain": 0.0,
+          "structured_turns": 1,
+          "text_gain": 0.0,
+          "text_turns": 1
+        },
+        {
+          "difference": -0.000669369452740487,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250244,
+          "structured_gain": 0.16501448557487847,
+          "structured_turns": 16,
+          "text_gain": 0.16434511612213798,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00015738796464914717,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250245,
+          "structured_gain": 0.029008380727735927,
+          "structured_turns": 16,
+          "text_gain": 0.02885099276308678,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250246,
+          "structured_gain": 0.013066852651013594,
+          "structured_turns": 3,
+          "text_gain": 0.013066852651013594,
+          "text_turns": 3
+        },
+        {
+          "difference": -0.005660094865378329,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250247,
+          "structured_gain": 0.15366646560392577,
+          "structured_turns": 16,
+          "text_gain": 0.14800637073854744,
+          "text_turns": 16
+        },
+        {
+          "difference": -3.8477508084611145e-05,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250248,
+          "structured_gain": 0.004086363038972696,
+          "structured_turns": 16,
+          "text_gain": 0.0040478855308880846,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.004526902377263942,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250249,
+          "structured_gain": 0.1499058215994467,
+          "structured_turns": 16,
+          "text_gain": 0.14537891922218277,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0093985650713167,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250250,
+          "structured_gain": 0.026423564285747048,
+          "structured_turns": 16,
+          "text_gain": 0.017024999214430347,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.011229170332152705,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250251,
+          "structured_gain": 0.04469961365322869,
+          "structured_turns": 16,
+          "text_gain": 0.03347044332107599,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0004469623581138116,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250252,
+          "structured_gain": 0.15831107471059505,
+          "structured_turns": 16,
+          "text_gain": 0.15786411235248124,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0037666839605213775,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250253,
+          "structured_gain": 0.029268401164518898,
+          "structured_turns": 16,
+          "text_gain": 0.02550171720399752,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.005573555268763686,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250254,
+          "structured_gain": 0.17566644011062205,
+          "structured_turns": 16,
+          "text_gain": 0.17009288484185836,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0015568893927105365,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250255,
+          "structured_gain": 0.025800033433010183,
+          "structured_turns": 16,
+          "text_gain": 0.024243144040299647,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.004206946429268554,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250256,
+          "structured_gain": 0.059165873768279864,
+          "structured_turns": 16,
+          "text_gain": 0.05495892733901131,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0004263626116388086,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250257,
+          "structured_gain": 0.12243303885225643,
+          "structured_turns": 16,
+          "text_gain": 0.12200667624061762,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.003991499397189235,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250258,
+          "structured_gain": 0.02759273560484088,
+          "structured_turns": 16,
+          "text_gain": 0.023601236207651644,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.004935408115117779,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250259,
+          "structured_gain": 0.15694899593718567,
+          "structured_turns": 16,
+          "text_gain": 0.1520135878220679,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250260,
+          "structured_gain": 0.020683320337352096,
+          "structured_turns": 16,
+          "text_gain": 0.020683320337352096,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.009116628356575118,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250261,
+          "structured_gain": 0.014742267373981238,
+          "structured_turns": 3,
+          "text_gain": 0.00562563901740612,
+          "text_turns": 3
+        },
+        {
+          "difference": -0.00046755485197125246,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250262,
+          "structured_gain": 0.12498837676351787,
+          "structured_turns": 16,
+          "text_gain": 0.12452082191154662,
+          "text_turns": 16
+        },
+        {
+          "difference": -3.97641002361504e-05,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250263,
+          "structured_gain": 0.004471632437261508,
+          "structured_turns": 16,
+          "text_gain": 0.0044318683370253575,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.002197090314170147,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250264,
+          "structured_gain": 0.15550781539812797,
+          "structured_turns": 16,
+          "text_gain": 0.15331072508395782,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0008863327775999741,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250265,
+          "structured_gain": 0.033705603060763756,
+          "structured_turns": 16,
+          "text_gain": 0.03281927028316378,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0008807522594285189,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250266,
+          "structured_gain": 0.03019056775208706,
+          "structured_turns": 12,
+          "text_gain": 0.029309815492658542,
+          "text_turns": 12
+        },
+        {
+          "difference": -0.0018885095481203096,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250267,
+          "structured_gain": 0.1588039041477777,
+          "structured_turns": 16,
+          "text_gain": 0.1569153945996574,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0003303710459517939,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250268,
+          "structured_gain": 0.0030962360732207372,
+          "structured_turns": 16,
+          "text_gain": 0.0027658650272689433,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0004480562344395811,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250269,
+          "structured_gain": 0.00466249486720377,
+          "structured_turns": 16,
+          "text_gain": 0.004214438632764189,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0012013666547917579,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250270,
+          "structured_gain": 0.025221866934162063,
+          "structured_turns": 16,
+          "text_gain": 0.024020500279370305,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.02189423935304924,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250271,
+          "structured_gain": 0.0640407343294623,
+          "structured_turns": 16,
+          "text_gain": 0.04214649497641307,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.004562562391058511,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250272,
+          "structured_gain": 0.13892848407556968,
+          "structured_turns": 16,
+          "text_gain": 0.13436592168451117,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.010512254432252899,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250273,
+          "structured_gain": 0.03543996770705671,
+          "structured_turns": 16,
+          "text_gain": 0.02492771327480381,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.003290302398735734,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250274,
+          "structured_gain": 0.15438917895257906,
+          "structured_turns": 16,
+          "text_gain": 0.15109887655384333,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00131559796805919,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250275,
+          "structured_gain": 0.02921209165182942,
+          "structured_turns": 16,
+          "text_gain": 0.02789649368377023,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.011518514320613071,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250276,
+          "structured_gain": 0.03633160531638033,
+          "structured_turns": 16,
+          "text_gain": 0.024813090995767256,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0026300263700056448,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250277,
+          "structured_gain": 0.15736858611447319,
+          "structured_turns": 16,
+          "text_gain": 0.15473855974446754,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0012859956648386128,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250278,
+          "structured_gain": 0.009382864604560115,
+          "structured_turns": 16,
+          "text_gain": 0.008096868939721502,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0037764782161176513,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250279,
+          "structured_gain": 0.1325666598930856,
+          "structured_turns": 16,
+          "text_gain": 0.12879018167696796,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.009991471442819977,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250280,
+          "structured_gain": 0.025133089620069327,
+          "structured_turns": 16,
+          "text_gain": 0.01514161817724935,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.014566886204670837,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250281,
+          "structured_gain": 0.03521249696011197,
+          "structured_turns": 16,
+          "text_gain": 0.020645610755441135,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.004063556839119908,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250282,
+          "structured_gain": 0.12257264759927333,
+          "structured_turns": 16,
+          "text_gain": 0.11850909076015342,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.001688384323796921,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250283,
+          "structured_gain": 0.012450041934442602,
+          "structured_turns": 16,
+          "text_gain": 0.01076165761064568,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0002204718681978468,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250284,
+          "structured_gain": 0.1445646323208051,
+          "structured_turns": 16,
+          "text_gain": 0.14434416045260726,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.004909120044020665,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250285,
+          "structured_gain": 0.025523103393013558,
+          "structured_turns": 16,
+          "text_gain": 0.020613983348992893,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.006389277100851187,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250286,
+          "structured_gain": 0.032047694885918576,
+          "structured_turns": 16,
+          "text_gain": 0.02565841778506739,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.002694439563366291,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250287,
+          "structured_gain": 0.14144351181117504,
+          "structured_turns": 16,
+          "text_gain": 0.13874907224780875,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0001516042889364022,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250288,
+          "structured_gain": 0.0020711483840058498,
+          "structured_turns": 16,
+          "text_gain": 0.0019195440950694476,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0001961247050356052,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250289,
+          "structured_gain": 0.004542298258866151,
+          "structured_turns": 16,
+          "text_gain": 0.004346173553830546,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.009938902274896688,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250290,
+          "structured_gain": 0.026268267089045394,
+          "structured_turns": 16,
+          "text_gain": 0.016329364814148706,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.008138051703637683,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250291,
+          "structured_gain": 0.04954503737156646,
+          "structured_turns": 16,
+          "text_gain": 0.041406985667928775,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.16239077285414003,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250292,
+          "structured_gain": 0.16510054054867473,
+          "structured_turns": 16,
+          "text_gain": 0.0027097676945347093,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0005852914727284553,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250293,
+          "structured_gain": 0.0055776755837476655,
+          "structured_turns": 16,
+          "text_gain": 0.00499238411101921,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.02151802902736022,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250294,
+          "structured_gain": 0.1844906892278398,
+          "structured_turns": 16,
+          "text_gain": 0.16297266020047957,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.009170971484273371,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250295,
+          "structured_gain": 0.0337552171483147,
+          "structured_turns": 16,
+          "text_gain": 0.024584245664041326,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.007176920746993387,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250296,
+          "structured_gain": 0.055963713846999,
+          "structured_turns": 16,
+          "text_gain": 0.04878679310000561,
+          "text_turns": 16
+        },
+        {
+          "difference": -5.8613788436800984e-05,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250297,
+          "structured_gain": 0.12488343149790654,
+          "structured_turns": 16,
+          "text_gain": 0.12482481770946974,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0014800180040732691,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250298,
+          "structured_gain": 0.004049964974921605,
+          "structured_turns": 16,
+          "text_gain": 0.002569946970848336,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250299,
+          "structured_gain": 0.0,
+          "structured_turns": 2,
+          "text_gain": 0.0,
+          "text_turns": 2
+        },
+        {
+          "difference": -0.0017452055787720577,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250300,
+          "structured_gain": 0.02753101198377797,
+          "structured_turns": 16,
+          "text_gain": 0.025785806405005912,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.013217946047724582,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250301,
+          "structured_gain": 0.02653467307741386,
+          "structured_turns": 4,
+          "text_gain": 0.01331672702968928,
+          "text_turns": 4
+        },
+        {
+          "difference": -0.0024367927176605075,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250302,
+          "structured_gain": 0.15139760063786448,
+          "structured_turns": 16,
+          "text_gain": 0.14896080792020397,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250303,
+          "structured_gain": 0.0,
+          "structured_turns": 1,
+          "text_gain": 0.0,
+          "text_turns": 1
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250304,
+          "structured_gain": 0.1600909086916838,
+          "structured_turns": 16,
+          "text_gain": 0.1600909086916838,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0009661469881995788,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250305,
+          "structured_gain": 0.03545113770061292,
+          "structured_turns": 16,
+          "text_gain": 0.034484990712413344,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0016044321207987489,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250306,
+          "structured_gain": 0.02326658101499618,
+          "structured_turns": 16,
+          "text_gain": 0.02166214889419743,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.001909180280261491,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250307,
+          "structured_gain": 0.15524580829056037,
+          "structured_turns": 16,
+          "text_gain": 0.15333662801029888,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.001221210253233851,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250308,
+          "structured_gain": 0.003550788865189336,
+          "structured_turns": 16,
+          "text_gain": 0.002329578611955485,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.005170027369218788,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250309,
+          "structured_gain": 0.15437415855469727,
+          "structured_turns": 14,
+          "text_gain": 0.14920413118547848,
+          "text_turns": 14
+        },
+        {
+          "difference": -0.00340403439782333,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250310,
+          "structured_gain": 0.019668339754720432,
+          "structured_turns": 16,
+          "text_gain": 0.016264305356897102,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.020721849049344154,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250311,
+          "structured_gain": 0.06213122947803895,
+          "structured_turns": 16,
+          "text_gain": 0.0414093804286948,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0020101443119390217,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250312,
+          "structured_gain": 0.1338511875491915,
+          "structured_turns": 16,
+          "text_gain": 0.1318410432372525,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0012536054108798211,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250313,
+          "structured_gain": 0.003103337607595069,
+          "structured_turns": 4,
+          "text_gain": 0.001849732196715248,
+          "text_turns": 4
+        },
+        {
+          "difference": -0.00138195186905693,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250314,
+          "structured_gain": 0.12924721022201416,
+          "structured_turns": 16,
+          "text_gain": 0.12786525835295723,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.020829940846701006,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250315,
+          "structured_gain": 0.042792846236317406,
+          "structured_turns": 16,
+          "text_gain": 0.0219629053896164,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00461049891657439,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250316,
+          "structured_gain": 0.0263635977923124,
+          "structured_turns": 16,
+          "text_gain": 0.02175309887573801,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0010262472842369474,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250317,
+          "structured_gain": 0.14220668880847506,
+          "structured_turns": 16,
+          "text_gain": 0.14118044152423811,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0017879225219973316,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250318,
+          "structured_gain": 0.035773339595117915,
+          "structured_turns": 16,
+          "text_gain": 0.03398541707312058,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0006622754111687001,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250319,
+          "structured_gain": 0.0037221952166839045,
+          "structured_turns": 12,
+          "text_gain": 0.0030599198055152044,
+          "text_turns": 12
+        },
+        {
+          "difference": -0.015843166260519514,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250320,
+          "structured_gain": 0.04173326773216296,
+          "structured_turns": 16,
+          "text_gain": 0.025890101471643445,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.020455949406706725,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250321,
+          "structured_gain": 0.04545895450104559,
+          "structured_turns": 16,
+          "text_gain": 0.025003005094338865,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.002345847344566332,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250322,
+          "structured_gain": 0.16826784008623707,
+          "structured_turns": 16,
+          "text_gain": 0.16592199274167074,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00897278487381059,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250323,
+          "structured_gain": 0.025286305001420817,
+          "structured_turns": 16,
+          "text_gain": 0.016313520127610226,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00015421636654544546,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250324,
+          "structured_gain": 0.0024469224710400583,
+          "structured_turns": 7,
+          "text_gain": 0.002292706104494613,
+          "text_turns": 7
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250325,
+          "structured_gain": 0.012179275661767797,
+          "structured_turns": 5,
+          "text_gain": 0.012179275661767797,
+          "text_turns": 5
+        },
+        {
+          "difference": -0.010891556948645742,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250326,
+          "structured_gain": 0.04974083378206695,
+          "structured_turns": 16,
+          "text_gain": 0.03884927683342121,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.002812037051493965,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250327,
+          "structured_gain": 0.12515796640068322,
+          "structured_turns": 5,
+          "text_gain": 0.12234592934918925,
+          "text_turns": 5
+        },
+        {
+          "difference": -5.6314612898511474e-05,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250328,
+          "structured_gain": 0.01331235793927632,
+          "structured_turns": 16,
+          "text_gain": 0.013256043326377809,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.001932979738159979,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250329,
+          "structured_gain": 0.15606635670118774,
+          "structured_turns": 16,
+          "text_gain": 0.15413337696302776,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250330,
+          "structured_gain": 0.03310830076241811,
+          "structured_turns": 16,
+          "text_gain": 0.03310830076241811,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250331,
+          "structured_gain": 0.03647235818434358,
+          "structured_turns": 16,
+          "text_gain": 0.03647235818434358,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.004162634539723986,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250332,
+          "structured_gain": 0.1632804376176643,
+          "structured_turns": 16,
+          "text_gain": 0.15911780307794032,
+          "text_turns": 16
+        },
+        {
+          "difference": -5.765652643874297e-06,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250333,
+          "structured_gain": 0.0027718003599212504,
+          "structured_turns": 16,
+          "text_gain": 0.002766034707277376,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.004297409813561526,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250334,
+          "structured_gain": 0.1410265261400412,
+          "structured_turns": 16,
+          "text_gain": 0.13672911632647966,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0011534395426164301,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250335,
+          "structured_gain": 0.003107059977572768,
+          "structured_turns": 3,
+          "text_gain": 0.001953620434956338,
+          "text_turns": 3
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250336,
+          "structured_gain": 0.0,
+          "structured_turns": 1,
+          "text_gain": 0.0,
+          "text_turns": 1
+        },
+        {
+          "difference": -0.01211429303934708,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250337,
+          "structured_gain": 0.17108121646893196,
+          "structured_turns": 16,
+          "text_gain": 0.15896692342958488,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0033789444936696,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250338,
+          "structured_gain": 0.00929462451048424,
+          "structured_turns": 16,
+          "text_gain": 0.0059156800168146395,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250339,
+          "structured_gain": 0.0,
+          "structured_turns": 2,
+          "text_gain": 0.0,
+          "text_turns": 2
+        },
+        {
+          "difference": -0.0010643212065406804,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250340,
+          "structured_gain": 0.029597204460906856,
+          "structured_turns": 16,
+          "text_gain": 0.028532883254366176,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0004121856286772585,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250341,
+          "structured_gain": 0.025902363752269036,
+          "structured_turns": 16,
+          "text_gain": 0.025490178123591778,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0001272355843995876,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250342,
+          "structured_gain": 0.12455446143241095,
+          "structured_turns": 16,
+          "text_gain": 0.12442722584801136,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0001478266138494888,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250343,
+          "structured_gain": 0.003299113289335742,
+          "structured_turns": 16,
+          "text_gain": 0.0031512866754862534,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250344,
+          "structured_gain": 0.0012146771778687449,
+          "structured_turns": 3,
+          "text_gain": 0.0012146771778687449,
+          "text_turns": 3
+        },
+        {
+          "difference": -0.004362480455208095,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250345,
+          "structured_gain": 0.029657182812768995,
+          "structured_turns": 16,
+          "text_gain": 0.0252947023575609,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.01568629791041426,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250346,
+          "structured_gain": 0.053259651914319805,
+          "structured_turns": 16,
+          "text_gain": 0.037573354003905546,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.005031170881014457,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250347,
+          "structured_gain": 0.14846316198629878,
+          "structured_turns": 16,
+          "text_gain": 0.14343199110528432,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0025951583993341076,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250348,
+          "structured_gain": 0.016237758946046565,
+          "structured_turns": 16,
+          "text_gain": 0.013642600546712458,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.005374450427180766,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250349,
+          "structured_gain": 0.1696891492741702,
+          "structured_turns": 16,
+          "text_gain": 0.16431469884698943,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250350,
+          "structured_gain": 0.0,
+          "structured_turns": 1,
+          "text_gain": 0.0,
+          "text_turns": 1
+        },
+        {
+          "difference": 0.00042936278449884346,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250351,
+          "structured_gain": 0.021443543686736843,
+          "structured_turns": 16,
+          "text_gain": 0.021872906471235687,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0015972751020623677,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250352,
+          "structured_gain": 0.1630646455248945,
+          "structured_turns": 16,
+          "text_gain": 0.16146737042283213,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.002248504427794451,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250353,
+          "structured_gain": 0.013274602495222165,
+          "structured_turns": 16,
+          "text_gain": 0.011026098067427714,
+          "text_turns": 16
+        },
+        {
+          "difference": -9.176473973454558e-05,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250354,
+          "structured_gain": 0.15999476234033927,
+          "structured_turns": 16,
+          "text_gain": 0.15990299760060472,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0036079901393282487,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250355,
+          "structured_gain": 0.016747802595682815,
+          "structured_turns": 16,
+          "text_gain": 0.013139812456354566,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.001354085852279474,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250356,
+          "structured_gain": 0.04011753614110325,
+          "structured_turns": 16,
+          "text_gain": 0.038763450288823775,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.002412111519013771,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250357,
+          "structured_gain": 0.1666525942325477,
+          "structured_turns": 16,
+          "text_gain": 0.16424048271353392,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.002107944324517441,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250358,
+          "structured_gain": 0.02140226461585415,
+          "structured_turns": 16,
+          "text_gain": 0.01929432029133671,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0001505131309895158,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250359,
+          "structured_gain": 0.0038353974472404295,
+          "structured_turns": 16,
+          "text_gain": 0.0036848843162509137,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.010622763247874811,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250360,
+          "structured_gain": 0.03755988630914803,
+          "structured_turns": 16,
+          "text_gain": 0.026937123061273216,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.022330838126664976,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250361,
+          "structured_gain": 0.05694737627560825,
+          "structured_turns": 16,
+          "text_gain": 0.03461653814894328,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0028122873790864533,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250362,
+          "structured_gain": 0.15673307530501318,
+          "structured_turns": 16,
+          "text_gain": 0.15392078792592673,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.007608206381642724,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250363,
+          "structured_gain": 0.018196356096733646,
+          "structured_turns": 16,
+          "text_gain": 0.010588149715090922,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0009579050280312806,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250364,
+          "structured_gain": 0.15292064370098413,
+          "structured_turns": 16,
+          "text_gain": 0.15196273867295285,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0022061591759945376,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250365,
+          "structured_gain": 0.01986073029594415,
+          "structured_turns": 6,
+          "text_gain": 0.017654571119949614,
+          "text_turns": 6
+        },
+        {
+          "difference": -0.0017749642548950395,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250366,
+          "structured_gain": 0.04568159819421519,
+          "structured_turns": 16,
+          "text_gain": 0.04390663393932015,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0006002063488720899,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250367,
+          "structured_gain": 0.12251303688895934,
+          "structured_turns": 16,
+          "text_gain": 0.12191283054008725,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250368,
+          "structured_gain": 0.03154252614857944,
+          "structured_turns": 16,
+          "text_gain": 0.03154252614857944,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.006942235022934007,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250369,
+          "structured_gain": 0.15195153533086067,
+          "structured_turns": 16,
+          "text_gain": 0.14500930030792666,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250370,
+          "structured_gain": 0.029929160047235392,
+          "structured_turns": 12,
+          "text_gain": 0.029929160047235392,
+          "text_turns": 12
+        },
+        {
+          "difference": -0.001731899133601389,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250371,
+          "structured_gain": 0.0549204797527903,
+          "structured_turns": 16,
+          "text_gain": 0.05318858061918891,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.005672149050300779,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250372,
+          "structured_gain": 0.13822631512099964,
+          "structured_turns": 16,
+          "text_gain": 0.13255416607069886,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0031307447210913164,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250373,
+          "structured_gain": 0.014169442760299189,
+          "structured_turns": 16,
+          "text_gain": 0.011038698039207873,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.007024188946186505,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250374,
+          "structured_gain": 0.15165722445219432,
+          "structured_turns": 16,
+          "text_gain": 0.1446330355060078,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.008596729263039615,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250375,
+          "structured_gain": 0.025444045456587405,
+          "structured_turns": 16,
+          "text_gain": 0.01684731619354779,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.009776507663699696,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250376,
+          "structured_gain": 0.030390030459735762,
+          "structured_turns": 16,
+          "text_gain": 0.020613522796036066,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0011551953833277007,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250377,
+          "structured_gain": 0.12765027146639368,
+          "structured_turns": 16,
+          "text_gain": 0.12649507608306598,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0007045896540244234,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250378,
+          "structured_gain": 0.0027337627710893875,
+          "structured_turns": 16,
+          "text_gain": 0.002029173117064964,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0014723282069051269,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250379,
+          "structured_gain": 0.00589589581431238,
+          "structured_turns": 16,
+          "text_gain": 0.004423567607407253,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.001752113789259102,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250380,
+          "structured_gain": 0.02936586795209961,
+          "structured_turns": 16,
+          "text_gain": 0.02761375416284051,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.02378881064285926,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250381,
+          "structured_gain": 0.059388257628037316,
+          "structured_turns": 16,
+          "text_gain": 0.03559944698517806,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0014357362816538877,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250382,
+          "structured_gain": 0.15396405973861593,
+          "structured_turns": 16,
+          "text_gain": 0.15252832345696204,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0005935023264238004,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250383,
+          "structured_gain": 0.0022327340702668064,
+          "structured_turns": 6,
+          "text_gain": 0.001639231743843006,
+          "text_turns": 6
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250384,
+          "structured_gain": 0.0,
+          "structured_turns": 2,
+          "text_gain": 0.0,
+          "text_turns": 2
+        },
+        {
+          "difference": -0.00026619638453739825,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250385,
+          "structured_gain": 0.027156084804745628,
+          "structured_turns": 16,
+          "text_gain": 0.02688988842020823,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.007222823396470457,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250386,
+          "structured_gain": 0.039019482705430764,
+          "structured_turns": 16,
+          "text_gain": 0.03179665930896031,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.005857239849071716,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250387,
+          "structured_gain": 0.15178261251720207,
+          "structured_turns": 16,
+          "text_gain": 0.14592537266813035,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00024812802904006226,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250388,
+          "structured_gain": 0.003279467631887467,
+          "structured_turns": 16,
+          "text_gain": 0.003031339602847405,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250389,
+          "structured_gain": 0.0,
+          "structured_turns": 1,
+          "text_gain": 0.0,
+          "text_turns": 1
+        },
+        {
+          "difference": -0.004517778946926176,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250390,
+          "structured_gain": 0.029014937235422256,
+          "structured_turns": 16,
+          "text_gain": 0.02449715828849608,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.00694650713285444,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250391,
+          "structured_gain": 0.06862010350481917,
+          "structured_turns": 16,
+          "text_gain": 0.061673596371964734,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.007337277687678834,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250392,
+          "structured_gain": 0.14498090293133115,
+          "structured_turns": 16,
+          "text_gain": 0.1376436252436523,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0011643050064151783,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250393,
+          "structured_gain": 0.003979755071502944,
+          "structured_turns": 16,
+          "text_gain": 0.0028154500650877656,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.001167790851388989,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250394,
+          "structured_gain": 0.003828306131793191,
+          "structured_turns": 16,
+          "text_gain": 0.002660515280404202,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.005326463310796892,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250395,
+          "structured_gain": 0.024262611363242037,
+          "structured_turns": 16,
+          "text_gain": 0.018936148052445145,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0006149576484783259,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250396,
+          "structured_gain": 0.03457093222500662,
+          "structured_turns": 16,
+          "text_gain": 0.0339559745765283,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0023949925086392265,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250397,
+          "structured_gain": 0.15058602134449328,
+          "structured_turns": 16,
+          "text_gain": 0.14819102883585406,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.003856473735528554,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250398,
+          "structured_gain": 0.012353463953357235,
+          "structured_turns": 16,
+          "text_gain": 0.008496990217828682,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0001942359171333008,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250399,
+          "structured_gain": 0.16484673247525072,
+          "structured_turns": 16,
+          "text_gain": 0.16465249655811742,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.005496034325624288,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250400,
+          "structured_gain": 0.030667105195833155,
+          "structured_turns": 12,
+          "text_gain": 0.025171070870208867,
+          "text_turns": 12
+        },
+        {
+          "difference": -0.0017718291290070298,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250401,
+          "structured_gain": 0.03975965362180239,
+          "structured_turns": 16,
+          "text_gain": 0.03798782449279536,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.004075502854942348,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250402,
+          "structured_gain": 0.12236732848042092,
+          "structured_turns": 16,
+          "text_gain": 0.11829182562547857,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.004604193863515071,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250403,
+          "structured_gain": 0.01782527501000447,
+          "structured_turns": 16,
+          "text_gain": 0.0132210811464894,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.000162588246867712,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250404,
+          "structured_gain": 0.14541222889967498,
+          "structured_turns": 16,
+          "text_gain": 0.14524964065280727,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0027144944475895882,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250405,
+          "structured_gain": 0.05161112272179791,
+          "structured_turns": 16,
+          "text_gain": 0.04889662827420832,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.003488766818064981,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250406,
+          "structured_gain": 0.04170162659356075,
+          "structured_turns": 16,
+          "text_gain": 0.03821285977549577,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0009349136569953842,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250407,
+          "structured_gain": 0.13761378779889813,
+          "structured_turns": 11,
+          "text_gain": 0.13667887414190275,
+          "text_turns": 11
+        },
+        {
+          "difference": -0.0003186807548493098,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250408,
+          "structured_gain": 0.007893664762938624,
+          "structured_turns": 16,
+          "text_gain": 0.007574984008089314,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.004236159988953936,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250409,
+          "structured_gain": 0.15123412074486228,
+          "structured_turns": 16,
+          "text_gain": 0.14699796075590835,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.007337520160292377,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250410,
+          "structured_gain": 0.02032401989128496,
+          "structured_turns": 16,
+          "text_gain": 0.012986499730992584,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0015599339347127095,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250411,
+          "structured_gain": 0.02753865626254931,
+          "structured_turns": 16,
+          "text_gain": 0.0259787223278366,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0020134399867687836,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250412,
+          "structured_gain": 0.16036650000047797,
+          "structured_turns": 16,
+          "text_gain": 0.1583530600137092,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250413,
+          "structured_gain": 0.05399616623713033,
+          "structured_turns": 16,
+          "text_gain": 0.05399616623713033,
+          "text_turns": 16
+        },
+        {
+          "difference": -0.0008613286279557375,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250414,
+          "structured_gain": 0.14472860855168526,
+          "structured_turns": 16,
+          "text_gain": 0.14386727992372952,
+          "text_turns": 16
+        }
+      ],
+      "paths": {
+        "structured": {
+          "critical_turns": 0,
+          "episodes": 300,
+          "failure_counts": {
+            "answer_disclosed": 0,
+            "draft_validator_failure": 441,
+            "extractor_disagreement": 0,
+            "fallback_used": 4357,
+            "item_changed": 0,
+            "validator_failure": 0,
+            "verbalizer_rejected": 0,
+            "wrong_move": 0
+          },
+          "gain": {
+            "ci_95": [
+              0.05795827386265667,
+              0.07180405039899132
+            ],
+            "mean": 0.06445780951003012
+          },
+          "model_delivered_episodes": 0,
+          "model_delivered_turns": 0,
+          "turns": 4357
+        },
+        "text": {
+          "critical_turns": 1008,
+          "episodes": 300,
+          "failure_counts": {
+            "answer_disclosed": 0,
+            "draft_validator_failure": 440,
+            "extractor_disagreement": 156,
+            "fallback_used": 4357,
+            "item_changed": 378,
+            "validator_failure": 886,
+            "verbalizer_rejected": 0,
+            "wrong_move": 886
+          },
+          "gain": {
+            "ci_95": [
+              0.05360976340821195,
+              0.06765985751631148
+            ],
+            "mean": 0.060158347651274306
+          },
+          "model_delivered_episodes": 0,
+          "model_delivered_turns": 0,
+          "turns": 4357
+        }
+      },
+      "policy": "rules",
+      "renderer_source_sha256": "5228f2c948938fb55ff53d616ee3b3cd6073da05c3be33b3b10e4d5e958262f1",
+      "renderer_version": "student_templates_bridge_v1",
+      "reply": "degraded",
+      "response_config_sha256": "f7052ff5c991eb07daa9205d189f7ca7d7569a9a37a0c0c1b7f1d2eee65c446d",
+      "scenario_bank_sha256": "dead8f7e54973b915a9e642c8ce8f593dab75a82f6665320f1aca4aa4604bd01",
+      "seed": 20250115,
+      "simulator_config": "configs/learning/simulator_proto_v2.yaml",
+      "simulator_config_sha256": "b8af3e431f4c09150f6d163c012efd9c39ae9e953ac2640203fdecd7ec85b067",
+      "source_commit": "7d4dd68576b77b33227ddac888d41b6216e5beb4",
+      "source_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "split": "validation",
+      "started_at": "2026-11-02T22:18:06.740576+00:00",
+      "text_path_source_sha256": "d548764358f05c20a25f288579e7c52d179e574500617d0ee2171f9aab50d0ba",
+      "text_realizer": {
+        "base": {
+          "artifact_id": "response_stub_pipeline_v1",
+          "compatible_artifact_ids": [
+            "response_stub_pipeline_v1",
+            "response_stub_v1"
+          ],
+          "limits": {
+            "decoding": "greedy",
+            "internal_deadline_ms": 8000,
+            "max_output_tokens": 384,
+            "max_repairs": 1
+          },
+          "responder": {
+            "kind": "template_stub",
+            "version": "template_stub_v1"
+          },
+          "versions": {
+            "fallback": "fallback_v1",
+            "pipeline": "pipeline_v1",
+            "prompt": "prompt_v1",
+            "repair": "repair_v1",
+            "validator": "validator_v2"
+          }
+        },
+        "kind": "fake_wrong_move",
+        "rate": 0.2
+      },
+      "verbalizer_config_sha256": null,
+      "version": "text_bridge_v1"
+    },
+    "stub": {
+      "bridge_source_sha256": "b376e77eaf6bc87ec58e3a4effb28f6920251ed4c262742729867cda73ba3637",
+      "call_estimate": {
+        "actual_model_calls": 0,
+        "max_calls_budget": 0,
+        "maximum_primary_calls": 0,
+        "maximum_repair_calls": 0,
+        "maximum_turns_per_path": 4800,
+        "maximum_verbalizer_calls": 0,
+        "note": "Nominal count follows stub decisions; text may change decisions and length. Upper bounds include every turn up to each scenario horizon, including repairs.",
+        "planned_primary_calls_at_stub_trajectory": 0,
+        "planned_verbalizer_calls_at_stub_trajectory": 0,
+        "structured_rehearsal_turns": 4357
+      },
+      "checkpoint_sha256": null,
+      "content_fidelity_rule": "PRD line 895: content_fidelity=0 for unsupported or contradictory delivered content. Here any failed independent A check or item-identity check sets content_realized=False; otherwise the simulator's configured stub_realized coefficient (at most 1) and seeded failure process apply. Extraction disagreement is separate from content fidelity.",
+      "dependency_lock_sha256": "0d43ba121fecce1327a88b57f643f951e81a01768f8d769e6466f3fde53dd5d6",
+      "dry_run": false,
+      "episodes": 300,
+      "g8": {
+        "automated_critical_candidates": 156,
+        "eligible_test_budget": false,
+        "flagged_traces": 8714,
+        "human_critical_failures": 0,
+        "outcome_threshold_met": true,
+        "paired_uncertainty_published": true,
+        "real_text_run": false,
+        "review_complete": false,
+        "reviewed_traces": 0,
+        "rule": "test pairs>=300 AND real replies AND all flagged traces reviewed with no critical failures AND text-minus-structured mean>=-0.02; publish paired bootstrap 95% CI (CI crossing -0.02 is reported, not an extra PRD gate)",
+        "status": "FAIL"
+      },
+      "label": "SIMULATED",
+      "navigator": "rules",
+      "paired_text_minus_structured": {
+        "ci_95": [
+          0.0,
+          0.0
+        ],
+        "mean": 0.0
+      },
+      "pairs": [
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250115,
+          "structured_gain": 0.02730170066433593,
+          "structured_turns": 16,
+          "text_gain": 0.02730170066433593,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250116,
+          "structured_gain": 0.048026308683313534,
+          "structured_turns": 16,
+          "text_gain": 0.048026308683313534,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250117,
+          "structured_gain": 0.16364003510936864,
+          "structured_turns": 16,
+          "text_gain": 0.16364003510936864,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250118,
+          "structured_gain": 0.0004304779733566577,
+          "structured_turns": 2,
+          "text_gain": 0.0004304779733566577,
+          "text_turns": 2
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250119,
+          "structured_gain": 0.1546113601480877,
+          "structured_turns": 16,
+          "text_gain": 0.1546113601480877,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250120,
+          "structured_gain": 0.014546569677204801,
+          "structured_turns": 16,
+          "text_gain": 0.014546569677204801,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250121,
+          "structured_gain": 0.029357494263102635,
+          "structured_turns": 16,
+          "text_gain": 0.029357494263102635,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250122,
+          "structured_gain": 0.0009410818054167158,
+          "structured_turns": 3,
+          "text_gain": 0.0009410818054167158,
+          "text_turns": 3
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250123,
+          "structured_gain": 0.004750707058320813,
+          "structured_turns": 16,
+          "text_gain": 0.004750707058320813,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250124,
+          "structured_gain": 0.0031975122861414573,
+          "structured_turns": 6,
+          "text_gain": 0.0031975122861414573,
+          "text_turns": 6
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250125,
+          "structured_gain": 0.047616801134419906,
+          "structured_turns": 16,
+          "text_gain": 0.047616801134419906,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250126,
+          "structured_gain": 0.03002263255783899,
+          "structured_turns": 10,
+          "text_gain": 0.03002263255783899,
+          "text_turns": 10
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250127,
+          "structured_gain": 0.15017413605558666,
+          "structured_turns": 16,
+          "text_gain": 0.15017413605558666,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250128,
+          "structured_gain": 0.00688437379537421,
+          "structured_turns": 16,
+          "text_gain": 0.00688437379537421,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250129,
+          "structured_gain": 0.15324024369763364,
+          "structured_turns": 16,
+          "text_gain": 0.15324024369763364,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250130,
+          "structured_gain": 0.029896986702038275,
+          "structured_turns": 16,
+          "text_gain": 0.029896986702038275,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250131,
+          "structured_gain": 0.05311367367033859,
+          "structured_turns": 16,
+          "text_gain": 0.05311367367033859,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250132,
+          "structured_gain": 0.14181913767942697,
+          "structured_turns": 16,
+          "text_gain": 0.14181913767942697,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250133,
+          "structured_gain": 0.02126118669986321,
+          "structured_turns": 16,
+          "text_gain": 0.02126118669986321,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250134,
+          "structured_gain": 0.1664712689349724,
+          "structured_turns": 16,
+          "text_gain": 0.1664712689349724,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250135,
+          "structured_gain": 0.020834772323570838,
+          "structured_turns": 16,
+          "text_gain": 0.020834772323570838,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250136,
+          "structured_gain": 0.03402038107434091,
+          "structured_turns": 7,
+          "text_gain": 0.03402038107434091,
+          "text_turns": 7
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250137,
+          "structured_gain": 0.18075213457620065,
+          "structured_turns": 16,
+          "text_gain": 0.18075213457620065,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250138,
+          "structured_gain": 0.02659778717944511,
+          "structured_turns": 16,
+          "text_gain": 0.02659778717944511,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250139,
+          "structured_gain": 0.0,
+          "structured_turns": 2,
+          "text_gain": 0.0,
+          "text_turns": 2
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250140,
+          "structured_gain": 0.026369328644884116,
+          "structured_turns": 16,
+          "text_gain": 0.026369328644884116,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250141,
+          "structured_gain": 0.037368797263464204,
+          "structured_turns": 16,
+          "text_gain": 0.037368797263464204,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250142,
+          "structured_gain": 0.005103072957690635,
+          "structured_turns": 16,
+          "text_gain": 0.005103072957690635,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250143,
+          "structured_gain": 0.01301932976854947,
+          "structured_turns": 16,
+          "text_gain": 0.01301932976854947,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250144,
+          "structured_gain": 0.16947537403954804,
+          "structured_turns": 16,
+          "text_gain": 0.16947537403954804,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250145,
+          "structured_gain": 0.023739794929110825,
+          "structured_turns": 16,
+          "text_gain": 0.023739794929110825,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250146,
+          "structured_gain": 0.041634328268993825,
+          "structured_turns": 16,
+          "text_gain": 0.041634328268993825,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250147,
+          "structured_gain": 0.1589913320309953,
+          "structured_turns": 16,
+          "text_gain": 0.1589913320309953,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250148,
+          "structured_gain": 0.008451754961236402,
+          "structured_turns": 16,
+          "text_gain": 0.008451754961236402,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250149,
+          "structured_gain": 0.15223066753766876,
+          "structured_turns": 16,
+          "text_gain": 0.15223066753766876,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250150,
+          "structured_gain": 0.02420781891049467,
+          "structured_turns": 16,
+          "text_gain": 0.02420781891049467,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250151,
+          "structured_gain": 0.05896170131391415,
+          "structured_turns": 16,
+          "text_gain": 0.05896170131391415,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250152,
+          "structured_gain": 0.16285188738807063,
+          "structured_turns": 16,
+          "text_gain": 0.16285188738807063,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250153,
+          "structured_gain": 0.004265458235440334,
+          "structured_turns": 16,
+          "text_gain": 0.004265458235440334,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250154,
+          "structured_gain": 0.0029729317126210852,
+          "structured_turns": 16,
+          "text_gain": 0.0029729317126210852,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250155,
+          "structured_gain": 0.02426780001649137,
+          "structured_turns": 10,
+          "text_gain": 0.02426780001649137,
+          "text_turns": 10
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250156,
+          "structured_gain": 0.024036006757388928,
+          "structured_turns": 16,
+          "text_gain": 0.024036006757388928,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250157,
+          "structured_gain": 0.13737088699100353,
+          "structured_turns": 16,
+          "text_gain": 0.13737088699100353,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250158,
+          "structured_gain": 0.008476324757897002,
+          "structured_turns": 16,
+          "text_gain": 0.008476324757897002,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250159,
+          "structured_gain": 0.1371617326667722,
+          "structured_turns": 16,
+          "text_gain": 0.1371617326667722,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250160,
+          "structured_gain": 0.026302725787516718,
+          "structured_turns": 16,
+          "text_gain": 0.026302725787516718,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250161,
+          "structured_gain": 0.0028505074664260666,
+          "structured_turns": 2,
+          "text_gain": 0.0028505074664260666,
+          "text_turns": 2
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250162,
+          "structured_gain": 0.002752129898126787,
+          "structured_turns": 8,
+          "text_gain": 0.002752129898126787,
+          "text_turns": 8
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250163,
+          "structured_gain": 0.014643867853248449,
+          "structured_turns": 16,
+          "text_gain": 0.014643867853248449,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250164,
+          "structured_gain": 0.13360321187045016,
+          "structured_turns": 16,
+          "text_gain": 0.13360321187045016,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250165,
+          "structured_gain": 0.027871291774800355,
+          "structured_turns": 16,
+          "text_gain": 0.027871291774800355,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250166,
+          "structured_gain": 0.07469670247250748,
+          "structured_turns": 16,
+          "text_gain": 0.07469670247250748,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250167,
+          "structured_gain": 0.12159543089636282,
+          "structured_turns": 16,
+          "text_gain": 0.12159543089636282,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250168,
+          "structured_gain": 0.010220179347259162,
+          "structured_turns": 16,
+          "text_gain": 0.010220179347259162,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250169,
+          "structured_gain": 0.15860462478333223,
+          "structured_turns": 16,
+          "text_gain": 0.15860462478333223,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250170,
+          "structured_gain": 0.029350592845827028,
+          "structured_turns": 16,
+          "text_gain": 0.029350592845827028,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250171,
+          "structured_gain": 0.035299666418279085,
+          "structured_turns": 16,
+          "text_gain": 0.035299666418279085,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250172,
+          "structured_gain": 0.14165724861445034,
+          "structured_turns": 10,
+          "text_gain": 0.14165724861445034,
+          "text_turns": 10
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250173,
+          "structured_gain": 0.016861933494700665,
+          "structured_turns": 16,
+          "text_gain": 0.016861933494700665,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250174,
+          "structured_gain": 0.16944452643878596,
+          "structured_turns": 16,
+          "text_gain": 0.16944452643878596,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250175,
+          "structured_gain": 0.033485317212522625,
+          "structured_turns": 14,
+          "text_gain": 0.033485317212522625,
+          "text_turns": 14
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250176,
+          "structured_gain": 0.06457020473876127,
+          "structured_turns": 16,
+          "text_gain": 0.06457020473876127,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250177,
+          "structured_gain": 0.14781980135155298,
+          "structured_turns": 16,
+          "text_gain": 0.14781980135155298,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250178,
+          "structured_gain": 0.005416169876631738,
+          "structured_turns": 16,
+          "text_gain": 0.005416169876631738,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250179,
+          "structured_gain": 0.15969268747292215,
+          "structured_turns": 16,
+          "text_gain": 0.15969268747292215,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250180,
+          "structured_gain": 0.016981852922809015,
+          "structured_turns": 16,
+          "text_gain": 0.016981852922809015,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250181,
+          "structured_gain": 0.02628895224396466,
+          "structured_turns": 6,
+          "text_gain": 0.02628895224396466,
+          "text_turns": 6
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250182,
+          "structured_gain": 0.15754071482519327,
+          "structured_turns": 16,
+          "text_gain": 0.15754071482519327,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250183,
+          "structured_gain": 0.008754636497271595,
+          "structured_turns": 16,
+          "text_gain": 0.008754636497271595,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250184,
+          "structured_gain": 0.1617222516711389,
+          "structured_turns": 16,
+          "text_gain": 0.1617222516711389,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250185,
+          "structured_gain": 0.013799849846861445,
+          "structured_turns": 16,
+          "text_gain": 0.013799849846861445,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250186,
+          "structured_gain": 0.0280712079842505,
+          "structured_turns": 16,
+          "text_gain": 0.0280712079842505,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250187,
+          "structured_gain": 0.16257061578301424,
+          "structured_turns": 16,
+          "text_gain": 0.16257061578301424,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250188,
+          "structured_gain": 0.006504831639875364,
+          "structured_turns": 12,
+          "text_gain": 0.006504831639875364,
+          "text_turns": 12
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250189,
+          "structured_gain": 0.003379430474874101,
+          "structured_turns": 16,
+          "text_gain": 0.003379430474874101,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250190,
+          "structured_gain": 0.03446044957352257,
+          "structured_turns": 16,
+          "text_gain": 0.03446044957352257,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250191,
+          "structured_gain": 0.0442080071398242,
+          "structured_turns": 16,
+          "text_gain": 0.0442080071398242,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250192,
+          "structured_gain": 0.16249867011569236,
+          "structured_turns": 16,
+          "text_gain": 0.16249867011569236,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250193,
+          "structured_gain": 0.01841159481198662,
+          "structured_turns": 16,
+          "text_gain": 0.01841159481198662,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250194,
+          "structured_gain": 0.16138089409882928,
+          "structured_turns": 16,
+          "text_gain": 0.16138089409882928,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250195,
+          "structured_gain": 0.023523965459094853,
+          "structured_turns": 16,
+          "text_gain": 0.023523965459094853,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250196,
+          "structured_gain": 0.06822202565048757,
+          "structured_turns": 16,
+          "text_gain": 0.06822202565048757,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250197,
+          "structured_gain": 0.14162545853272207,
+          "structured_turns": 16,
+          "text_gain": 0.14162545853272207,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250198,
+          "structured_gain": 0.014425463071207567,
+          "structured_turns": 16,
+          "text_gain": 0.014425463071207567,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250199,
+          "structured_gain": 0.15473189860759118,
+          "structured_turns": 16,
+          "text_gain": 0.15473189860759118,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250200,
+          "structured_gain": 0.02565105118563238,
+          "structured_turns": 16,
+          "text_gain": 0.02565105118563238,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250201,
+          "structured_gain": 0.030112602226996243,
+          "structured_turns": 16,
+          "text_gain": 0.030112602226996243,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250202,
+          "structured_gain": 0.1370375518852547,
+          "structured_turns": 16,
+          "text_gain": 0.1370375518852547,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250203,
+          "structured_gain": 0.014029565979139569,
+          "structured_turns": 16,
+          "text_gain": 0.014029565979139569,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250204,
+          "structured_gain": 0.1657057598407085,
+          "structured_turns": 16,
+          "text_gain": 0.1657057598407085,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250205,
+          "structured_gain": 0.026645595336938888,
+          "structured_turns": 16,
+          "text_gain": 0.026645595336938888,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250206,
+          "structured_gain": 0.039725266386753,
+          "structured_turns": 16,
+          "text_gain": 0.039725266386753,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250207,
+          "structured_gain": 0.1688665379029,
+          "structured_turns": 16,
+          "text_gain": 0.1688665379029,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250208,
+          "structured_gain": 0.01689578151515625,
+          "structured_turns": 16,
+          "text_gain": 0.01689578151515625,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250209,
+          "structured_gain": 0.0035317456337423114,
+          "structured_turns": 16,
+          "text_gain": 0.0035317456337423114,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250210,
+          "structured_gain": 0.02584921747496205,
+          "structured_turns": 16,
+          "text_gain": 0.02584921747496205,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250211,
+          "structured_gain": 0.02092480753427267,
+          "structured_turns": 12,
+          "text_gain": 0.02092480753427267,
+          "text_turns": 12
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250212,
+          "structured_gain": 0.00882383687097385,
+          "structured_turns": 16,
+          "text_gain": 0.00882383687097385,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250213,
+          "structured_gain": 0.005860243719191471,
+          "structured_turns": 16,
+          "text_gain": 0.005860243719191471,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250214,
+          "structured_gain": 0.16587505400954208,
+          "structured_turns": 16,
+          "text_gain": 0.16587505400954208,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250215,
+          "structured_gain": 0.02204423312918785,
+          "structured_turns": 16,
+          "text_gain": 0.02204423312918785,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250216,
+          "structured_gain": 0.044256574746127875,
+          "structured_turns": 16,
+          "text_gain": 0.044256574746127875,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250217,
+          "structured_gain": 0.00766696844201889,
+          "structured_turns": 15,
+          "text_gain": 0.00766696844201889,
+          "text_turns": 15
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250218,
+          "structured_gain": 0.007302221350881988,
+          "structured_turns": 16,
+          "text_gain": 0.007302221350881988,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250219,
+          "structured_gain": 0.004177336831389433,
+          "structured_turns": 15,
+          "text_gain": 0.004177336831389433,
+          "text_turns": 15
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250220,
+          "structured_gain": 0.01529796047458154,
+          "structured_turns": 5,
+          "text_gain": 0.01529796047458154,
+          "text_turns": 5
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250221,
+          "structured_gain": 0.031007194546281036,
+          "structured_turns": 16,
+          "text_gain": 0.031007194546281036,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250222,
+          "structured_gain": 0.16517888859933427,
+          "structured_turns": 16,
+          "text_gain": 0.16517888859933427,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250223,
+          "structured_gain": 0.02190566234468183,
+          "structured_turns": 16,
+          "text_gain": 0.02190566234468183,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250224,
+          "structured_gain": 0.1677264494997687,
+          "structured_turns": 16,
+          "text_gain": 0.1677264494997687,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250225,
+          "structured_gain": 0.01902784363782062,
+          "structured_turns": 16,
+          "text_gain": 0.01902784363782062,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250226,
+          "structured_gain": 0.029474460341399833,
+          "structured_turns": 16,
+          "text_gain": 0.029474460341399833,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250227,
+          "structured_gain": 0.16387848527346807,
+          "structured_turns": 16,
+          "text_gain": 0.16387848527346807,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250228,
+          "structured_gain": 0.0008868852733027177,
+          "structured_turns": 2,
+          "text_gain": 0.0008868852733027177,
+          "text_turns": 2
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250229,
+          "structured_gain": 0.15454459597656667,
+          "structured_turns": 16,
+          "text_gain": 0.15454459597656667,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250230,
+          "structured_gain": 0.028524567642333687,
+          "structured_turns": 16,
+          "text_gain": 0.028524567642333687,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250231,
+          "structured_gain": 0.029858006874082132,
+          "structured_turns": 16,
+          "text_gain": 0.029858006874082132,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250232,
+          "structured_gain": 0.0,
+          "structured_turns": 1,
+          "text_gain": 0.0,
+          "text_turns": 1
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250233,
+          "structured_gain": 0.021527662306764506,
+          "structured_turns": 16,
+          "text_gain": 0.021527662306764506,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250234,
+          "structured_gain": 0.1767895075059651,
+          "structured_turns": 16,
+          "text_gain": 0.1767895075059651,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250235,
+          "structured_gain": 0.026808132289089237,
+          "structured_turns": 16,
+          "text_gain": 0.026808132289089237,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250236,
+          "structured_gain": 0.01215772662725595,
+          "structured_turns": 2,
+          "text_gain": 0.01215772662725595,
+          "text_turns": 2
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250237,
+          "structured_gain": 0.16029114986267473,
+          "structured_turns": 16,
+          "text_gain": 0.16029114986267473,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250238,
+          "structured_gain": 0.005340594001784327,
+          "structured_turns": 16,
+          "text_gain": 0.005340594001784327,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250239,
+          "structured_gain": 0.17533469038122265,
+          "structured_turns": 16,
+          "text_gain": 0.17533469038122265,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250240,
+          "structured_gain": 0.03446665171177116,
+          "structured_turns": 16,
+          "text_gain": 0.03446665171177116,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250241,
+          "structured_gain": 0.03247007133131585,
+          "structured_turns": 16,
+          "text_gain": 0.03247007133131585,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250242,
+          "structured_gain": 0.16187091886912844,
+          "structured_turns": 16,
+          "text_gain": 0.16187091886912844,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250243,
+          "structured_gain": 0.0,
+          "structured_turns": 1,
+          "text_gain": 0.0,
+          "text_turns": 1
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250244,
+          "structured_gain": 0.16501448557487847,
+          "structured_turns": 16,
+          "text_gain": 0.16501448557487847,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250245,
+          "structured_gain": 0.029008380727735927,
+          "structured_turns": 16,
+          "text_gain": 0.029008380727735927,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250246,
+          "structured_gain": 0.013066852651013594,
+          "structured_turns": 3,
+          "text_gain": 0.013066852651013594,
+          "text_turns": 3
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250247,
+          "structured_gain": 0.15366646560392577,
+          "structured_turns": 16,
+          "text_gain": 0.15366646560392577,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250248,
+          "structured_gain": 0.004086363038972696,
+          "structured_turns": 16,
+          "text_gain": 0.004086363038972696,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250249,
+          "structured_gain": 0.1499058215994467,
+          "structured_turns": 16,
+          "text_gain": 0.1499058215994467,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250250,
+          "structured_gain": 0.026423564285747048,
+          "structured_turns": 16,
+          "text_gain": 0.026423564285747048,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250251,
+          "structured_gain": 0.04469961365322869,
+          "structured_turns": 16,
+          "text_gain": 0.04469961365322869,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250252,
+          "structured_gain": 0.15831107471059505,
+          "structured_turns": 16,
+          "text_gain": 0.15831107471059505,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250253,
+          "structured_gain": 0.029268401164518898,
+          "structured_turns": 16,
+          "text_gain": 0.029268401164518898,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250254,
+          "structured_gain": 0.17566644011062205,
+          "structured_turns": 16,
+          "text_gain": 0.17566644011062205,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250255,
+          "structured_gain": 0.025800033433010183,
+          "structured_turns": 16,
+          "text_gain": 0.025800033433010183,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250256,
+          "structured_gain": 0.059165873768279864,
+          "structured_turns": 16,
+          "text_gain": 0.059165873768279864,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250257,
+          "structured_gain": 0.12243303885225643,
+          "structured_turns": 16,
+          "text_gain": 0.12243303885225643,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250258,
+          "structured_gain": 0.02759273560484088,
+          "structured_turns": 16,
+          "text_gain": 0.02759273560484088,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250259,
+          "structured_gain": 0.15694899593718567,
+          "structured_turns": 16,
+          "text_gain": 0.15694899593718567,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250260,
+          "structured_gain": 0.020683320337352096,
+          "structured_turns": 16,
+          "text_gain": 0.020683320337352096,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250261,
+          "structured_gain": 0.014742267373981238,
+          "structured_turns": 3,
+          "text_gain": 0.014742267373981238,
+          "text_turns": 3
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250262,
+          "structured_gain": 0.12498837676351787,
+          "structured_turns": 16,
+          "text_gain": 0.12498837676351787,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250263,
+          "structured_gain": 0.004471632437261508,
+          "structured_turns": 16,
+          "text_gain": 0.004471632437261508,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250264,
+          "structured_gain": 0.15550781539812797,
+          "structured_turns": 16,
+          "text_gain": 0.15550781539812797,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250265,
+          "structured_gain": 0.033705603060763756,
+          "structured_turns": 16,
+          "text_gain": 0.033705603060763756,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250266,
+          "structured_gain": 0.03019056775208706,
+          "structured_turns": 12,
+          "text_gain": 0.03019056775208706,
+          "text_turns": 12
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250267,
+          "structured_gain": 0.1588039041477777,
+          "structured_turns": 16,
+          "text_gain": 0.1588039041477777,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250268,
+          "structured_gain": 0.0030962360732207372,
+          "structured_turns": 16,
+          "text_gain": 0.0030962360732207372,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250269,
+          "structured_gain": 0.00466249486720377,
+          "structured_turns": 16,
+          "text_gain": 0.00466249486720377,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250270,
+          "structured_gain": 0.025221866934162063,
+          "structured_turns": 16,
+          "text_gain": 0.025221866934162063,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250271,
+          "structured_gain": 0.0640407343294623,
+          "structured_turns": 16,
+          "text_gain": 0.0640407343294623,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250272,
+          "structured_gain": 0.13892848407556968,
+          "structured_turns": 16,
+          "text_gain": 0.13892848407556968,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250273,
+          "structured_gain": 0.03543996770705671,
+          "structured_turns": 16,
+          "text_gain": 0.03543996770705671,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250274,
+          "structured_gain": 0.15438917895257906,
+          "structured_turns": 16,
+          "text_gain": 0.15438917895257906,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250275,
+          "structured_gain": 0.02921209165182942,
+          "structured_turns": 16,
+          "text_gain": 0.02921209165182942,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250276,
+          "structured_gain": 0.03633160531638033,
+          "structured_turns": 16,
+          "text_gain": 0.03633160531638033,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250277,
+          "structured_gain": 0.15736858611447319,
+          "structured_turns": 16,
+          "text_gain": 0.15736858611447319,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250278,
+          "structured_gain": 0.009382864604560115,
+          "structured_turns": 16,
+          "text_gain": 0.009382864604560115,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250279,
+          "structured_gain": 0.1325666598930856,
+          "structured_turns": 16,
+          "text_gain": 0.1325666598930856,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250280,
+          "structured_gain": 0.025133089620069327,
+          "structured_turns": 16,
+          "text_gain": 0.025133089620069327,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250281,
+          "structured_gain": 0.03521249696011197,
+          "structured_turns": 16,
+          "text_gain": 0.03521249696011197,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250282,
+          "structured_gain": 0.12257264759927333,
+          "structured_turns": 16,
+          "text_gain": 0.12257264759927333,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250283,
+          "structured_gain": 0.012450041934442602,
+          "structured_turns": 16,
+          "text_gain": 0.012450041934442602,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250284,
+          "structured_gain": 0.1445646323208051,
+          "structured_turns": 16,
+          "text_gain": 0.1445646323208051,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250285,
+          "structured_gain": 0.025523103393013558,
+          "structured_turns": 16,
+          "text_gain": 0.025523103393013558,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250286,
+          "structured_gain": 0.032047694885918576,
+          "structured_turns": 16,
+          "text_gain": 0.032047694885918576,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250287,
+          "structured_gain": 0.14144351181117504,
+          "structured_turns": 16,
+          "text_gain": 0.14144351181117504,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250288,
+          "structured_gain": 0.0020711483840058498,
+          "structured_turns": 16,
+          "text_gain": 0.0020711483840058498,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250289,
+          "structured_gain": 0.004542298258866151,
+          "structured_turns": 16,
+          "text_gain": 0.004542298258866151,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250290,
+          "structured_gain": 0.026268267089045394,
+          "structured_turns": 16,
+          "text_gain": 0.026268267089045394,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250291,
+          "structured_gain": 0.04954503737156646,
+          "structured_turns": 16,
+          "text_gain": 0.04954503737156646,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250292,
+          "structured_gain": 0.16510054054867473,
+          "structured_turns": 16,
+          "text_gain": 0.16510054054867473,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250293,
+          "structured_gain": 0.0055776755837476655,
+          "structured_turns": 16,
+          "text_gain": 0.0055776755837476655,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250294,
+          "structured_gain": 0.1844906892278398,
+          "structured_turns": 16,
+          "text_gain": 0.1844906892278398,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250295,
+          "structured_gain": 0.0337552171483147,
+          "structured_turns": 16,
+          "text_gain": 0.0337552171483147,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250296,
+          "structured_gain": 0.055963713846999,
+          "structured_turns": 16,
+          "text_gain": 0.055963713846999,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250297,
+          "structured_gain": 0.12488343149790654,
+          "structured_turns": 16,
+          "text_gain": 0.12488343149790654,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250298,
+          "structured_gain": 0.004049964974921605,
+          "structured_turns": 16,
+          "text_gain": 0.004049964974921605,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250299,
+          "structured_gain": 0.0,
+          "structured_turns": 2,
+          "text_gain": 0.0,
+          "text_turns": 2
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250300,
+          "structured_gain": 0.02753101198377797,
+          "structured_turns": 16,
+          "text_gain": 0.02753101198377797,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250301,
+          "structured_gain": 0.02653467307741386,
+          "structured_turns": 4,
+          "text_gain": 0.02653467307741386,
+          "text_turns": 4
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250302,
+          "structured_gain": 0.15139760063786448,
+          "structured_turns": 16,
+          "text_gain": 0.15139760063786448,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250303,
+          "structured_gain": 0.0,
+          "structured_turns": 1,
+          "text_gain": 0.0,
+          "text_turns": 1
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250304,
+          "structured_gain": 0.1600909086916838,
+          "structured_turns": 16,
+          "text_gain": 0.1600909086916838,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250305,
+          "structured_gain": 0.03545113770061292,
+          "structured_turns": 16,
+          "text_gain": 0.03545113770061292,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250306,
+          "structured_gain": 0.02326658101499618,
+          "structured_turns": 16,
+          "text_gain": 0.02326658101499618,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250307,
+          "structured_gain": 0.15524580829056037,
+          "structured_turns": 16,
+          "text_gain": 0.15524580829056037,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250308,
+          "structured_gain": 0.003550788865189336,
+          "structured_turns": 16,
+          "text_gain": 0.003550788865189336,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250309,
+          "structured_gain": 0.15437415855469727,
+          "structured_turns": 14,
+          "text_gain": 0.15437415855469727,
+          "text_turns": 14
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250310,
+          "structured_gain": 0.019668339754720432,
+          "structured_turns": 16,
+          "text_gain": 0.019668339754720432,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250311,
+          "structured_gain": 0.06213122947803895,
+          "structured_turns": 16,
+          "text_gain": 0.06213122947803895,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250312,
+          "structured_gain": 0.1338511875491915,
+          "structured_turns": 16,
+          "text_gain": 0.1338511875491915,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250313,
+          "structured_gain": 0.003103337607595069,
+          "structured_turns": 4,
+          "text_gain": 0.003103337607595069,
+          "text_turns": 4
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250314,
+          "structured_gain": 0.12924721022201416,
+          "structured_turns": 16,
+          "text_gain": 0.12924721022201416,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250315,
+          "structured_gain": 0.042792846236317406,
+          "structured_turns": 16,
+          "text_gain": 0.042792846236317406,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250316,
+          "structured_gain": 0.0263635977923124,
+          "structured_turns": 16,
+          "text_gain": 0.0263635977923124,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250317,
+          "structured_gain": 0.14220668880847506,
+          "structured_turns": 16,
+          "text_gain": 0.14220668880847506,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250318,
+          "structured_gain": 0.035773339595117915,
+          "structured_turns": 16,
+          "text_gain": 0.035773339595117915,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250319,
+          "structured_gain": 0.0037221952166839045,
+          "structured_turns": 12,
+          "text_gain": 0.0037221952166839045,
+          "text_turns": 12
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250320,
+          "structured_gain": 0.04173326773216296,
+          "structured_turns": 16,
+          "text_gain": 0.04173326773216296,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250321,
+          "structured_gain": 0.04545895450104559,
+          "structured_turns": 16,
+          "text_gain": 0.04545895450104559,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250322,
+          "structured_gain": 0.16826784008623707,
+          "structured_turns": 16,
+          "text_gain": 0.16826784008623707,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250323,
+          "structured_gain": 0.025286305001420817,
+          "structured_turns": 16,
+          "text_gain": 0.025286305001420817,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250324,
+          "structured_gain": 0.0024469224710400583,
+          "structured_turns": 7,
+          "text_gain": 0.0024469224710400583,
+          "text_turns": 7
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250325,
+          "structured_gain": 0.012179275661767797,
+          "structured_turns": 5,
+          "text_gain": 0.012179275661767797,
+          "text_turns": 5
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250326,
+          "structured_gain": 0.04974083378206695,
+          "structured_turns": 16,
+          "text_gain": 0.04974083378206695,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250327,
+          "structured_gain": 0.12515796640068322,
+          "structured_turns": 5,
+          "text_gain": 0.12515796640068322,
+          "text_turns": 5
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250328,
+          "structured_gain": 0.01331235793927632,
+          "structured_turns": 16,
+          "text_gain": 0.01331235793927632,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250329,
+          "structured_gain": 0.15606635670118774,
+          "structured_turns": 16,
+          "text_gain": 0.15606635670118774,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250330,
+          "structured_gain": 0.03310830076241811,
+          "structured_turns": 16,
+          "text_gain": 0.03310830076241811,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250331,
+          "structured_gain": 0.03647235818434358,
+          "structured_turns": 16,
+          "text_gain": 0.03647235818434358,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250332,
+          "structured_gain": 0.1632804376176643,
+          "structured_turns": 16,
+          "text_gain": 0.1632804376176643,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250333,
+          "structured_gain": 0.0027718003599212504,
+          "structured_turns": 16,
+          "text_gain": 0.0027718003599212504,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250334,
+          "structured_gain": 0.1410265261400412,
+          "structured_turns": 16,
+          "text_gain": 0.1410265261400412,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250335,
+          "structured_gain": 0.003107059977572768,
+          "structured_turns": 3,
+          "text_gain": 0.003107059977572768,
+          "text_turns": 3
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250336,
+          "structured_gain": 0.0,
+          "structured_turns": 1,
+          "text_gain": 0.0,
+          "text_turns": 1
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250337,
+          "structured_gain": 0.17108121646893196,
+          "structured_turns": 16,
+          "text_gain": 0.17108121646893196,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250338,
+          "structured_gain": 0.00929462451048424,
+          "structured_turns": 16,
+          "text_gain": 0.00929462451048424,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250339,
+          "structured_gain": 0.0,
+          "structured_turns": 2,
+          "text_gain": 0.0,
+          "text_turns": 2
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250340,
+          "structured_gain": 0.029597204460906856,
+          "structured_turns": 16,
+          "text_gain": 0.029597204460906856,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250341,
+          "structured_gain": 0.025902363752269036,
+          "structured_turns": 16,
+          "text_gain": 0.025902363752269036,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250342,
+          "structured_gain": 0.12455446143241095,
+          "structured_turns": 16,
+          "text_gain": 0.12455446143241095,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250343,
+          "structured_gain": 0.003299113289335742,
+          "structured_turns": 16,
+          "text_gain": 0.003299113289335742,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250344,
+          "structured_gain": 0.0012146771778687449,
+          "structured_turns": 3,
+          "text_gain": 0.0012146771778687449,
+          "text_turns": 3
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250345,
+          "structured_gain": 0.029657182812768995,
+          "structured_turns": 16,
+          "text_gain": 0.029657182812768995,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250346,
+          "structured_gain": 0.053259651914319805,
+          "structured_turns": 16,
+          "text_gain": 0.053259651914319805,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250347,
+          "structured_gain": 0.14846316198629878,
+          "structured_turns": 16,
+          "text_gain": 0.14846316198629878,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250348,
+          "structured_gain": 0.016237758946046565,
+          "structured_turns": 16,
+          "text_gain": 0.016237758946046565,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250349,
+          "structured_gain": 0.1696891492741702,
+          "structured_turns": 16,
+          "text_gain": 0.1696891492741702,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250350,
+          "structured_gain": 0.0,
+          "structured_turns": 1,
+          "text_gain": 0.0,
+          "text_turns": 1
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250351,
+          "structured_gain": 0.021443543686736843,
+          "structured_turns": 16,
+          "text_gain": 0.021443543686736843,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250352,
+          "structured_gain": 0.1630646455248945,
+          "structured_turns": 16,
+          "text_gain": 0.1630646455248945,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250353,
+          "structured_gain": 0.013274602495222165,
+          "structured_turns": 16,
+          "text_gain": 0.013274602495222165,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250354,
+          "structured_gain": 0.15999476234033927,
+          "structured_turns": 16,
+          "text_gain": 0.15999476234033927,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250355,
+          "structured_gain": 0.016747802595682815,
+          "structured_turns": 16,
+          "text_gain": 0.016747802595682815,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250356,
+          "structured_gain": 0.04011753614110325,
+          "structured_turns": 16,
+          "text_gain": 0.04011753614110325,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250357,
+          "structured_gain": 0.1666525942325477,
+          "structured_turns": 16,
+          "text_gain": 0.1666525942325477,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250358,
+          "structured_gain": 0.02140226461585415,
+          "structured_turns": 16,
+          "text_gain": 0.02140226461585415,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250359,
+          "structured_gain": 0.0038353974472404295,
+          "structured_turns": 16,
+          "text_gain": 0.0038353974472404295,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250360,
+          "structured_gain": 0.03755988630914803,
+          "structured_turns": 16,
+          "text_gain": 0.03755988630914803,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250361,
+          "structured_gain": 0.05694737627560825,
+          "structured_turns": 16,
+          "text_gain": 0.05694737627560825,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250362,
+          "structured_gain": 0.15673307530501318,
+          "structured_turns": 16,
+          "text_gain": 0.15673307530501318,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250363,
+          "structured_gain": 0.018196356096733646,
+          "structured_turns": 16,
+          "text_gain": 0.018196356096733646,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250364,
+          "structured_gain": 0.15292064370098413,
+          "structured_turns": 16,
+          "text_gain": 0.15292064370098413,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250365,
+          "structured_gain": 0.01986073029594415,
+          "structured_turns": 6,
+          "text_gain": 0.01986073029594415,
+          "text_turns": 6
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250366,
+          "structured_gain": 0.04568159819421519,
+          "structured_turns": 16,
+          "text_gain": 0.04568159819421519,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250367,
+          "structured_gain": 0.12251303688895934,
+          "structured_turns": 16,
+          "text_gain": 0.12251303688895934,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250368,
+          "structured_gain": 0.03154252614857944,
+          "structured_turns": 16,
+          "text_gain": 0.03154252614857944,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250369,
+          "structured_gain": 0.15195153533086067,
+          "structured_turns": 16,
+          "text_gain": 0.15195153533086067,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250370,
+          "structured_gain": 0.029929160047235392,
+          "structured_turns": 12,
+          "text_gain": 0.029929160047235392,
+          "text_turns": 12
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250371,
+          "structured_gain": 0.0549204797527903,
+          "structured_turns": 16,
+          "text_gain": 0.0549204797527903,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250372,
+          "structured_gain": 0.13822631512099964,
+          "structured_turns": 16,
+          "text_gain": 0.13822631512099964,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250373,
+          "structured_gain": 0.014169442760299189,
+          "structured_turns": 16,
+          "text_gain": 0.014169442760299189,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250374,
+          "structured_gain": 0.15165722445219432,
+          "structured_turns": 16,
+          "text_gain": 0.15165722445219432,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250375,
+          "structured_gain": 0.025444045456587405,
+          "structured_turns": 16,
+          "text_gain": 0.025444045456587405,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250376,
+          "structured_gain": 0.030390030459735762,
+          "structured_turns": 16,
+          "text_gain": 0.030390030459735762,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250377,
+          "structured_gain": 0.12765027146639368,
+          "structured_turns": 16,
+          "text_gain": 0.12765027146639368,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250378,
+          "structured_gain": 0.0027337627710893875,
+          "structured_turns": 16,
+          "text_gain": 0.0027337627710893875,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250379,
+          "structured_gain": 0.00589589581431238,
+          "structured_turns": 16,
+          "text_gain": 0.00589589581431238,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250380,
+          "structured_gain": 0.02936586795209961,
+          "structured_turns": 16,
+          "text_gain": 0.02936586795209961,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250381,
+          "structured_gain": 0.059388257628037316,
+          "structured_turns": 16,
+          "text_gain": 0.059388257628037316,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250382,
+          "structured_gain": 0.15396405973861593,
+          "structured_turns": 16,
+          "text_gain": 0.15396405973861593,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250383,
+          "structured_gain": 0.0022327340702668064,
+          "structured_turns": 6,
+          "text_gain": 0.0022327340702668064,
+          "text_turns": 6
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250384,
+          "structured_gain": 0.0,
+          "structured_turns": 2,
+          "text_gain": 0.0,
+          "text_turns": 2
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250385,
+          "structured_gain": 0.027156084804745628,
+          "structured_turns": 16,
+          "text_gain": 0.027156084804745628,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250386,
+          "structured_gain": 0.039019482705430764,
+          "structured_turns": 16,
+          "text_gain": 0.039019482705430764,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250387,
+          "structured_gain": 0.15178261251720207,
+          "structured_turns": 16,
+          "text_gain": 0.15178261251720207,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250388,
+          "structured_gain": 0.003279467631887467,
+          "structured_turns": 16,
+          "text_gain": 0.003279467631887467,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250389,
+          "structured_gain": 0.0,
+          "structured_turns": 1,
+          "text_gain": 0.0,
+          "text_turns": 1
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250390,
+          "structured_gain": 0.029014937235422256,
+          "structured_turns": 16,
+          "text_gain": 0.029014937235422256,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250391,
+          "structured_gain": 0.06862010350481917,
+          "structured_turns": 16,
+          "text_gain": 0.06862010350481917,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250392,
+          "structured_gain": 0.14498090293133115,
+          "structured_turns": 16,
+          "text_gain": 0.14498090293133115,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250393,
+          "structured_gain": 0.003979755071502944,
+          "structured_turns": 16,
+          "text_gain": 0.003979755071502944,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250394,
+          "structured_gain": 0.003828306131793191,
+          "structured_turns": 16,
+          "text_gain": 0.003828306131793191,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250395,
+          "structured_gain": 0.024262611363242037,
+          "structured_turns": 16,
+          "text_gain": 0.024262611363242037,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250396,
+          "structured_gain": 0.03457093222500662,
+          "structured_turns": 16,
+          "text_gain": 0.03457093222500662,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250397,
+          "structured_gain": 0.15058602134449328,
+          "structured_turns": 16,
+          "text_gain": 0.15058602134449328,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250398,
+          "structured_gain": 0.012353463953357235,
+          "structured_turns": 16,
+          "text_gain": 0.012353463953357235,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250399,
+          "structured_gain": 0.16484673247525072,
+          "structured_turns": 16,
+          "text_gain": 0.16484673247525072,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250400,
+          "structured_gain": 0.030667105195833155,
+          "structured_turns": 12,
+          "text_gain": 0.030667105195833155,
+          "text_turns": 12
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250401,
+          "structured_gain": 0.03975965362180239,
+          "structured_turns": 16,
+          "text_gain": 0.03975965362180239,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250402,
+          "structured_gain": 0.12236732848042092,
+          "structured_turns": 16,
+          "text_gain": 0.12236732848042092,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250403,
+          "structured_gain": 0.01782527501000447,
+          "structured_turns": 16,
+          "text_gain": 0.01782527501000447,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250404,
+          "structured_gain": 0.14541222889967498,
+          "structured_turns": 16,
+          "text_gain": 0.14541222889967498,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250405,
+          "structured_gain": 0.05161112272179791,
+          "structured_turns": 16,
+          "text_gain": 0.05161112272179791,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250406,
+          "structured_gain": 0.04170162659356075,
+          "structured_turns": 16,
+          "text_gain": 0.04170162659356075,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250407,
+          "structured_gain": 0.13761378779889813,
+          "structured_turns": 11,
+          "text_gain": 0.13761378779889813,
+          "text_turns": 11
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250408,
+          "structured_gain": 0.007893664762938624,
+          "structured_turns": 16,
+          "text_gain": 0.007893664762938624,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250409,
+          "structured_gain": 0.15123412074486228,
+          "structured_turns": 16,
+          "text_gain": 0.15123412074486228,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-09",
+          "seed": 20250410,
+          "structured_gain": 0.02032401989128496,
+          "structured_turns": 16,
+          "text_gain": 0.02032401989128496,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-10",
+          "seed": 20250411,
+          "structured_gain": 0.02753865626254931,
+          "structured_turns": 16,
+          "text_gain": 0.02753865626254931,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-17",
+          "seed": 20250412,
+          "structured_gain": 0.16036650000047797,
+          "structured_turns": 16,
+          "text_gain": 0.16036650000047797,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-23",
+          "seed": 20250413,
+          "structured_gain": 0.05399616623713033,
+          "structured_turns": 16,
+          "text_gain": 0.05399616623713033,
+          "text_turns": 16
+        },
+        {
+          "difference": 0.0,
+          "scenario_id": "proto-scenario-29",
+          "seed": 20250414,
+          "structured_gain": 0.14472860855168526,
+          "structured_turns": 16,
+          "text_gain": 0.14472860855168526,
+          "text_turns": 16
+        }
+      ],
+      "paths": {
+        "structured": {
+          "critical_turns": 0,
+          "episodes": 300,
+          "failure_counts": {
+            "answer_disclosed": 0,
+            "draft_validator_failure": 441,
+            "extractor_disagreement": 0,
+            "fallback_used": 4357,
+            "item_changed": 0,
+            "validator_failure": 0,
+            "verbalizer_rejected": 0,
+            "wrong_move": 0
+          },
+          "gain": {
+            "ci_95": [
+              0.05795827386265667,
+              0.07180405039899132
+            ],
+            "mean": 0.06445780951003012
+          },
+          "model_delivered_episodes": 0,
+          "model_delivered_turns": 0,
+          "turns": 4357
+        },
+        "text": {
+          "critical_turns": 156,
+          "episodes": 300,
+          "failure_counts": {
+            "answer_disclosed": 0,
+            "draft_validator_failure": 441,
+            "extractor_disagreement": 156,
+            "fallback_used": 4357,
+            "item_changed": 0,
+            "validator_failure": 0,
+            "verbalizer_rejected": 0,
+            "wrong_move": 0
+          },
+          "gain": {
+            "ci_95": [
+              0.05795827386265667,
+              0.07180405039899132
+            ],
+            "mean": 0.06445780951003012
+          },
+          "model_delivered_episodes": 0,
+          "model_delivered_turns": 0,
+          "turns": 4357
+        }
+      },
+      "policy": "rules",
+      "renderer_source_sha256": "5228f2c948938fb55ff53d616ee3b3cd6073da05c3be33b3b10e4d5e958262f1",
+      "renderer_version": "student_templates_bridge_v1",
+      "reply": "stub",
+      "response_config_sha256": "f7052ff5c991eb07daa9205d189f7ca7d7569a9a37a0c0c1b7f1d2eee65c446d",
+      "scenario_bank_sha256": "dead8f7e54973b915a9e642c8ce8f593dab75a82f6665320f1aca4aa4604bd01",
+      "seed": 20250115,
+      "simulator_config": "configs/learning/simulator_proto_v2.yaml",
+      "simulator_config_sha256": "b8af3e431f4c09150f6d163c012efd9c39ae9e953ac2640203fdecd7ec85b067",
+      "source_commit": "7d4dd68576b77b33227ddac888d41b6216e5beb4",
+      "source_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "split": "validation",
+      "started_at": "2026-11-02T22:16:13.335306+00:00",
+      "text_path_source_sha256": "d548764358f05c20a25f288579e7c52d179e574500617d0ee2171f9aab50d0ba",
+      "text_realizer": {
+        "artifact_id": "response_stub_pipeline_v1",
+        "compatible_artifact_ids": [
+          "response_stub_pipeline_v1",
+          "response_stub_v1"
+        ],
+        "limits": {
+          "decoding": "greedy",
+          "internal_deadline_ms": 8000,
+          "max_output_tokens": 384,
+          "max_repairs": 1
+        },
+        "responder": {
+          "kind": "template_stub",
+          "version": "template_stub_v1"
+        },
+        "versions": {
+          "fallback": "fallback_v1",
+          "pipeline": "pipeline_v1",
+          "prompt": "prompt_v1",
+          "repair": "repair_v1",
+          "validator": "validator_v2"
+        }
+      },
+      "verbalizer_config_sha256": null,
+      "version": "text_bridge_v1"
+    }
+  }
+}
