@@ -247,6 +247,7 @@ def main() -> None:
                 strategist_name="network",
                 run_id=f"{run_name}-update{update}",
                 simulator_config=simulator_config,
+                reteach_shaping=config.get("reteach_shaping"),
             )
             metrics = _ppo_update(model, optimizer, results, config, rng)
             completed += count

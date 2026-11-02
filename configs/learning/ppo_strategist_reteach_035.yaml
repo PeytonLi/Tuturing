@@ -1,0 +1,21 @@
+seed: 20250115
+sessions: 2500
+episodes_per_update: 32
+epochs: 4
+minibatch_size: 256
+learning_rate: 0.0003
+clip: 0.2
+entropy_coef: 0.01
+value_coef: 0.5
+max_grad_norm: 0.5
+gamma: 0.99
+lam: 0.95
+split: train
+run_name: ppo_reteach_035
+simulator_config: configs/learning/simulator_proto_v2.yaml
+# Re-teaching cost: penalize HINT/EXPLAIN_CONCEPT/WORKED_EXAMPLE on a concept whose
+# private simulator mastery is >= mastery_threshold; small bonus for CHECK_MASTERY/CHALLENGE.
+reteach_shaping:
+  mastery_threshold: 0.8
+  cost: 0.035
+  bonus: 0.0088
