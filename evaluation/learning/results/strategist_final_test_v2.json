@@ -1,0 +1,333 @@
+{
+  "episodes_per_scenario": 20,
+  "label": "simulated",
+  "paired_seeds": true,
+  "policies": {
+    "checkpoint:experiments/learning/runs/bc_rules3_seed0/bc.pt": {
+      "label": "simulated",
+      "overall": {
+        "disclosure_rate": 0.0,
+        "dropout_rate": 0.33,
+        "episodes": 100,
+        "label": "simulated",
+        "mean_gain": 0.06597977057320967,
+        "mean_gain_ci_95": [
+          0.055886843320331135,
+          0.07632659957417441
+        ],
+        "mean_total_reward": -0.09158091770716133,
+        "mean_turns": 13.65,
+        "move_frequency": {
+          "PRACTICE": 0.389010989010989,
+          "PROBE": 0.13186813186813187,
+          "WORKED_EXAMPLE": 0.47912087912087914
+        },
+        "pace_frequency": {
+          "concise": 0.20586080586080585,
+          "normal": 0.7941391941391941
+        }
+      },
+      "paired_gain_difference_vs_first": {
+        "ci_95": [
+          0.0008629037710850848,
+          0.009554492024163695
+        ],
+        "mean": 0.0045334633451507384
+      },
+      "profiles": {
+        "confident_misconception": {
+          "disclosure_rate": 0.0,
+          "dropout_rate": 0.2,
+          "episodes": 20,
+          "label": "simulated",
+          "mean_gain": 0.15835803920299904,
+          "mean_gain_ci_95": [
+            0.15216988517459976,
+            0.16514736030012017
+          ],
+          "mean_total_reward": 0.2844321568119962,
+          "mean_turns": 14.95,
+          "move_frequency": {
+            "PRACTICE": 0.3311036789297659,
+            "PROBE": 0.13043478260869565,
+            "WORKED_EXAMPLE": 0.5384615384615384
+          },
+          "pace_frequency": {
+            "normal": 1.0
+          }
+        },
+        "knowledgeable_concise": {
+          "disclosure_rate": 0.0,
+          "dropout_rate": 0.2,
+          "episodes": 20,
+          "label": "simulated",
+          "mean_gain": 0.016976243182449162,
+          "mean_gain_ci_95": [
+            0.01110372160919818,
+            0.023747808968881068
+          ],
+          "mean_total_reward": -0.2650950272702034,
+          "mean_turns": 14.15,
+          "move_frequency": {
+            "PRACTICE": 0.47703180212014135,
+            "PROBE": 0.08480565371024736,
+            "WORKED_EXAMPLE": 0.4381625441696113
+          },
+          "pace_frequency": {
+            "concise": 0.833922261484099,
+            "normal": 0.16607773851590105
+          }
+        },
+        "novice_missing_prereqs": {
+          "disclosure_rate": 0.0,
+          "dropout_rate": 0.4166666666666667,
+          "episodes": 60,
+          "label": "simulated",
+          "mean_gain": 0.051521523493533374,
+          "mean_gain_ci_95": [
+            0.04537106050620005,
+            0.05684378674674209
+          ],
+          "mean_total_reward": -0.15908057269253317,
+          "mean_turns": 13.05,
+          "move_frequency": {
+            "PRACTICE": 0.3793103448275862,
+            "PROBE": 0.14942528735632185,
+            "WORKED_EXAMPLE": 0.47126436781609193
+          },
+          "pace_frequency": {
+            "concise": 0.05747126436781609,
+            "normal": 0.9425287356321839
+          }
+        }
+      }
+    },
+    "random": {
+      "label": "simulated",
+      "overall": {
+        "disclosure_rate": 0.0,
+        "dropout_rate": 0.59,
+        "episodes": 100,
+        "label": "simulated",
+        "mean_gain": 0.036905260489703905,
+        "mean_gain_ci_95": [
+          0.02839235985105731,
+          0.046261826956224356
+        ],
+        "mean_total_reward": -0.2274789580411844,
+        "mean_turns": 11.23,
+        "move_frequency": {
+          "CHALLENGE": 0.0026714158504007124,
+          "CHECK_MASTERY": 0.18165627782724844,
+          "EXPLAIN_CONCEPT": 0.19857524487978628,
+          "HINT": 0.0365093499554764,
+          "PRACTICE": 0.1834372217275156,
+          "PROBE": 0.1745325022261799,
+          "REFLECT": 0.04630454140694568,
+          "WORKED_EXAMPLE": 0.176313446126447
+        },
+        "pace_frequency": {
+          "concise": 0.3606411398040962,
+          "detailed": 0.3259127337488869,
+          "normal": 0.3134461264470169
+        }
+      },
+      "paired_gain_difference_vs_first": {
+        "ci_95": [
+          -0.03252022267744467,
+          -0.01653246020739624
+        ],
+        "mean": -0.02454104673835502
+      },
+      "profiles": {
+        "confident_misconception": {
+          "disclosure_rate": 0.0,
+          "dropout_rate": 0.6,
+          "episodes": 20,
+          "label": "simulated",
+          "mean_gain": 0.08950657729240627,
+          "mean_gain_ci_95": [
+            0.059277243319942816,
+            0.11829697073592918
+          ],
+          "mean_total_reward": -0.002973690830374955,
+          "mean_turns": 10.55,
+          "move_frequency": {
+            "CHALLENGE": 0.004739336492890996,
+            "CHECK_MASTERY": 0.22748815165876776,
+            "EXPLAIN_CONCEPT": 0.2132701421800948,
+            "HINT": 0.04739336492890995,
+            "PRACTICE": 0.15165876777251186,
+            "PROBE": 0.16113744075829384,
+            "REFLECT": 0.037914691943127965,
+            "WORKED_EXAMPLE": 0.15639810426540285
+          },
+          "pace_frequency": {
+            "concise": 0.35071090047393366,
+            "detailed": 0.35071090047393366,
+            "normal": 0.2985781990521327
+          }
+        },
+        "knowledgeable_concise": {
+          "disclosure_rate": 0.0,
+          "dropout_rate": 0.35,
+          "episodes": 20,
+          "label": "simulated",
+          "mean_gain": 0.00906955344700532,
+          "mean_gain_ci_95": [
+            0.005538047425571321,
+            0.013373168500463353
+          ],
+          "mean_total_reward": -0.3192217862119787,
+          "mean_turns": 13.4,
+          "move_frequency": {
+            "CHALLENGE": 0.007462686567164179,
+            "CHECK_MASTERY": 0.1865671641791045,
+            "EXPLAIN_CONCEPT": 0.1791044776119403,
+            "HINT": 0.041044776119402986,
+            "PRACTICE": 0.16791044776119404,
+            "PROBE": 0.19402985074626866,
+            "REFLECT": 0.05223880597014925,
+            "WORKED_EXAMPLE": 0.17164179104477612
+          },
+          "pace_frequency": {
+            "concise": 0.3358208955223881,
+            "detailed": 0.3246268656716418,
+            "normal": 0.33955223880597013
+          }
+        },
+        "novice_missing_prereqs": {
+          "disclosure_rate": 0.0,
+          "dropout_rate": 0.6666666666666666,
+          "episodes": 60,
+          "label": "simulated",
+          "mean_gain": 0.028650057236369316,
+          "mean_gain_ci_95": [
+            0.024506080236759886,
+            0.03319817348762964
+          ],
+          "mean_total_reward": -0.2717331043878561,
+          "mean_turns": 10.733333333333333,
+          "move_frequency": {
+            "CHECK_MASTERY": 0.16459627329192547,
+            "EXPLAIN_CONCEPT": 0.20186335403726707,
+            "HINT": 0.031055900621118012,
+            "PRACTICE": 0.20031055900621117,
+            "PROBE": 0.17080745341614906,
+            "REFLECT": 0.046583850931677016,
+            "WORKED_EXAMPLE": 0.18478260869565216
+          },
+          "pace_frequency": {
+            "concise": 0.37422360248447206,
+            "detailed": 0.31832298136645965,
+            "normal": 0.30745341614906835
+          }
+        }
+      }
+    },
+    "rules": {
+      "label": "simulated",
+      "overall": {
+        "disclosure_rate": 0.0,
+        "dropout_rate": 0.3,
+        "episodes": 100,
+        "label": "simulated",
+        "mean_gain": 0.061446307228058925,
+        "mean_gain_ci_95": [
+          0.05131314786424572,
+          0.0721981661836239
+        ],
+        "mean_total_reward": -0.1443147710877643,
+        "mean_turns": 13.88,
+        "move_frequency": {
+          "EXPLAIN_CONCEPT": 0.0036023054755043226,
+          "HINT": 0.2154178674351585,
+          "PRACTICE": 0.2838616714697406,
+          "PROBE": 0.1505763688760807,
+          "WORKED_EXAMPLE": 0.3465417867435158
+        },
+        "pace_frequency": {
+          "concise": 0.24639769452449567,
+          "detailed": 0.05187319884726225,
+          "normal": 0.7017291066282421
+        }
+      },
+      "profiles": {
+        "confident_misconception": {
+          "disclosure_rate": 0.0,
+          "dropout_rate": 0.15,
+          "episodes": 20,
+          "label": "simulated",
+          "mean_gain": 0.15101372095721377,
+          "mean_gain_ci_95": [
+            0.13337385346951322,
+            0.1637906679948673
+          ],
+          "mean_total_reward": 0.24205488382885507,
+          "mean_turns": 15.6,
+          "move_frequency": {
+            "EXPLAIN_CONCEPT": 0.003205128205128205,
+            "HINT": 0.17307692307692307,
+            "PRACTICE": 0.2532051282051282,
+            "PROBE": 0.1794871794871795,
+            "WORKED_EXAMPLE": 0.391025641025641
+          },
+          "pace_frequency": {
+            "normal": 1.0
+          }
+        },
+        "knowledgeable_concise": {
+          "disclosure_rate": 0.0,
+          "dropout_rate": 0.2,
+          "episodes": 20,
+          "label": "simulated",
+          "mean_gain": 0.019998103642994595,
+          "mean_gain_ci_95": [
+            0.01334337117195596,
+            0.027833948970764723
+          ],
+          "mean_total_reward": -0.2750075854280216,
+          "mean_turns": 14.25,
+          "move_frequency": {
+            "HINT": 0.22807017543859648,
+            "PRACTICE": 0.3473684210526316,
+            "PROBE": 0.1543859649122807,
+            "WORKED_EXAMPLE": 0.27017543859649124
+          },
+          "pace_frequency": {
+            "concise": 0.8350877192982457,
+            "normal": 0.1649122807017544
+          }
+        },
+        "novice_missing_prereqs": {
+          "disclosure_rate": 0.0,
+          "dropout_rate": 0.38333333333333336,
+          "episodes": 60,
+          "label": "simulated",
+          "mean_gain": 0.04540657051336209,
+          "mean_gain_ci_95": [
+            0.04005918974687461,
+            0.050701585316208206
+          ],
+          "mean_total_reward": -0.22954038461321832,
+          "mean_turns": 13.183333333333334,
+          "move_frequency": {
+            "EXPLAIN_CONCEPT": 0.0050568900126422255,
+            "HINT": 0.22756005056890014,
+            "PRACTICE": 0.27307206068268014,
+            "PROBE": 0.13780025284450062,
+            "WORKED_EXAMPLE": 0.35651074589127685
+          },
+          "pace_frequency": {
+            "concise": 0.13147914032869784,
+            "detailed": 0.09102402022756005,
+            "normal": 0.7774968394437421
+          }
+        }
+      }
+    }
+  },
+  "seed": 20250115,
+  "simulator_config": "configs/learning/simulator_proto_v2.yaml",
+  "split": "test"
+}

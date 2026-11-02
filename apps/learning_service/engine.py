@@ -29,6 +29,7 @@ from packages.learning.episode import (
     _next_item,
     _public_state,
     load_graph,
+    update_public_misconceptions,
 )
 from packages.learning.features import build_features
 from packages.learning.grader import grade_answer
@@ -279,6 +280,7 @@ class LearningEngine:
                     goal=None,
                     goal_change=False,
                 ),
+                public_misconceptions={},
             )
             self._save(db, state)
             self._event(db, state["session_id"], "session_created", self._public(state))
@@ -365,6 +367,14 @@ class LearningEngine:
                 correctness = grade_answer(
                     evidence["normalized_answer"], item["instance"], item["family"]
                 )
+            state["public_misconceptions"] = update_public_misconceptions(
+                state.get("public_misconceptions", {}),
+                family=item["family"],
+                instance=item["instance"],
+                normalized_answer=evidence["normalized_answer"],
+                correctness=correctness,
+                move=plan["teaching_action"]["move"],
+            )
             assistance = evidence["assistance"]
             if plan["assistance"] != "none":
                 assistance = plan["assistance"]
@@ -424,6 +434,7 @@ class LearningEngine:
             explicit_faster=state["requests"]["faster"],
             explicit_slower=state["requests"]["slower"],
             stack=stack.stack,
+            misconceptions=state.get("public_misconceptions", {}),
         )
         public["remaining_budget"] = state["teaching_budget"] - state["teaching_turns"]
         context = _active_context(

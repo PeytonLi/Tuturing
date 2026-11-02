@@ -4,6 +4,7 @@ import hashlib
 import json
 from collections import Counter
 from dataclasses import dataclass, field
+from fractions import Fraction
 from pathlib import Path
 
 import yaml
@@ -22,6 +23,7 @@ from packages.learning.grader import grade_answer
 from packages.learning.scheduler import GoalStack, boundary_reasons, skip_diagnostic_due
 from packages.policies.rules import (
     AlwaysHintStrategist,
+    AlwaysWorkedExampleStrategist,
     RandomStrategist,
     RulesNavigator,
     RulesStrategist,
@@ -130,6 +132,37 @@ def _scenario_requests(scenario: dict) -> dict:
     return requests
 
 
+def update_public_misconceptions(
+    current: dict[str, float],
+    *,
+    family: TemplateFamily,
+    instance: dict,
+    normalized_answer: Fraction | str | int | float | None,
+    correctness: str,
+    move: str,
+) -> dict[str, float]:
+    updated = dict(current)
+    if correctness == "incorrect" and normalized_answer is not None:
+        answer = family.answer_normalizer(normalized_answer, 1e-9)
+        if answer is None:
+            return updated
+        for misconception in sorted(family.error_generators):
+            if answer != family.generate_error(misconception, instance):
+                continue
+            if move == "PROBE" or updated.get(misconception, 0.0) >= 0.5:
+                updated[misconception] = 0.85
+            else:
+                updated[misconception] = max(updated.get(misconception, 0.0), 0.6)
+    elif correctness == "correct":
+        for misconception in family.error_generators:
+            if misconception not in updated:
+                continue
+            updated[misconception] /= 2
+            if updated[misconception] < 0.2:
+                del updated[misconception]
+    return updated
+
+
 def _public_state(
     beliefs: dict[str, ConceptBelief],
     *,
@@ -148,6 +181,7 @@ def _public_state(
     explicit_faster: bool,
     explicit_slower: bool,
     stack: list[str],
+    misconceptions: dict[str, float] | None = None,
 ) -> dict:
     concepts = []
     for index in range(1, 16):
@@ -163,7 +197,10 @@ def _public_state(
         )
     return {
         "concepts": concepts,
-        "misconceptions": [0.0] * 25,
+        "misconceptions": [
+            float((misconceptions or {}).get(f"M{index:02d}", 0.0))
+            for index in range(1, 26)
+        ],
         "current_concept_id": current,
         "goal_concept_id": goal,
         "active_target_concept_id": active_target,
@@ -493,7 +530,7 @@ def _build_plan(
             "content": "content_proto_v1",
             "state_estimator": "bkt_v1",
             "navigator": "rules_navigator_v1",
-            "strategist": "rules_strategist_v1",
+            "strategist": "rules_strategist_v3",
             "mask": "mask_v1",
             "feature": "features_v1",
         },
@@ -585,6 +622,7 @@ def run_episode(
     )
     beliefs = {f"C{index:02d}": ConceptBelief() for index in range(1, 16)}
     requests = _scenario_requests(scenario)
+    public_misconceptions: dict[str, float] = {}
     if requests["goal"] in ENABLED_CONCEPTS:
         goal = requests["goal"]
     else:
@@ -613,6 +651,8 @@ def run_episode(
             strategist = RandomStrategist(episode_seed)
         elif strategist_name == "always_hint":
             strategist = AlwaysHintStrategist()
+        elif strategist_name == "always_worked_example":
+            strategist = AlwaysWorkedExampleStrategist()
         else:
             raise ValueError(f"unknown strategist policy {strategist_name}")
     navigator = RulesNavigator()
@@ -637,6 +677,7 @@ def run_episode(
         explicit_faster=requests["faster"],
         explicit_slower=requests["slower"],
         stack=stack.stack,
+        misconceptions=public_misconceptions,
     )
     navigator_context = _active_context(
         initial_public,
@@ -770,6 +811,7 @@ def run_episode(
             explicit_faster=requests["faster"],
             explicit_slower=requests["slower"],
             stack=stack.stack,
+            misconceptions=public_misconceptions,
         )
         context = _active_context(
             public,
@@ -911,6 +953,14 @@ def run_episode(
             )
             evidence_correctness = (
                 grader_result if grader_result in {"correct", "incorrect"} else "unknown"
+            )
+            public_misconceptions = update_public_misconceptions(
+                public_misconceptions,
+                family=item["family"],
+                instance=item["instance"],
+                normalized_answer=outcome.normalized_answer,
+                correctness=evidence_correctness,
+                move=move,
             )
             if outcome.normalized_answer is not None:
                 learner_evidence_count += 1
@@ -1054,6 +1104,7 @@ def run_episode(
             explicit_faster=requests["faster"],
             explicit_slower=requests["slower"],
             stack=stack.stack,
+            misconceptions=public_misconceptions,
         )
         next_observation = build_features(public_after)
         if terminal:
@@ -1212,6 +1263,7 @@ def run_episode(
             explicit_faster=requests["faster"],
             explicit_slower=requests["slower"],
             stack=stack.stack,
+            misconceptions=public_misconceptions,
         )
         next_context = _active_context(
             next_public,
