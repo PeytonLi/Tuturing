@@ -41,6 +41,15 @@ def _render(plan: dict) -> str:
     raise ResponseValidationError(f"unsupported move: {move}")
 
 
+def render_template(plan: dict) -> str:
+    """Return the stub's raw template text for a plan, before word and question limiting.
+
+    The response pipeline uses this as its deterministic template responder and runs the
+    full response checks on it. ``generate`` below is unchanged for existing callers.
+    """
+    return _render(plan)
+
+
 def _limit_questions(text: str, maximum: int) -> str:
     if maximum <= 0:
         return text.replace("?", ".")

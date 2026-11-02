@@ -62,10 +62,12 @@ Xueming authorized running every Person A item in parallel and asked for dataset
 - `a/public-api-v1`: `contracts/public_v1.openapi.yaml` with public fixtures, a D11 proposal on where `Error` and `PublicState` live, and `apps/public_api` with idempotency, staging and recovery, tested against an A-owned transaction stand-in until B's mock ships.
 - `a/response-service-v1`: the generation pipeline with one repair and a verified fallback, an OpenAI-compatible responder, `apps/response_service`, `tools.response.serve`, and the stub artifact manifest and runbook for B.
 - `a/datasets-v1`: MathDial prep with a leak review, model-drafted audit labels in a separate file, at least 300 synthetic original probability examples pending review with frozen splits, the probability benchmark case set and a review packet.
-- `a/benchmark-v1`: a benchmark of OpenAI `gpt-6.1-sol` and Qwen3.8-27B, the models Xueming chose, with the deterministic fallback as the floor. Qwen3.8-27B runs on a Fireworks on-demand deployment that Xueming approved and that is deleted after the run. Spend stays within a $25 total cap. Outputs are a report and a blinded review sheet.
+- `a/benchmark-v1` (merged to `main` on 2026-11-02, commit `c01e4d0`): the harness `tools/response/benchmark.py`, the deployment helper, the report at `experiments/response/benchmark_v1/report.md` and a blinded review sheet. `gpt-6.1-sol` ran on all 107 cases for $0.21; 40 of 107 passed every automated check, against 43 for the deterministic fallback, but the diagnostics show the math and disclosure checks over-flag numbers the learner already said. Qwen3.8-27B did not run: the Fireworks account has no payment method, so the deployment dry run was refused and nothing was created. Fireworks also reports the model as not serverless-trainable, which contradicts D10.
 - `a/extractor-v1`: a messy-message extraction eval set, extractor improvements and a confusion-matrix report.
 
 Keys live in `~/.config/tuturing/llm.env` (mode 600), outside Git. Both keys answered free model-list calls with HTTP 200.
+
+Peyton merged the internal learning service to `main` on 2026-11-02 (`apps/learning_service`, `tools/learning/serve.py`, handoff in `docs/learning_service.md`), which unblocks the public API integration and the ten-session smoke (G4). Peyton's agent also appends its own decision entries to this repository's `decisions.md`; the PRD places owner decisions in `docs/decisions/`.
 
 Xueming decided that Person A owns SFT (capture `cap_7c410346-63da-4a59-9c26-bfb410856672`): the SFT configs, trainer, SFT data and D09/D10 are maintained by Xueming's agents from now on. Xueming asked to be sent review items as each workstream finishes.
 
@@ -73,6 +75,7 @@ Xueming decided that Person A owns SFT (capture `cap_7c410346-63da-4a59-9c26-bfb
 
 - D10 on `main` switches the SFT base model from the PRD's `Qwen/Qwen2.5-7B-Instruct` to `Qwen/Qwen3.8-27B` on Fireworks and is marked "accepted by lead". PRD 2.3 makes SFT selection a Person A decision, so Xueming should confirm it. Fireworks lists the model as LoRA-tunable but not serverless, so benchmarking and serving it need a paid dedicated deployment. Xueming approved a deployment so the benchmark can include it; the results are meant to inform this decision.
 - The $25 benchmark spend cap is an assistant default that Xueming has not confirmed.
+- The Qwen3.8-27B benchmark run started on 2026-11-02 at about 22:00 UTC on Peyton's Fireworks account; results and spend pending.
 - Anthropic and Google keys are absent, so Claude and Gemini are not in the benchmark yet.
 - Hackathon deadline and demo format are not recorded anywhere in the repository.
 - When will Peyton ship B's mock learning service?

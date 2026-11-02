@@ -33,6 +33,7 @@ MathDial is not part of your RL. Its only possible role is a Strategist head sta
 
 ## What you owe Person A
 
+- Done: the internal learning service hand-off, with startup and endpoint examples in [the learning service guide](learning_service.md).
 - Valid teaching plan examples for every move, with content A can render.
 - Problem templates, hint ladders, worked examples and approved facts for every enabled concept. A's original SFT examples and math checks depend on these.
 - Once PPO runs, which moves and paces the Strategist picks most, so A can make sure those have enough SFT examples.

@@ -1,0 +1,391 @@
+# Prompt-only response benchmark v1 (PRD 13.5, 14.1, 18.2; docs/person_a_tasks.md item 4).
+# Runner: uv run python -m tools.response.benchmark {plan,run,report}
+# Runbook: docs/runbooks/response_benchmark.md
+#
+# Keys are read only from keys_file (KEY=value lines, mode 600). This config names the
+# environment variables, never their values. A paid entry runs only when the keys file
+# defines spend_cap_env; the runner refuses any call that could push the cumulative ledger
+# (run_dir/ledger.jsonl, git-ignored) past that cap.
+benchmark_id: response_benchmark_v1
+run_dir: experiments/response/benchmark_v1/runs
+report_dir: experiments/response/benchmark_v1
+keys_file: ~/.config/tuturing/llm.env
+spend_cap_env: TUTURING_BENCH_SPEND_CAP_USD
+chars_per_token_estimate: 3.0   # pre-pilot input estimate; conservative for English prose
+estimate_safety_factor: 1.3     # multiplies pilot-based per-case cost or time
+min_subsample_cases: 20         # below this, stop and report the estimate instead
+order_seed: 0                   # stratified order used for pilots and subsamples
+
+case_sets:
+  - name: b_fixtures
+    format: plan_dir
+    path: contracts/fixtures/learning/valid
+    source: Person B valid TeachingPlan fixtures (8 moves plus the protected check)
+  - name: smoke
+    format: jsonl
+    path: evaluation/response/smoke_cases_v1.jsonl
+    source: Person A synthetic eight-move smoke suite
+  - name: mathdial_test
+    format: jsonl
+    path: data/sft/mathdial_v1/test.jsonl
+    source: MathDial regrouped test split (CC BY 4.0, revision acc38784), mapped moves
+    prepare: uv run python -m tools.response.prepare_sft --config configs/response/mathdial_v1.yaml
+    sample:
+      per_move: 30
+      seed: 17
+      distinct: template_family_id   # at most one turn per MathDial problem and move
+  - name: probability_v1
+    format: jsonl
+    path: evaluation/response/probability_cases_v1.jsonl
+    source: Person A original probability cases (a/datasets-v1)
+    optional: true
+
+review:
+  cases: 40          # paired cases; each reviewed model answers every one
+  seed: 23
+
+# Pricing: USD per million tokens, standard tier, prompts under any long-context threshold.
+# "verified" means read from the provider's official page on price_checked.
+models:
+  - id: fallback
+    label: Deterministic fallback (floor)
+    provider: fallback
+
+  # --- Required paid entries (Xueming, 2026-11-02) -------------------------------------
+  - id: gpt-6.1-sol
+    label: OpenAI GPT-6.1 Sol (frontier)
+    provider: openai_compatible
+    base_url: https://api.openai.com/v1
+    model: gpt-6.1-sol
+    api_key_env: OPENAI_API_KEY
+    concurrency: 4
+    timeout_s: 180
+    decoding:
+      # A probe on 2026-11-02 with temperature 0 returned HTTP 400 "Unsupported value:
+      # 'temperature' does not support 0 with this model. Only the default (1) value is
+      # supported." So sampling runs at the default temperature 1 and is not deterministic.
+      temperature: null
+      max_tokens: 1024
+      token_param: max_completion_tokens
+      extra:
+        reasoning_effort: low
+    reasoning:
+      setting: reasoning_effort=low
+      note: >-
+        Reasoning model; the model page lists efforts low, medium, high, xhigh, max (default
+        medium), so low is the lowest. Reasoning tokens count toward max_completion_tokens
+        and are billed as output; 1024 leaves room for them, and records flag any visible
+        reply above the PRD 14.1 cap of 384 tokens.
+    pricing:
+      basis: tokens
+      input_usd_per_mtok: 2.00
+      cached_input_usd_per_mtok: 0.10
+      output_usd_per_mtok: 10.00
+      source: https://developers.openai.com/api/docs/models/gpt-6.1-sol
+      checked: 2026-11-02
+      verified: true
+      note: prompts above 272K tokens cost more; benchmark prompts are under 2K tokens
+
+  - id: qwen3.8-27b-fw-h100
+    label: Qwen3.8-27B (D10 base) on a Fireworks on-demand H100
+    provider: openai_compatible
+    base_url: https://api.fireworks.ai/inference/v1
+    model: "{deployment}"        # accounts/<account>/deployments/<id>, set at run time
+    api_key_env: FIREWORKS_API_KEY
+    concurrency: 4
+    timeout_s: 180
+    retry:
+      max_attempts: 4
+      scaling_attempts: 40       # 503 DEPLOYMENT_SCALING_UP while a replica starts
+      base_delay_s: 5
+    decoding:
+      temperature: 0
+      max_tokens: 384            # PRD 14.1 output cap
+      token_param: max_tokens
+      extra:
+        reasoning_effort: none   # Fireworks: disables thinking (enable_thinking=false)
+    reasoning:
+      setting: reasoning_effort=none
+      note: >-
+        Thinking disabled. Fireworks maps chat_template_kwargs.enable_thinking=false to
+        reasoning_effort=none. Any <think> block that still appears is stripped and flagged.
+    pricing:
+      basis: gpu_time
+      source: https://fireworks.ai/pricing
+      checked: 2026-11-02
+      verified: true
+      note: billed per GPU-second while replicas run; ledger uses create-to-delete wall time
+    deployment:
+      provider: fireworks
+      base_model: accounts/fireworks/models/qwen3p8-27b
+      hf_repo: Qwen/Qwen3.8-27B
+      hf_revision: 1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0
+      license: apache-2.0
+      deployment_shape: accounts/fireworks/deploymentShapes/sva2n3mh   # "Qwen3.8 27B BF16 1x H100"
+      accelerator_type: NVIDIA_H100_80GB
+      accelerator_count: 1
+      precision: BF16
+      usd_per_gpu_hour: 8.00
+      price_source: https://fireworks.ai/pricing (H100 80 GB, $8.00/h, checked 2026-11-02)
+      min_replica_count: 0
+      max_replica_count: 1
+      scale_to_zero_window: 300s   # minimum allowed; safety net if the run dies
+      scale_down_window: 300s
+      max_minutes: 75              # hard time budget from create request to delete
+      delete_buffer_s: 300
+      ready_timeout_s: 2400
+      warmup_timeout_s: 2400
+      id_prefix: tut-bench-qwen38
+      display_name: tuturing response benchmark qwen3.8-27b
+      description: Tuturing response benchmark v1 (Person A). Delete after the run.
+      serverless_note: >-
+        GET /v1/accounts/fireworks/models/qwen3p8-27b (2026-11-02) reports
+        supportsServerless false, so this model needs a dedicated deployment to benchmark
+        or serve.
+
+  # --- Ready to run once keys exist (no Anthropic or Google key yet) --------------------
+  # Anthropic OpenAI SDK compatibility: https://platform.claude.com/docs/en/api/openai-sdk
+  # Claude 4.7+ return 400 for temperature below 1, so temperature is omitted. Claude 5
+  # models think by default and the compatibility layer cannot disable it; thinking tokens
+  # count toward max_tokens and are billed as output, so max_tokens is 1024.
+  - id: claude-fable-5-1
+    label: Anthropic Claude Fable 5.1
+    provider: openai_compatible
+    base_url: https://api.anthropic.com/v1
+    model: claude-fable-5-1
+    api_key_env: ANTHROPIC_API_KEY
+    concurrency: 2
+    timeout_s: 300
+    decoding: {temperature: null, max_tokens: 1024, token_param: max_tokens}
+    reasoning: {setting: provider default (thinking always on), note: cannot be disabled}
+    pricing: &anthropic_source
+      basis: tokens
+      input_usd_per_mtok: 10.00
+      output_usd_per_mtok: 50.00
+      source: https://platform.claude.com/docs/en/about-claude/pricing
+      checked: 2026-11-02
+      verified: true
+  - id: claude-opus-5-5
+    label: Anthropic Claude Opus 5.5
+    provider: openai_compatible
+    base_url: https://api.anthropic.com/v1
+    model: claude-opus-5-5
+    api_key_env: ANTHROPIC_API_KEY
+    concurrency: 2
+    timeout_s: 300
+    decoding: {temperature: null, max_tokens: 1024, token_param: max_tokens}
+    reasoning:
+      setting: provider default (adaptive thinking, effort medium)
+      note: thinking cannot be disabled; reasoning_effort is ignored by the compatibility layer
+    pricing: {<<: *anthropic_source, input_usd_per_mtok: 4.00, output_usd_per_mtok: 20.00}
+  - id: claude-sonnet-5-5
+    label: Anthropic Claude Sonnet 5.5
+    provider: openai_compatible
+    base_url: https://api.anthropic.com/v1
+    model: claude-sonnet-5-5
+    api_key_env: ANTHROPIC_API_KEY
+    concurrency: 2
+    timeout_s: 300
+    decoding: {temperature: null, max_tokens: 1024, token_param: max_tokens}
+    reasoning:
+      setting: provider default (adaptive thinking)
+      note: the native API's between_tools mode is not reachable through the compatibility layer
+    pricing: {<<: *anthropic_source, input_usd_per_mtok: 2.00, output_usd_per_mtok: 10.00}
+  - id: claude-haiku-5-5
+    label: Anthropic Claude Haiku 5.5
+    provider: openai_compatible
+    base_url: https://api.anthropic.com/v1
+    model: claude-haiku-5-5
+    api_key_env: ANTHROPIC_API_KEY
+    concurrency: 2
+    timeout_s: 300
+    decoding: {temperature: null, max_tokens: 1024, token_param: max_tokens}
+    reasoning: {setting: "provider default (adaptive thinking, effort medium)"}
+    pricing:
+      <<: *anthropic_source
+      input_usd_per_mtok: 0.10
+      output_usd_per_mtok: 0.50
+      note: prompts over 100K tokens cost $0.50 / $2.50
+  # Google Gemini OpenAI compatibility: https://aistudio.google.com/docs/openai
+  - id: gemini-4-argon
+    label: Google Gemini 4 Argon (flagship)
+    provider: openai_compatible
+    base_url: https://generativelanguage.googleapis.com/v1beta/openai
+    model: gemini-4-argon
+    api_key_env: GEMINI_API_KEY
+    concurrency: 2
+    timeout_s: 300
+    decoding:
+      temperature: null          # not documented for the compatibility layer; unverified
+      max_tokens: 1024
+      token_param: max_tokens    # unverified for this endpoint
+      extra: {reasoning_effort: low}
+    reasoning:
+      setting: reasoning_effort=low
+      note: lowest level for Gemini 4 Argon per the compatibility page; thinking cannot be off
+    pricing:
+      basis: tokens
+      input_usd_per_mtok: 2.00
+      output_usd_per_mtok: 10.00
+      source: https://aistudio.google.com/docs/pricing
+      checked: 2026-11-02
+      verified: true
+      note: $4.00 / $20.00 from 2026-12-01; output price includes thinking tokens
+
+  # --- Not selected by Xueming on 2026-11-02 (kept for later) ---------------------------
+  - id: gpt-6-astra
+    enabled: false
+    disabled_reason: Xueming chose gpt-6.1-sol as the frontier model (2026-11-02)
+    label: OpenAI GPT-6 Astra (flagship per the models page)
+    provider: openai_compatible
+    base_url: https://api.openai.com/v1
+    model: gpt-6-astra
+    api_key_env: OPENAI_API_KEY
+    concurrency: 4
+    timeout_s: 300
+    decoding:
+      temperature: null
+      max_tokens: 1024
+      token_param: max_completion_tokens
+      extra: {reasoning_effort: low}
+    reasoning: {setting: reasoning_effort=low, note: lowest listed effort (low..max)}
+    pricing:
+      basis: tokens
+      input_usd_per_mtok: 10.00
+      cached_input_usd_per_mtok: 1.00
+      output_usd_per_mtok: 50.00
+      source: https://developers.openai.com/api/docs/models/gpt-6-astra
+      checked: 2026-11-02
+      verified: true
+  - id: gpt-6.1-terra
+    enabled: false
+    disabled_reason: cheaper OpenAI tier dropped by Xueming (2026-11-02)
+    label: OpenAI GPT-6.1 Terra
+    provider: openai_compatible
+    base_url: https://api.openai.com/v1
+    model: gpt-6.1-terra
+    api_key_env: OPENAI_API_KEY
+    concurrency: 4
+    timeout_s: 180
+    decoding:
+      temperature: null
+      max_tokens: 1024
+      token_param: max_completion_tokens
+      extra: {reasoning_effort: none}
+    reasoning: {setting: reasoning_effort=none, note: none is listed for Terra (none..max)}
+    pricing:
+      basis: tokens
+      input_usd_per_mtok: 1.00
+      cached_input_usd_per_mtok: 0.05
+      output_usd_per_mtok: 5.00
+      source: https://developers.openai.com/api/docs/pricing
+      checked: 2026-11-02
+      verified: true
+  - id: qwen3.8-max-fw-serverless
+    enabled: false
+    disabled_reason: other Fireworks serverless models dropped by Xueming (2026-11-02)
+    label: Qwen3.8 Max on Fireworks serverless (hosted product built on Qwen3.8-2.4T-A95B)
+    provider: openai_compatible
+    base_url: https://api.fireworks.ai/inference/v1
+    model: accounts/fireworks/models/qwen3p8-max
+    api_key_env: FIREWORKS_API_KEY
+    concurrency: 4
+    decoding: {temperature: 0, max_tokens: 384, extra: {reasoning_effort: none}}
+    reasoning: {setting: reasoning_effort=none, note: unverified for this model}
+    pricing:
+      basis: tokens
+      input_usd_per_mtok: 2.00
+      cached_input_usd_per_mtok: 0.25
+      output_usd_per_mtok: 6.00
+      source: https://docs.fireworks.ai/serverless/pricing.md
+      checked: 2026-11-02
+      verified: true
+      license_note: open weights Qwen/Qwen3.8-2.4T-A95B use the custom "Qwen3.8-Max License"
+  - id: gpt-oss-120b-fw-serverless
+    enabled: false
+    disabled_reason: other Fireworks serverless models dropped by Xueming (2026-11-02)
+    label: OpenAI gpt-oss-120b on Fireworks serverless (Apache-2.0 open weights)
+    provider: openai_compatible
+    base_url: https://api.fireworks.ai/inference/v1
+    model: accounts/fireworks/models/gpt-oss-120b
+    api_key_env: FIREWORKS_API_KEY
+    concurrency: 4
+    decoding: {temperature: 0, max_tokens: 1024, extra: {reasoning_effort: low}}
+    reasoning: {setting: reasoning_effort=low, note: reasoning model; low is its lowest level}
+    pricing:
+      basis: tokens
+      input_usd_per_mtok: 0.15
+      cached_input_usd_per_mtok: 0.015
+      output_usd_per_mtok: 0.60
+      source: https://docs.fireworks.ai/serverless/pricing.md
+      checked: 2026-11-02
+      verified: true
+
+  # Local llama.cpp (Apple M4, 16 GB). Free. Not run in v1: Xueming asked for no new local
+  # downloads on 2026-11-02. Start one server at a time with server_command, then run.
+  - id: qwen3.5-9b-q4km-local
+    enabled: false
+    disabled_reason: no new local downloads (Xueming, 2026-11-02)
+    label: Qwen3.5-9B Q4_K_M, local llama.cpp (Qwen3.8 architecture family proxy)
+    provider: openai_compatible
+    base_url: http://127.0.0.1:8089/v1
+    model: qwen3.5-9b
+    concurrency: 1
+    timeout_s: 300
+    decoding:
+      temperature: 0
+      max_tokens: 384
+      extra: {chat_template_kwargs: {enable_thinking: false}}
+    reasoning: {setting: enable_thinking=false via chat_template_kwargs}
+    pricing: {basis: free}
+    weights:
+      repo: unsloth/Qwen3.5-9B-GGUF
+      file: Qwen3.5-9B-Q4_K_M.gguf
+      revision: 3885219b6810b007914f3a7950a8d1b469d598a5
+      size_gb: 5.68
+      license: apache-2.0 (base Qwen/Qwen3.5-9B, model_type qwen3_5 like Qwen3.8-27B)
+    server_command: >-
+      llama-server -m ~/models/Qwen3.5-9B-Q4_K_M.gguf --host 127.0.0.1 --port 8089
+      -c 4096 --jinja --alias qwen3.5-9b
+  - id: qwen2.5-7b-instruct-q4km-local
+    enabled: false
+    disabled_reason: no new local downloads (Xueming, 2026-11-02)
+    label: Qwen2.5-7B-Instruct Q4_K_M, local llama.cpp (the PRD's original base model)
+    provider: openai_compatible
+    base_url: http://127.0.0.1:8089/v1
+    model: qwen2.5-7b-instruct
+    concurrency: 1
+    timeout_s: 300
+    decoding: {temperature: 0, max_tokens: 384}
+    reasoning: {setting: not applicable (no thinking mode)}
+    pricing: {basis: free}
+    weights:
+      repo: Qwen/Qwen2.5-7B-Instruct-GGUF
+      file: qwen2.5-7b-instruct-q4_k_m-00001-of-00002.gguf (plus part 00002)
+      revision: bb5d59e06d9551d752d08b292a50eb208b07ab1f
+      size_gb: 4.68
+      license: apache-2.0
+    server_command: >-
+      llama-server -m ~/models/qwen2.5-7b-instruct-q4_k_m-00001-of-00002.gguf
+      --host 127.0.0.1 --port 8089 -c 4096 --jinja --alias qwen2.5-7b-instruct
+  - id: llama-3.1-8b-instruct-q4km-local
+    enabled: false
+    disabled_reason: no new local downloads (Xueming, 2026-11-02)
+    label: Llama-3.1-8B-Instruct Q4_K_M, local llama.cpp
+    provider: openai_compatible
+    base_url: http://127.0.0.1:8089/v1
+    model: llama-3.1-8b-instruct
+    concurrency: 1
+    timeout_s: 300
+    decoding: {temperature: 0, max_tokens: 384}
+    reasoning: {setting: not applicable (no thinking mode)}
+    pricing: {basis: free}
+    weights:
+      repo: bartowski/Meta-Llama-3.1-8B-Instruct-GGUF
+      file: Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf
+      revision: bf5b95e96dac0462e2a09145ec66cae9a3f12067
+      size_gb: 4.92
+      license: Llama 3.1 Community License (permits research use and benchmarking)
+    server_command: >-
+      llama-server -m ~/models/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf --host 127.0.0.1
+      --port 8089 -c 4096 --jinja --alias llama-3.1-8b-instruct

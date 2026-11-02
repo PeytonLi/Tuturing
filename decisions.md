@@ -52,3 +52,75 @@ Workspace-level decisions and their rationale, with dates and sources. Product a
 
 **Consequences:** SFT is Person A's, as PRD section 2 and `OWNERS.md` already assign: the SFT configs, `tools/response/train_sft.py`, SFT data and decision records D09 and D10. Xueming's agents maintain these from now on, and the earlier hands-off rule for the files Peyton's agent was editing no longer applies to new work. D10's base-model choice is still unconfirmed; the benchmark of `gpt-6.1-sol` and Qwen3.8-27B is meant to inform it. Peyton's agent is outside this workspace, so Peyton has to relay the change to it.
 
+## 2026-11-02 — Person B transaction engine implementation
+
+**Source:** Person B learning-service handoff in this agent session; PRD sections 8 and 9.
+
+**Implementation choices:** SQLite stores the full session snapshot as JSON and pending intervention
+snapshots separately, so cancellation retains evidence but never commits option/item assignments.
+Observe returns either `{kind: "plan", teaching_plan: ...}` or
+`{kind: "session_end", session_end: ...}`. Live sessions sample only the original `train` families;
+held-out validation/test families remain reserved. Items persist their family and sample seed.
+Plan counters, rather than delivered turn counts, identify reservations and sampled instances.
+The rules runtime defaults to `work/learning.sqlite3` under the existing ignored `work/` directory.
+The store creates its parent directory automatically, including when used without the HTTP server.
+
+`PROBE` and `CHECK_MASTERY` are independent assessments in this runtime; requested answers cannot
+reveal an independent assessment. Both extractor assistance and committed-plan assistance gate BKT.
+Explicit skip targets become the goal, matching the episode initializer's request semantics;
+live goal changes update the goal and trigger the scheduler without inventing a navigation action.
+Navigator streaks reset at option boundaries, as in `run_episode`. Policy failures retain already
+accepted evidence, but unsuccessful operations are not cached. Exact successful idempotent retries
+take precedence over the ended-session guard; fresh mutations on ended sessions are rejected.
+Idempotency conflicts precede lookup of a different, potentially unknown session in a reused key's
+body. No HTTP or Person A implementation is included.
+
+## 2026-11-02 — Internal learning HTTP hand-off
+
+**Source:** Follow-up Person B learning-service handoff in this agent session.
+
+The stdlib HTTP server authenticates before reading any body. Missing or invalid trace IDs are
+authentication failures (401), as requested. Error correlation IDs use `unknown` when absent or
+invalid so even rejected requests receive contract-valid Error records. Unknown GET/POST routes
+return 422 `INVALID_SCHEMA`. Successful requests return 200, including session creation.
+POSTs require a nonempty ASCII Idempotency-Key of at most 128 characters. Chunked requests are not
+supported; POSTs require Content-Length and at most 65,536 bytes of finite JSON. The server closes
+each response connection, so an unread rejected body cannot become the next request.
+`docs/learning_service.md` records a real local transport run with a development-only token.
+
+## 2026-11-02 — Episode helper compatibility after simulator v2 merge
+
+**Source:** Follow-up request to adapt the learning service after merging origin/main.
+
+`_next_item` now consumes assessment-family usage and per-concept reuse counters, not an
+assessment-family set. The engine persists both counters in the proposed plan snapshot and
+promotes them only on commit. Cancellation and expiry still consume no teaching turn or family
+usage. The existing `used_assessment` field now holds a count mapping. Legacy lists in sessions
+and pending plan snapshots are accepted as one recorded use per listed family; earlier unrecorded
+PROBE usage cannot be inferred from that list. Missing legacy reuse counters start empty.
+Other imported episode helpers are unchanged. New train assessment families enter the existing
+train-only allowlist automatically. Simulator v2 student/reward settings and training configs are
+not used by the live engine; its rules config and checkpoint loading remain unchanged.
+
+## 2026-11-02 — Benchmark v1 merged; Qwen3.8-27B blocked on a payment method
+
+**Source:** the benchmark agent's final report in the Tuturing topic session; results in `experiments/response/benchmark_v1/`.
+
+**Facts:** `gpt-6.1-sol` ran on 107 cases at `reasoning_effort: low` for $0.212; the model rejects `temperature: 0`, so the run is not deterministic. Qwen3.8-27B needs a dedicated Fireworks deployment (1x H100, $8.00 per GPU hour list) and the free dry run returned "payment method is required", so nothing was created and GPU spend is $0. Fireworks reports the model as `supportsServerlessTraining: false`, which contradicts D10's serverless training claim and needs checking before any SFT plan relies on it.
+
+**Assistant note:** the automated checks over-report on dialogue data (numbers from the learner's own message count as unsupported math; answer fingerprints already in the stem count as disclosure). Whether to relax the validator is a Person A decision for Xueming; the blinded human review measures the gap meanwhile.
+
+## 2026-11-02 — Fireworks key replaced; Qwen3.8-27B run started on Peyton's account
+
+**User direction:** “use this for fireworks key instead …” (Lark message in the Tuturing topic on 2026-11-02; the key value is stored only in `~/.config/tuturing/llm.env`).
+
+**Facts:** the new key resolves to Fireworks account `accounts/peli`, Peyton's. The free deployment dry run passed there, and the live deployment list was empty. The list also shows two deleted deployments of the same model created from that account earlier the same day, before this session used it. The benchmark agent was told to run the Qwen3.8-27B entry with the same safeguards (pilot first, $25 total cap including GPU hours, deletion verified afterward) and to add the Qwen replies as a supplement to the review sheet without reshuffling the 62 replies Xueming is already rating.
+
+**Assistant note:** the response service merge (`afdd0e3`) left one open labeling choice: template-stub output is reported as `delivery_mode: model`. Xueming was asked; the assistant proposed `fallback` as the more honest label and will apply it unless Xueming objects.
+
+## 2026-11-02 — Template-stub output is labeled `fallback`
+
+**User direction:** “pick "fallback"” (Lark message in the Tuturing topic), answering the assistant's question from the response service merge.
+
+**Implementation (commit `e497294`):** responders declare their own delivery label. The template stub says `fallback`, including when its CHECK_MASTERY template goes through the one permitted repair, because a template is a verified fallback realization and never model text (PRD 8.4). Only a language-model responder yields `model` or `repaired`. The runbook and tests were updated; 237 tests pass.
+
