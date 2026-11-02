@@ -40,3 +40,9 @@ Workspace-level decisions and their rationale, with dates and sources. Product a
 - Keys are stored in `~/.config/tuturing/llm.env` (mode 600), outside Git. Benchmark API spend is capped at $25 total across OpenAI and Fireworks; the cap is an assistant default awaiting Xueming's confirmation. Small open models also run locally through llama.cpp on the Mac mini at no cost.
 - Fireworks control-plane metadata shows Qwen3.8-27B (D10's choice) supports LoRA but not serverless inference, so benchmarking or serving it needs a paid dedicated deployment. No deployment was created.
 
+## 2026-11-02 — Benchmark models: gpt-6.1-sol and Qwen3.8-27B on a Fireworks deployment
+
+**User direction:** “for frontier model benchmark use gpt6.1sol, for opensourced model use Qwen3.8-27B. we do deloy is fine.” Source: Lark message in the Tuturing topic at about 20:45 UTC, sent while the previous turn was running; its capture had not been exported when this was recorded.
+
+**Implementation (assistant):** The benchmark's required models are now OpenAI `gpt-6.1-sol` and `accounts/fireworks/models/qwen3p8-27b` on an on-demand Fireworks deployment. The agent creates the deployment only once the harness is ready, deletes it after the run, and records proof of deletion. Other paid models were dropped. The $25 total cap now also covers the deployment's GPU hours and still awaits Xueming's confirmation.
+

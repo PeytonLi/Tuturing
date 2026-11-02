@@ -62,14 +62,14 @@ Xueming authorized running every Person A item in parallel and asked for dataset
 - `a/public-api-v1`: `contracts/public_v1.openapi.yaml` with public fixtures, a D11 proposal on where `Error` and `PublicState` live, and `apps/public_api` with idempotency, staging and recovery, tested against an A-owned transaction stand-in until B's mock ships.
 - `a/response-service-v1`: the generation pipeline with one repair and a verified fallback, an OpenAI-compatible responder, `apps/response_service`, `tools.response.serve`, and the stub artifact manifest and runbook for B.
 - `a/datasets-v1`: MathDial prep with a leak review, model-drafted audit labels in a separate file, at least 300 synthetic original probability examples pending review with frozen splits, the probability benchmark case set and a review packet.
-- `a/benchmark-v1`: a model-matrix benchmark with local llama.cpp models plus OpenAI and Fireworks serverless models within a $25 total cap, a report and a blinded review sheet.
+- `a/benchmark-v1`: a benchmark of OpenAI `gpt-6.1-sol` and Qwen3.8-27B, the models Xueming chose, with the deterministic fallback as the floor. Qwen3.8-27B runs on a Fireworks on-demand deployment that Xueming approved and that is deleted after the run. Spend stays within a $25 total cap. Outputs are a report and a blinded review sheet.
 - `a/extractor-v1`: a messy-message extraction eval set, extractor improvements and a confusion-matrix report.
 
 Keys live in `~/.config/tuturing/llm.env` (mode 600), outside Git. Both keys answered free model-list calls with HTTP 200.
 
 ## Open questions
 
-- D10 on `main` switches the SFT base model from the PRD's `Qwen/Qwen2.5-7B-Instruct` to `Qwen/Qwen3.8-27B` on Fireworks and is marked "accepted by lead". PRD 2.3 makes SFT selection a Person A decision, so Xueming should confirm it. Fireworks lists the model as LoRA-tunable but not serverless, so benchmarking and serving it need a paid dedicated deployment. The benchmark results are meant to inform this decision.
+- D10 on `main` switches the SFT base model from the PRD's `Qwen/Qwen2.5-7B-Instruct` to `Qwen/Qwen3.8-27B` on Fireworks and is marked "accepted by lead". PRD 2.3 makes SFT selection a Person A decision, so Xueming should confirm it. Fireworks lists the model as LoRA-tunable but not serverless, so benchmarking and serving it need a paid dedicated deployment. Xueming approved a deployment so the benchmark can include it; the results are meant to inform this decision.
 - The $25 benchmark spend cap is an assistant default that Xueming has not confirmed.
 - Who edits Person A files: Peyton's agent is still committing to A's SFT config, trainer and D10.
 - Anthropic and Google keys are absent, so Claude and Gemini are not in the benchmark yet.

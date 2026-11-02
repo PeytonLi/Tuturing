@@ -26,3 +26,6 @@ Thumbs.db
 # Python
 *.pyc
 .mypy_cache/
+
+# Agent worktrees created by Claude Code sessions
+/.claude/worktrees/
