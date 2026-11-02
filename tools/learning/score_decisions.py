@@ -119,6 +119,8 @@ def case_state_to_inputs(state: dict) -> tuple[dict, list[float], list[bool], di
     skip_done = skip_option and state.get("previous_move") == "CHECK_MASTERY"
     context = {
         **mask_state,
+        "misconceptions": state.get("misconceptions", {}),
+        "previous_move": state.get("previous_move") or "NONE",
         "pace_preference": state.get("pace_preference", "normal"),
         "explicit_request": request,
         "explicit_skip": request == "skip",

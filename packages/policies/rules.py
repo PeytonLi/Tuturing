@@ -85,7 +85,7 @@ class RulesNavigator:
 
 
 class RulesStrategist:
-    policy_version = "rules_strategist_v1"
+    policy_version = "rules_strategist_v2"
 
     def act(self, observation: list[float], mask: list[bool], context: dict) -> int:
         difficulty = str(context.get("active_item_difficulty", "medium"))
@@ -94,6 +94,18 @@ class RulesStrategist:
         pace = str(context.get("pace_preference", "normal"))
         if pace not in PACES:
             pace = "normal"
+        misconceptions = context.get("public_misconceptions", context.get("misconceptions"))
+        probability = (
+            max((float(value) for value in misconceptions.values()), default=0.0)
+            if isinstance(misconceptions, dict)
+            else 0.0
+        )
+        likely_misconception = probability >= 0.5
+        confirmed_misconception = probability >= 0.75 or (
+            likely_misconception
+            and context.get("previous_move") in {"PROBE", "REFLECT", "HINT"}
+            and context.get("meaningful_error")
+        )
         if context.get("skip_diagnostic_due"):
             move = "CHECK_MASTERY"
         elif context.get("unsupported_advancement"):
@@ -108,6 +120,13 @@ class RulesStrategist:
             or int(context.get("unsuccessful_hint_count", 0)) >= 2
         ):
             move = "WORKED_EXAMPLE"
+        elif likely_misconception and not confirmed_misconception:
+            move = "PROBE"
+        elif confirmed_misconception and context.get("previous_move") not in {
+            "EXPLAIN_CONCEPT",
+            "WORKED_EXAMPLE",
+        }:
+            move = "WORKED_EXAMPLE" if mastery < 0.4 else "EXPLAIN_CONCEPT"
         elif context.get("meaningful_error") or context.get("independent_failure_streak", 0):
             move = "HINT"
         elif context.get("no_diagnostic_yet"):
