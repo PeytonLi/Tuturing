@@ -249,6 +249,10 @@ def test_pilot_full_and_report_run_against_the_fake_server(tmp_path, monkeypatch
                                     log=lambda _: None)
     assert full_summary["outcome"]["labeled"] == 4
     assert full_summary["selection"]["rule"] == "all pending turns"
+    with FakeOpenAIServer([]) as server:
+        again = labeler.full(config, "fake", turns, "sk-test", base_url=server.base_url,
+                             log=lambda _: None)
+    assert again["outcome"]["already_done"] == 4 and len(again["invocations"]) == 2
     universe = {"teacher_turns_total": 4, "skipped": {}, "labelable": 4, "by_split_and_act": {}}
     source = {"source_id": "mathdial", "revision": "rev-test"}
     config["act_move_map"] = str(ROOT / "configs/response/mathdial_move_map_v1.yaml")

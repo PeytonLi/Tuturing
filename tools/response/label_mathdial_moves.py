@@ -782,6 +782,7 @@ def full(config, model, turns, api_key, *, base_url=None, log=print, seed=202611
     tracker = tracker_for(config)
     estimator = make_estimator(pilot_summary["token_fit"], prices)
     pending = [turn for turn in turns if turn["example_id"] not in store.records]
+    already_done = len(turns) - len(pending)
     estimate_total = sum(estimator(turn) for turn in pending)
     budget = tracker.remaining() - config.get("budget_reserve_usd", 0.1)
     selection = {
@@ -801,11 +802,21 @@ def full(config, model, turns, api_key, *, base_url=None, log=print, seed=202611
             "selected_by_split": dict(sorted(Counter(turn["split"] for turn in pending).items())),
         })
     log(json.dumps({"selection": selection}, sort_keys=True))
+    started = datetime.now(UTC).replace(microsecond=0).isoformat()
     outcome = label_turns(
         pending, client, store, tracker, stage="full", estimate_per_turn=estimator,
         system_prompt=system_prompt, prompt_version=prompt_version,
         concurrency=config.get("concurrency", 8), log=log,
     )
+    outcome["already_done"] = already_done
+    summary_path = run_dir(config) / f"full_{prompt_version}_{tag}.json"
+    invocations = []
+    if summary_path.exists():
+        invocations = json.loads(summary_path.read_text(encoding="utf-8")).get("invocations", [])
+    invocations.append({
+        "started": started, "selection": selection, "outcome": outcome,
+        "spent_after_usd": round(tracker.spent, 6),
+    })
     summary = {
         "stage": "full",
         "model": model,
@@ -813,6 +824,7 @@ def full(config, model, turns, api_key, *, base_url=None, log=print, seed=202611
         "prompt_version": prompt_version,
         "selection": selection,
         "outcome": outcome,
+        "invocations": invocations,
         "labeled_total": len(store.records),
         "request_parameters": {
             **client.params, "max_completion_tokens": client.max_completion_tokens,
@@ -821,9 +833,7 @@ def full(config, model, turns, api_key, *, base_url=None, log=print, seed=202611
         "spend": tracker.summary(),
         "updated": datetime.now(UTC).replace(microsecond=0).isoformat(),
     }
-    (run_dir(config) / f"full_{prompt_version}_{tag}.json").write_text(
-        json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-    )
+    summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     log(json.dumps({"outcome": outcome, "spend": tracker.summary()}, sort_keys=True))
     return summary
 
@@ -948,6 +958,7 @@ def report(config, model, turns, universe, source, *, log=print):
         "request_parameters": (full_summary or {}).get("request_parameters"),
         "adjustments": (full_summary or {}).get("adjustments"),
         "selection": (full_summary or {}).get("selection"),
+        "invocations": (full_summary or {}).get("invocations"),
         "spend": {
             **tracker.summary(),
             "ledger": config["run_dir"] + "/ledger.jsonl (ignored by Git)",
