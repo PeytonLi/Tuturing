@@ -181,3 +181,11 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 **Reading for D10 (assistant):** prompt-only, the frontier model passes the strict checks far more often than Qwen3.8-27B on our own probability items, and the gap is driven by action fidelity and math support, which SFT targets. This is evidence for the decision, not the decision.
 
+## 2026-11-02 — Run a smoke SFT of Qwen3.8-27B on Fireworks
+
+**User direction:** “smoke SFT on Qwen3.8-27B via Fireworks” (Lark message in the Tuturing topic), answering the assistant's question on whether to fine-tune.
+
+**Scope and budget:** a smoke run in the PRD 13.5 sense on the 261 training examples of `original_v1` (MathDial is not included while its mapping is in progress), evaluated on the 55 validation cases against prompt-only Qwen3.8-27B; the test split stays frozen. Budget: $20 for training plus evaluation deployments, the figure the assistant proposed in the same exchange and Xueming did not change. Fireworks reports the model as not serverless-trainable, so the agent first checks feasibility with free calls and stops if training is impossible on the account or would exceed the cap.
+
+**What this is not:** D10 is not yet confirmed. The smoke result is evidence for that decision, alongside the benchmark.
+
