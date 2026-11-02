@@ -1,0 +1,94 @@
+# Smoke LoRA SFT of the D10 base model on Fireworks managed training
+# (docs/person_a_tasks.md item 6; PRD 13.4 values, 13.5 smoke run).
+# Runner: uv run python -m tools.response.fireworks_sft {convert,tokens,upload,train,poll,fetch}
+# Runbook: docs/runbooks/sft_fireworks.md. Report: experiments/response/sft_smoke_v1/report.md.
+#
+# The top-level keys are the PRD 13.4 vocabulary checked by
+#   uv run python -m tools.response.train_sft --config <this file> --check-config
+# The fireworks.job block is what is actually sent to Fireworks. Fireworks' managed SFT does
+# not expose LoRA dropout, target modules, gradient clipping, packing, seed or the
+# evaluation/checkpoint interval; fireworks.not_settable lists them, and the report records
+# what the job actually used.
+run_type: response_sft
+run_id: sft_smoke_v1
+base_model: Qwen/Qwen3.8-27B
+base_model_revision: 1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0
+tokenizer_revision: 1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0
+method: lora
+lora_rank: 16
+lora_alpha: 32
+lora_dropout: 0.05
+# D10's decided scope (160 modules). Fireworks chooses its own targets; see the report.
+lora_target_modules: '^(model\.)?(language_model\.)?layers\.\d+\.[^.]+\.(q_proj|k_proj|v_proj|o_proj|in_proj_qkv|out_proj)$'
+lora_target_modules_scope: language_model_attention
+lora_expected_target_count: 160
+precision: bfloat16
+max_sequence_tokens: 4096
+micro_batch_size: 1
+gradient_accumulation_steps: 16   # 16 samples per optimizer step -> batch_size_samples 16
+learning_rate: 0.0001
+epochs_max: 3
+warmup_ratio: 0.05
+weight_decay: 0.01
+gradient_clip_norm: 1.0
+packing: false
+loss_scope: target_completion_only
+evaluation_interval_optimizer_steps: 17   # one epoch; Fireworks picks its own schedule
+checkpoint_interval_optimizer_steps: 17   # not settable on Fireworks
+seed: 17
+
+data:
+  source: original_v1 (synthetic, reviewer_status pending)
+  build: uv run python -m tools.response.build_original_sft
+  train: data/sft/original_v1/train.jsonl            # 261 rows
+  validation: data/sft/original_v1/validation.jsonl  # 55 rows
+  test: frozen; not used by this run
+  mathdial: >-
+    excluded from this smoke run: the MathDial move mapping is still in progress on another
+    branch, so the PRD 13.2 60/40 mix starts with the full run
+
+evaluation:
+  validation_cases: experiments/response/sft_smoke_v1/validation_cases_v1.jsonl
+  benchmark_config: configs/response/sft_smoke_eval_v1.yaml
+
+fireworks:
+  keys_file: ~/.config/tuturing/llm.env
+  api_key_env: FIREWORKS_API_KEY
+  spend_cap_env: TUTURING_BENCH_SPEND_CAP_USD   # must exist: it authorizes paid calls
+  spend_cap_usd: 20          # hard cap for this task (training plus evaluation deployments)
+  run_dir: experiments/response/sft_smoke_v1/runs   # git-ignored; holds the shared ledger
+  base_model: accounts/fireworks/models/qwen3p8-27b
+  # GET of the base model (2026-11-02): supervisedLoraTunable true, useTrainingV2 true,
+  # trainingContextLength 131072, supportsServerlessTraining false (that flag is the
+  # Training API's serverless loop, not managed jobs).
+  datasets:
+    train: tut-sft-smoke-v1-train
+    validation: tut-sft-smoke-v1-validation
+  job:
+    id: tut-sft-smoke-v1
+    output_model: tut-sft-smoke-v1
+    display_name: tuturing response sft smoke v1
+    epochs: 3                      # PRD epochs_max
+    batch_size_samples: 16         # PRD micro_batch_size 1 x gradient_accumulation_steps 16
+    learning_rate: 0.0001          # PRD 13.4
+    learning_rate_warmup_steps: 3  # ceil(0.05 x 51 optimizer steps)
+    lr_scheduler:
+      linear: {minLrRatio: 0.0, decayRatio: 0.0}   # decay to 0 over the run, as TRL's default
+    lora_rank: 16
+    lora_alpha: 32                 # field is in job responses but not in the API docs
+    max_context_length: 4096
+    optimizer_weight_decay: 0.01
+    eval_auto_carveout: false      # the validation split is the evaluation dataset
+    is_turbo: false
+  not_settable: [lora_dropout, lora_target_modules, gradient_clip_norm, packing, seed,
+                 evaluation_interval_optimizer_steps, checkpoint_interval_optimizer_steps]
+  pricing:
+    basis: training_tokens
+    usd_per_mtok: 3.00
+    tier: Managed Training, LoRA SFT, models 16.1B - 80B (Qwen3.8-27B has 27.36B parameters)
+    token_rule: training tokens = tokens in the training dataset x epochs (Fireworks pricing)
+    source: https://fireworks.ai/pricing
+    checked: 2026-11-02
+    estimate_safety_factor: 1.5
+  poll_interval_s: 60
+  max_wait_minutes: 180
