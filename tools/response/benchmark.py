@@ -11,6 +11,7 @@ runbook is ``docs/runbooks/response_benchmark.md``.
     uv run python -m tools.response.benchmark run --models gpt-6.1-sol
     uv run python -m tools.response.benchmark run --models qwen3.8-27b-fw-h100 \\
         --manage-deployment
+    uv run python -m tools.response.benchmark rescore   # after a validator change
     uv run python -m tools.response.benchmark report
 
 API keys are read only from the keys file named in the config (default
@@ -39,6 +40,7 @@ import yaml
 
 from packages.response.fallbacks import render_fallback
 from packages.response.hashing import canonical_json
+from packages.response.item_fidelity import item_fidelity
 from packages.response.numbers import extract_numbers
 from packages.response.prompt import PROMPT_VERSION, compile_prompt
 from packages.response.shapes import is_valid
@@ -652,6 +654,40 @@ def reusable(record, case, entry, messages):
     )
 
 
+def score_text(plan, text, *, error=None, provider=None):
+    """Every check-derived field of a record, so stored texts can be re-scored later."""
+    checks, applicable, failed, failed_raw = evaluate_text(plan, text)
+    unsupported, from_learner = number_diagnostics(plan, text)
+    disclosed, disclosed_in_context = disclosure_diagnostics(plan, text)
+    delivery = delivery_for(failed, error=error is not None)
+    if provider == "fallback" and error is not None:
+        delivery = "unavailable"
+    fidelity = item_fidelity(plan, text)
+    return {
+        "validator_version": VALIDATOR_VERSION,
+        "word_count": word_count(text),
+        "question_marks": text.count("?"),
+        "checks": checks,
+        "applicable": applicable,
+        "failed_checks": failed,
+        "failed_checks_raw": failed_raw,
+        "all_applicable_pass": not failed and error is None,
+        "delivery": delivery,
+        "delivery_raw": delivery_for(failed_raw, error=error is not None),
+        "fallback_needed": delivery != "model",
+        "fallback_available": fallback_available(plan),
+        "unsupported_numbers": unsupported,
+        "unsupported_numbers_from_learner": from_learner,
+        "disclosed_fingerprints": disclosed,
+        "disclosed_fingerprints_in_context": disclosed_in_context,
+        "item_fidelity_applicable": fidelity.applicable,
+        "item_fidelity_pass": fidelity.passed,
+        "item_fidelity_reasons": list(fidelity.reasons),
+        "item_fidelity_new_objects": list(fidelity.new_objects),
+        "item_fidelity_coverage": round(fidelity.coverage, 3),
+    }
+
+
 def run_one(entry, case, ctx, *, model, tag):
     plan = case.plan
     messages = compile_prompt(plan)
@@ -704,12 +740,6 @@ def run_one(entry, case, ctx, *, model, tag):
             finish_reason, latency_ms = result["finish_reason"], result["latency_ms"]
             attempts, served = result["attempts"], result["served_model"]
             think_stripped = result["think_stripped"]
-    checks, applicable, failed, failed_raw = evaluate_text(plan, text)
-    unsupported, from_learner = number_diagnostics(plan, text)
-    disclosed, disclosed_in_context = disclosure_diagnostics(plan, text)
-    delivery = delivery_for(failed, error=error is not None)
-    if entry["provider"] == "fallback" and error is not None:
-        delivery = "unavailable"
     cost = token_cost(usage, entry.get("pricing") or {}) if cost_basis(entry) == "tokens" else 0.0
     record.update({
         "text": text,
@@ -721,24 +751,10 @@ def run_one(entry, case, ctx, *, model, tag):
         "latency_ms": latency_ms,
         "usage": usage,
         "over_visible_token_cap": usage["visible_output_tokens"] > PRD_OUTPUT_TOKEN_CAP,
-        "word_count": word_count(text),
-        "question_marks": text.count("?"),
-        "checks": checks,
-        "applicable": applicable,
-        "failed_checks": failed,
-        "failed_checks_raw": failed_raw,
-        "all_applicable_pass": not failed and error is None,
-        "delivery": delivery,
-        "delivery_raw": delivery_for(failed_raw, error=error is not None),
-        "fallback_needed": delivery != "model",
-        "fallback_available": fallback_available(plan),
-        "unsupported_numbers": unsupported,
-        "unsupported_numbers_from_learner": from_learner,
-        "disclosed_fingerprints": disclosed,
-        "disclosed_fingerprints_in_context": disclosed_in_context,
         "cost_usd": round(cost, 8),
         "cost_basis": cost_basis(entry),
     })
+    record.update(score_text(plan, text, error=error, provider=entry["provider"]))
     return record
 
 
@@ -1161,6 +1177,48 @@ def command_run(args, config, ctx):
     return status
 
 
+def rescore(entry, cases, ctx, *, force=False):
+    """Re-check this entry's stored texts under the current validator; no model calls."""
+    case_by_key = {case.key: case for case in cases}
+    latest = load_results(ctx.run_dir, entry["id"])
+    if not latest:
+        return 0, 0, 0
+    writer = ResultWriter(ctx.run_dir / entry["id"])
+    rescored = current = missing = 0
+    for key, record in sorted(latest.items()):
+        case = case_by_key.get(key)
+        if case is None:
+            missing += 1
+            continue
+        if record.get("validator_version") == VALIDATOR_VERSION and not force:
+            current += 1
+            continue
+        updated = dict(record)
+        updated.update(
+            score_text(case.plan, record["text"], error=record["error"], provider=entry["provider"])
+        )
+        updated["run_tag"] = f"rescore_{VALIDATOR_VERSION}"
+        updated["rescored_at"] = utc_now()
+        updated["rescored_from_validator"] = record.get("validator_version")
+        writer.write(updated)
+        rescored += 1
+    return rescored, current, missing
+
+
+def command_rescore(args, config, ctx):
+    cases, _ = load_all_cases(config, args.case_sets)
+    for entry in config.get("models", []):
+        if args.models and entry["id"] not in args.models:
+            continue
+        rescored, current, missing = rescore(entry, cases, ctx, force=args.force)
+        if rescored or current or missing:
+            ctx.out(
+                f"{entry['id']}: rescored {rescored} under {VALIDATOR_VERSION}, "
+                f"{current} already current, {missing} not in the loaded case sets"
+            )
+    return 0
+
+
 def command_report(args, config, ctx):
     from tools.response.benchmark_report import build_report
 
@@ -1190,10 +1248,19 @@ def main(argv=None):
         help="create the entry's GPU deployment, run, and always delete it",
     )
     sub.add_parser("report", help="aggregate runs into CSVs, report.md and the review sheet")
+    rescore_parser = sub.add_parser(
+        "rescore", help="re-check stored texts under the current validator, no model calls"
+    )
+    rescore_parser.add_argument("--models", type=lambda s: s.split(","))
+    rescore_parser.add_argument("--case-sets", type=lambda s: s.split(","))
+    rescore_parser.add_argument("--force", action="store_true")
     args = parser.parse_args(argv)
     config = load_config(args.config)
     ctx = make_context(args, config)
-    commands = {"plan": command_plan, "run": command_run, "report": command_report}
+    commands = {
+        "plan": command_plan, "run": command_run, "report": command_report,
+        "rescore": command_rescore,
+    }
     return commands[args.command](args, ctx.config, ctx)
 
 

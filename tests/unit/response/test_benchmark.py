@@ -446,6 +446,46 @@ def test_report_keeps_published_sheet_frozen_and_adds_a_supplement(tmp_path):
         (review_dir / "review_sheet_blinded_supplement.csv").open(encoding="utf-8")))) == 3
 
 
+def test_rescore_updates_stale_records_without_model_calls(tmp_path):
+    config = make_config(tmp_path, PLAN_DIR)
+    write_keys(tmp_path)
+    chat = FakeChat(text="Consider a standard six-sided die. List its sample space. Try it.")
+    ctx = make_ctx(config, chat)
+    cases, _ = bench.load_all_cases(config)
+    entry = config["models"][1]
+    bench.run_entry(entry, cases, ctx, pilot=8)
+    calls = len(chat.requests)
+    latest = bench.load_results(ctx.run_dir, entry["id"])
+    mastery = latest["fixtures/check_mastery"]
+    assert mastery["item_fidelity_applicable"] and not mastery["item_fidelity_pass"]
+    assert "action_faithful" in mastery["failed_checks"]
+    # Simulate records scored by an older validator: wrong verdicts, no fidelity fields.
+    stale_dir = ctx.run_dir / entry["id"]
+    for path in stale_dir.glob("*.jsonl"):
+        records = [json.loads(line) for line in path.read_text().splitlines()]
+        for record in records:
+            record["validator_version"] = "validator_v1"
+            record["checks"] = {name: True for name in record["checks"]}
+            record["failed_checks"] = []
+            record["delivery"] = "model"
+            for field in ("item_fidelity_applicable", "item_fidelity_pass",
+                          "item_fidelity_reasons"):
+                record.pop(field, None)
+        path.write_text("".join(json.dumps(r) + "\n" for r in records))
+    assert bench.load_results(ctx.run_dir, entry["id"])["fixtures/check_mastery"][
+        "delivery"] == "model"
+    rescored, current, missing = bench.rescore(entry, cases, ctx)
+    assert (rescored, current, missing) == (8, 0, 0)
+    assert len(chat.requests) == calls, "rescoring must not call the model"
+    again = bench.load_results(ctx.run_dir, entry["id"])["fixtures/check_mastery"]
+    assert again["validator_version"] == bench.VALIDATOR_VERSION
+    assert again["rescored_from_validator"] == "validator_v1"
+    assert again["delivery"] == "fallback" and "action_faithful" in again["failed_checks"]
+    assert again["item_fidelity_reasons"] and again["usage"] == mastery["usage"]
+    assert bench.rescore(entry, cases, ctx) == (0, 8, 0)
+    assert bench.pending_cases(entry, cases, ctx) == [], "rescored records stay reusable"
+
+
 def test_committed_config_is_consistent():
     config = yaml.safe_load((ROOT / "configs/response/benchmark_v1.yaml").read_text())
     ids = [entry["id"] for entry in config["models"]]
