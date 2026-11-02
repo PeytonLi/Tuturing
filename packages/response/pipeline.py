@@ -38,6 +38,7 @@ from packages.response.repair import REPAIR_VERSION, failed_checks, is_repairabl
 from packages.response.responders import (
     MAX_OUTPUT_TOKENS,
     RepairLimits,
+    ResponderConfigRejected,
     ResponderOutput,
     TemplateStubResponder,
 )
@@ -180,7 +181,9 @@ class ResponsePipeline:
                 "internal_deadline_ms": self.settings.internal_deadline_ms,
                 "max_output_tokens": self.settings.max_output_tokens,
                 "max_repairs": self.settings.max_repairs,
-                "decoding": "greedy",
+                # "greedy" (temperature 0), "provider_default_temperature" (field omitted, so
+                # not deterministic) or "deterministic" for the template stub.
+                "decoding": getattr(self.responder, "decoding_label", "greedy"),
             },
         }
 
@@ -288,6 +291,11 @@ class ResponsePipeline:
                 output = function(remaining)
         except ResponderTimeout:
             attempts.append(Attempt(stage, "timeout"))
+            return None
+        except ResponderConfigRejected as error:
+            # The provider refused the configured request format. The learner still gets the
+            # fallback, but the trail names the rejected parameter so operators can see it.
+            attempts.append(Attempt(stage, "config_error", detail=error.summary))
             return None
         except Exception as error:  # every responder failure falls through to the fallback
             attempts.append(Attempt(stage, "error", detail=type(error).__name__))

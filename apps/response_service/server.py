@@ -21,6 +21,7 @@ import socketserver
 import threading
 import time
 from collections import OrderedDict
+from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 from apps.response_service.config import (
@@ -67,21 +68,53 @@ class ResponseService:
         self._session_guard = threading.Lock()
         self._clock = clock
         self._logger = logger
+        self._config_errors = {"count": 0, "last": None, "last_seen_at": None}
+        self._config_error_lock = threading.Lock()
 
     @property
     def authenticated(self) -> bool:
         return self._token is not None
 
     def health(self) -> dict:
+        """Versions plus any provider configuration rejection seen since startup.
+
+        ``status`` is ``degraded`` once the model provider has refused the configured request
+        format: learners still get verified fallbacks, but no model text is being delivered.
+        """
         info = self.pipeline.describe()
+        with self._config_error_lock:
+            config_errors = dict(self._config_errors) if self._config_errors["count"] else None
         return {
-            "status": "ok",
+            "status": "degraded" if config_errors else "ok",
             "artifact_id": info["artifact_id"],
             "compatible_artifact_ids": info["compatible_artifact_ids"],
             "responder_kind": info["responder"].get("kind"),
+            "decoding": info["limits"]["decoding"],
             "versions": info["versions"],
             "auth": "bearer" if self.authenticated else "none",
+            "responder_config_errors": config_errors,
         }
+
+    def _note_config_error(self, record: dict) -> bool:
+        """Lift a provider config rejection out of the attempt trail into the log record."""
+        detail = next(
+            (
+                attempt.get("detail")
+                for attempt in record.get("attempts") or ()
+                if attempt.get("outcome") == "config_error"
+            ),
+            None,
+        )
+        if detail is None:
+            return False
+        record["responder_config_error"] = detail
+        with self._config_error_lock:
+            self._config_errors["count"] += 1
+            self._config_errors["last"] = detail
+            self._config_errors["last_seen_at"] = (
+                datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+            )
+        return True
 
     def handle_generate(self, headers, read) -> tuple[int, dict, bool]:
         """Return ``(status, body, close_connection)`` for one generate request.
@@ -136,7 +169,10 @@ class ResponseService:
             return 503, self._error(fallback, request), True
         finally:
             record["elapsed_ms"] = max(0, round((self._clock() - started) * 1000))
-            self._logger.info(json.dumps(record, sort_keys=True))
+            # A provider that refuses the configured format is an operator problem, not a
+            # learner one: log it at WARNING so it never hides behind a working fallback.
+            level = logging.WARNING if self._note_config_error(record) else logging.INFO
+            self._logger.log(level, json.dumps(record, sort_keys=True))
 
     def _error(self, error: GenerationError, request) -> dict:
         request_id = trace_id = UNKNOWN_ID

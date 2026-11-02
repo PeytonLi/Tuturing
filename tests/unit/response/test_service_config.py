@@ -135,6 +135,6 @@ def test_serve_check_prints_a_summary_without_binding(capsys, monkeypatch):
     assert summary["auth"] == "none (loopback only)"
     assert summary["port"] == 0
     assert summary["responder"] == {"kind": "template_stub", "version": "template_stub_v1"}
-    assert summary["limits"]["decoding"] == "greedy"
+    assert summary["limits"]["decoding"] == "deterministic"
     assert serve.main(["--config", str(MODEL_CONFIG), "--check"]) == 2
     assert "TUTOR_LLM_BASE_URL" in capsys.readouterr().err
