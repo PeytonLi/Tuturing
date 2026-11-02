@@ -122,7 +122,9 @@ def main() -> None:
             *(
                 f"{concept_id.lower()}_assess_{variant:02d}"
                 for concept_id in sorted(ENABLED)
-                for variant, family_split in enumerate(("train", "validation", "test"), 1)
+                for variant, family_split in enumerate(
+                    ("train", "validation", "test", "train", "validation", "test"), 1
+                )
                 if family_split == split
             ),
         ]

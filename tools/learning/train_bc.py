@@ -15,6 +15,7 @@ from packages.policies.network import (
     save_checkpoint,
     torch,
 )
+from packages.simulator.student import DEFAULT_SIMULATOR_CONFIG
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -91,6 +92,7 @@ def main() -> None:
     config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     seed = int(args.seed if args.seed is not None else config["seed"])
     episodes = int(args.episodes if args.episodes is not None else config["episodes"])
+    simulator_config = config.get("simulator_config", DEFAULT_SIMULATOR_CONFIG)
     torch.manual_seed(seed)
     results = simulate_episodes(
         episodes=episodes,
@@ -98,6 +100,7 @@ def main() -> None:
         seed=seed,
         strategist_name="rules",
         run_id=f"{config['run_name']}-seed{seed}",
+        simulator_config=simulator_config,
     )
     holdout_count = min(episodes - 1, max(1, round(episodes * config["holdout_fraction"])))
     order = list(range(episodes))
@@ -140,6 +143,7 @@ def main() -> None:
         "seed": seed,
         "init": "scratch",
         "policy": "behavior_cloning",
+        "simulator_config": simulator_config,
     }
     save_checkpoint(model, run_dir / "bc.pt", metadata)
     metrics = {
@@ -151,6 +155,7 @@ def main() -> None:
         "holdout_action_agreement": action_agreement(model, holdout_samples),
         "epoch_losses": epoch_losses,
         "checkpoint": str(run_dir / "bc.pt"),
+        "simulator_config": simulator_config,
     }
     run_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "metrics.json").write_text(

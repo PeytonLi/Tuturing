@@ -216,6 +216,27 @@ def _families() -> dict[str, TemplateFamily]:
                 tuple(FACTS[concept_id]),
                 ("cards", "two_way_table", "tree")[variant],
             )
+        for variant, split in enumerate(ASSESMENT_SPLITS, 4):
+            family_id = f"{concept_id.lower()}_assess_{variant:02d}"
+            result[family_id] = TemplateFamily(
+                family_id,
+                concept_id,
+                ("easy", "medium", "hard")[variant - 4],
+                split,
+                "assessment",
+                "train-reward" if split == "train" else split,
+                lambda seed, i=concept_index: _sampler(i, seed ^ 0x5EC0DD),
+                _solver,
+                normalize_answer,
+                {
+                    misconception_id: _error_factory(misconception_id)
+                    for misconception_id in MISCONCEPTIONS
+                },
+                HINTS[concept_id],
+                _example_generator,
+                tuple(FACTS[concept_id]),
+                ("urns", "raffle", "lottery")[variant - 4],
+            )
     return result
 
 

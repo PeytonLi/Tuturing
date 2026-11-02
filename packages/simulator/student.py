@@ -10,6 +10,7 @@ from packages.learning.content.templates.families import TemplateFamily
 from packages.simulator.randomness import EventRandomBank
 
 ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_SIMULATOR_CONFIG = "configs/learning/simulator_proto_v2.yaml"
 DIFFICULTY_FACTORS = {"easy": 1.0, "medium": 0.85, "hard": 0.65}
 
 
@@ -62,7 +63,7 @@ def sample_student(
     scenario: dict,
     episode_seed: int,
     *,
-    config_path: str | Path = "configs/learning/simulator_proto_v1.yaml",
+    config_path: str | Path = DEFAULT_SIMULATOR_CONFIG,
     bank: EventRandomBank | None = None,
 ) -> PrivateStudentState:
     random_bank = bank or EventRandomBank()

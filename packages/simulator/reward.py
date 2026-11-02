@@ -6,7 +6,11 @@ from pathlib import Path
 import yaml
 
 from packages.learning.content.templates.families import FAMILIES
-from packages.simulator.student import PrivateStudentState, probability_correct
+from packages.simulator.student import (
+    DEFAULT_SIMULATOR_CONFIG,
+    PrivateStudentState,
+    probability_correct,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -60,14 +64,20 @@ def _proto_graph() -> dict:
     return {"prerequisites": prerequisites}
 
 
-def expected_score(student: PrivateStudentState, goal_concept_id: str, split: str) -> float:
+def expected_score(
+    student: PrivateStudentState,
+    goal_concept_id: str,
+    split: str,
+    *,
+    config_path: str | Path = DEFAULT_SIMULATOR_CONFIG,
+) -> float:
     ancestors = proto_ancestors(goal_concept_id)
     weights = {goal_concept_id: 0.5 if ancestors else 1.0}
     if ancestors:
         weights.update({ancestor: 0.5 / len(ancestors) for ancestor in ancestors})
     graph = _proto_graph()
     simulator_config = yaml.safe_load(
-        (ROOT / "configs/learning/simulator_proto_v1.yaml").read_text(encoding="utf-8")
+        (ROOT / config_path).read_text(encoding="utf-8")
     )
     misconception_effect = float(
         simulator_config["misconceptions"]["susceptible_incorrect_probability"]

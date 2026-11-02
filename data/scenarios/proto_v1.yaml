@@ -21,10 +21,15 @@ scenarios:
   - c08_teach_01
   - c08_teach_02
   - c01_assess_01
+  - c01_assess_04
   - c02_assess_01
+  - c02_assess_04
   - c03_assess_01
+  - c03_assess_04
   - c06_assess_01
+  - c06_assess_04
   - c08_assess_01
+  - c08_assess_04
   teaching_horizon: 16
   provenance:
     author: Person B
@@ -151,10 +156,15 @@ scenarios:
   - c06_teach_03
   - c08_teach_03
   - c01_assess_02
+  - c01_assess_05
   - c02_assess_02
+  - c02_assess_05
   - c03_assess_02
+  - c03_assess_05
   - c06_assess_02
+  - c06_assess_05
   - c08_assess_02
+  - c08_assess_05
   teaching_horizon: 16
   provenance:
     author: Person B
@@ -191,10 +201,15 @@ scenarios:
   - c06_teach_04
   - c08_teach_04
   - c01_assess_03
+  - c01_assess_06
   - c02_assess_03
+  - c02_assess_06
   - c03_assess_03
+  - c03_assess_06
   - c06_assess_03
+  - c06_assess_06
   - c08_assess_03
+  - c08_assess_06
   teaching_horizon: 16
   provenance:
     author: Person B

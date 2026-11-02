@@ -91,8 +91,8 @@ def validate_content(config_path: str = "configs/learning/prototype.yaml") -> di
     if any(record["active"] != (record["index"] < 8) for record in misconception_records):
         raise ValueError("only misconception slots M01 through M08 may be active")
     family_ids = set(FAMILIES)
-    if len(FAMILIES) != 35:
-        raise ValueError(f"expected 35 template families; found {len(FAMILIES)}")
+    if len(FAMILIES) != 50:
+        raise ValueError(f"expected 50 template families; found {len(FAMILIES)}")
     for record in concepts:
         if any(prerequisite not in concept_ids for prerequisite in record["prerequisites"]):
             raise ValueError(f"{record['concept_id']} references an unknown prerequisite")
@@ -143,11 +143,18 @@ def validate_content(config_path: str = "configs/learning/prototype.yaml") -> di
             for family in FAMILIES.values()
             if family.concept_id == concept_id and family.role == "assessment"
         ]
-        if len(teaching) != 4 or len(assessment) != 3:
-            raise ValueError(f"{concept_id} must have four teaching and three assessment families")
+        if len(teaching) != 4 or len(assessment) != 6:
+            raise ValueError(f"{concept_id} must have four teaching and six assessment families")
         if sorted(family.split for family in teaching) != ["test", "train", "train", "validation"]:
             raise ValueError(f"{concept_id} teaching split allocation is invalid")
-        if sorted(family.split for family in assessment) != ["test", "train", "validation"]:
+        if sorted(family.split for family in assessment) != [
+            "test",
+            "test",
+            "train",
+            "train",
+            "validation",
+            "validation",
+        ]:
             raise ValueError(f"{concept_id} assessment split allocation is invalid")
         if any(family.pool == "teaching" for family in assessment):
             raise ValueError("assessment family leaked into teaching pool")
@@ -156,9 +163,9 @@ def validate_content(config_path: str = "configs/learning/prototype.yaml") -> di
                 ("teaching", "train"): 2,
                 ("teaching", "validation"): 1,
                 ("teaching", "test"): 1,
-                ("assessment", "train"): 1,
-                ("assessment", "validation"): 1,
-                ("assessment", "test"): 1,
+                ("assessment", "train"): 2,
+                ("assessment", "validation"): 2,
+                ("assessment", "test"): 2,
             }
         )
         actual_splits = Counter(
@@ -230,6 +237,19 @@ def validate_content(config_path: str = "configs/learning/prototype.yaml") -> di
             raise ValueError(f"scenario {scenario['scenario_id']} crosses content splits")
         if any(FAMILIES[family_id].role not in {"teaching", "assessment"} for family_id in allowed):
             raise ValueError(f"scenario {scenario['scenario_id']} has an invalid teaching pool")
+        for concept_id in ENABLED:
+            assessment_families = {
+                family_id
+                for family_id in allowed
+                if FAMILIES[family_id].concept_id == concept_id
+                and FAMILIES[family_id].role == "assessment"
+                and FAMILIES[family_id].split == scenario["split"]
+            }
+            if len(assessment_families) < 2:
+                raise ValueError(
+                    f"scenario {scenario['scenario_id']} must allow at least two "
+                    f"{scenario['split']} assessment families for {concept_id}"
+                )
         if group == "mixed":
             requests = {event["explicit_request"] for event in scenario["public_history"]}
             if not requests & {"faster", "skip"}:
