@@ -81,6 +81,52 @@ def test_public_misconception_updates_likely_confirmed_and_decays():
     assert misconception not in nearly_cleared
 
 
+def test_public_misconception_normalizes_percent_answers_and_ignores_garbage():
+    family = families_for("C01", role="teaching", split="train")[0]
+    instance = family.sample(2)
+    misconception = "M02"
+    error_answer = family.generate_error(misconception, instance)
+    assert error_answer == Fraction(1, 2)
+
+    fraction_result = update_public_misconceptions(
+        {},
+        family=family,
+        instance=instance,
+        normalized_answer=Fraction(1, 2),
+        correctness="incorrect",
+        move="PRACTICE",
+    )
+    percent_result = update_public_misconceptions(
+        {},
+        family=family,
+        instance=instance,
+        normalized_answer="50%",
+        correctness="incorrect",
+        move="PRACTICE",
+    )
+    decimal_result = update_public_misconceptions(
+        {},
+        family=family,
+        instance=instance,
+        normalized_answer=0.5,
+        correctness="incorrect",
+        move="PRACTICE",
+    )
+    garbage_result = update_public_misconceptions(
+        {misconception: 0.3},
+        family=family,
+        instance=instance,
+        normalized_answer="not a number",
+        correctness="incorrect",
+        move="PRACTICE",
+    )
+
+    assert fraction_result == percent_result == decimal_result == {
+        misconception: 0.6
+    }
+    assert garbage_result == {misconception: 0.3}
+
+
 def _rules_move(**overrides):
     context = {
         "mastery": 0.5,

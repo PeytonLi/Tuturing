@@ -143,7 +143,9 @@ def update_public_misconceptions(
 ) -> dict[str, float]:
     updated = dict(current)
     if correctness == "incorrect" and normalized_answer is not None:
-        answer = Fraction(normalized_answer)
+        answer = family.answer_normalizer(normalized_answer, 1e-9)
+        if answer is None:
+            return updated
         for misconception in sorted(family.error_generators):
             if answer != family.generate_error(misconception, instance):
                 continue

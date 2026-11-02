@@ -134,6 +134,16 @@ def test_checkpoint_flag_reuses_evaluate_loader(monkeypatch, tmp_path):
 
 
 def test_optional_baseline_skips_gracefully_and_rules_is_always_reference(monkeypatch):
+    original_policy_from_name = robustness.policy_from_name
+
+    def policy_from_name_without_optional_baseline(name):
+        if name == "always_worked_example":
+            raise ValueError("unknown policy")
+        return original_policy_from_name(name)
+
+    monkeypatch.setattr(
+        robustness, "policy_from_name", policy_from_name_without_optional_baseline
+    )
     monkeypatch.delattr(robustness.rules, "AlwaysWorkedExampleStrategist", raising=False)
     policies, skipped = robustness.load_policies(["random", "always_worked_example", "random"])
     assert list(policies) == ["rules", "random"]
