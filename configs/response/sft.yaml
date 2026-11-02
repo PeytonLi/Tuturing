@@ -1,5 +1,8 @@
+# Base model changed from the PRD's Qwen2.5-7B-Instruct by lead decision (see D10).
+# LoRA SFT can run on Fireworks Serverless Training (accounts/fireworks/models/qwen3p8-27b) or locally via train_sft.py.
+# Re-check lora_target_modules for this hybrid architecture before training (see D10).
 run_type: response_sft
-base_model: Qwen/Qwen2.5-7B-Instruct
+base_model: Qwen/Qwen3.8-27B
 base_model_revision: REQUIRED_RESOLVED_COMMIT
 tokenizer_revision: REQUIRED_RESOLVED_COMMIT
 method: lora

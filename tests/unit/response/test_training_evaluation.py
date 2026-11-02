@@ -109,6 +109,70 @@ def test_openai_compatible_evaluation_uses_expected_http_request(monkeypatch, tm
     assert "do-not-log-this" not in result_text
 
 
+def test_evaluate_config_model_defaults_and_environment_overrides(
+    monkeypatch, tmp_path
+):
+    from tools.response import evaluate as evaluate_module
+
+    case_path = tmp_path / "case.jsonl"
+    case_path.write_text(
+        json.dumps({"example_id": "case-hint", "plan": plans()["hint"]}) + "\n",
+        encoding="utf-8",
+    )
+    config_path = tmp_path / "eval.yaml"
+    config_path.write_text(
+        f"cases: {json.dumps(str(case_path))}\n"
+        f"out: {json.dumps(str(tmp_path / 'out'))}\n"
+        "small_model:\n"
+        "  responder: openai_compatible\n"
+        "  base_url: https://config.invalid/v1\n"
+        "  model: accounts/fireworks/models/qwen3p8-27b\n"
+        "frontier_model:\n"
+        "  responder: PLACEHOLDER\n"
+        "  base_url: PLACEHOLDER\n"
+        "  model: PLACEHOLDER\n",
+        encoding="utf-8",
+    )
+    captured = []
+
+    class FakeResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+        def read(self):
+            return json.dumps({
+                "choices": [{"message": {"content": "A clue: count carefully. What next?"}}],
+            }).encode()
+
+    def fake_urlopen(request, timeout):
+        captured.append((request, timeout))
+        return FakeResponse()
+
+    monkeypatch.setattr(evaluate_module.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setenv("TUTOR_LLM_API_KEY", "key-from-env")
+    monkeypatch.delenv("TUTOR_LLM_BASE_URL", raising=False)
+    monkeypatch.delenv("TUTOR_LLM_MODEL", raising=False)
+    evaluate_module.main(["--config", str(config_path)])
+    default_request = captured[-1][0]
+    assert default_request.full_url == "https://config.invalid/v1/chat/completions"
+    assert json.loads(default_request.data)["model"] == "accounts/fireworks/models/qwen3p8-27b"
+    assert json.loads((tmp_path / "out" / "report.json").read_text())["model"] == (
+        "accounts/fireworks/models/qwen3p8-27b"
+    )
+    assert default_request.get_header("Authorization") == "Bearer key-from-env"
+
+    monkeypatch.setenv("TUTOR_LLM_BASE_URL", "https://env.invalid/v1/")
+    monkeypatch.setenv("TUTOR_LLM_MODEL", "env-model")
+    evaluate_module.main(["--config", str(config_path)])
+    override_request = captured[-1][0]
+    assert override_request.full_url == "https://env.invalid/v1/chat/completions"
+    assert json.loads(override_request.data)["model"] == "env-model"
+    assert json.loads((tmp_path / "out" / "report.json").read_text())["model"] == "env-model"
+
+
 def test_sft_config_placeholders_missing_keys_and_resolved_config():
     placeholder = load_config("configs/response/sft.yaml")
     errors = check_config(placeholder)
@@ -119,8 +183,11 @@ def test_sft_config_placeholders_missing_keys_and_resolved_config():
     incomplete.pop("epochs_max")
     assert "missing key: epochs_max" in check_config(incomplete)
 
-    resolved = load_config("configs/response/sft_resolved_qwen2.5-7b.yaml")
+    resolved = load_config("configs/response/sft_resolved_qwen3.8-27b.yaml")
     assert check_config(resolved) == []
+    assert resolved["base_model"] == "Qwen/Qwen3.8-27B"
+    assert resolved["fireworks_model"] == "accounts/fireworks/models/qwen3p8-27b"
+    assert resolved["lora_target_modules_scope"] == "decision_pending"
     invalid_nested = dict(resolved)
     invalid_nested["package_pins"] = {
         **resolved["package_pins"],
@@ -131,7 +198,7 @@ def test_sft_config_placeholders_missing_keys_and_resolved_config():
 
 
 def test_sft_kwargs_and_prompt_completion_projection():
-    cfg = load_config("configs/response/sft_resolved_qwen2.5-7b.yaml")
+    cfg = load_config("configs/response/sft_resolved_qwen3.8-27b.yaml")
     kwargs = build_sft_config_kwargs(cfg, "some/output")
     assert kwargs["num_train_epochs"] == cfg["epochs_max"]
     assert kwargs["per_device_train_batch_size"] == cfg["micro_batch_size"]

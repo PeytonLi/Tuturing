@@ -155,16 +155,32 @@ def _find_subsequence(sequence, subsequence):
     return None
 
 
+def _render_chat(tokenizer, messages, *, add_generation_prompt):
+    try:
+        return tokenizer.apply_chat_template(
+            messages,
+            add_generation_prompt=add_generation_prompt,
+            tokenize=False,
+            enable_thinking=False,
+        )
+    except TypeError as error:
+        if "enable_thinking" not in str(error):
+            raise
+        return tokenizer.apply_chat_template(
+            messages, add_generation_prompt=add_generation_prompt, tokenize=False
+        )
+
+
 def build_loss_mask(tokenizer, example):
     prompt_messages = example["prompt"]
     completion_messages = example["completion"]
-    prompt_text = tokenizer.apply_chat_template(
-        prompt_messages, add_generation_prompt=True, tokenize=False
+    prompt_text = _render_chat(
+        tokenizer, prompt_messages, add_generation_prompt=True
     )
-    full_text = tokenizer.apply_chat_template(
+    full_text = _render_chat(
+        tokenizer,
         [*prompt_messages, *completion_messages],
         add_generation_prompt=False,
-        tokenize=False,
     )
     end_token = getattr(tokenizer, "im_end_token", None) or getattr(
         tokenizer, "eos_token", None
@@ -325,6 +341,12 @@ def inspect_masks(cfg, count, cases_path=None):
         raise ValueError(f"requested {count} cases but only found {len(examples)}")
     for example in examples:
         result = build_loss_mask(tokenizer, example)
+        prompt_text = _render_chat(
+            tokenizer, example["prompt"], add_generation_prompt=True
+        )
+        thinking_markers = any(
+            marker in prompt_text for marker in ("<think>", "</think>")
+        )
         converter = getattr(tokenizer, "convert_ids_to_tokens", None)
         tokens = (
             converter(result["input_ids"])
@@ -340,7 +362,8 @@ def inspect_masks(cfg, count, cases_path=None):
             f"summary {example['example_id']}: "
             f"move={example['plan']['teaching_action']['move']} "
             f"prompt_tokens={len(result['loss_mask']) - target_count} "
-            f"target_tokens={target_count} checks=passed"
+            f"target_tokens={target_count} thinking_markers={thinking_markers} "
+            "checks=passed"
         )
     return len(examples)
 

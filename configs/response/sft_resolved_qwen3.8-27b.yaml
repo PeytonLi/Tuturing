@@ -1,12 +1,14 @@
 run_type: response_sft
-base_model: Qwen/Qwen2.5-7B-Instruct
-base_model_revision: a09a35458c702b33eeacc393d103063234e8bc28
-tokenizer_revision: a09a35458c702b33eeacc393d103063234e8bc28
+base_model: Qwen/Qwen3.8-27B
+base_model_revision: 1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0
+tokenizer_revision: 1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0
 method: lora
 lora_rank: 16
 lora_alpha: 32
 lora_dropout: 0.05
+# See D10: the hybrid-architecture target scope is still open before training.
 lora_target_modules: [q_proj, k_proj, v_proj, o_proj]
+lora_target_modules_scope: decision_pending
 precision: bfloat16
 max_sequence_tokens: 4096
 micro_batch_size: 1
@@ -25,6 +27,7 @@ data:
   train: data/sft/mathdial_v1/train.jsonl
   validation: data/sft/mathdial_v1/validation.jsonl
 output_dir: artifacts/response/sft_mathdial_v1
+fireworks_model: accounts/fireworks/models/qwen3p8-27b
 package_pins:
   pyyaml: 6.0.3
   pytest: 9.2.0
