@@ -46,22 +46,24 @@ The contract and fixture freeze comes first. Day-one lists:
 ## Our side: Person A (2026-11-02)
 
 - Xueming: "we will be person A and my teammate is pushing setup" (capture `cap_f7092820-6b99-45d1-9140-729c3649ca5d`). Workspace agents build only Person A's paths; Person B's side is Peyton's.
-- Peyton's agent pushed the setup as two branches based on `ea8c388`. Neither was on `main` when checked at 2026-11-02 20:23 UTC:
+- Peyton's agent pushed the setup as two branches based on `ea8c388`, then merged both into `main` through PR #1 (`2e7c6a3`, 2026-11-02 20:27 UTC) together with later additions: behavior cloning and PPO code, decision scoring, and the task guides `docs/person_a_tasks.md` and `docs/person_b_tasks.md`. The branches contain:
   - `devin/1793649093-scaffold-a-b-workstreams`: Python 3.12 with uv and `uv.lock`, `OWNERS.md`, both contracts with valid and invalid fixtures, action and feature specs, B's content, belief, rules policies, simulator and episode collector, and A's CPU response stub with the independent-reveal rejection.
   - `devin/1793649184-person-a-response-lane`: A's prompt compiler with snapshots for all eight moves, fallbacks, validators, content hashing, evidence extractor, MathDial SFT preparation with a 200-row mapping audit, SFT training and evaluation utilities, and decision records D09 (MathDial move mapping, proposed) and D10 (base model, see open questions).
-- A trial merge of `origin/main` with both branches had no conflicts. On that tree, on CPU with only the base dependencies: `pytest` passed (62 tests), both `validate_contracts` commands passed, `validate_content` passed (15 concepts, 35 families, 30 scenarios) and a 10-episode `simulate` smoke completed.
+- CPU smoke on `main` after the merge, with the workspace record commits rebased on top: `uv sync --extra learning`, `pytest` (69 passed), `ruff check`, both `validate_contracts` commands, `validate_content` (15 concepts, 35 families, 30 scenarios) and a 10-episode `simulate` all passed on 2026-11-02.
+- `docs/person_a_tasks.md`, written by Peyton's agent, is the working checklist for A and assumes D10. `docs/person_b_tasks.md` says B's current plan learns only the Strategist while the Navigator stays rule-based.
 - Still missing for A's day-one list (PRD 21.1) and gates G0/G4: `contracts/public_v1.openapi.yaml`; the public API in `apps/public_api` (durable request keys, response staging, a retry returning the same response ID and hash); `apps/response_service` and `tools.response.serve` (`configs/response/serve_stub.yaml` is a placeholder); 30 original response examples with a source and split manifest (only eight synthetic smoke cases exist); the published stub artifact with loading instructions for B; the CPU ten-session smoke workflow.
-- B's mock observe/commit/status/conflict service is not in the setup yet. A's retry demonstration and the ten-session smoke depend on it.
+- B's mock observe/commit/status/conflict service is not on `main` yet, and `apps/learning_service` is empty. A's retry demonstration and the ten-session smoke depend on it.
 - Contract placement differs from PRD 2.2 and 21.1: `Error` and `PublicState` are defined in B's `learning_v1.schema.json`, not in A's contracts. `response_v1.schema.json` embeds identical generated copies of `TeachingPlan`, `TeachingAction` and `NavigationAction` from the shared generator `tools/dev/generate_contract_assets.py`. Both points belong to the contract freeze (G0).
 
 ## Open questions
 
-- D10 on the response-lane branch switches the SFT base model from the PRD's `Qwen/Qwen2.5-7B-Instruct` to `Qwen/Qwen3.8-27B`, trained and served through Fireworks, and is marked "accepted by lead". PRD 2.3 makes SFT selection a Person A decision, so Xueming should confirm it. It also adds a Fireworks account, API key and spending.
+- D10, now on `main`, switches the SFT base model from the PRD's `Qwen/Qwen2.5-7B-Instruct` to `Qwen/Qwen3.8-27B`, trained and served through Fireworks, and is marked "accepted by lead". PRD 2.3 makes SFT selection a Person A decision, so Xueming should confirm it. It also adds a Fireworks account, API key and spending.
 - Hackathon deadline and demo format are not recorded anywhere in the repository.
 - When will Peyton ship B's mock learning service?
 
 ## Proposed next steps (assistant proposal, not a decision)
 
-1. After the setup lands on `main`, pull it and run A's remaining day-one items as one bounded workspace task: the public OpenAPI contract (settling with Peyton where `Error` and `PublicState` live), the response service and `serve` entrypoint, public API idempotency and staging tested against B's fixture plans through a stand-in until B's mock ships, 30 original examples with a split manifest, and the stub artifact with loading instructions. Completion condition: PRD 21.1 day-one acceptance with green `pytest` and `validate_contracts`.
-2. Then M1 for A: the CPU ten-session demo (G4) and the G2 fallback and disclosure report.
-3. Hold the first integration review (21.3) with Peyton before either side trains anything; settle D10 and the contract placement there or earlier.
+1. Once Xueming authorizes it, run A's remaining day-one items as one bounded workspace task: the public OpenAPI contract (settling with Peyton where `Error` and `PublicState` live), the response service and `serve` entrypoint, public API idempotency and staging tested against B's fixture plans until B's mock ships, 30 original examples with a split manifest, and the stub artifact with loading instructions. Completion condition: PRD 21.1 day-one acceptance with green `pytest` and `validate_contracts`.
+2. In parallel, the data items from `docs/person_a_tasks.md`: read 20 prepared MathDial examples for leaks, label A's half of the 200-turn mapping audit, and measure the evidence extractor on messy messages.
+3. Build the demo path first. If an LLM API key is available, a prompt-only model behind the response service gives natural replies before any SFT; SFT follows the D10 decision.
+4. Hold the first integration review (21.3) with Peyton before either side trains anything; settle D10 and the contract placement there or earlier.
