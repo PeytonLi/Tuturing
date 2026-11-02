@@ -107,7 +107,8 @@ def summarize(records):
             and r["disclosed_fingerprints_in_context"]
         ),
     })
-    fidelity = [r for r in records if r.get("item_fidelity_applicable")]
+    # Only texts that were produced: an unavailable fallback has no reply to judge.
+    fidelity = [r for r in records if r.get("item_fidelity_applicable") and not r["error"]]
     summary["item_fidelity_applicable"] = len(fidelity)
     summary["item_fidelity_pass"] = sum(1 for r in fidelity if r.get("item_fidelity_pass"))
     summary["item_fidelity_fail"] = len(fidelity) - summary["item_fidelity_pass"]
@@ -187,6 +188,7 @@ def _failure_examples(records, model_label, per_check=2, width=320):
             failed = [
                 r for r in records
                 if r.get("item_fidelity_applicable") and not r.get("item_fidelity_pass")
+                and not r["error"]
             ]
         else:
             failed = [r for r in records if name in r["failed_checks"]]
@@ -583,8 +585,9 @@ def build_report(config, ctx):
         "",
         "Item fidelity applies to PRACTICE, CHALLENGE, CHECK_MASTERY and HINT plans with a "
         "problem stem and to PROBE plans with a stem and a problem instance; the denominator "
-        "is that count. A failure means the reply dropped the issued problem or introduced "
-        "another scenario. Validator versions in the records: "
+        "is that count among records that produced a text (an unavailable fallback has none). "
+        "A failure means the reply dropped the issued problem or introduced another scenario. "
+        "Validator versions in the records: "
         + ", ".join(f"{row['label']}: {row['validator_versions']}" for row in by_model) + ".",
         "",
         "| Model / case set | Item fidelity pass |",
