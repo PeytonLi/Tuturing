@@ -41,8 +41,6 @@ OPERATION_SCHEMAS = {
     "postTurn": ("TurnRequest", "TurnResult"),
     "stopSession": ("StopRequest", "StopResult"),
 }
-# Reference used when a learner stops before any response was committed. Proposed to B in D11.
-STOP_BEFORE_FIRST_RESPONSE = "session-start"
 
 Hook = Callable[[str, dict[str, Any]], None]
 
@@ -147,10 +145,9 @@ class PublicApi:
             raise invalid(f"message exceeds {self.limits.max_message_chars} characters")
         if path_session_id is not None:
             self._session_or_forbidden(caller, path_session_id)
-        row_session_id = path_session_id or new_id("ses")
         digest = fingerprint(operation, path_session_id, body)
         record = self.store.begin_request(
-            caller, request_id, operation, row_session_id, digest, trace_id
+            caller, request_id, operation, path_session_id, digest, trace_id
         )
         is_new = record.trace_id == trace_id
         trace_id = record.trace_id
@@ -161,7 +158,7 @@ class PublicApi:
                 terminal=False,
             )
         if record.complete:
-            return Reply(record.status or 200, record.body, trace_id)
+            return self._stored(record)
         lock = self._session_lock(caller, record.session_id or request_id)
         wait = 0.0 if is_new else max(0.0, deadline - self.clock())
         if not lock.acquire(timeout=wait):
@@ -175,7 +172,7 @@ class PublicApi:
         try:
             record = self._record(caller, request_id)
             if record.complete:
-                return Reply(record.status or 200, record.body, trace_id)
+                return self._stored(record)
             try:
                 status, result = work(caller, record, body, deadline)
             except ApiError as error:
@@ -200,28 +197,33 @@ class PublicApi:
     def _create_work(
         self, caller: str, record: RequestRecord, body: dict, deadline: float
     ) -> tuple[int, Any]:
-        session_id = record.session_id or new_id("ses")
-        existing = self.store.get_session(caller, session_id)
-        if existing is None:
+        session_id = record.session_id
+        session = self.store.get_session(caller, session_id) if session_id else None
+        if session is None:
+            # B allocates the session ID; the same request_id (idempotency key) returns the
+            # same session on a retry, so a crash between B's answer and our record is safe.
             spec = {
                 "schema_version": "1.0",
-                "session_id": session_id,
                 "request_id": record.request_id,
-                "learner_pseudonym": hashlib.sha256(f"{caller}|{session_id}".encode()).hexdigest()[
-                    :24
-                ],
                 "goal_concept_id": body["goal_concept_id"],
                 "pace_preference": body["pace_preference"],
             }
             created = self.learning.create_session(spec, trace_id=record.trace_id)
             public_state = created.get("public_state") if isinstance(created, dict) else None
             problems = self.contract.learning_issues("PublicState", public_state)
-            if problems or public_state["session_id"] != session_id:
+            if (
+                problems
+                or not isinstance(created.get("session_id"), str)
+                or public_state["session_id"] != created["session_id"]
+                or self.contract.public_issues("Id", created["session_id"])
+            ):
                 raise ServiceUnavailable("learning service returned an invalid initial state")
+            session_id = created["session_id"]
             self.store.create_session(caller, session_id, public_state)
-            existing = self.store.get_session(caller, session_id)
-        assert existing is not None
-        return 201, {"session_id": session_id, "public_state": existing.public_state}
+            self.store.set_request_session(caller, record.request_id, session_id)
+            session = self.store.get_session(caller, session_id)
+        assert session is not None
+        return 201, {"session_id": session.session_id, "public_state": session.public_state}
 
     # Learner turn (PRD 8.2) -------------------------------------------------------------------
 
@@ -239,25 +241,13 @@ class PublicApi:
             self._check_expectations(session, body["expected_state_version"], body)
             evidence = None
             if body["source_response_id"] is not None:
-                evidence = extract(
-                    body["message"],
-                    session.last_plan,
-                    body["source_response_id"],
-                    session_id=session_id,
-                    trace_id=record.trace_id,
-                    raw_message_ref=f"msg-{record.request_id}",
-                )
-                problems = self.contract.learning_issues("Evidence", evidence)
-                if problems:
-                    raise ServiceUnavailable(
-                        "extractor produced invalid evidence: " + "; ".join(problems)
-                    )
+                evidence = self._evidence(body["message"], session, record)
             result = self.learning.observe_and_plan(
                 self._observe_request(session, record, evidence), trace_id=record.trace_id
             )
-            kind = self._check_plan_or_end(result, session, body["expected_state_version"])
-            self.store.stage_plan(caller, record.request_id, result, kind)
-            self.hook("after_observe", {"record": record, "result": result})
+            kind, payload = self._check_plan_or_end(result, session, body["expected_state_version"])
+            self.store.stage_plan(caller, record.request_id, payload, kind)
+            self.hook("after_observe", {"record": record, "result": payload})
             record = self._record(caller, record.request_id)
         if record.plan_kind == "session_end":
             return self._finish_session_end(caller, record, body.get("message"))
@@ -271,9 +261,9 @@ class PublicApi:
         staged = record.staged_response
         assert staged is not None
         if record.committed is None:
-            committed = (
-                self._recover_commit(record, plan, staged) if record.commit_attempted else None
-            )
+            committed = None
+            if record.commit_attempted:
+                committed = self._recover_commit(caller, record, plan, staged)
             if committed is None:
                 committed = self._commit(caller, record, plan, staged)
             self.store.stage_commit(caller, record.request_id, committed)
@@ -281,13 +271,27 @@ class PublicApi:
             record = self._record(caller, record.request_id)
         return self._finish_turn(caller, record, body.get("message"))
 
+    def _evidence(self, message: str, session: SessionRecord, record: RequestRecord) -> dict:
+        evidence = extract(
+            message,
+            session.last_plan,
+            session.last_response_id,
+            session_id=session.session_id,
+            trace_id=record.trace_id,
+            raw_message_ref=f"msg-{record.request_id}",
+        )
+        problems = self.contract.learning_issues("Evidence", evidence)
+        if problems:
+            raise ServiceUnavailable("extractor produced invalid evidence: " + "; ".join(problems))
+        return evidence
+
     def _observe_request(
         self, session: SessionRecord, record: RequestRecord, evidence: dict | None
     ) -> dict:
         return {
             "schema_version": "1.0",
-            "session_id": session.session_id,
             "request_id": record.request_id,
+            "session_id": session.session_id,
             "expected_state_version": session.state_version,
             "evidence": evidence,
         }
@@ -304,21 +308,29 @@ class PublicApi:
                 session.state_version,
             )
 
-    def _check_plan_or_end(self, result: Any, session: SessionRecord, expected: int) -> str:
-        if isinstance(result, dict) and "plan_id" in result:
-            problems = self.contract.learning_issues("TeachingPlan", result)
-            problems += validate_plan_rules(result) if not problems else []
+    def _check_plan_or_end(
+        self, result: Any, session: SessionRecord, expected: int
+    ) -> tuple[str, dict]:
+        """Unwrap B's `{"kind": "plan" | "session_end", ...}` observe result and validate it."""
+        kind = result.get("kind") if isinstance(result, dict) else None
+        if kind == "plan":
+            plan = result.get("teaching_plan")
+            problems = self.contract.learning_issues("TeachingPlan", plan)
+            problems += validate_plan_rules(plan) if not problems else []
             if (
                 problems
-                or result["session_id"] != session.session_id
-                or result["based_on_state_version"] != expected
+                or plan["session_id"] != session.session_id
+                or plan["based_on_state_version"] != expected
             ):
                 raise ServiceUnavailable("learning service returned an invalid TeachingPlan")
-            return "plan"
-        problems = self.contract.learning_issues("SessionEnd", result)
-        if problems or result["session_id"] != session.session_id:
-            raise ServiceUnavailable("learning service returned neither a plan nor a SessionEnd")
-        return "session_end"
+            return "plan", plan
+        if kind == "session_end":
+            session_end = result.get("session_end")
+            problems = self.contract.learning_issues("SessionEnd", session_end)
+            if problems or session_end["session_id"] != session.session_id:
+                raise ServiceUnavailable("learning service returned an invalid SessionEnd")
+            return "session_end", session_end
+        raise ServiceUnavailable("learning service returned neither a plan nor a SessionEnd")
 
     def _generate(self, plan: dict, record: RequestRecord, deadline: float) -> dict:
         request = {
@@ -353,19 +365,44 @@ class PublicApi:
                 )
         raise generation_unavailable() from failure
 
-    def _recover_commit(self, record: RequestRecord, plan: dict, staged: dict) -> dict | None:
+    def _recover_commit(
+        self, caller: str, record: RequestRecord, plan: dict, staged: dict
+    ) -> dict | None:
         """After a crash between B's commit and our record of it, ask B what happened."""
         status = self.learning.plan_status(plan["plan_id"], trace_id=record.trace_id)
         state = status.get("status") if isinstance(status, dict) else None
         if state == "committed":
-            if status.get("content_hash") != staged["content_hash"]:
+            if status.get("content_hash") != staged["content_hash"] or (
+                status.get("response_id") not in (None, staged["response_id"])
+            ):
                 raise learning_unavailable(retryable=False)
+            public_state = status.get("public_state")
+            if public_state is None:
+                # B's plan status carries no state (docs/learning_service.md), so the public
+                # state after the commit is derived from the plan and our last committed state:
+                # commit-plan is the only operation that advances the version and turn count.
+                assert record.session_id is not None
+                session = self._session_or_forbidden(caller, record.session_id)
+                public_state = {
+                    "session_id": session.session_id,
+                    "state_version": plan["based_on_state_version"] + 1,
+                    "current_concept_id": plan["concept_id"],
+                    "goal_concept_id": plan["goal_concept_id"],
+                    "teaching_turns": session.public_state["teaching_turns"] + 1,
+                    "status": "active",
+                    "end_reason": None,
+                }
+                log.warning(
+                    "derived public state after recovery trace_id=%s plan_id=%s",
+                    record.trace_id,
+                    plan["plan_id"],
+                )
             committed = {
                 "schema_version": "1.0",
                 "plan_id": plan["plan_id"],
                 "status": "committed",
-                "state_version": status.get("state_version"),
-                "public_state": status.get("public_state"),
+                "state_version": public_state["state_version"],
+                "public_state": public_state,
             }
             if self.contract.learning_issues("CommitPlanResponse", committed):
                 raise learning_unavailable(retryable=False)
@@ -373,7 +410,7 @@ class PublicApi:
         if state == "pending":
             return None
         if state in {"canceled", "expired"}:
-            raise plan_expired(status.get("state_version"))
+            raise plan_expired(self._known_version(caller, record.session_id))
         raise ServiceUnavailable("learning service returned an unknown plan status")
 
     def _commit(self, caller: str, record: RequestRecord, plan: dict, staged: dict) -> dict:
@@ -388,7 +425,9 @@ class PublicApi:
             "effective_move": staged["effective_move"],
             "delivery_mode": staged["delivery_mode"],
         }
-        committed = self.learning.commit_plan(request, trace_id=record.trace_id)
+        committed = self.learning.commit_plan(
+            request, trace_id=record.trace_id, idempotency_key=record.request_id
+        )
         self.hook("after_commit", {"record": record, "committed": committed})
         problems = self.contract.learning_issues("CommitPlanResponse", committed)
         if problems or committed["plan_id"] != plan["plan_id"]:
@@ -406,14 +445,7 @@ class PublicApi:
             "text": staged["text"],
             "delivery_mode": staged["delivery_mode"],
         }
-        entries: list[tuple[str, dict]] = []
-        if message:
-            entries.append(
-                (
-                    record.request_id,
-                    {"role": "learner", "request_id": record.request_id, "text": message},
-                )
-            )
+        entries = self._learner_entry(record, message)
         entries.append(
             (
                 record.request_id,
@@ -441,19 +473,21 @@ class PublicApi:
     ) -> tuple[int, Any]:
         session_end = record.plan
         assert session_end is not None and record.session_id is not None
-        entries: list[tuple[str, dict]] = []
-        if message:
-            entries.append(
-                (
-                    record.request_id,
-                    {"role": "learner", "request_id": record.request_id, "text": message},
-                )
-            )
         self.store.update_session(
-            caller, record.session_id, session_end["public_state"], entries=entries
+            caller,
+            record.session_id,
+            session_end["public_state"],
+            entries=self._learner_entry(record, message),
         )
         self.hook("before_reply", {"record": record})
         return 200, {"request_id": record.request_id, "session_end": session_end}
+
+    @staticmethod
+    def _learner_entry(record: RequestRecord, message: str | None) -> list[tuple[str, dict]]:
+        if not message:
+            return []
+        entry = {"role": "learner", "request_id": record.request_id, "text": message}
+        return [(record.request_id, entry)]
 
     def _supersede_pending(self, caller: str, session_id: str, current: RequestRecord) -> None:
         """Resolve older uncommitted turns of the session before reserving a new plan.
@@ -468,7 +502,9 @@ class PublicApi:
             committed = older.committed
             if committed is None and older.commit_attempted and older.staged_response is not None:
                 try:
-                    committed = self._recover_commit(older, older.plan, older.staged_response)
+                    committed = self._recover_commit(
+                        caller, older, older.plan, older.staged_response
+                    )
                 except ApiError as error:
                     if error.code != "PLAN_EXPIRED":
                         raise
@@ -481,9 +517,9 @@ class PublicApi:
             self.learning.cancel_plan(
                 {
                     "schema_version": "1.0",
+                    "request_id": f"cancel-{older.request_id}",
                     "session_id": session_id,
                     "plan_id": older.plan["plan_id"],
-                    "request_id": older.request_id,
                 },
                 trace_id=older.trace_id,
             )
@@ -506,21 +542,23 @@ class PublicApi:
             self._supersede_pending(caller, session_id, record)
             session = self._session_or_forbidden(caller, session_id)
             self._check_expectations(session, body["expected_state_version"], body)
-            evidence = extract(
-                "stop",
-                session.last_plan,
-                session.last_response_id or STOP_BEFORE_FIRST_RESPONSE,
-                session_id=session_id,
-                trace_id=record.trace_id,
-                raw_message_ref=f"msg-{record.request_id}",
-            )
+            if session.last_response_id is None:
+                # B accepts evidence, and therefore a stop request, only after a committed
+                # response (docs/learning_service.md); recorded as an open point in D11.
+                raise state_conflict(
+                    "The session has no committed response yet; send the first turn before"
+                    " stopping, or abandon the session.",
+                    session.state_version,
+                )
+            evidence = self._evidence("stop", session, record)
+            assert evidence["explicit_request"] == "stop"
             result = self.learning.observe_and_plan(
                 self._observe_request(session, record, evidence), trace_id=record.trace_id
             )
-            kind = self._check_plan_or_end(result, session, body["expected_state_version"])
+            kind, payload = self._check_plan_or_end(result, session, body["expected_state_version"])
             if kind != "session_end":
                 raise ServiceUnavailable("learning service did not end the session on a stop")
-            self.store.stage_plan(caller, record.request_id, result, kind)
+            self.store.stage_plan(caller, record.request_id, payload, kind)
             record = self._record(caller, record.request_id)
         return self._finish_session_end(caller, record, None)
 
@@ -541,6 +579,20 @@ class PublicApi:
             return None
         session = self.store.get_session(caller, session_id)
         return None if session is None else session.state_version
+
+    @staticmethod
+    def _stored(record: RequestRecord) -> Reply:
+        """Replay a completed request exactly; a stored error raises like the first attempt."""
+        status = record.status or 200
+        if status >= 400 and isinstance(record.body, dict):
+            raise ApiError(
+                record.body["code"],
+                record.body["message"],
+                retryable=bool(record.body["retryable"]),
+                current_state_version=record.body.get("current_state_version"),
+                terminal=not record.body["retryable"],
+            )
+        return Reply(status, record.body, record.trace_id)
 
     def _record(self, caller: str, request_id: str) -> RequestRecord:
         record = self.store.get_request(caller, request_id)

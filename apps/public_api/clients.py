@@ -1,12 +1,14 @@
 """Clients of the internal services (PRD 9.5).
 
-LearningClient talks to Person B's internal endpoints; ResponseClient talks to Person A's
-`POST /internal/v1/generate`, with an in-process option that calls `packages.response.stub` so the
-whole public API runs without any server. Both HTTP clients use only the standard library.
+LearningClient talks to Person B's learning service (`apps/learning_service`, documented in
+docs/learning_service.md); ResponseClient talks to Person A's `POST /internal/v1/generate`, with
+an in-process option that calls `packages.response.stub` so the whole public API runs without any
+server. Both HTTP clients use only the standard library.
 
-Wire shapes of B's endpoints that the PRD describes in prose only (session creation,
-observe-and-plan, plan status and cancel) are documented in docs/runbooks/public_api.md and
-proposed to B in docs/decisions/D11_public_contract_placement.md.
+B's transport rules, mirrored here: every call carries `Authorization: Bearer <token>` and
+`X-Trace-Id`; every POST carries `Content-Type: application/json`, `Content-Length` and an
+`Idempotency-Key` equal to the body's `request_id` (commit-plan has no `request_id`, so its key
+is the public request's ID); success is HTTP 200; errors are PRD Error records.
 """
 
 from __future__ import annotations
@@ -40,7 +42,7 @@ class LearningClient(Protocol):
 
     def observe_and_plan(self, request: dict, *, trace_id: str) -> dict: ...
 
-    def commit_plan(self, request: dict, *, trace_id: str) -> dict: ...
+    def commit_plan(self, request: dict, *, trace_id: str, idempotency_key: str) -> dict: ...
 
     def plan_status(self, plan_id: str, *, trace_id: str) -> dict: ...
 
@@ -51,11 +53,16 @@ class ResponseClient(Protocol):
     def generate(self, request: dict) -> dict: ...
 
 
-def _service_headers(token_env: str, trace_id: str) -> dict[str, str]:
-    headers = {"Content-Type": "application/json", "X-Trace-Id": trace_id}
+def _service_headers(
+    token_env: str, trace_id: str, idempotency_key: str | None = None
+) -> dict[str, str]:
+    headers = {"X-Trace-Id": trace_id, "Accept": "application/json"}
     token = os.environ.get(token_env)
     if token:
         headers["Authorization"] = f"Bearer {token}"
+    if idempotency_key is not None:
+        headers["Content-Type"] = "application/json"
+        headers["Idempotency-Key"] = idempotency_key
     return headers
 
 
@@ -140,43 +147,46 @@ def _public_message(code: str) -> str:
 
 
 class HttpLearningClient:
-    """Client of B's `/internal/v1` endpoints (PRD 9.5). Service auth comes from an env var."""
+    """Client of B's `/internal/v1` endpoints. Service auth comes from an env var."""
 
     def __init__(self, base_url: str, *, service_token_env: str, timeout_s: float = 3.0) -> None:
         self.base_url = base_url.rstrip("/")
         self.service_token_env = service_token_env
         self.timeout_s = timeout_s
 
-    def _call(self, method: str, path: str, body: dict | None, trace_id: str) -> dict:
-        try:
-            status, payload = http_json(
-                method,
-                f"{self.base_url}{path}",
-                body,
-                _service_headers(self.service_token_env, trace_id),
-                self.timeout_s,
-            )
-        except ServiceUnavailable:
-            raise
+    def _call(
+        self, method: str, path: str, body: dict | None, trace_id: str, key: str | None = None
+    ) -> dict:
+        status, payload = http_json(
+            method,
+            f"{self.base_url}{path}",
+            body,
+            _service_headers(self.service_token_env, trace_id, key),
+            self.timeout_s,
+        )
         raise_for_error(status, payload, "learning service")
         if not isinstance(payload, dict):
             raise ServiceUnavailable("learning service returned a non-object body")
         return payload
 
     def create_session(self, spec: dict, *, trace_id: str) -> dict:
-        return self._call("POST", "/internal/v1/sessions", spec, trace_id)
+        return self._call("POST", "/internal/v1/sessions", spec, trace_id, spec["request_id"])
 
     def observe_and_plan(self, request: dict, *, trace_id: str) -> dict:
-        return self._call("POST", "/internal/v1/observe-and-plan", request, trace_id)
+        return self._call(
+            "POST", "/internal/v1/observe-and-plan", request, trace_id, request["request_id"]
+        )
 
-    def commit_plan(self, request: dict, *, trace_id: str) -> dict:
-        return self._call("POST", "/internal/v1/commit-plan", request, trace_id)
+    def commit_plan(self, request: dict, *, trace_id: str, idempotency_key: str) -> dict:
+        return self._call("POST", "/internal/v1/commit-plan", request, trace_id, idempotency_key)
 
     def plan_status(self, plan_id: str, *, trace_id: str) -> dict:
         return self._call("GET", f"/internal/v1/plans/{plan_id}", None, trace_id)
 
     def cancel_plan(self, request: dict, *, trace_id: str) -> dict:
-        return self._call("POST", "/internal/v1/cancel-plan", request, trace_id)
+        return self._call(
+            "POST", "/internal/v1/cancel-plan", request, trace_id, request["request_id"]
+        )
 
 
 def check_generate_response(request: dict, response: Any) -> dict:
@@ -221,12 +231,11 @@ class HttpResponseClient:
                 "POST",
                 f"{self.base_url}/internal/v1/generate",
                 request,
-                _service_headers(self.service_token_env, request["trace_id"]),
+                _service_headers(
+                    self.service_token_env, request["trace_id"], request["request_id"]
+                ),
                 self.timeout_s,
             )
-        except ServiceUnavailable as error:
-            raise GenerationFailure(str(error)) from error
-        try:
             raise_for_error(status, payload, "response service")
         except ServiceUnavailable as error:
             raise GenerationFailure(str(error)) from error

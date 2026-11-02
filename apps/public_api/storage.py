@@ -190,6 +190,10 @@ class RequestStore:
             )
             return self.get_request(caller, request_id)  # type: ignore[return-value]
 
+    def set_request_session(self, caller: str, request_id: str, session_id: str) -> None:
+        """Record the session B allocated for a createSession request."""
+        self._update(caller, request_id, session_id=session_id)
+
     def get_request(self, caller: str, request_id: str) -> RequestRecord | None:
         with self._lock:
             row = self._connection.execute(
