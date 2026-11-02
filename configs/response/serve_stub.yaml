@@ -1,0 +1,11 @@
+responder: fallback
+prompt_version: prompt_v1
+validator_version: validator_v1
+fallback_version: fallback_v1
+max_output_tokens: 384
+decoding:
+  strategy: greedy
+  temperature: 0
+internal_deadline_ms: 8000
+retry_once: true
+status: placeholder

@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "plan_id": "plan_fx_practice_0001",
+  "session_id": "sess_fx_practice_0001",
+  "trace_id": "trace_fx_practice_0001",
+  "based_on_state_version": 4,
+  "option_id": "option_fx_practice_0001",
+  "navigation_action": {"action_id": 1, "operation": "STAY", "target_concept_id": "C02"},
+  "teaching_action": {"action_id": 40, "move": "PRACTICE", "difficulty": "medium", "pace": "normal"},
+  "actor_eligible": true,
+  "concept_id": "C02",
+  "goal_concept_id": "C02",
+  "problem_instance_id": "problem_fx_practice_0001",
+  "template_family_id": "family_fx_practice_0001",
+  "assessment_mode": "practice",
+  "assistance": "none",
+  "content_bundle_id": "bundle_fx_practice_0001",
+  "content": {
+    "concept_name": "Probability bounds and equally likely outcomes",
+    "goal_name": "Find probabilities from equally likely outcomes",
+    "problem_stem": "A bag contains 3 red and 7 blue counters. One counter is drawn at random. What is the probability of drawing red?",
+    "approved_facts": ["A probability is a ratio of favorable outcomes to all equally likely outcomes."],
+    "permitted_hint": null,
+    "worked_example": null,
+    "reveal_solution": null,
+    "previous_step": null
+  },
+  "constraints": {
+    "reveal_allowed": false,
+    "max_words": 150,
+    "max_questions": 1,
+    "must_request_student_attempt": true,
+    "forbidden_answer_fingerprints": ["3/10", "0.3", "30%"]
+  },
+  "response_context": {
+    "last_student_message": "I am ready to try one.",
+    "recent_dialogue": [{"role": "student", "text": "I am ready to try one."}],
+    "qualified_misconception_summary": null
+  },
+  "versions": {
+    "graph": "graph_proto_v1",
+    "content": "content_proto_v1",
+    "state_estimator": "state_proto_v1",
+    "navigator": "navigator_proto_v1",
+    "strategist": "strategist_proto_v1",
+    "mask": "mask_proto_v1",
+    "feature": "feature_proto_v1"
+  },
+  "expires_at": "2099-01-01T00:00:00Z"
+}
