@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "request_id": "request-hint",
+  "plan_id": "plan-hint",
+  "response_id": "response-15cd2161051d1793d86e9591",
+  "text": "Here's a hint: List the two outcomes. Try the problem again.",
+  "effective_move": {
+    "action_id": 13,
+    "move": "HINT",
+    "difficulty": "medium",
+    "pace": "normal"
+  },
+  "delivery_mode": "fallback",
+  "content_hash": "ddb0d18e44386284e6cc93b3b058347047e7c4b9de51f56392c277bac27ba872",
+  "checks": {
+    "schema_valid": true,
+    "action_faithful": true,
+    "math_supported": true,
+    "disclosure_allowed": true,
+    "length_valid": true,
+    "question_count_valid": true
+  },
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 11,
+    "elapsed_ms": 0
+  },
+  "versions": {
+    "response_artifact": "stub_v1",
+    "prompt": "stub_prompt_v1",
+    "validator": "stub_validator_v1"
+  }
+}

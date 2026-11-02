@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "request_id": "request-check_mastery",
+  "plan_id": "plan-check_mastery",
+  "response_id": "response-d069eb0fc4af1750fe95d9b0",
+  "text": "Work this one independently: A fair coin is flipped once. What is the probability of heads.",
+  "effective_move": {
+    "action_id": 58,
+    "move": "CHECK_MASTERY",
+    "difficulty": "medium",
+    "pace": "normal"
+  },
+  "delivery_mode": "fallback",
+  "content_hash": "45017eb080a199c8d030c40206b2b094a63cd29e7f298dfd17ef9d4053d519d2",
+  "checks": {
+    "schema_valid": true,
+    "action_faithful": true,
+    "math_supported": true,
+    "disclosure_allowed": true,
+    "length_valid": true,
+    "question_count_valid": true
+  },
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 16,
+    "elapsed_ms": 0
+  },
+  "versions": {
+    "response_artifact": "stub_v1",
+    "prompt": "stub_prompt_v1",
+    "validator": "stub_validator_v1"
+  }
+}

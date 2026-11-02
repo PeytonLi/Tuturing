@@ -1,0 +1,565 @@
+{
+  "schema_version": "features_v1",
+  "features": [
+    {
+      "index": 0,
+      "name": "mastery_00"
+    },
+    {
+      "index": 1,
+      "name": "mastery_01"
+    },
+    {
+      "index": 2,
+      "name": "mastery_02"
+    },
+    {
+      "index": 3,
+      "name": "mastery_03"
+    },
+    {
+      "index": 4,
+      "name": "mastery_04"
+    },
+    {
+      "index": 5,
+      "name": "mastery_05"
+    },
+    {
+      "index": 6,
+      "name": "mastery_06"
+    },
+    {
+      "index": 7,
+      "name": "mastery_07"
+    },
+    {
+      "index": 8,
+      "name": "mastery_08"
+    },
+    {
+      "index": 9,
+      "name": "mastery_09"
+    },
+    {
+      "index": 10,
+      "name": "mastery_10"
+    },
+    {
+      "index": 11,
+      "name": "mastery_11"
+    },
+    {
+      "index": 12,
+      "name": "mastery_12"
+    },
+    {
+      "index": 13,
+      "name": "mastery_13"
+    },
+    {
+      "index": 14,
+      "name": "mastery_14"
+    },
+    {
+      "index": 15,
+      "name": "uncertainty_00"
+    },
+    {
+      "index": 16,
+      "name": "uncertainty_01"
+    },
+    {
+      "index": 17,
+      "name": "uncertainty_02"
+    },
+    {
+      "index": 18,
+      "name": "uncertainty_03"
+    },
+    {
+      "index": 19,
+      "name": "uncertainty_04"
+    },
+    {
+      "index": 20,
+      "name": "uncertainty_05"
+    },
+    {
+      "index": 21,
+      "name": "uncertainty_06"
+    },
+    {
+      "index": 22,
+      "name": "uncertainty_07"
+    },
+    {
+      "index": 23,
+      "name": "uncertainty_08"
+    },
+    {
+      "index": 24,
+      "name": "uncertainty_09"
+    },
+    {
+      "index": 25,
+      "name": "uncertainty_10"
+    },
+    {
+      "index": 26,
+      "name": "uncertainty_11"
+    },
+    {
+      "index": 27,
+      "name": "uncertainty_12"
+    },
+    {
+      "index": 28,
+      "name": "uncertainty_13"
+    },
+    {
+      "index": 29,
+      "name": "uncertainty_14"
+    },
+    {
+      "index": 30,
+      "name": "evidence_count_00"
+    },
+    {
+      "index": 31,
+      "name": "evidence_count_01"
+    },
+    {
+      "index": 32,
+      "name": "evidence_count_02"
+    },
+    {
+      "index": 33,
+      "name": "evidence_count_03"
+    },
+    {
+      "index": 34,
+      "name": "evidence_count_04"
+    },
+    {
+      "index": 35,
+      "name": "evidence_count_05"
+    },
+    {
+      "index": 36,
+      "name": "evidence_count_06"
+    },
+    {
+      "index": 37,
+      "name": "evidence_count_07"
+    },
+    {
+      "index": 38,
+      "name": "evidence_count_08"
+    },
+    {
+      "index": 39,
+      "name": "evidence_count_09"
+    },
+    {
+      "index": 40,
+      "name": "evidence_count_10"
+    },
+    {
+      "index": 41,
+      "name": "evidence_count_11"
+    },
+    {
+      "index": 42,
+      "name": "evidence_count_12"
+    },
+    {
+      "index": 43,
+      "name": "evidence_count_13"
+    },
+    {
+      "index": 44,
+      "name": "evidence_count_14"
+    },
+    {
+      "index": 45,
+      "name": "misconception_probability_M01"
+    },
+    {
+      "index": 46,
+      "name": "misconception_probability_M02"
+    },
+    {
+      "index": 47,
+      "name": "misconception_probability_M03"
+    },
+    {
+      "index": 48,
+      "name": "misconception_probability_M04"
+    },
+    {
+      "index": 49,
+      "name": "misconception_probability_M05"
+    },
+    {
+      "index": 50,
+      "name": "misconception_probability_M06"
+    },
+    {
+      "index": 51,
+      "name": "misconception_probability_M07"
+    },
+    {
+      "index": 52,
+      "name": "misconception_probability_M08"
+    },
+    {
+      "index": 53,
+      "name": "misconception_probability_M09"
+    },
+    {
+      "index": 54,
+      "name": "misconception_probability_M10"
+    },
+    {
+      "index": 55,
+      "name": "misconception_probability_M11"
+    },
+    {
+      "index": 56,
+      "name": "misconception_probability_M12"
+    },
+    {
+      "index": 57,
+      "name": "misconception_probability_M13"
+    },
+    {
+      "index": 58,
+      "name": "misconception_probability_M14"
+    },
+    {
+      "index": 59,
+      "name": "misconception_probability_M15"
+    },
+    {
+      "index": 60,
+      "name": "misconception_probability_M16"
+    },
+    {
+      "index": 61,
+      "name": "misconception_probability_M17"
+    },
+    {
+      "index": 62,
+      "name": "misconception_probability_M18"
+    },
+    {
+      "index": 63,
+      "name": "misconception_probability_M19"
+    },
+    {
+      "index": 64,
+      "name": "misconception_probability_M20"
+    },
+    {
+      "index": 65,
+      "name": "misconception_probability_M21"
+    },
+    {
+      "index": 66,
+      "name": "misconception_probability_M22"
+    },
+    {
+      "index": 67,
+      "name": "misconception_probability_M23"
+    },
+    {
+      "index": 68,
+      "name": "misconception_probability_M24"
+    },
+    {
+      "index": 69,
+      "name": "misconception_probability_M25"
+    },
+    {
+      "index": 70,
+      "name": "current_concept_C01"
+    },
+    {
+      "index": 71,
+      "name": "current_concept_C02"
+    },
+    {
+      "index": 72,
+      "name": "current_concept_C03"
+    },
+    {
+      "index": 73,
+      "name": "current_concept_C04"
+    },
+    {
+      "index": 74,
+      "name": "current_concept_C05"
+    },
+    {
+      "index": 75,
+      "name": "current_concept_C06"
+    },
+    {
+      "index": 76,
+      "name": "current_concept_C07"
+    },
+    {
+      "index": 77,
+      "name": "current_concept_C08"
+    },
+    {
+      "index": 78,
+      "name": "current_concept_C09"
+    },
+    {
+      "index": 79,
+      "name": "current_concept_C10"
+    },
+    {
+      "index": 80,
+      "name": "current_concept_C11"
+    },
+    {
+      "index": 81,
+      "name": "current_concept_C12"
+    },
+    {
+      "index": 82,
+      "name": "current_concept_C13"
+    },
+    {
+      "index": 83,
+      "name": "current_concept_C14"
+    },
+    {
+      "index": 84,
+      "name": "current_concept_C15"
+    },
+    {
+      "index": 85,
+      "name": "goal_concept_C01"
+    },
+    {
+      "index": 86,
+      "name": "goal_concept_C02"
+    },
+    {
+      "index": 87,
+      "name": "goal_concept_C03"
+    },
+    {
+      "index": 88,
+      "name": "goal_concept_C04"
+    },
+    {
+      "index": 89,
+      "name": "goal_concept_C05"
+    },
+    {
+      "index": 90,
+      "name": "goal_concept_C06"
+    },
+    {
+      "index": 91,
+      "name": "goal_concept_C07"
+    },
+    {
+      "index": 92,
+      "name": "goal_concept_C08"
+    },
+    {
+      "index": 93,
+      "name": "goal_concept_C09"
+    },
+    {
+      "index": 94,
+      "name": "goal_concept_C10"
+    },
+    {
+      "index": 95,
+      "name": "goal_concept_C11"
+    },
+    {
+      "index": 96,
+      "name": "goal_concept_C12"
+    },
+    {
+      "index": 97,
+      "name": "goal_concept_C13"
+    },
+    {
+      "index": 98,
+      "name": "goal_concept_C14"
+    },
+    {
+      "index": 99,
+      "name": "goal_concept_C15"
+    },
+    {
+      "index": 100,
+      "name": "active_target_C01"
+    },
+    {
+      "index": 101,
+      "name": "active_target_C02"
+    },
+    {
+      "index": 102,
+      "name": "active_target_C03"
+    },
+    {
+      "index": 103,
+      "name": "active_target_C04"
+    },
+    {
+      "index": 104,
+      "name": "active_target_C05"
+    },
+    {
+      "index": 105,
+      "name": "active_target_C06"
+    },
+    {
+      "index": 106,
+      "name": "active_target_C07"
+    },
+    {
+      "index": 107,
+      "name": "active_target_C08"
+    },
+    {
+      "index": 108,
+      "name": "active_target_C09"
+    },
+    {
+      "index": 109,
+      "name": "active_target_C10"
+    },
+    {
+      "index": 110,
+      "name": "active_target_C11"
+    },
+    {
+      "index": 111,
+      "name": "active_target_C12"
+    },
+    {
+      "index": 112,
+      "name": "active_target_C13"
+    },
+    {
+      "index": 113,
+      "name": "active_target_C14"
+    },
+    {
+      "index": 114,
+      "name": "active_target_C15"
+    },
+    {
+      "index": 115,
+      "name": "active_option_STAY"
+    },
+    {
+      "index": 116,
+      "name": "active_option_ADVANCE_ONE"
+    },
+    {
+      "index": 117,
+      "name": "active_option_SKIP_TO_TARGET"
+    },
+    {
+      "index": 118,
+      "name": "active_option_REVIEW_PREREQUISITE"
+    },
+    {
+      "index": 119,
+      "name": "active_option_RETURN_TO_GOAL"
+    },
+    {
+      "index": 120,
+      "name": "active_option_END_SESSION"
+    },
+    {
+      "index": 121,
+      "name": "previous_move_PROBE"
+    },
+    {
+      "index": 122,
+      "name": "previous_move_HINT"
+    },
+    {
+      "index": 123,
+      "name": "previous_move_EXPLAIN_CONCEPT"
+    },
+    {
+      "index": 124,
+      "name": "previous_move_WORKED_EXAMPLE"
+    },
+    {
+      "index": 125,
+      "name": "previous_move_PRACTICE"
+    },
+    {
+      "index": 126,
+      "name": "previous_move_CHALLENGE"
+    },
+    {
+      "index": 127,
+      "name": "previous_move_CHECK_MASTERY"
+    },
+    {
+      "index": 128,
+      "name": "previous_move_REFLECT"
+    },
+    {
+      "index": 129,
+      "name": "previous_move_NONE"
+    },
+    {
+      "index": 130,
+      "name": "turn_over_16"
+    },
+    {
+      "index": 131,
+      "name": "turns_in_option_over_4"
+    },
+    {
+      "index": 132,
+      "name": "hint_count_over_4"
+    },
+    {
+      "index": 133,
+      "name": "independent_success_streak_over_3"
+    },
+    {
+      "index": 134,
+      "name": "remaining_budget_over_16"
+    },
+    {
+      "index": 135,
+      "name": "explicit_skip"
+    },
+    {
+      "index": 136,
+      "name": "explicit_faster"
+    },
+    {
+      "index": 137,
+      "name": "explicit_slower"
+    },
+    {
+      "index": 138,
+      "name": "response_failure"
+    },
+    {
+      "index": 139,
+      "name": "goal_stack_depth_over_4"
+    }
+  ]
+}

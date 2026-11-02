@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "session_id": "session-1",
+  "state_version": 4,
+  "reason": "learner_stop",
+  "summary_content_id": "summary-1",
+  "public_state": {
+    "session_id": "session-1",
+    "state_version": 4,
+    "current_concept_id": "C01",
+    "goal_concept_id": "C01",
+    "teaching_turns": 1,
+    "status": "ended",
+    "end_reason": "learner_stop"
+  }
+}

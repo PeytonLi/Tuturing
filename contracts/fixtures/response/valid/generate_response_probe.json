@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "request_id": "request-probe",
+  "plan_id": "plan-probe",
+  "response_id": "response-3eba1d2767720a5a7c281c2d",
+  "text": "Let's check your thinking about this: A fair coin is flipped once. What is the probability of heads? Show how you reason it out.",
+  "effective_move": {
+    "action_id": 4,
+    "move": "PROBE",
+    "difficulty": "medium",
+    "pace": "normal"
+  },
+  "delivery_mode": "fallback",
+  "content_hash": "efc1f0af5c58dd373947b54be4303e188062ad4ca3520b169057e8efc0eaeedb",
+  "checks": {
+    "schema_valid": true,
+    "action_faithful": true,
+    "math_supported": true,
+    "disclosure_allowed": true,
+    "length_valid": true,
+    "question_count_valid": true
+  },
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 24,
+    "elapsed_ms": 0
+  },
+  "versions": {
+    "response_artifact": "stub_v1",
+    "prompt": "stub_prompt_v1",
+    "validator": "stub_validator_v1"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "plan_id": "plan_fx_probe_0005",
+  "session_id": "sess_fx_probe_0005",
+  "trace_id": "trace_fx_probe_0005",
+  "based_on_state_version": 5,
+  "option_id": "option_fx_probe_0005",
+  "navigation_action": {"action_id": 5, "operation": "STAY", "target_concept_id": "C06"},
+  "teaching_action": {"action_id": 4, "move": "PROBE", "difficulty": "medium", "pace": "normal"},
+  "actor_eligible": true,
+  "concept_id": "C06",
+  "goal_concept_id": "C06",
+  "problem_instance_id": "problem_fx_probe_0005",
+  "template_family_id": "family_fx_probe_0005",
+  "assessment_mode": "practice",
+  "assistance": "none",
+  "content_bundle_id": "bundle_fx_probe_0005",
+  "content": {
+    "concept_name": "Conditional probability",
+    "goal_name": "Explain conditional probability",
+    "problem_stem": "If P(A and B)=2/5 and P(B)=4/5, what is P(A given B)?",
+    "approved_facts": [],
+    "permitted_hint": null,
+    "worked_example": null,
+    "reveal_solution": null,
+    "previous_step": null
+  },
+  "constraints": {
+    "reveal_allowed": false,
+    "max_words": 150,
+    "max_questions": 1,
+    "must_request_student_attempt": false,
+    "forbidden_answer_fingerprints": ["1/2", "0.5", "50%"]
+  },
+  "response_context": {
+    "last_student_message": "I think the condition matters.",
+    "recent_dialogue": [{"role": "student", "text": "I think the condition matters."}],
+    "qualified_misconception_summary": null
+  },
+  "versions": {
+    "graph": "graph_proto_v1",
+    "content": "content_proto_v1",
+    "state_estimator": "state_proto_v1",
+    "navigator": "navigator_proto_v1",
+    "strategist": "strategist_proto_v1",
+    "mask": "mask_proto_v1",
+    "feature": "feature_proto_v1"
+  },
+  "expires_at": "2099-01-01T00:00:00Z"
+}

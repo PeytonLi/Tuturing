@@ -1,0 +1,10 @@
+# Coefficients follow PRD 16.1.
+teaching_turn_cost: -0.02
+unauthorized_disclosure: -0.10
+unproductive_repetition: -0.05
+terminal_dropout: -0.25
+terminal_gain_multiplier: 4.0
+shaping: 0.0
+invalid_action_penalty: 0.0
+assessment_difficulty: medium
+goal_weight: 0.5

@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "plan_id": "plan-reflect",
+  "session_id": "session-1",
+  "trace_id": "trace-1",
+  "based_on_state_version": 1,
+  "option_id": "option-1",
+  "navigation_action": {
+    "action_id": 0,
+    "operation": "STAY",
+    "target_concept_id": "C01"
+  },
+  "teaching_action": {
+    "action_id": 67,
+    "move": "REFLECT",
+    "difficulty": "medium",
+    "pace": "normal"
+  },
+  "actor_eligible": true,
+  "concept_id": "C01",
+  "goal_concept_id": "C01",
+  "problem_instance_id": null,
+  "template_family_id": null,
+  "assessment_mode": "none",
+  "assistance": "none",
+  "content_bundle_id": "bundle-1",
+  "content": {
+    "concept_name": "Outcomes and sample spaces",
+    "goal_name": "Outcomes and sample spaces",
+    "problem_stem": null,
+    "approved_facts": [
+      "A fair coin has two equally likely outcomes."
+    ],
+    "permitted_hint": null,
+    "worked_example": null,
+    "reveal_solution": null,
+    "previous_step": "You listed the sample space."
+  },
+  "constraints": {
+    "reveal_allowed": false,
+    "max_words": 150,
+    "max_questions": 1,
+    "must_request_student_attempt": false,
+    "forbidden_answer_fingerprints": []
+  },
+  "response_context": {
+    "last_student_message": "",
+    "recent_dialogue": [],
+    "qualified_misconception_summary": null
+  },
+  "versions": {
+    "graph": "graph_proto_v1",
+    "content": "content_v1",
+    "state_estimator": "bkt_v1",
+    "navigator": "rules_v1",
+    "strategist": "rules_v1",
+    "mask": "mask_v1",
+    "feature": "features_v1"
+  },
+  "expires_at": "2026-11-02T00:00:00Z"
+}

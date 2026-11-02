@@ -1,0 +1,347 @@
+schema_version: concepts_v1
+concepts:
+- concept_id: C01
+  index: 0
+  name: Outcomes events and sample spaces
+  enabled: true
+  measurable_objective: Use evidence and probability rules to reason about outcomes
+    events and sample spaces.
+  prerequisites: []
+  diagnostic_template_ids:
+  - c01_assess_01
+  practice_template_ids:
+  - c01_teach_01
+  - c01_teach_02
+  - c01_teach_03
+  - c01_teach_04
+  allowed_misconception_ids:
+  - M01
+  - M02
+  - M03
+  - M04
+  content_provenance: original prototype content; authored for this project
+- concept_id: C02
+  index: 1
+  name: Probability bounds and equally likely outcomes
+  enabled: true
+  measurable_objective: Use evidence and probability rules to reason about probability
+    bounds and equally likely outcomes.
+  prerequisites:
+  - C01
+  diagnostic_template_ids:
+  - c02_assess_01
+  practice_template_ids:
+  - c02_teach_01
+  - c02_teach_02
+  - c02_teach_03
+  - c02_teach_04
+  allowed_misconception_ids:
+  - M01
+  - M02
+  - M03
+  - M04
+  content_provenance: original prototype content; authored for this project
+- concept_id: C03
+  index: 2
+  name: Complements
+  enabled: true
+  measurable_objective: Use evidence and probability rules to reason about complements.
+  prerequisites:
+  - C02
+  diagnostic_template_ids:
+  - c03_assess_01
+  practice_template_ids:
+  - c03_teach_01
+  - c03_teach_02
+  - c03_teach_03
+  - c03_teach_04
+  allowed_misconception_ids:
+  - M01
+  - M02
+  - M03
+  - M04
+  content_provenance: original prototype content; authored for this project
+- concept_id: C04
+  index: 3
+  name: Unions intersections and set notation
+  enabled: false
+  measurable_objective: Use evidence and probability rules to reason about unions
+    intersections and set notation.
+  prerequisites:
+  - C01
+  diagnostic_template_ids: []
+  practice_template_ids: []
+  allowed_misconception_ids:
+  - M01
+  - M02
+  - M03
+  - M04
+  content_provenance: original prototype content; authored for this project
+- concept_id: C05
+  index: 4
+  name: Addition rule
+  enabled: false
+  measurable_objective: Use evidence and probability rules to reason about addition
+    rule.
+  prerequisites:
+  - C02
+  - C04
+  diagnostic_template_ids: []
+  practice_template_ids: []
+  allowed_misconception_ids:
+  - M01
+  - M02
+  - M03
+  - M04
+  content_provenance: original prototype content; authored for this project
+- concept_id: C06
+  index: 5
+  name: Conditional probability
+  enabled: true
+  measurable_objective: Use evidence and probability rules to reason about conditional
+    probability.
+  prerequisites:
+  - C02
+  - C04
+  diagnostic_template_ids:
+  - c06_assess_01
+  practice_template_ids:
+  - c06_teach_01
+  - c06_teach_02
+  - c06_teach_03
+  - c06_teach_04
+  allowed_misconception_ids:
+  - M05
+  - M06
+  content_provenance: original prototype content; authored for this project
+- concept_id: C07
+  index: 6
+  name: Independence
+  enabled: false
+  measurable_objective: Use evidence and probability rules to reason about independence.
+  prerequisites:
+  - C06
+  diagnostic_template_ids: []
+  practice_template_ids: []
+  allowed_misconception_ids:
+  - M01
+  - M02
+  - M03
+  - M04
+  content_provenance: original prototype content; authored for this project
+- concept_id: C08
+  index: 7
+  name: Multiplication rule and probability trees
+  enabled: true
+  measurable_objective: Use evidence and probability rules to reason about multiplication
+    rule and probability trees.
+  prerequisites:
+  - C06
+  diagnostic_template_ids:
+  - c08_assess_01
+  practice_template_ids:
+  - c08_teach_01
+  - c08_teach_02
+  - c08_teach_03
+  - c08_teach_04
+  allowed_misconception_ids:
+  - M05
+  - M06
+  content_provenance: original prototype content; authored for this project
+- concept_id: C09
+  index: 8
+  name: Total probability
+  enabled: false
+  measurable_objective: Use evidence and probability rules to reason about total probability.
+  prerequisites:
+  - C05
+  - C08
+  diagnostic_template_ids: []
+  practice_template_ids: []
+  allowed_misconception_ids:
+  - M01
+  - M02
+  - M03
+  - M04
+  content_provenance: original prototype content; authored for this project
+- concept_id: C10
+  index: 9
+  name: Bayes theorem
+  enabled: false
+  measurable_objective: Use evidence and probability rules to reason about bayes theorem.
+  prerequisites:
+  - C06
+  - C09
+  diagnostic_template_ids: []
+  practice_template_ids: []
+  allowed_misconception_ids:
+  - M01
+  - M02
+  - M03
+  - M04
+  content_provenance: original prototype content; authored for this project
+- concept_id: C11
+  index: 10
+  name: Counting with order
+  enabled: false
+  measurable_objective: Use evidence and probability rules to reason about counting
+    with order.
+  prerequisites:
+  - C01
+  diagnostic_template_ids: []
+  practice_template_ids: []
+  allowed_misconception_ids:
+  - M01
+  - M02
+  - M03
+  - M04
+  content_provenance: original prototype content; authored for this project
+- concept_id: C12
+  index: 11
+  name: Counting without order
+  enabled: false
+  measurable_objective: Use evidence and probability rules to reason about counting
+    without order.
+  prerequisites:
+  - C11
+  diagnostic_template_ids: []
+  practice_template_ids: []
+  allowed_misconception_ids:
+  - M01
+  - M02
+  - M03
+  - M04
+  content_provenance: original prototype content; authored for this project
+- concept_id: C13
+  index: 12
+  name: Bernoulli trials
+  enabled: false
+  measurable_objective: Use evidence and probability rules to reason about bernoulli
+    trials.
+  prerequisites:
+  - C02
+  - C03
+  - C07
+  diagnostic_template_ids: []
+  practice_template_ids: []
+  allowed_misconception_ids:
+  - M01
+  - M02
+  - M03
+  - M04
+  content_provenance: original prototype content; authored for this project
+- concept_id: C14
+  index: 13
+  name: Binomial probability
+  enabled: false
+  measurable_objective: Use evidence and probability rules to reason about binomial
+    probability.
+  prerequisites:
+  - C12
+  - C13
+  diagnostic_template_ids: []
+  practice_template_ids: []
+  allowed_misconception_ids:
+  - M01
+  - M02
+  - M03
+  - M04
+  content_provenance: original prototype content; authored for this project
+- concept_id: C15
+  index: 14
+  name: Expected value of a discrete variable
+  enabled: false
+  measurable_objective: Use evidence and probability rules to reason about expected
+    value of a discrete variable.
+  prerequisites:
+  - C02
+  - C05
+  diagnostic_template_ids: []
+  practice_template_ids: []
+  allowed_misconception_ids:
+  - M01
+  - M02
+  - M03
+  - M04
+  content_provenance: original prototype content; authored for this project
+graphs:
+  graph_full_v1:
+  - source_concept_id: C01
+    dependent_concept_id: C02
+    status: proposed
+  - source_concept_id: C02
+    dependent_concept_id: C03
+    status: proposed
+  - source_concept_id: C01
+    dependent_concept_id: C04
+    status: proposed
+  - source_concept_id: C02
+    dependent_concept_id: C05
+    status: proposed
+  - source_concept_id: C04
+    dependent_concept_id: C05
+    status: proposed
+  - source_concept_id: C02
+    dependent_concept_id: C06
+    status: proposed
+  - source_concept_id: C04
+    dependent_concept_id: C06
+    status: proposed
+  - source_concept_id: C06
+    dependent_concept_id: C07
+    status: proposed
+  - source_concept_id: C06
+    dependent_concept_id: C08
+    status: proposed
+  - source_concept_id: C05
+    dependent_concept_id: C09
+    status: proposed
+  - source_concept_id: C08
+    dependent_concept_id: C09
+    status: proposed
+  - source_concept_id: C06
+    dependent_concept_id: C10
+    status: proposed
+  - source_concept_id: C09
+    dependent_concept_id: C10
+    status: proposed
+  - source_concept_id: C01
+    dependent_concept_id: C11
+    status: proposed
+  - source_concept_id: C11
+    dependent_concept_id: C12
+    status: proposed
+  - source_concept_id: C02
+    dependent_concept_id: C13
+    status: proposed
+  - source_concept_id: C03
+    dependent_concept_id: C13
+    status: proposed
+  - source_concept_id: C07
+    dependent_concept_id: C13
+    status: proposed
+  - source_concept_id: C12
+    dependent_concept_id: C14
+    status: proposed
+  - source_concept_id: C13
+    dependent_concept_id: C14
+    status: proposed
+  - source_concept_id: C02
+    dependent_concept_id: C15
+    status: proposed
+  - source_concept_id: C05
+    dependent_concept_id: C15
+    status: proposed
+  graph_proto_v1:
+  - source_concept_id: C01
+    dependent_concept_id: C02
+    status: proposed
+  - source_concept_id: C02
+    dependent_concept_id: C03
+    status: proposed
+  - source_concept_id: C02
+    dependent_concept_id: C06
+    status: proposed
+  - source_concept_id: C06
+    dependent_concept_id: C08
+    status: proposed

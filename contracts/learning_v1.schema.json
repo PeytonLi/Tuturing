@@ -1,0 +1,1622 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/learning_v1.schema.json",
+  "title": "learning_v1",
+  "$defs": {
+    "EvidenceSpan": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "additionalProperties": false
+    },
+    "Evidence": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "event_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "session_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "trace_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "source_response_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "problem_instance_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "normalized_answer": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "correctness": {
+          "type": "string",
+          "enum": [
+            "correct",
+            "incorrect",
+            "unknown",
+            "not_applicable"
+          ]
+        },
+        "grade_source": {
+          "type": "string",
+          "enum": [
+            "deterministic",
+            "extractor",
+            "none"
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "assistance": {
+          "type": "string",
+          "enum": [
+            "none",
+            "hint",
+            "example",
+            "answer_shown",
+            "unknown"
+          ]
+        },
+        "explicit_request": {
+          "type": "string",
+          "enum": [
+            "none",
+            "skip",
+            "faster",
+            "slower",
+            "hint",
+            "answer",
+            "stop",
+            "change_goal"
+          ]
+        },
+        "requested_concept_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "misconception_hypotheses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MisconceptionHypothesis"
+          }
+        },
+        "raw_message_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "extractor_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "extensions": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "event_id",
+        "session_id",
+        "trace_id",
+        "source_response_id",
+        "problem_instance_id",
+        "observed_at",
+        "normalized_answer",
+        "correctness",
+        "grade_source",
+        "confidence",
+        "assistance",
+        "explicit_request",
+        "requested_concept_id",
+        "misconception_hypotheses",
+        "raw_message_ref",
+        "extractor_version",
+        "extensions"
+      ],
+      "additionalProperties": false
+    },
+    "MisconceptionHypothesis": {
+      "type": "object",
+      "properties": {
+        "misconception_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "probability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "evidence_spans": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceSpan"
+          }
+        }
+      },
+      "required": [
+        "misconception_id",
+        "probability",
+        "evidence_spans"
+      ],
+      "additionalProperties": false
+    },
+    "ConceptBelief": {
+      "type": "object",
+      "properties": {
+        "concept_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "mastery": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "uncertainty": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "independent_correct": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "independent_incorrect": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "assisted_attempts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "last_evidence_event_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "concept_id",
+        "mastery",
+        "uncertainty",
+        "independent_correct",
+        "independent_incorrect",
+        "assisted_attempts",
+        "last_evidence_event_id"
+      ],
+      "additionalProperties": false
+    },
+    "StudentBelief": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "session_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "state_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "learner_pseudonym": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "graph_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "feature_version": {
+          "const": "features_v1"
+        },
+        "current_concept_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "goal_concept_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "concepts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ConceptBelief"
+          },
+          "minItems": 15,
+          "maxItems": 15
+        },
+        "misconceptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BeliefProbability"
+          },
+          "minItems": 25,
+          "maxItems": 25
+        },
+        "pace_preference": {
+          "type": "string",
+          "enum": [
+            "concise",
+            "normal",
+            "detailed"
+          ]
+        },
+        "active_option": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NavigationAction"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "option_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "option_turns": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "goal_stack": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[\\u0000-\\u007F]+$"
+          },
+          "minItems": 0,
+          "maxItems": 4
+        },
+        "teaching_turns": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16
+        },
+        "current_problem_instance_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hint_level": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "recent_evidence_event_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[\\u0000-\\u007F]+$"
+          }
+        },
+        "session_status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "pending_plan",
+            "ended"
+          ]
+        },
+        "end_reason": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EndReason"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "schema_version",
+        "session_id",
+        "state_version",
+        "learner_pseudonym",
+        "graph_version",
+        "feature_version",
+        "current_concept_id",
+        "goal_concept_id",
+        "concepts",
+        "misconceptions",
+        "pace_preference",
+        "active_option",
+        "option_id",
+        "option_turns",
+        "goal_stack",
+        "teaching_turns",
+        "current_problem_instance_id",
+        "hint_level",
+        "recent_evidence_event_ids",
+        "session_status",
+        "end_reason",
+        "updated_at"
+      ],
+      "additionalProperties": false
+    },
+    "BeliefProbability": {
+      "type": "object",
+      "properties": {
+        "misconception_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "probability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [
+        "misconception_id",
+        "probability"
+      ],
+      "additionalProperties": false
+    },
+    "NavigationAction": {
+      "type": "object",
+      "properties": {
+        "action_id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 75
+        },
+        "operation": {
+          "type": "string",
+          "enum": [
+            "STAY",
+            "ADVANCE_ONE",
+            "SKIP_TO_TARGET",
+            "REVIEW_PREREQUISITE",
+            "RETURN_TO_GOAL",
+            "END_SESSION"
+          ]
+        },
+        "target_concept_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "action_id",
+        "operation",
+        "target_concept_id"
+      ],
+      "additionalProperties": false
+    },
+    "TeachingAction": {
+      "type": "object",
+      "properties": {
+        "action_id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 71
+        },
+        "move": {
+          "type": "string",
+          "enum": [
+            "PROBE",
+            "HINT",
+            "EXPLAIN_CONCEPT",
+            "WORKED_EXAMPLE",
+            "PRACTICE",
+            "CHALLENGE",
+            "CHECK_MASTERY",
+            "REFLECT"
+          ]
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": [
+            "easy",
+            "medium",
+            "hard"
+          ]
+        },
+        "pace": {
+          "type": "string",
+          "enum": [
+            "concise",
+            "normal",
+            "detailed"
+          ]
+        }
+      },
+      "required": [
+        "action_id",
+        "move",
+        "difficulty",
+        "pace"
+      ],
+      "additionalProperties": false
+    },
+    "TeachingPlan": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "plan_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "session_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "trace_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "based_on_state_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "option_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "navigation_action": {
+          "$ref": "#/$defs/NavigationAction"
+        },
+        "teaching_action": {
+          "$ref": "#/$defs/TeachingAction"
+        },
+        "actor_eligible": {
+          "type": "boolean"
+        },
+        "concept_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "goal_concept_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "problem_instance_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "template_family_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "assessment_mode": {
+          "type": "string",
+          "enum": [
+            "none",
+            "practice",
+            "independent"
+          ]
+        },
+        "assistance": {
+          "type": "string",
+          "enum": [
+            "none",
+            "hint",
+            "example",
+            "answer_shown"
+          ]
+        },
+        "content_bundle_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "content": {
+          "type": "object",
+          "properties": {
+            "concept_name": {
+              "type": "string"
+            },
+            "goal_name": {
+              "type": "string"
+            },
+            "problem_stem": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "approved_facts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "permitted_hint": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "worked_example": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reveal_solution": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "previous_step": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "concept_name",
+            "goal_name",
+            "problem_stem",
+            "approved_facts",
+            "permitted_hint",
+            "worked_example",
+            "reveal_solution",
+            "previous_step"
+          ],
+          "additionalProperties": false
+        },
+        "constraints": {
+          "type": "object",
+          "properties": {
+            "reveal_allowed": {
+              "type": "boolean"
+            },
+            "max_words": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "max_questions": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "must_request_student_attempt": {
+              "type": "boolean"
+            },
+            "forbidden_answer_fingerprints": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[\\u0000-\\u007F]+$"
+              }
+            }
+          },
+          "required": [
+            "reveal_allowed",
+            "max_words",
+            "max_questions",
+            "must_request_student_attempt",
+            "forbidden_answer_fingerprints"
+          ],
+          "additionalProperties": false
+        },
+        "response_context": {
+          "type": "object",
+          "properties": {
+            "last_student_message": {
+              "type": "string"
+            },
+            "recent_dialogue": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "student",
+                      "tutor"
+                    ]
+                  },
+                  "text": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "role",
+                  "text"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "qualified_misconception_summary": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "last_student_message",
+            "recent_dialogue",
+            "qualified_misconception_summary"
+          ],
+          "additionalProperties": false
+        },
+        "versions": {
+          "type": "object",
+          "properties": {
+            "graph": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            "content": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            "state_estimator": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            "navigator": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            "strategist": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            "mask": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            "feature": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            }
+          },
+          "required": [
+            "graph",
+            "content",
+            "state_estimator",
+            "navigator",
+            "strategist",
+            "mask",
+            "feature"
+          ],
+          "additionalProperties": false
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "schema_version",
+        "plan_id",
+        "session_id",
+        "trace_id",
+        "based_on_state_version",
+        "option_id",
+        "navigation_action",
+        "teaching_action",
+        "actor_eligible",
+        "concept_id",
+        "goal_concept_id",
+        "problem_instance_id",
+        "template_family_id",
+        "assessment_mode",
+        "assistance",
+        "content_bundle_id",
+        "content",
+        "constraints",
+        "response_context",
+        "versions",
+        "expires_at"
+      ],
+      "additionalProperties": false
+    },
+    "EndReason": {
+      "type": "string",
+      "enum": [
+        "learner_stop",
+        "demonstrated_completion",
+        "policy_stop",
+        "teaching_budget",
+        "simulated_dropout",
+        "configuration_error"
+      ]
+    },
+    "SessionEnd": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "session_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "state_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reason": {
+          "$ref": "#/$defs/EndReason"
+        },
+        "summary_content_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "public_state": {
+          "$ref": "#/$defs/PublicState"
+        }
+      },
+      "required": [
+        "schema_version",
+        "session_id",
+        "state_version",
+        "reason",
+        "summary_content_id",
+        "public_state"
+      ],
+      "additionalProperties": false
+    },
+    "CommitPlanRequest": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "session_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "plan_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "based_on_state_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "response_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "effective_move": {
+          "$ref": "#/$defs/TeachingAction"
+        },
+        "delivery_mode": {
+          "type": "string",
+          "enum": [
+            "model",
+            "repaired",
+            "fallback"
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "session_id",
+        "plan_id",
+        "based_on_state_version",
+        "response_id",
+        "content_hash",
+        "effective_move",
+        "delivery_mode"
+      ],
+      "additionalProperties": false
+    },
+    "CommitPlanResponse": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "plan_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "status": {
+          "const": "committed"
+        },
+        "state_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "public_state": {
+          "$ref": "#/$defs/PublicState"
+        }
+      },
+      "required": [
+        "schema_version",
+        "plan_id",
+        "status",
+        "state_version",
+        "public_state"
+      ],
+      "additionalProperties": false
+    },
+    "PublicState": {
+      "type": "object",
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "state_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "current_concept_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "goal_concept_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "teaching_turns": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "ended"
+          ]
+        },
+        "end_reason": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EndReason"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "session_id",
+        "state_version",
+        "current_concept_id",
+        "goal_concept_id",
+        "teaching_turns",
+        "status",
+        "end_reason"
+      ],
+      "additionalProperties": false
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "trace_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "code": {
+          "type": "string",
+          "enum": [
+            "INVALID_SCHEMA",
+            "UNSUPPORTED_VERSION",
+            "UNAUTHORIZED",
+            "FORBIDDEN",
+            "STATE_CONFLICT",
+            "PLAN_EXPIRED",
+            "SESSION_ENDED",
+            "RATE_LIMITED",
+            "GENERATION_UNAVAILABLE",
+            "LEARNING_UNAVAILABLE",
+            "DEADLINE_EXCEEDED"
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "retryable": {
+          "type": "boolean"
+        },
+        "current_state_version": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "request_id",
+        "trace_id",
+        "code",
+        "message",
+        "retryable",
+        "current_state_version"
+      ],
+      "additionalProperties": false
+    },
+    "Scenario": {
+      "type": "object",
+      "properties": {
+        "scenario_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "scenario_family_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "split": {
+          "type": "string",
+          "enum": [
+            "train",
+            "validation",
+            "test"
+          ]
+        },
+        "goal_concept_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "start_concept_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "profile_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "simulator_config_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "private_initial_state_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "public_history": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        },
+        "template_family_allowlist": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[\\u0000-\\u007F]+$"
+          }
+        },
+        "teaching_horizon": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "author": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            "reviewed": {
+              "type": "boolean"
+            },
+            "revision": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            }
+          },
+          "required": [
+            "author",
+            "reviewed",
+            "revision"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "scenario_id",
+        "scenario_family_id",
+        "split",
+        "goal_concept_id",
+        "start_concept_id",
+        "profile_id",
+        "simulator_config_id",
+        "private_initial_state_ref",
+        "public_history",
+        "template_family_allowlist",
+        "teaching_horizon",
+        "provenance"
+      ],
+      "additionalProperties": false
+    },
+    "RewardComponents": {
+      "type": "object",
+      "properties": {
+        "terminal_gain": {
+          "type": "number"
+        },
+        "teaching_cost": {
+          "type": "number"
+        },
+        "disclosure_penalty": {
+          "type": "number"
+        },
+        "repetition_penalty": {
+          "type": "number"
+        },
+        "dropout_penalty": {
+          "type": "number"
+        },
+        "invalid_action_penalty": {
+          "type": "number"
+        },
+        "shaping": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "terminal_gain",
+        "teaching_cost",
+        "disclosure_penalty",
+        "repetition_penalty",
+        "dropout_penalty",
+        "invalid_action_penalty",
+        "shaping"
+      ],
+      "additionalProperties": false
+    },
+    "StrategistTransition": {
+      "type": "object",
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "episode_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "transition_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "turn_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "option_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "observation": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 140,
+          "maxItems": 140
+        },
+        "action_mask": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          },
+          "minItems": 72,
+          "maxItems": 72
+        },
+        "action_id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 71
+        },
+        "old_log_prob": {
+          "type": "number"
+        },
+        "old_value": {
+          "type": "number"
+        },
+        "reward_components": {
+          "$ref": "#/$defs/RewardComponents"
+        },
+        "reward": {
+          "type": "number"
+        },
+        "next_observation": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 140,
+          "maxItems": 140
+        },
+        "terminated": {
+          "type": "boolean"
+        },
+        "truncated": {
+          "type": "boolean"
+        },
+        "actor_eligible": {
+          "type": "boolean"
+        },
+        "collector_cut": {
+          "type": "boolean"
+        },
+        "policy_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "environment_bundle_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        }
+      },
+      "required": [
+        "run_id",
+        "episode_id",
+        "transition_id",
+        "turn_index",
+        "option_id",
+        "observation",
+        "action_mask",
+        "action_id",
+        "old_log_prob",
+        "old_value",
+        "reward_components",
+        "reward",
+        "next_observation",
+        "terminated",
+        "truncated",
+        "actor_eligible",
+        "collector_cut",
+        "policy_version",
+        "environment_bundle_id"
+      ],
+      "additionalProperties": false
+    },
+    "NavigatorTransition": {
+      "type": "object",
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "episode_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "transition_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "option_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "start_turn": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_turn": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "observation": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 140,
+          "maxItems": 140
+        },
+        "action_mask": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          },
+          "minItems": 76,
+          "maxItems": 76
+        },
+        "action_id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 75
+        },
+        "old_log_prob": {
+          "type": "number"
+        },
+        "old_value": {
+          "type": "number"
+        },
+        "duration": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "discounted_option_reward": {
+          "type": "number"
+        },
+        "next_observation": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 140,
+          "maxItems": 140
+        },
+        "terminated": {
+          "type": "boolean"
+        },
+        "truncated": {
+          "type": "boolean"
+        },
+        "actor_eligible": {
+          "type": "boolean"
+        },
+        "boundary_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "policy_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "environment_bundle_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        }
+      },
+      "required": [
+        "run_id",
+        "episode_id",
+        "transition_id",
+        "option_id",
+        "start_turn",
+        "end_turn",
+        "observation",
+        "action_mask",
+        "action_id",
+        "old_log_prob",
+        "old_value",
+        "duration",
+        "discounted_option_reward",
+        "next_observation",
+        "terminated",
+        "truncated",
+        "actor_eligible",
+        "boundary_reasons",
+        "policy_version",
+        "environment_bundle_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/Evidence"
+    },
+    {
+      "$ref": "#/$defs/ConceptBelief"
+    },
+    {
+      "$ref": "#/$defs/StudentBelief"
+    },
+    {
+      "$ref": "#/$defs/NavigationAction"
+    },
+    {
+      "$ref": "#/$defs/TeachingAction"
+    },
+    {
+      "$ref": "#/$defs/TeachingPlan"
+    },
+    {
+      "$ref": "#/$defs/SessionEnd"
+    },
+    {
+      "$ref": "#/$defs/CommitPlanRequest"
+    },
+    {
+      "$ref": "#/$defs/CommitPlanResponse"
+    },
+    {
+      "$ref": "#/$defs/PublicState"
+    },
+    {
+      "$ref": "#/$defs/Error"
+    },
+    {
+      "$ref": "#/$defs/Scenario"
+    },
+    {
+      "$ref": "#/$defs/RewardComponents"
+    },
+    {
+      "$ref": "#/$defs/StrategistTransition"
+    },
+    {
+      "$ref": "#/$defs/NavigatorTransition"
+    }
+  ]
+}

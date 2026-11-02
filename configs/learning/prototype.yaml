@@ -1,0 +1,5 @@
+graph_version: graph_proto_v1
+enabled_concepts: [C01, C02, C03, C06, C08]
+seed: 20250115
+content_version: content_proto_v1
+assessment_version: assessment_proto_v1

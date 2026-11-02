@@ -1,0 +1,56 @@
+# Assumptions set for this prototype; these are not empirically calibrated effects.
+action_effect:
+  PROBE: 0
+  CHECK_MASTERY: 0
+  PRACTICE: 0.5
+  HINT: {incorrect: 0.6, otherwise: 0.15}
+  EXPLAIN_CONCEPT: {below_0_4: 0.7, from_0_4_to_0_75: 0.4, above_0_75: 0.1}
+  WORKED_EXAMPLE: {below_0_4: 0.8, from_0_4_to_0_75: 0.5, above_0_75: 0.1}
+  CHALLENGE: {at_least_0_6: 0.6, below_0_6: 0.1}
+  REFLECT: {previous_and_incorrect: 0.4, otherwise: 0.2}
+readiness:
+  prerequisite_factor: "0.5 + 0.5 * min(prerequisite_mastery)"
+  difficulty_fit:
+    easy: {below_0_5: 1.0, otherwise: 0.7}
+    medium: 0.9
+    hard: {at_least_0_6: 1.0, otherwise: 0.4}
+novelty: "0.6 ** preceding_identical_moves_on_same_concept"
+content_fidelity:
+  stub_realized: 1.0
+  failure_probability: 0.0
+misconceptions:
+  susceptible_incorrect_probability: 0.7
+  surfaced_by: [PROBE, REFLECT]
+  deactivate_probability: {surfaced: 0.5, not_surfaced: 0.1}
+dropout:
+  base_per_turn: 0.01
+  per_independent_incorrect_after_two: 0.02
+  per_pace_mismatch_turn: 0.02
+help_seeking:
+  request: hint
+  profiles_use_probability: true
+profiles:
+  novice_missing_prereqs:
+    concept_mastery: [0.05, 0.35]
+    ell: [0.06, 0.12]
+    help_seeking_probability: 0.3
+    preferred_pace: normal
+  knowledgeable_concise:
+    concept_mastery: [0.7, 0.9]
+    goal_mastery: [0.5, 0.7]
+    ell: [0.04, 0.10]
+    help_seeking_probability: 0.05
+    preferred_pace: concise
+  confident_misconception:
+    concept_mastery: [0.4, 0.6]
+    active_misconception: M05
+    susceptible_concepts: [C06, C08]
+    ell: [0.04, 0.10]
+    help_seeking_probability: 0.05
+    preferred_pace: normal
+observation:
+  item_format: free_response
+  guess: [0.0, 0.05]
+  slip: [0.02, 0.20]
+  difficulty_factor: {easy: 1.0, medium: 0.85, hard: 0.65}
+  forgetting: 0.0

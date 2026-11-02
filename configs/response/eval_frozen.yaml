@@ -1,0 +1,21 @@
+cases: evaluation/response/frozen_600.jsonl
+out: artifacts/response/eval_frozen
+small_model:
+  responder: openai_compatible
+  base_url: https://api.fireworks.ai/inference/v1
+  model: accounts/fireworks/models/qwen3p8-27b
+frontier_model:
+  responder: PLACEHOLDER
+  base_url: PLACEHOLDER
+  model: PLACEHOLDER
+decoding:
+  temperature: 0
+  max_tokens: 384
+checks:
+  - schema_valid
+  - action_faithful
+  - math_supported
+  - disclosure_allowed
+  - length_valid
+  - question_count_valid
+status: placeholder_not_frozen

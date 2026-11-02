@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "plan_id": "plan_fx_hint_0002",
+  "session_id": "sess_fx_hint_0002",
+  "trace_id": "trace_fx_hint_0002",
+  "based_on_state_version": 2,
+  "option_id": "option_fx_hint_0002",
+  "navigation_action": {"action_id": 2, "operation": "STAY", "target_concept_id": "C03"},
+  "teaching_action": {"action_id": 13, "move": "HINT", "difficulty": "medium", "pace": "normal"},
+  "actor_eligible": true,
+  "concept_id": "C03",
+  "goal_concept_id": "C03",
+  "problem_instance_id": "problem_fx_hint_0002",
+  "template_family_id": "family_fx_hint_0002",
+  "assessment_mode": "practice",
+  "assistance": "hint",
+  "content_bundle_id": "bundle_fx_hint_0002",
+  "content": {
+    "concept_name": "Complements",
+    "goal_name": "Find a complement",
+    "problem_stem": "A spinner has 10 equal sections, and 3 are blue. What is the probability of landing on a section that is not blue?",
+    "approved_facts": ["A complement contains outcomes outside the event."],
+    "permitted_hint": "Count the sections that are not blue, then compare that count to all sections.",
+    "worked_example": null,
+    "reveal_solution": null,
+    "previous_step": null
+  },
+  "constraints": {
+    "reveal_allowed": false,
+    "max_words": 150,
+    "max_questions": 1,
+    "must_request_student_attempt": false,
+    "forbidden_answer_fingerprints": ["7/10", "0.7"]
+  },
+  "response_context": {
+    "last_student_message": "Can I get a small clue?",
+    "recent_dialogue": [{"role": "student", "text": "Can I get a small clue?"}],
+    "qualified_misconception_summary": null
+  },
+  "versions": {
+    "graph": "graph_proto_v1",
+    "content": "content_proto_v1",
+    "state_estimator": "state_proto_v1",
+    "navigator": "navigator_proto_v1",
+    "strategist": "strategist_proto_v1",
+    "mask": "mask_proto_v1",
+    "feature": "feature_proto_v1"
+  },
+  "expires_at": "2099-01-01T00:00:00Z"
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "session_id": "session-1",
+  "plan_id": "plan-1",
+  "based_on_state_version": 1,
+  "response_id": "response-1",
+  "content_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "effective_move": {
+    "action_id": 3,
+    "move": "PROBE",
+    "difficulty": "medium",
+    "pace": "normal"
+  },
+  "delivery_mode": "fallback"
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "request_id": "request-explain_concept",
+  "plan_id": "plan-explain_concept",
+  "response_id": "response-907e5cdb5d18184c4bc70fc1",
+  "text": "A fair coin has two equally likely outcomes. The solution is 1/2.",
+  "effective_move": {
+    "action_id": 22,
+    "move": "EXPLAIN_CONCEPT",
+    "difficulty": "medium",
+    "pace": "normal"
+  },
+  "delivery_mode": "fallback",
+  "content_hash": "22852850106dee83e58ca42e87ec6e8083af9994a7779d2c1696acca7b81609d",
+  "checks": {
+    "schema_valid": true,
+    "action_faithful": true,
+    "math_supported": true,
+    "disclosure_allowed": true,
+    "length_valid": true,
+    "question_count_valid": true
+  },
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 12,
+    "elapsed_ms": 0
+  },
+  "versions": {
+    "response_artifact": "stub_v1",
+    "prompt": "stub_prompt_v1",
+    "validator": "stub_validator_v1"
+  }
+}

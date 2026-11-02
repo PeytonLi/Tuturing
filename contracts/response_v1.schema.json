@@ -1,0 +1,811 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/response_v1.schema.json",
+  "title": "response_v1",
+  "$defs": {
+    "TeachingAction": {
+      "type": "object",
+      "properties": {
+        "action_id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 71
+        },
+        "move": {
+          "type": "string",
+          "enum": [
+            "PROBE",
+            "HINT",
+            "EXPLAIN_CONCEPT",
+            "WORKED_EXAMPLE",
+            "PRACTICE",
+            "CHALLENGE",
+            "CHECK_MASTERY",
+            "REFLECT"
+          ]
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": [
+            "easy",
+            "medium",
+            "hard"
+          ]
+        },
+        "pace": {
+          "type": "string",
+          "enum": [
+            "concise",
+            "normal",
+            "detailed"
+          ]
+        }
+      },
+      "required": [
+        "action_id",
+        "move",
+        "difficulty",
+        "pace"
+      ],
+      "additionalProperties": false
+    },
+    "NavigationAction": {
+      "type": "object",
+      "properties": {
+        "action_id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 75
+        },
+        "operation": {
+          "type": "string",
+          "enum": [
+            "STAY",
+            "ADVANCE_ONE",
+            "SKIP_TO_TARGET",
+            "REVIEW_PREREQUISITE",
+            "RETURN_TO_GOAL",
+            "END_SESSION"
+          ]
+        },
+        "target_concept_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "action_id",
+        "operation",
+        "target_concept_id"
+      ],
+      "additionalProperties": false
+    },
+    "TeachingPlan": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "plan_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "session_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "trace_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "based_on_state_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "option_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "navigation_action": {
+          "$ref": "#/$defs/NavigationAction"
+        },
+        "teaching_action": {
+          "$ref": "#/$defs/TeachingAction"
+        },
+        "actor_eligible": {
+          "type": "boolean"
+        },
+        "concept_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "goal_concept_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "problem_instance_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "template_family_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "assessment_mode": {
+          "type": "string",
+          "enum": [
+            "none",
+            "practice",
+            "independent"
+          ]
+        },
+        "assistance": {
+          "type": "string",
+          "enum": [
+            "none",
+            "hint",
+            "example",
+            "answer_shown"
+          ]
+        },
+        "content_bundle_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "content": {
+          "type": "object",
+          "properties": {
+            "concept_name": {
+              "type": "string"
+            },
+            "goal_name": {
+              "type": "string"
+            },
+            "problem_stem": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "approved_facts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "permitted_hint": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "worked_example": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reveal_solution": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "previous_step": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "concept_name",
+            "goal_name",
+            "problem_stem",
+            "approved_facts",
+            "permitted_hint",
+            "worked_example",
+            "reveal_solution",
+            "previous_step"
+          ],
+          "additionalProperties": false
+        },
+        "constraints": {
+          "type": "object",
+          "properties": {
+            "reveal_allowed": {
+              "type": "boolean"
+            },
+            "max_words": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "max_questions": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "must_request_student_attempt": {
+              "type": "boolean"
+            },
+            "forbidden_answer_fingerprints": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[\\u0000-\\u007F]+$"
+              }
+            }
+          },
+          "required": [
+            "reveal_allowed",
+            "max_words",
+            "max_questions",
+            "must_request_student_attempt",
+            "forbidden_answer_fingerprints"
+          ],
+          "additionalProperties": false
+        },
+        "response_context": {
+          "type": "object",
+          "properties": {
+            "last_student_message": {
+              "type": "string"
+            },
+            "recent_dialogue": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "student",
+                      "tutor"
+                    ]
+                  },
+                  "text": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "role",
+                  "text"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "qualified_misconception_summary": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "last_student_message",
+            "recent_dialogue",
+            "qualified_misconception_summary"
+          ],
+          "additionalProperties": false
+        },
+        "versions": {
+          "type": "object",
+          "properties": {
+            "graph": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            "content": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            "state_estimator": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            "navigator": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            "strategist": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            "mask": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            "feature": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            }
+          },
+          "required": [
+            "graph",
+            "content",
+            "state_estimator",
+            "navigator",
+            "strategist",
+            "mask",
+            "feature"
+          ],
+          "additionalProperties": false
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "schema_version",
+        "plan_id",
+        "session_id",
+        "trace_id",
+        "based_on_state_version",
+        "option_id",
+        "navigation_action",
+        "teaching_action",
+        "actor_eligible",
+        "concept_id",
+        "goal_concept_id",
+        "problem_instance_id",
+        "template_family_id",
+        "assessment_mode",
+        "assistance",
+        "content_bundle_id",
+        "content",
+        "constraints",
+        "response_context",
+        "versions",
+        "expires_at"
+      ],
+      "additionalProperties": false
+    },
+    "GenerateRequest": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "trace_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "plan": {
+          "$ref": "#/$defs/TeachingPlan"
+        },
+        "response_artifact_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "generation_seed": {
+          "type": "integer"
+        },
+        "deadline_ms": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "schema_version",
+        "request_id",
+        "trace_id",
+        "plan",
+        "response_artifact_id",
+        "generation_seed",
+        "deadline_ms"
+      ],
+      "additionalProperties": false
+    },
+    "GenerateResponse": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "plan_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "response_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "text": {
+          "type": "string"
+        },
+        "effective_move": {
+          "$ref": "#/$defs/TeachingAction"
+        },
+        "delivery_mode": {
+          "type": "string",
+          "enum": [
+            "model",
+            "repaired",
+            "fallback"
+          ]
+        },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "checks": {
+          "type": "object",
+          "properties": {
+            "schema_valid": {
+              "type": "boolean"
+            },
+            "action_faithful": {
+              "type": "boolean"
+            },
+            "math_supported": {
+              "type": "boolean"
+            },
+            "disclosure_allowed": {
+              "type": "boolean"
+            },
+            "length_valid": {
+              "type": "boolean"
+            },
+            "question_count_valid": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "schema_valid",
+            "action_faithful",
+            "math_supported",
+            "disclosure_allowed",
+            "length_valid",
+            "question_count_valid"
+          ],
+          "additionalProperties": false
+        },
+        "usage": {
+          "type": "object",
+          "properties": {
+            "input_tokens": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "output_tokens": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "elapsed_ms": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "input_tokens",
+            "output_tokens",
+            "elapsed_ms"
+          ],
+          "additionalProperties": false
+        },
+        "versions": {
+          "type": "object",
+          "properties": {
+            "response_artifact": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            "prompt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            },
+            "validator": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[\\u0000-\\u007F]+$"
+            }
+          },
+          "required": [
+            "response_artifact",
+            "prompt",
+            "validator"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schema_version",
+        "request_id",
+        "plan_id",
+        "response_id",
+        "text",
+        "effective_move",
+        "delivery_mode",
+        "content_hash",
+        "checks",
+        "usage",
+        "versions"
+      ],
+      "additionalProperties": false
+    },
+    "SFTExample": {
+      "type": "object",
+      "properties": {
+        "example_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "dialogue_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "original_problem_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "template_family_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "split": {
+          "type": "string",
+          "enum": [
+            "train",
+            "validation",
+            "test"
+          ]
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "source_revision": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "license_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\u0000-\\u007F]+$"
+        },
+        "synthetic": {
+          "type": "boolean"
+        },
+        "reviewer_status": {
+          "type": "string",
+          "enum": [
+            "approved",
+            "rejected",
+            "pending"
+          ]
+        },
+        "action_label_source": {
+          "type": "string",
+          "enum": [
+            "human",
+            "mapped",
+            "synthetic"
+          ]
+        },
+        "plan": {
+          "$ref": "#/$defs/TeachingPlan"
+        },
+        "prompt": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "role": {
+                "type": "string",
+                "enum": [
+                  "system",
+                  "user",
+                  "assistant"
+                ]
+              },
+              "content": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "role",
+              "content"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "completion": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "role": {
+                "const": "assistant"
+              },
+              "content": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "role",
+              "content"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "checks": {
+          "type": "object",
+          "properties": {
+            "math_correct": {
+              "type": "boolean"
+            },
+            "faithful": {
+              "type": "boolean"
+            },
+            "no_early_answer": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "math_correct",
+            "faithful",
+            "no_early_answer"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "example_id",
+        "dialogue_id",
+        "original_problem_id",
+        "template_family_id",
+        "split",
+        "source_id",
+        "source_revision",
+        "license_ref",
+        "synthetic",
+        "reviewer_status",
+        "action_label_source",
+        "plan",
+        "prompt",
+        "completion",
+        "checks"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/TeachingAction"
+    },
+    {
+      "$ref": "#/$defs/NavigationAction"
+    },
+    {
+      "$ref": "#/$defs/TeachingPlan"
+    },
+    {
+      "$ref": "#/$defs/GenerateRequest"
+    },
+    {
+      "$ref": "#/$defs/GenerateResponse"
+    },
+    {
+      "$ref": "#/$defs/SFTExample"
+    }
+  ]
+}

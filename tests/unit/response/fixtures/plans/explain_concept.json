@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "plan_id": "plan_fx_explain_0003",
+  "session_id": "sess_fx_explain_0003",
+  "trace_id": "trace_fx_explain_0003",
+  "based_on_state_version": 1,
+  "option_id": "option_fx_explain_0003",
+  "navigation_action": {"action_id": 0, "operation": "STAY", "target_concept_id": "C01"},
+  "teaching_action": {"action_id": 22, "move": "EXPLAIN_CONCEPT", "difficulty": "medium", "pace": "normal"},
+  "actor_eligible": true,
+  "concept_id": "C01",
+  "goal_concept_id": "C01",
+  "problem_instance_id": null,
+  "template_family_id": null,
+  "assessment_mode": "none",
+  "assistance": "answer_shown",
+  "content_bundle_id": "bundle_fx_explain_0003",
+  "content": {
+    "concept_name": "Outcomes events and sample spaces",
+    "goal_name": "Describe possible outcomes",
+    "problem_stem": null,
+    "approved_facts": ["An outcome is one possible result of a random process.", "A sample space lists all possible outcomes."],
+    "permitted_hint": null,
+    "worked_example": null,
+    "reveal_solution": "For a coin flip, the sample space is heads or tails.",
+    "previous_step": null
+  },
+  "constraints": {
+    "reveal_allowed": true,
+    "max_words": 150,
+    "max_questions": 1,
+    "must_request_student_attempt": false,
+    "forbidden_answer_fingerprints": []
+  },
+  "response_context": {
+    "last_student_message": "What does sample space mean?",
+    "recent_dialogue": [{"role": "student", "text": "What does sample space mean?"}],
+    "qualified_misconception_summary": null
+  },
+  "versions": {
+    "graph": "graph_proto_v1",
+    "content": "content_proto_v1",
+    "state_estimator": "state_proto_v1",
+    "navigator": "navigator_proto_v1",
+    "strategist": "strategist_proto_v1",
+    "mask": "mask_proto_v1",
+    "feature": "feature_proto_v1"
+  },
+  "expires_at": "2099-01-01T00:00:00Z"
+}

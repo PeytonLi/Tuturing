@@ -1,0 +1,9 @@
+seed: 20250115
+episodes: 300
+split: train
+holdout_fraction: 0.1
+epochs: 10
+batch_size: 256
+learning_rate: 0.001
+gamma: 0.99
+run_name: bc_rules
