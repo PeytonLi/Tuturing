@@ -181,6 +181,13 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 **Reading for D10 (assistant):** prompt-only, the frontier model passes the strict checks far more often than Qwen3.8-27B on our own probability items, and the gap is driven by action fidelity and math support, which SFT targets. This is evidence for the decision, not the decision.
 
+
+## 2026-11-02 — Full-session LLM Strategist reference path
+
+**Source:** Person B full-session LLM Strategist evaluation handoff.
+
+This adds a simulated, validation-only reference path for LLM Teaching Strategists. No paid model runs or test-split runs are part of this change. Truncated, unparsable, illegal, or HTTP-failed replies fall back to `RulesStrategist`; evaluation reports the fallback rate. The frozen BC checkpoint remains the selected policy, with no selection change.
+
 ## 2026-11-02 — Run a smoke SFT of Qwen3.8-27B on Fireworks
 
 **User direction:** “smoke SFT on Qwen3.8-27B via Fireworks” (Lark message in the Tuturing topic), answering the assistant's question on whether to fine-tune.
@@ -226,4 +233,3 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 **Facts:** Fireworks returned HTTP 403 "dataset uploads are temporarily disabled, please contact Fireworks AI to get access" for `accounts/peli` (not verified). No job ran and nothing was spent. The tooling, configs, converted data, mask checks and evaluation plan are on `main`; a smoke job is estimated at $0.81 and the full mix job at $1.93 once uploads work. Managed LoRA fine-tuning does apply to Qwen3.8-27B; D10's "serverless training pool" wording is inaccurate (proposed edits in the report).
 
 **Options sent to Xueming:** (A) Peyton gets uploads enabled; (B) fine-tune an OpenAI model now with the working OpenAI key, serving without a deployment, which replaces D10's open-weight choice for the demo; (C) skip SFT and demo gpt-6.1-sol behind the validator. The assistant recommended B now with A in parallel and is preparing B at no cost; nothing is uploaded or trained until Xueming approves.
-

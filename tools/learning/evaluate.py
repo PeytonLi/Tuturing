@@ -2,13 +2,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import random
 import warnings
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import yaml
 
-from packages.learning.episode import load_scenarios, simulate_episodes
+from packages.learning.episode import HORIZON, load_scenarios, run_episode, simulate_episodes
+from packages.policies.llm import LLMStrategist
 from packages.policies.network import NetworkStrategist
 from packages.policies.rules import action_label
 from packages.simulator.student import DEFAULT_SIMULATOR_CONFIG
@@ -64,7 +67,23 @@ def summarize(results, seed: int) -> dict:
     }
 
 
-def policy_from_name(name: str):
+def load_llm_aliases() -> dict:
+    aliases = yaml.safe_load(
+        (ROOT / "configs/learning/llm_strategists.yaml").read_text(encoding="utf-8")
+    )
+    if not isinstance(aliases, dict):
+        raise ValueError("LLM strategist config must be a mapping of aliases")
+    return aliases
+
+
+def policy_from_name(
+    name: str,
+    *,
+    llm_aliases: dict | None = None,
+    max_calls: int = 2000,
+    llm_base_url_override: str | None = None,
+    dry_run: bool = False,
+):
     if name in {"rules", "random", "always_hint", "always_worked_example"}:
         return None, name
     if name.startswith("checkpoint:"):
@@ -72,11 +91,126 @@ def policy_from_name(name: str):
         if not checkpoint:
             raise ValueError("checkpoint policy requires a path")
         return NetworkStrategist(checkpoint, greedy=True), "network"
+    if name.startswith("llm:"):
+        alias = name.split(":", 1)[1]
+        if not alias:
+            raise ValueError("LLM policy requires an alias")
+        aliases = llm_aliases if llm_aliases is not None else load_llm_aliases()
+        if alias not in aliases:
+            raise ValueError(f"unknown LLM strategist alias {alias!r}")
+        config = aliases[alias]
+        model_env = config.get("model_env")
+        model = config.get("model")
+        if model_env:
+            model = os.environ.get(model_env)
+            if model is None:
+                if not dry_run:
+                    raise RuntimeError(f"LLM policy requires environment variable {model_env}")
+                model = f"<{model_env} not set>"
+        api_key_env = config["api_key_env"]
+        api_key = os.environ.get(api_key_env, "")
+        if not api_key and not dry_run:
+            raise RuntimeError(f"LLM policy requires environment variable {api_key_env}")
+        return (
+            LLMStrategist(
+                base_url=llm_base_url_override or config["base_url"],
+                api_key=api_key,
+                model=model,
+                max_tokens_field=config["max_tokens_field"],
+                max_tokens=int(config["max_tokens"]),
+                temperature=config.get("temperature"),
+                max_calls=max_calls,
+                prompt_path=config["prompt"],
+            ),
+            "llm",
+        )
     raise ValueError(f"unknown policy {name!r}")
 
 
 def policy_seed(seed: int, policy_index: int, paired: bool) -> int:
     return seed if paired else seed + policy_index * 100_000
+
+
+def simulate_policy(
+    *,
+    episodes: int,
+    split: str,
+    scenarios: list[dict],
+    seed: int,
+    strategist_name: str,
+    strategist,
+    run_id: str,
+    simulator_config: str,
+    workers: int = 1,
+):
+    if workers < 1:
+        raise ValueError("workers must be at least 1")
+    if workers == 1:
+        return simulate_episodes(
+            episodes=episodes,
+            split=split,
+            scenarios=scenarios,
+            seed=seed,
+            strategist_name=strategist_name,
+            strategist=strategist,
+            run_id=run_id,
+            simulator_config=simulator_config,
+        )
+    if episodes < 1:
+        raise ValueError("episodes must be positive")
+    candidates = [scenario for scenario in scenarios if scenario["split"] == split]
+    if not candidates:
+        raise ValueError(f"no scenarios available for split {split}")
+
+    def run(index: int):
+        scenario = candidates[index % len(candidates)]
+        return run_episode(
+            scenario,
+            run_id=run_id,
+            episode_seed=seed + index,
+            strategist_name=strategist_name,
+            strategist=strategist,
+            horizon=min(int(scenario["teaching_horizon"]), HORIZON),
+            simulator_config=simulator_config,
+        )
+
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        return list(executor.map(run, range(episodes)))
+
+
+class _PromptCaptured(Exception):
+    pass
+
+
+def first_prompt_for(
+    strategist: LLMStrategist,
+    *,
+    scenario: dict,
+    seed: int,
+    simulator_config: str,
+) -> str:
+    captured = {}
+
+    class PromptCapture:
+        def act(self, observation: list[float], mask: list[bool], context: dict) -> int:
+            captured["prompt"] = strategist.build_prompt(context, mask)
+            raise _PromptCaptured
+
+    try:
+        run_episode(
+            scenario,
+            run_id="evaluation-dry-run",
+            episode_seed=seed,
+            strategist_name="llm",
+            strategist=PromptCapture(),
+            horizon=min(int(scenario["teaching_horizon"]), HORIZON),
+            simulator_config=simulator_config,
+        )
+    except _PromptCaptured:
+        pass
+    if "prompt" not in captured:
+        raise RuntimeError("could not capture the first LLM prompt")
+    return captured["prompt"]
 
 
 def main() -> None:
@@ -89,8 +223,16 @@ def main() -> None:
     parser.add_argument("--paired-seeds", action="store_true")
     parser.add_argument("--simulator-config")
     parser.add_argument("--name")
+    parser.add_argument("--workers", type=int, default=1)
+    parser.add_argument("--max-calls", type=int, default=2000)
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--llm-base-url-override")
     parser.add_argument("--unseal-test", action="store_true")
     args = parser.parse_args()
+    if args.workers < 1:
+        parser.error("--workers must be at least 1")
+    if args.max_calls < 0:
+        parser.error("--max-calls must be non-negative")
     config = yaml.safe_load((ROOT / args.config).read_text(encoding="utf-8"))
     simulator_config = (
         args.simulator_config
@@ -107,6 +249,43 @@ def main() -> None:
     if not scenarios:
         raise ValueError(f"no scenarios for split {args.split}")
     policies = [item.strip() for item in args.policies.split(",") if item.strip()]
+    llm_aliases = (
+        load_llm_aliases() if any(name.startswith("llm:") for name in policies) else None
+    )
+    selected_policies = [
+        (
+            policy_index,
+            name,
+            *policy_from_name(
+                name,
+                llm_aliases=llm_aliases,
+                max_calls=args.max_calls,
+                llm_base_url_override=args.llm_base_url_override,
+                dry_run=args.dry_run,
+            ),
+        )
+        for policy_index, name in enumerate(policies)
+    ]
+    if args.dry_run:
+        llm_policies = [
+            (policy_index, name, strategist)
+            for policy_index, name, strategist, _ in selected_policies
+            if isinstance(strategist, LLMStrategist)
+        ]
+        if not llm_policies:
+            parser.error("--dry-run requires at least one llm:<alias> policy")
+        estimated_calls = len(scenarios) * args.episodes_per_scenario * 16
+        for policy_index, name, strategist in llm_policies:
+            prompt = first_prompt_for(
+                strategist,
+                scenario=scenarios[0],
+                seed=policy_seed(seed, policy_index, args.paired_seeds),
+                simulator_config=simulator_config,
+            )
+            print(f"=== {name} ({strategist.model}) ===")
+            print(prompt, end="" if prompt.endswith("\n") else "\n")
+            print(f"Estimated calls: {estimated_calls}")
+        return
     first_policy_gains: list[float] | None = None
     report = {
         "label": "simulated",
@@ -115,11 +294,11 @@ def main() -> None:
         "episodes_per_scenario": args.episodes_per_scenario,
         "simulator_config": simulator_config,
         "paired_seeds": args.paired_seeds,
+        "workers": args.workers,
         "policies": {},
     }
-    for policy_index, name in enumerate(policies):
-        strategist, strategist_name = policy_from_name(name)
-        results = simulate_episodes(
+    for policy_index, name, strategist, strategist_name in selected_policies:
+        results = simulate_policy(
             episodes=len(scenarios) * args.episodes_per_scenario,
             split=args.split,
             scenarios=scenarios,
@@ -128,12 +307,15 @@ def main() -> None:
             strategist=strategist,
             run_id=f"evaluation-{args.split}-{policy_index}",
             simulator_config=simulator_config,
+            workers=args.workers,
         )
         policy_report = {
             "label": "simulated",
             "overall": summarize(results, seed + policy_index),
             "profiles": {},
         }
+        if isinstance(strategist, LLMStrategist):
+            policy_report["llm_usage"] = strategist.usage_summary()
         if args.paired_seeds and first_policy_gains is not None:
             gain_differences = [
                 result.gain - first_gain
@@ -180,6 +362,28 @@ def main() -> None:
                     for pace, frequency in summary["pace_frequency"].items()
                 )
                 + " |"
+            )
+    llm_policies = [
+        (policy, values["llm_usage"])
+        for policy, values in report["policies"].items()
+        if "llm_usage" in values
+    ]
+    if llm_policies:
+        lines.extend(
+            [
+                "",
+                "## LLM usage",
+                "",
+                "| Policy | Model | Calls | Cache hits | Fallback rate | Prompt tokens | "
+                "Completion tokens |",
+                "|---|---|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for policy, usage in llm_policies:
+            lines.append(
+                f"| {policy} | {usage['model']} | {usage['calls']} | "
+                f"{usage['cache_hits']} | {usage['fallback_rate']:.4f} | "
+                f"{usage['prompt_tokens']} | {usage['completion_tokens']} |"
             )
     (output_dir / "report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print("\n".join(lines))

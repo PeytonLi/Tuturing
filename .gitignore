@@ -4,6 +4,7 @@
 /data/private_raw/
 /data/sft/
 /artifacts/
+/experiments/learning/llm_cache/
 /experiments/**/runs/
 /experiments/**/evals/
 .pytest_cache/
