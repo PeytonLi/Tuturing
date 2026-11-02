@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import urllib.error
 import urllib.request
 from collections import defaultdict
@@ -16,6 +17,7 @@ from packages.learning.actions import (
     strategist_mask,
 )
 from packages.learning.features import build_features
+from packages.learning.scheduler import skip_diagnostic_due
 from packages.policies.network import NetworkStrategist
 from packages.policies.rules import (
     AlwaysHintStrategist,
@@ -111,6 +113,9 @@ def case_state_to_inputs(state: dict) -> tuple[dict, list[float], list[bool], di
         "hint_level": int(state.get("hint_level", 0)),
     }
     mask = strategist_mask(mask_state)
+    skip_option = state.get("option_type") == "SKIP_TO_TARGET"
+    skip_deadline = turn - int(state.get("option_turns", 0)) + 2 if skip_option else None
+    skip_done = skip_option and state.get("previous_move") == "CHECK_MASTERY"
     context = {
         **mask_state,
         "pace_preference": state.get("pace_preference", "normal"),
@@ -119,8 +124,18 @@ def case_state_to_inputs(state: dict) -> tuple[dict, list[float], list[bool], di
         "explicit_faster": request == "faster",
         "explicit_slower": request == "slower",
         "independent_success_streak": int(state.get("independent_success_streak", 0)),
-        "meaningful_error": False,
+        "meaningful_error": request == "hint"
+        or bool(item and item.get("answered") == "incorrect"),
         "no_diagnostic_yet": turn == 0,
+        "unsupported_advancement": False,
+        "wants_certification": False,
+        "skip_diagnostic_due": skip_diagnostic_due(
+            {
+                "skip_diagnostic_deadline": skip_deadline,
+                "skip_diagnostic_done": skip_done,
+            },
+            turn,
+        ),
         "turn_index": turn,
     }
     if sum(mask) == 0:
@@ -142,6 +157,11 @@ def legal_action_text(mask: list[bool]) -> str:
 
 
 def parse_first_json_object(text: str) -> dict:
+    text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
+    leading = text.lstrip()
+    if leading.startswith("<think>"):
+        first_object = text.find("{")
+        text = text[first_object:] if first_object >= 0 else ""
     decoder = json.JSONDecoder()
     for index, char in enumerate(text):
         if char != "{":
@@ -155,7 +175,7 @@ def parse_first_json_object(text: str) -> dict:
     raise ValueError("reply contains no JSON object")
 
 
-def llm_action(case: dict, mask: list[bool]) -> tuple[int | None, bool]:
+def llm_action(case: dict, mask: list[bool]) -> tuple[int | None, bool, bool]:
     base_url = os.environ.get("TUTOR_LLM_BASE_URL")
     api_key = os.environ.get("TUTOR_LLM_API_KEY")
     model = os.environ.get("TUTOR_LLM_MODEL")
@@ -175,13 +195,18 @@ def llm_action(case: dict, mask: list[bool]) -> tuple[int | None, bool]:
         .replace("{recent_dialogue}", dialogue)
         .replace("{legal_actions}", legal_action_text(mask))
     )
-    payload = json.dumps(
-        {
-            "model": model,
-            "messages": [{"role": "user", "content": prompt}],
-            "temperature": 0,
-        }
-    ).encode("utf-8")
+    payload_data = {
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}],
+    }
+    if os.environ.get("TUTOR_LLM_OMIT_TEMPERATURE") != "1":
+        payload_data["temperature"] = 0
+    token_field = os.environ.get("TUTOR_LLM_MAX_TOKENS_FIELD", "max_tokens")
+    token_limit = int(os.environ.get("TUTOR_LLM_MAX_TOKENS", "2048"))
+    if not token_field or token_limit <= 0:
+        raise ValueError("LLM token-limit field must be non-empty and limit must be positive")
+    payload_data[token_field] = token_limit
+    payload = json.dumps(payload_data).encode("utf-8")
     request = urllib.request.Request(
         base_url.rstrip("/") + "/chat/completions",
         data=payload,
@@ -195,17 +220,27 @@ def llm_action(case: dict, mask: list[bool]) -> tuple[int | None, bool]:
     try:
         with urllib.request.urlopen(request, timeout=60) as response:
             body = json.loads(response.read().decode("utf-8"))
-        content = body["choices"][0]["message"]["content"]
+        choice = body["choices"][0]
+        truncated = choice.get("finish_reason") in {"length", "max_tokens"}
+        if truncated:
+            return None, True, True
+        content = choice["message"]["content"]
         parsed = parse_first_json_object(content)
         action_id = encode_strategist(
             str(parsed["move"]), str(parsed["difficulty"]), str(parsed["pace"])
         )
-        return action_id, False
+        return action_id, False, False
     except (urllib.error.URLError, KeyError, IndexError, TypeError, ValueError):
-        return None, True
+        return None, True, False
 
 
-def score_action(case: dict, action_id: int | None, mask: list[bool], parse_failure: bool):
+def score_action(
+    case: dict,
+    action_id: int | None,
+    mask: list[bool],
+    parse_failure: bool,
+    truncated: bool = False,
+):
     move, difficulty, pace = decode_strategist(action_id) if action_id is not None else (None,) * 3
     illegal = action_id is None or not mask[action_id]
     return {
@@ -226,15 +261,21 @@ def score_action(case: dict, action_id: int | None, mask: list[bool], parse_fail
         ),
         "illegal": illegal,
         "parse_failure": parse_failure,
+        "truncated": truncated,
     }
 
 
 def rates(rows: list[dict]) -> dict:
     fields = ("move_ok", "forbidden", "pace_ok", "difficulty_ok", "illegal", "parse_failure")
-    result = {"cases": len(rows)}
+    result = {
+        "cases": len(rows),
+        "truncated_output_count": sum(bool(row.get("truncated")) for row in rows),
+    }
     for field in fields:
         values = [row[field] for row in rows if row[field] is not None]
         result[field + "_rate"] = sum(values) / len(values) if values else None
+        if field in {"forbidden", "illegal", "parse_failure"}:
+            result[field + "_count"] = sum(values)
     return result
 
 
@@ -272,16 +313,19 @@ def main() -> None:
     rows = []
     for case, observation, mask, context in mapped_cases:
         if args.policy == "llm":
-            action_id, parse_failure = llm_action(case, mask)
+            action_id, parse_failure, truncated = llm_action(case, mask)
         else:
             action_id = policy.act(observation, mask, context)
             parse_failure = False
-        rows.append(score_action(case, action_id, mask, parse_failure))
+            truncated = False
+        rows.append(score_action(case, action_id, mask, parse_failure, truncated))
     categories = defaultdict(list)
     for row in rows:
         categories[row["category"]].append(row)
     report = {
+        "result_label": "one-step judged results, not learning outcomes",
         "policy": args.policy,
+        "model_id": os.environ.get("TUTOR_LLM_MODEL") if args.policy == "llm" else None,
         "overall": rates(rows),
         "categories": {key: rates(value) for key, value in sorted(categories.items())},
         "cases": rows,
@@ -292,13 +336,18 @@ def main() -> None:
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(rendered + "\n", encoding="utf-8")
     print(rendered)
-    print("\n| Category | Cases | Move OK | Forbidden | Pace OK | Difficulty OK | Illegal |")
-    print("|---|---:|---:|---:|---:|---:|---:|")
+    print(
+        "\n| Category | Cases | Move OK | Forbidden | Pace OK | Difficulty OK "
+        "| Illegal | Parse failures | Truncated |"
+    )
+    print("|---|---:|---:|---:|---:|---:|---:|---:|---:|")
     for category, summary in [("overall", report["overall"]), *report["categories"].items()]:
         print(
             f"| {category} | {summary['cases']} | {summary['move_ok_rate']:.3f} "
             f"| {summary['forbidden_rate']:.3f} | {summary['pace_ok_rate']} "
-            f"| {summary['difficulty_ok_rate']} | {summary['illegal_rate']:.3f} |"
+            f"| {summary['difficulty_ok_rate']} | {summary['illegal_rate']:.3f} "
+            f"| {summary['parse_failure_rate']:.3f} "
+            f"| {summary['truncated_output_count']} |"
         )
 
 
