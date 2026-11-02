@@ -296,7 +296,7 @@ def apply_teaching_effect(
         for misconception in student.active_misconceptions:
             if concept_id in student.susceptible_concepts.get(misconception, set()):
                 student.surfaced_misconceptions.add(misconception)
-    if move in {"EXPLAIN_CONCEPT", "WORKED_EXAMPLE"}:
+    if fidelity > 0 and move in {"EXPLAIN_CONCEPT", "WORKED_EXAMPLE"}:
         deactivation_rng = bank.rng(
             scenario["scenario_id"], episode_seed, turn, "misconception_deactivation"
         )
