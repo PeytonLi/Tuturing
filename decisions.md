@@ -132,3 +132,11 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 **Consequences (assistant):** an item substitution on a protected check is a critical failure under PRD 14.1, so the validator gets a digit-independent item-fidelity check before any model output is trusted; the response-service agent was tasked with it. The finding weighs on D10, which Xueming has not yet confirmed. The review sheet Xueming is rating was left byte-for-byte unchanged; the 40 Qwen replies were added as a supplement under new labels, which weakens blinding between Qwen and the earlier two systems but not between those two.
 
+## 2026-11-02 — Public API merged; ten-session smoke passes against B's service
+
+**Source:** the public API agent's final report; merge `428bda3`.
+
+**Facts:** the public contract, fixtures, `apps/public_api` and the ten-session smoke workflow are on `main`. The smoke test starts Peyton's real learning service in-process and completed 10 of 10 sessions with byte-identical retries and hashes matching B's records (gate G4, A's side). The agent mapped PRD gaps to existing codes: `request_id` reuse with different content and an in-flight competing request both return `409 STATE_CONFLICT`; unexpected failures return `503 LEARNING_UNAVAILABLE`.
+
+**Open for the owners:** D11 proposes keeping `Error` in A's contract and referencing B's `PublicState` and `SessionEnd`; the public session ID is B's allocated ID because B rejects a client-supplied one, a deviation from PRD 8.1; and four findings about B's service are recorded in D11 for the first integration review rather than patched.
+
