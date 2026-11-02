@@ -6,7 +6,7 @@
   "based_on_state_version": 8,
   "option_id": "option_fx_challenge_0006",
   "navigation_action": {"action_id": 7, "operation": "STAY", "target_concept_id": "C08"},
-  "teaching_action": {"action_id": 49, "move": "CHALLENGE", "difficulty": "medium", "pace": "normal"},
+  "teaching_action": {"action_id": 52, "move": "CHALLENGE", "difficulty": "hard", "pace": "normal"},
   "actor_eligible": true,
   "concept_id": "C08",
   "goal_concept_id": "C08",
