@@ -46,6 +46,9 @@ def test_alt_config_only_changes_intended_assumptions():
                     [max(0.05, value - 0.10) for value in profile[key]]
                 )
                 restored["profiles"][profile_id][key] = profile[key]
+    assert alt["pace_cues"]["strength"] < v2["pace_cues"]["strength"]
+    assert alt["pace_cues"]["reply_seconds"]["sigma"] > v2["pace_cues"]["reply_seconds"]["sigma"]
+    restored["pace_cues"] = v2["pace_cues"]
     assert restored == v2
     for scenario in robustness.load_scenarios():
         if scenario["split"] == "validation":

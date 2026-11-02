@@ -31,6 +31,9 @@ dropout:
 help_seeking:
   request: hint
   profiles_use_probability: true
+  # Assumption: a detail-preferring learner asks for help more often when the tutor's pace was
+  # more concise than preferred; added to the profile probability only when the caller passes tutor_pace.
+  detailed_too_concise_bonus: 0.10
 profiles:
   novice_missing_prereqs:
     concept_mastery: [0.05, 0.25]
@@ -50,9 +53,23 @@ profiles:
     ell: [0.04, 0.10]
     help_seeking_probability: 0.05
     preferred_pace: normal
+  careful_detailed:
+    concept_mastery: [0.25, 0.5]
+    ell: [0.04, 0.10]
+    help_seeking_probability: 0.15
+    preferred_pace: detailed
 observation:
   item_format: free_response
   guess: [0.05, 0.10]
   slip: [0.07, 0.25]
   difficulty_factor: {easy: 1.0, medium: 0.85, hard: 0.65}
   forgetting: 0.0
+# Robustness-only pace cues: half the pace separation and noisier replies than v2.
+pace_cues:
+  strength: 0.5
+  mismatch_weight: 0.5
+  reply_seconds: {median: 14.0, sigma: 0.8, log_shift: 0.35}
+  message_words: {mean: 6.0, log_shift: 0.4, skim_max_words: 3}
+  skim: {base_logit: -1.4, slope: 0.9}
+  confusion: {base_logit: -1.8, slope: 0.8}
+  why_question: {base_logit: -2.0, slope: 0.8}

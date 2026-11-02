@@ -10,6 +10,7 @@ from pathlib import Path
 import yaml
 
 from packages.learning.actions import (
+    PACES,
     decode_navigator,
     decode_strategist,
     encode_strategist,
@@ -20,6 +21,10 @@ from packages.learning.belief import ConceptBelief, update_belief
 from packages.learning.content.templates.families import TemplateFamily, families_for
 from packages.learning.features import build_features
 from packages.learning.grader import grade_answer
+from packages.learning.pace import initial_state as initial_pace_state
+from packages.learning.pace import lean_faster, lean_slower
+from packages.learning.pace import select as select_pace
+from packages.learning.pace import update as update_pace
 from packages.learning.scheduler import GoalStack, boundary_reasons, skip_diagnostic_due
 from packages.policies.rules import (
     AlwaysHintStrategist,
@@ -48,6 +53,11 @@ from packages.simulator.student import (
     sample_student,
     sample_student_outcome,
 )
+
+try:
+    from packages.simulator.pace_cues import sample_pace_cues
+except ImportError:  # the simulator lane may not have landed pace cues yet
+    sample_pace_cues = None
 
 HORIZON = 16
 GAMMA = 0.99
@@ -182,6 +192,8 @@ def _public_state(
     explicit_slower: bool,
     stack: list[str],
     misconceptions: dict[str, float] | None = None,
+    pace_lean_faster: float | None = None,
+    pace_lean_slower: float | None = None,
 ) -> dict:
     concepts = []
     for index in range(1, 16):
@@ -195,7 +207,7 @@ def _public_state(
                 "independent_incorrect": belief.independent_incorrect,
             }
         )
-    return {
+    public = {
         "concepts": concepts,
         "misconceptions": [
             float((misconceptions or {}).get(f"M{index:02d}", 0.0))
@@ -223,6 +235,11 @@ def _public_state(
         "mastery": beliefs[current].mastery,
         "mastery_by_concept": {concept_id: beliefs[concept_id].mastery for concept_id in beliefs},
     }
+    if pace_lean_faster is not None:
+        public["pace_lean_faster"] = float(pace_lean_faster)
+    if pace_lean_slower is not None:
+        public["pace_lean_slower"] = float(pace_lean_slower)
+    return public
 
 
 def _concept_graph_context(graph: dict, beliefs: dict[str, ConceptBelief], goal: str) -> dict:
@@ -628,7 +645,12 @@ def run_episode(
     else:
         goal = scenario["goal_concept_id"]
     current = scenario["start_concept_id"]
-    pace = "concise" if requests["faster"] else "detailed" if requests["slower"] else "normal"
+    pace = "normal"
+    pace_state = initial_pace_state(pace)
+    initial_request = "faster" if requests["faster"] else "slower" if requests["slower"] else None
+    if initial_request is not None:
+        pace_state = update_pace(pace_state, request=initial_request, current=pace)
+        pace, pace_state = select_pace(pace_state, pace)
     stack = GoalStack()
     active_item: dict | None = None
     previous_move = "NONE"
@@ -678,6 +700,8 @@ def run_episode(
         explicit_slower=requests["slower"],
         stack=stack.stack,
         misconceptions=public_misconceptions,
+        pace_lean_faster=lean_faster(pace_state),
+        pace_lean_slower=lean_slower(pace_state),
     )
     navigator_context = _active_context(
         initial_public,
@@ -812,6 +836,8 @@ def run_episode(
             explicit_slower=requests["slower"],
             stack=stack.stack,
             misconceptions=public_misconceptions,
+            pace_lean_faster=lean_faster(pace_state),
+            pace_lean_slower=lean_slower(pace_state),
         )
         context = _active_context(
             public,
@@ -1046,6 +1072,7 @@ def run_episode(
         stop_rng = random_bank.rng(scenario["scenario_id"], episode_seed, turn, "stop_request")
         pace_mismatch = selected_pace != private.preferred_pace
         pace_request = None
+        requests["faster"] = requests["slower"] = False
         if pace_mismatch:
             pace_request_rng = random_bank.rng(
                 scenario["scenario_id"], episode_seed, turn, "pace_mismatch_request"
@@ -1059,7 +1086,36 @@ def run_episode(
                     pace_request = "slower" if selected_pace == "concise" else "faster"
                 requests["faster"] = pace_request == "faster"
                 requests["slower"] = pace_request == "slower"
-                pace = "concise" if pace_request == "faster" else "detailed"
+        pace_before = pace
+        pace_cues = (
+            sample_pace_cues(
+                private,
+                selected_pace,
+                scenario=scenario,
+                episode_seed=episode_seed,
+                turn=turn,
+                bank=random_bank,
+                config=sim_config,
+            )
+            if sample_pace_cues is not None
+            else None
+        )
+        pace_state = update_pace(
+            pace_state,
+            request=pace_request,
+            correct=(
+                evidence_correctness == "correct"
+                if outcome.independent and evidence_correctness in {"correct", "incorrect"}
+                else None
+            ),
+            used_hint=outcome.explicit_request == "hint",
+            asked_answer=outcome.explicit_request == "answer",
+            success_streak=success_streak,
+            failure_streak=failure_streak,
+            cues=pace_cues,
+            current=pace,
+        )
+        pace, pace_state = select_pace(pace_state, pace)
         hazard_components = dropout_hazard_components(private, selected_pace, sim_config)
         hazard = dropout_hazard(private, selected_pace, sim_config)
         dropout = float(dropout_rng.random()) < hazard or float(stop_rng.random()) < hazard
@@ -1105,6 +1161,8 @@ def run_episode(
             explicit_slower=requests["slower"],
             stack=stack.stack,
             misconceptions=public_misconceptions,
+            pace_lean_faster=lean_faster(pace_state),
+            pace_lean_slower=lean_slower(pace_state),
         )
         next_observation = build_features(public_after)
         if terminal:
@@ -1163,6 +1221,12 @@ def run_episode(
                 "pace_mismatch": pace_mismatch,
                 "pace_request_emitted": pace_request is not None,
                 "pace_request": pace_request,
+                "pace_before": pace_before,
+                "pace_chosen": pace,
+                "pace_cues": pace_cues,
+                "pace_belief": dict(zip(PACES, pace_state["belief"], strict=True)),
+                "pace_lean_faster": lean_faster(pace_state),
+                "pace_lean_slower": lean_slower(pace_state),
                 "previous_answer_correct": previous_answer_correct,
                 "previous_answer_item_id": previous_answer_item,
                 "teaching_delta": private.mastery[current] - mastery_before[current],
@@ -1264,6 +1328,8 @@ def run_episode(
             explicit_slower=requests["slower"],
             stack=stack.stack,
             misconceptions=public_misconceptions,
+            pace_lean_faster=lean_faster(pace_state),
+            pace_lean_slower=lean_slower(pace_state),
         )
         next_context = _active_context(
             next_public,
