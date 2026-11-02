@@ -1,4 +1,17 @@
 {
-  "gpt_6_1_sol": {"wall_seconds": 93, "cost_usd": 1.51, "cost_basis": "599679 input tokens x $2/M + 31462 output tokens x $10/M (configs/response/benchmark_v1.yaml pricing)"},
-  "strategist_bc": {"wall_seconds": 12.65, "cost_usd": 0.0, "cost_basis": "CPU only on the dev VM"}
+  "gpt_6_1_sol": {
+    "wall_seconds": 93,
+    "cost_usd": 1.51,
+    "cost_basis": "599679 input tokens x $2/M + 31462 output tokens x $10/M (configs/response/benchmark_v1.yaml pricing)"
+  },
+  "strategist_bc": {
+    "wall_seconds": 12.65,
+    "cost_usd": 0.0,
+    "cost_basis": "CPU only on the dev VM"
+  },
+  "gpt_6_astra": {
+    "wall_seconds": 111,
+    "cost_usd": 7.66,
+    "cost_basis": "602342 input x $10/M + 32789 output x $50/M (configs/response/benchmark_v1.yaml pricing)"
+  }
 }
