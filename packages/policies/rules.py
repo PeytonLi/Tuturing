@@ -85,7 +85,7 @@ class RulesNavigator:
 
 
 class RulesStrategist:
-    policy_version = "rules_strategist_v1"
+    policy_version = "rules_strategist_v3"
 
     def act(self, observation: list[float], mask: list[bool], context: dict) -> int:
         difficulty = str(context.get("active_item_difficulty", "medium"))
@@ -94,6 +94,20 @@ class RulesStrategist:
         pace = str(context.get("pace_preference", "normal"))
         if pace not in PACES:
             pace = "normal"
+        misconceptions = context.get("misconceptions", {})
+        if isinstance(misconceptions, dict):
+            misconception_values = misconceptions.values()
+        elif isinstance(misconceptions, (list, tuple)) and len(misconceptions) == 25:
+            misconception_values = misconceptions
+        else:
+            misconception_values = ()
+        probability = max((float(value) for value in misconception_values), default=0.0)
+        likely_misconception = probability >= 0.5
+        confirmed_misconception = probability >= 0.75 or (
+            likely_misconception
+            and context.get("previous_move") in {"PROBE", "REFLECT", "HINT"}
+            and context.get("meaningful_error")
+        )
         if context.get("skip_diagnostic_due"):
             move = "CHECK_MASTERY"
         elif context.get("unsupported_advancement"):
@@ -107,7 +121,18 @@ class RulesStrategist:
             context.get("repeated_unsuccessful_hints")
             or int(context.get("unsuccessful_hint_count", 0)) >= 2
         ):
-            move = "WORKED_EXAMPLE"
+            move = (
+                "PRACTICE"
+                if context.get("previous_move") == "WORKED_EXAMPLE"
+                else "WORKED_EXAMPLE"
+            )
+        elif likely_misconception and not confirmed_misconception:
+            move = "PROBE"
+        elif confirmed_misconception and context.get("previous_move") not in {
+            "EXPLAIN_CONCEPT",
+            "WORKED_EXAMPLE",
+        }:
+            move = "WORKED_EXAMPLE" if mastery < 0.4 else "EXPLAIN_CONCEPT"
         elif context.get("meaningful_error") or context.get("independent_failure_streak", 0):
             move = "HINT"
         elif context.get("no_diagnostic_yet"):
@@ -158,6 +183,23 @@ class AlwaysHintStrategist:
         hint = encode_strategist("HINT", difficulty, pace)
         if _valid(mask, hint):
             return hint
+        fallback = encode_strategist("PROBE", "easy", pace)
+        return _first_valid(mask, [fallback])
+
+
+class AlwaysWorkedExampleStrategist:
+    policy_version = "always_worked_example_strategist_v1"
+
+    def act(self, observation: list[float], mask: list[bool], context: dict) -> int:
+        difficulty = str(context.get("active_item_difficulty", "medium"))
+        if difficulty not in DIFFICULTIES:
+            difficulty = "medium"
+        pace = str(context.get("pace_preference", "normal"))
+        if pace not in PACES:
+            pace = "normal"
+        worked_example = encode_strategist("WORKED_EXAMPLE", difficulty, pace)
+        if _valid(mask, worked_example):
+            return worked_example
         fallback = encode_strategist("PROBE", "easy", pace)
         return _first_valid(mask, [fallback])
 
