@@ -124,3 +124,11 @@ not used by the live engine; its rules config and checkpoint loading remain unch
 
 **Implementation (commit `e497294`):** responders declare their own delivery label. The template stub says `fallback`, including when its CHECK_MASTERY template goes through the one permitted repair, because a template is a verified fallback realization and never model text (PRD 8.4). Only a language-model responder yields `model` or `repaired`. The runbook and tests were updated; 237 tests pass.
 
+## 2026-11-02 — Qwen3.8-27B benchmark result and the item-substitution gap
+
+**Source:** the benchmark agent's final report; results in `experiments/response/benchmark_v1/` (merge `374758a`).
+
+**Facts:** Qwen3.8-27B ran on all 107 cases from a one-H100 Fireworks deployment on Peyton's account, created at 21:32:51 UTC and verified deleted at 21:36:42 UTC, for at most $0.51 of GPU time. Automated results: 41 of 107 delivered as model, 5 repaired, 61 fallback, 1.2 s median latency. A human read found that it substituted a six-sided die for the issued coin problem on both CHECK_MASTERY fixtures and the CHALLENGE fixture; the automated checks passed because the coin stem contains no digits to anchor the fidelity and math checks. gpt-6.1-sol kept the issued problem in all 17 fixture and smoke cases.
+
+**Consequences (assistant):** an item substitution on a protected check is a critical failure under PRD 14.1, so the validator gets a digit-independent item-fidelity check before any model output is trusted; the response-service agent was tasked with it. The finding weighs on D10, which Xueming has not yet confirmed. The review sheet Xueming is rating was left byte-for-byte unchanged; the 40 Qwen replies were added as a supplement under new labels, which weakens blinding between Qwen and the earlier two systems but not between those two.
+
