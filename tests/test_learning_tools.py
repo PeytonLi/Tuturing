@@ -111,6 +111,24 @@ def test_evaluation_paired_seed_and_simulator_override_are_reported(
     assert report["paired_seeds"] is True
     assert report["simulator_config"] == simulator_config
     assert set(report["policies"]) == {"rules", "always_hint"}
+    rules_report = report["policies"]["rules"]
+    hint_report = report["policies"]["always_hint"]
+    assert "paired_gain_difference_vs_first" not in rules_report
+    difference = hint_report["paired_gain_difference_vs_first"]
+    expected_difference = (
+        hint_report["overall"]["mean_gain"] - rules_report["overall"]["mean_gain"]
+    )
+    assert difference["mean"] == pytest.approx(expected_difference)
+    assert difference["ci_95"] == pytest.approx(
+        [expected_difference, expected_difference]
+    )
+    for policy_report in report["policies"].values():
+        assert sum(policy_report["overall"]["pace_frequency"].values()) == pytest.approx(1)
+        for profile in policy_report["profiles"].values():
+            assert sum(profile["pace_frequency"].values()) == pytest.approx(1)
+    assert "Pace frequency" in (Path(output_name) / "report.md").read_text(
+        encoding="utf-8"
+    )
     assert evaluate.policy_seed(42, 0, paired=False) == 42
     assert evaluate.policy_seed(42, 1, paired=False) == 100_042
     assert evaluate.policy_seed(42, 1, paired=True) == 42

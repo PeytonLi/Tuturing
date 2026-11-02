@@ -10,6 +10,7 @@ import yaml
 
 from packages.learning.episode import load_scenarios, simulate_episodes
 from packages.policies.network import NetworkStrategist
+from packages.policies.rules import action_label
 from packages.simulator.student import DEFAULT_SIMULATOR_CONFIG
 from tools.learning.train_ppo import episode_reward
 
@@ -32,10 +33,15 @@ def summarize(results, seed: int) -> dict:
     gains = [result.gain for result in results]
     transitions = [item for result in results for item in result.strategist_transitions]
     move_counts = {}
+    pace_counts = {}
     for result in results:
         for move, count in result.move_histogram.items():
             move_counts[move] = move_counts.get(move, 0) + count
+    for transition in transitions:
+        pace = action_label(transition["action_id"])[2]
+        pace_counts[pace] = pace_counts.get(pace, 0) + 1
     total_moves = sum(move_counts.values())
+    total_turns = sum(pace_counts.values())
     disclosure = sum(
         item["reward_components"]["disclosure_penalty"] < 0 for item in transitions
     ) / max(1, len(transitions))
@@ -49,6 +55,9 @@ def summarize(results, seed: int) -> dict:
         "mean_turns": sum(result.turns for result in results) / max(1, len(results)),
         "move_frequency": {
             move: move_counts[move] / max(1, total_moves) for move in sorted(move_counts)
+        },
+        "pace_frequency": {
+            pace: pace_counts[pace] / max(1, total_turns) for pace in sorted(pace_counts)
         },
         "mean_total_reward": sum(episode_reward(result) for result in results)
         / max(1, len(results)),
@@ -98,6 +107,7 @@ def main() -> None:
     if not scenarios:
         raise ValueError(f"no scenarios for split {args.split}")
     policies = [item.strip() for item in args.policies.split(",") if item.strip()]
+    first_policy_gains: list[float] | None = None
     report = {
         "label": "simulated",
         "split": args.split,
@@ -124,6 +134,17 @@ def main() -> None:
             "overall": summarize(results, seed + policy_index),
             "profiles": {},
         }
+        if args.paired_seeds and first_policy_gains is not None:
+            gain_differences = [
+                result.gain - first_gain
+                for result, first_gain in zip(results, first_policy_gains, strict=True)
+            ]
+            policy_report["paired_gain_difference_vs_first"] = {
+                "mean": sum(gain_differences) / len(gain_differences),
+                "ci_95": bootstrap_mean_interval(gain_differences, seed + policy_index),
+            }
+        elif first_policy_gains is None:
+            first_policy_gains = [result.gain for result in results]
         for profile_index, profile in enumerate(sorted({row.profile_id for row in results})):
             group = [row for row in results if row.profile_id == profile]
             policy_report["profiles"][profile] = summarize(
@@ -142,8 +163,8 @@ def main() -> None:
         f"Split: **{args.split}**. All results are **simulated**.",
         "",
         "| Policy | Profile | Mean gain (95% bootstrap CI) | Disclosure | Dropout | "
-        "Mean turns | Mean reward |",
-        "|---|---|---:|---:|---:|---:|---:|",
+        "Mean turns | Mean reward | Pace frequency |",
+        "|---|---|---:|---:|---:|---:|---:|---|",
     ]
     for policy, values in report["policies"].items():
         groups = [("overall", values["overall"]), *values["profiles"].items()]
@@ -153,7 +174,12 @@ def main() -> None:
                 f"| {policy} | {profile} | {summary['mean_gain']:.4f} "
                 f"({low:.4f}, {high:.4f}) | {summary['disclosure_rate']:.3f} "
                 f"| {summary['dropout_rate']:.3f} | {summary['mean_turns']:.2f} "
-                f"| {summary['mean_total_reward']:.4f} |"
+                f"| {summary['mean_total_reward']:.4f} | "
+                + ", ".join(
+                    f"{pace}={frequency:.3f}"
+                    for pace, frequency in summary["pace_frequency"].items()
+                )
+                + " |"
             )
     (output_dir / "report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print("\n".join(lines))
