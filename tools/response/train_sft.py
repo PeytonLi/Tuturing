@@ -6,6 +6,7 @@ Context7 /huggingface/trl/v1.16.0.
 import argparse
 import json
 import math
+import re
 from pathlib import Path
 
 import yaml
@@ -13,13 +14,29 @@ import yaml
 CONFIG_KEYS = (
     "run_type", "base_model", "base_model_revision", "tokenizer_revision",
     "method", "lora_rank", "lora_alpha", "lora_dropout",
-    "lora_target_modules", "precision", "max_sequence_tokens",
+    "lora_target_modules", "lora_expected_target_count",
+    "precision", "max_sequence_tokens",
     "micro_batch_size", "gradient_accumulation_steps", "learning_rate",
     "epochs_max", "warmup_ratio", "weight_decay", "gradient_clip_norm",
     "packing", "loss_scope", "evaluation_interval_optimizer_steps",
     "checkpoint_interval_optimizer_steps", "seed",
 )
 _MISSING_REVISION = "REQUIRED_RESOLVED_COMMIT"
+
+
+def matched_lora_targets(module_names, target_modules) -> list[str]:
+    if isinstance(target_modules, str):
+        return [
+            name for name in module_names
+            if re.fullmatch(target_modules, name) is not None
+        ]
+    if isinstance(target_modules, list):
+        suffixes = set(target_modules)
+        return [
+            name for name in module_names
+            if name.rsplit(".", 1)[-1] in suffixes
+        ]
+    raise TypeError("target_modules must be a regex string or a list of suffixes")
 
 
 def load_config(path):
@@ -89,8 +106,29 @@ def check_config(cfg):
         errors.append("seed must be a non-negative integer")
     if cfg.get("precision") not in {"bfloat16", "float16", "float32"}:
         errors.append("precision must be bfloat16, float16, or float32")
-    if not isinstance(cfg.get("lora_target_modules"), list) or not cfg.get("lora_target_modules"):
-        errors.append("lora_target_modules must be a non-empty list")
+    target_modules = cfg.get("lora_target_modules")
+    if isinstance(target_modules, list):
+        if not target_modules or any(
+            not isinstance(module, str) or not module for module in target_modules
+        ):
+            errors.append("lora_target_modules must be a non-empty list of strings")
+    elif isinstance(target_modules, str):
+        if not target_modules:
+            errors.append("lora_target_modules must be a non-empty regex string")
+        else:
+            try:
+                re.compile(target_modules)
+            except re.error as error:
+                errors.append(f"lora_target_modules must be a valid regex: {error}")
+    else:
+        errors.append("lora_target_modules must be a non-empty list or regex string")
+    expected_target_count = cfg.get("lora_expected_target_count")
+    if (
+        not isinstance(expected_target_count, int)
+        or isinstance(expected_target_count, bool)
+        or expected_target_count <= 0
+    ):
+        errors.append("lora_expected_target_count must be a positive integer")
     return errors
 
 
@@ -281,6 +319,16 @@ def train(cfg):
         revision=cfg["base_model_revision"],
         torch_dtype=getattr(torch, cfg["precision"]),
     )
+    matched_targets = matched_lora_targets(
+        [name for name, _ in model.named_modules()],
+        cfg["lora_target_modules"],
+    )
+    expected_target_count = cfg["lora_expected_target_count"]
+    if len(matched_targets) != expected_target_count:
+        raise ValueError(
+            "LoRA target count mismatch: "
+            f"expected {expected_target_count}, matched {len(matched_targets)}"
+        )
     train_data = load_dataset("json", data_files=cfg["data"]["train"], split="train")
     train_data = train_data.map(
         to_prompt_completion, remove_columns=train_data.column_names

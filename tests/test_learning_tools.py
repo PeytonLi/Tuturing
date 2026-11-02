@@ -97,7 +97,7 @@ def test_evaluation_refuses_sealed_test_split(monkeypatch):
     assert error.value.code == 2
 
 
-def test_decision_cases_map_or_report_unmapped_request():
+def test_all_decision_cases_map_to_observations_and_legal_masks():
     cases = [
         json.loads(line)
         for line in (ROOT / "evaluation/learning/decision_cases_v1.jsonl")
@@ -105,28 +105,21 @@ def test_decision_cases_map_or_report_unmapped_request():
         .splitlines()
     ]
     assert len(cases) == 30
-    failed = []
-    mapped = 0
     for case in cases:
-        try:
-            _, observation, mask, _ = score_decisions.case_state_to_inputs(case["state"])
-        except ValueError as error:
-            failed.append((case["case_id"], str(error)))
-            continue
+        _, observation, mask, _ = score_decisions.case_state_to_inputs(case["state"])
         assert len(observation) == 140
         assert any(mask)
-        mapped += 1
-    assert mapped == 29
-    assert failed == [
-        (
-            "DC20",
-            "explicit_request='hint' has no corresponding feature or mask input; "
-            "cannot score this case without inventing semantics",
-        )
-    ]
+    assert len(cases) == 30
 
 
-def test_rules_scorer_stops_on_unmapped_case(monkeypatch):
-    monkeypatch.setattr(sys, "argv", ["score_decisions", "--policy", "rules"])
-    with pytest.raises(ValueError, match="explicit_request='hint'"):
-        score_decisions.main()
+def test_rules_scorer_scores_all_cases(monkeypatch, tmp_path):
+    output = tmp_path / "rules_scores.json"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["score_decisions", "--policy", "rules", "--out", str(output)],
+    )
+    score_decisions.main()
+    report = json.loads(output.read_text(encoding="utf-8"))
+    assert len(report["cases"]) == 30
+    assert report["overall"]["cases"] == 30
