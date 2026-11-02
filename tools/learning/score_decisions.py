@@ -21,6 +21,7 @@ from packages.learning.scheduler import skip_diagnostic_due
 from packages.policies.network import NetworkStrategist
 from packages.policies.rules import (
     AlwaysHintStrategist,
+    AlwaysWorkedExampleStrategist,
     RandomStrategist,
     RulesStrategist,
 )
@@ -304,12 +305,17 @@ def main() -> None:
         policy = RandomStrategist(args.seed)
     elif args.policy == "always_hint":
         policy = AlwaysHintStrategist()
+    elif args.policy == "always_worked_example":
+        policy = AlwaysWorkedExampleStrategist()
     elif args.policy.startswith("checkpoint:"):
         policy = NetworkStrategist(args.policy.split(":", 1)[1], greedy=True)
     elif args.policy == "llm":
         policy = None
     else:
-        parser.error("policy must be rules, random, always_hint, llm, or checkpoint:PATH")
+        parser.error(
+            "policy must be rules, random, always_hint, always_worked_example, "
+            "llm, or checkpoint:PATH"
+        )
     rows = []
     for case, observation, mask, context in mapped_cases:
         if args.policy == "llm":

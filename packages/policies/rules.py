@@ -162,6 +162,23 @@ class AlwaysHintStrategist:
         return _first_valid(mask, [fallback])
 
 
+class AlwaysWorkedExampleStrategist:
+    policy_version = "always_worked_example_strategist_v1"
+
+    def act(self, observation: list[float], mask: list[bool], context: dict) -> int:
+        difficulty = str(context.get("active_item_difficulty", "medium"))
+        if difficulty not in DIFFICULTIES:
+            difficulty = "medium"
+        pace = str(context.get("pace_preference", "normal"))
+        if pace not in PACES:
+            pace = "normal"
+        worked_example = encode_strategist("WORKED_EXAMPLE", difficulty, pace)
+        if _valid(mask, worked_example):
+            return worked_example
+        fallback = encode_strategist("PROBE", "easy", pace)
+        return _first_valid(mask, [fallback])
+
+
 def action_label(action_id: int) -> tuple[str, str, str]:
     move_index, rest = divmod(action_id, 9)
     difficulty_index, pace_index = divmod(rest, 3)

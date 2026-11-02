@@ -22,6 +22,7 @@ from packages.learning.grader import grade_answer
 from packages.learning.scheduler import GoalStack, boundary_reasons, skip_diagnostic_due
 from packages.policies.rules import (
     AlwaysHintStrategist,
+    AlwaysWorkedExampleStrategist,
     RandomStrategist,
     RulesNavigator,
     RulesStrategist,
@@ -612,6 +613,8 @@ def run_episode(
             strategist = RandomStrategist(episode_seed)
         elif strategist_name == "always_hint":
             strategist = AlwaysHintStrategist()
+        elif strategist_name == "always_worked_example":
+            strategist = AlwaysWorkedExampleStrategist()
         else:
             raise ValueError(f"unknown strategist policy {strategist_name}")
     navigator = RulesNavigator()

@@ -6,15 +6,114 @@ from pathlib import Path
 
 import pytest
 
+from packages.learning.actions import encode_strategist
+from packages.learning.episode import load_scenarios, simulate_episodes
 from packages.policies.network import (
     NetworkStrategist,
     StrategistActorCritic,
     save_checkpoint,
     torch,
 )
+from packages.policies.rules import AlwaysWorkedExampleStrategist
 from tools.learning import evaluate, score_decisions, train_bc, train_ppo
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_always_worked_example_uses_legal_move_and_falls_back_when_masked():
+    policy = AlwaysWorkedExampleStrategist()
+    worked_example = encode_strategist("WORKED_EXAMPLE", "hard", "detailed")
+    mask = [False] * 72
+    mask[worked_example] = True
+    assert (
+        policy.act(
+            [0.0] * 140,
+            mask,
+            {"active_item_difficulty": "hard", "pace_preference": "detailed"},
+        )
+        == worked_example
+    )
+
+    fallback = encode_strategist("PROBE", "easy", "normal")
+    fallback_mask = [False] * 72
+    fallback_mask[fallback] = True
+    assert (
+        policy.act(
+            [0.0] * 140,
+            fallback_mask,
+            {"active_item_difficulty": "medium", "pace_preference": "normal"},
+        )
+        == fallback
+    )
+
+
+def test_always_worked_example_runs_validation_episode_without_masking(monkeypatch):
+    from packages.learning import episode
+
+    scenarios = [row for row in load_scenarios() if row["split"] == "validation"]
+    worked_example_legal = []
+    original_mask = episode.strategist_mask
+
+    def record_mask(context):
+        mask = original_mask(context)
+        expected = encode_strategist(
+            "WORKED_EXAMPLE",
+            context["active_item_difficulty"],
+            context["pace_preference"],
+        )
+        worked_example_legal.append(mask[expected])
+        return mask
+
+    monkeypatch.setattr(episode, "strategist_mask", record_mask)
+    result = simulate_episodes(
+        episodes=1,
+        split="validation",
+        seed=17,
+        strategist_name="always_worked_example",
+        scenarios=scenarios,
+        run_id="always-worked-example-test",
+    )[0]
+    assert result.turns > 0
+    assert result.move_histogram == {"WORKED_EXAMPLE": result.turns}
+    assert worked_example_legal
+    assert all(worked_example_legal)
+
+
+def test_evaluation_paired_seed_and_simulator_override_are_reported(
+    monkeypatch, tmp_path
+):
+    scenarios = [row for row in load_scenarios() if row["split"] == "validation"]
+    monkeypatch.setattr(evaluate, "load_scenarios", lambda: scenarios[:1])
+    output_name = str(tmp_path / "paired-evaluation")
+    simulator_config = "configs/learning/simulator_proto_v1.yaml"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "evaluate",
+            "--config",
+            "configs/learning/smoke.yaml",
+            "--split",
+            "validation",
+            "--policies",
+            "rules,always_hint",
+            "--episodes-per-scenario",
+            "1",
+            "--paired-seeds",
+            "--simulator-config",
+            simulator_config,
+            "--name",
+            output_name,
+        ],
+    )
+    evaluate.main()
+    report = json.loads((Path(output_name) / "report.json").read_text(encoding="utf-8"))
+    assert report["paired_seeds"] is True
+    assert report["simulator_config"] == simulator_config
+    assert set(report["policies"]) == {"rules", "always_hint"}
+    assert evaluate.policy_seed(42, 0, paired=False) == 42
+    assert evaluate.policy_seed(42, 1, paired=False) == 100_042
+    assert evaluate.policy_seed(42, 1, paired=True) == 42
 
 
 def test_masked_actor_never_samples_an_illegal_action():

@@ -56,7 +56,7 @@ def summarize(results, seed: int) -> dict:
 
 
 def policy_from_name(name: str):
-    if name in {"rules", "random", "always_hint"}:
+    if name in {"rules", "random", "always_hint", "always_worked_example"}:
         return None, name
     if name.startswith("checkpoint:"):
         checkpoint = name.split(":", 1)[1]
@@ -66,6 +66,10 @@ def policy_from_name(name: str):
     raise ValueError(f"unknown policy {name!r}")
 
 
+def policy_seed(seed: int, policy_index: int, paired: bool) -> int:
+    return seed if paired else seed + policy_index * 100_000
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/learning/smoke.yaml")
@@ -73,11 +77,17 @@ def main() -> None:
     parser.add_argument("--policies", default="rules,random,always_hint")
     parser.add_argument("--episodes-per-scenario", type=int, default=20)
     parser.add_argument("--seed", type=int)
+    parser.add_argument("--paired-seeds", action="store_true")
+    parser.add_argument("--simulator-config")
     parser.add_argument("--name")
     parser.add_argument("--unseal-test", action="store_true")
     args = parser.parse_args()
     config = yaml.safe_load((ROOT / args.config).read_text(encoding="utf-8"))
-    simulator_config = config.get("simulator_config", DEFAULT_SIMULATOR_CONFIG)
+    simulator_config = (
+        args.simulator_config
+        if args.simulator_config is not None
+        else config.get("simulator_config", DEFAULT_SIMULATOR_CONFIG)
+    )
     seed = int(args.seed if args.seed is not None else config.get("seed", 20250115))
     if args.split == "test" and not args.unseal_test:
         parser.error("test split is sealed; pass --unseal-test to run it")
@@ -94,6 +104,7 @@ def main() -> None:
         "seed": seed,
         "episodes_per_scenario": args.episodes_per_scenario,
         "simulator_config": simulator_config,
+        "paired_seeds": args.paired_seeds,
         "policies": {},
     }
     for policy_index, name in enumerate(policies):
@@ -102,7 +113,7 @@ def main() -> None:
             episodes=len(scenarios) * args.episodes_per_scenario,
             split=args.split,
             scenarios=scenarios,
-            seed=seed + policy_index * 100_000,
+            seed=policy_seed(seed, policy_index, args.paired_seeds),
             strategist_name=strategist_name,
             strategist=strategist,
             run_id=f"evaluation-{args.split}-{policy_index}",
