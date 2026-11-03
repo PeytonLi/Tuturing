@@ -2,6 +2,42 @@
 
 A probability tutor prototype with a deterministic response stub, a simulated learner, and tools for training and evaluating the Strategist. It targets Python 3.12 and uses `uv`.
 
+## Problem
+
+AI tutors don't work out what a student actually knows. They re-teach material the student already has and miss hidden wrong ideas, such as flipping P(A given B) and P(B given A). Using a frontier model to plan every turn helps, but it's slow and costs money per turn, and base Qwen 3.8 is slower still and sometimes returns unusable replies.
+
+## Solution
+
+Tuturing tracks what each student knows and believes after every reply: mastery of each topic, signs of specific wrong ideas, and preferred pace. A small planner trained with reinforcement learning (PPO) on simulated students then picks the topic, the teaching move, the difficulty and the pace. A fine-tuned Qwen 3.8 writes the message.
+
+![How Tuturing teaches, one turn at a time](docs/results/knowledge_v1/architecture.png)
+
+## Results
+
+These results come from a hidden-knowledge test with 9 learner types and 6 sessions each, 54 sessions in total. Each learner type secretly lacks basics, already knows the material, or holds one specific wrong idea, and the tutor has to infer which from the student's answers. Only the planner is swapped between arms. All students are simulated: these are one-seed simulator results, not measured human learning.
+
+| Score | Base Qwen 3.8 27B | Our planner + RL | gpt-6.1-sol | gpt-6-astra |
+|---|---|---|---|---|
+| Learning gain (higher is better) | 0.110 | **0.119** | 0.104 | 0.112 |
+| Hidden wrong ideas fixed | 68% | 79% | 79% | **83%** |
+| Turn the fix happened (lower is better) | 6.9 | 4.6 | 5.0 | **4.4** |
+| Re-teaching a student who already knows it (lower is better) | 43% | 46% | **18%** | 23% |
+| Simulated quits (lower is better) | 19% | **15%** | 19% | 22% |
+| Unusable replies | 7% | **0%** | 0% | 0% |
+| Cost for 54 sessions | $6.10 | **$0** | $1.51 | $7.66 |
+| Time per session | 28 s | **0.2 s** | 1.7 s | 2.1 s |
+
+Compared with base Qwen 3.8, our planner wins on every score except re-teaching, and it matches or beats gpt-6.1-sol on everything except re-teaching. A version trained on gpt-6.1-sol's choices cuts re-teaching to 9%, but it gains less and has more quits.
+
+| | |
+|---|---|
+| ![Learning gain](docs/results/knowledge_v1/01_learning_gain.png) | ![Wrong ideas fixed](docs/results/knowledge_v1/02_wrong_ideas_fixed.png) |
+| ![Turn of fix](docs/results/knowledge_v1/03_turn_of_fix.png) | ![Re-teaching](docs/results/knowledge_v1/04_reteaching_known.png) |
+| ![Quits](docs/results/knowledge_v1/05_quits.png) | ![Unusable replies](docs/results/knowledge_v1/06_unusable_replies.png) |
+| ![Cost](docs/results/knowledge_v1/07_cost.png) | ![Time per session](docs/results/knowledge_v1/08_time_per_session.png) |
+
+The test set, evaluator and raw results are on the `devin/1793661049-knowledge-eval` branch, under `data/scenarios/knowledge_v1.yaml`, `tools/learning/knowledge_eval.py` and `evaluation/learning/results/knowledge_v1/`.
+
 ## Ownership
 
 | Workstream | Owner | Guide |
