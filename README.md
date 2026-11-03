@@ -27,7 +27,7 @@ These results come from a hidden-knowledge test with 9 learner types and 6 sessi
 | Cost for 54 sessions | $6.10 | **$0** | **$0** (plus $8.90 once to train) | $1.51 | $7.66 |
 | Time per session | 28 s | **0.2 s** | **0.2 s** | 1.7 s | 2.1 s |
 
-Compared with base Qwen 3.8, our planner wins on every score except re-teaching, and it matches or beats gpt-6.1-sol on everything except re-teaching. The version trained on gpt-6.1-sol's choices learned from 5,495 of gpt's teaching decisions on 400 practice sessions, at a one-time cost of $8.90. It re-teaches less than any other arm (9%, versus 18% for gpt-6.1-sol), but it gains less and has more quits.
+Compared with base Qwen 3.8, our planner + RL wins on every score except re-teaching, and it matches or beats gpt-6.1-sol on everything except re-teaching. The version trained on gpt-6.1-sol's choices learned from 5,495 of gpt's teaching decisions on 400 practice sessions, at a one-time cost of $8.90. It re-teaches less than any other arm (9%, versus 18% for gpt-6.1-sol), but it gains less and has more quits.
 
 | | |
 |---|---|
