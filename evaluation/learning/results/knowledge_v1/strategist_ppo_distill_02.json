@@ -1,0 +1,1043 @@
+{
+  "label": "simulated",
+  "policy": "checkpoint:experiments/learning/runs/ppo_distill_02/ppo.pt",
+  "seed": 20261102,
+  "episodes": [
+    {
+      "scenario_id": "knowledge-01",
+      "profile_id": "k_missing_basics",
+      "turns": 16,
+      "gain": 0.04665660589063925,
+      "post_score": 0.26290320820965385,
+      "dropout": false,
+      "had_misconception": false,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.8125,
+      "probe_share": 0.1875,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 3,
+        "PROBE": 3,
+        "WORKED_EXAMPLE": 10
+      }
+    },
+    {
+      "scenario_id": "knowledge-02",
+      "profile_id": "k_already_knows",
+      "turns": 11,
+      "gain": 0.00031210653304025726,
+      "post_score": 0.6735566864683149,
+      "dropout": false,
+      "had_misconception": false,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.2727272727272727,
+      "probe_share": 0.45454545454545453,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 3,
+        "EXPLAIN_CONCEPT": 3,
+        "PROBE": 5
+      }
+    },
+    {
+      "scenario_id": "knowledge-03",
+      "profile_id": "k_reverses_conditionals",
+      "turns": 16,
+      "gain": 0.14136058537854143,
+      "post_score": 0.3295575738707579,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 2,
+      "teaching_share": 0.9375,
+      "probe_share": 0.0625,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 2,
+        "PROBE": 1,
+        "WORKED_EXAMPLE": 13
+      }
+    },
+    {
+      "scenario_id": "knowledge-04",
+      "profile_id": "k_wrong_denominator",
+      "turns": 6,
+      "gain": 0.03393809836100542,
+      "post_score": 0.286401914580152,
+      "dropout": true,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 5,
+      "teaching_share": 0.3333333333333333,
+      "probe_share": 0.5,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 1,
+        "EXPLAIN_CONCEPT": 2,
+        "PROBE": 3
+      }
+    },
+    {
+      "scenario_id": "knowledge-05",
+      "profile_id": "k_assumes_independence",
+      "turns": 16,
+      "gain": 0.0072792059568813905,
+      "post_score": 0.2428603051378721,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.75,
+      "probe_share": 0.1875,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 1,
+        "EXPLAIN_CONCEPT": 2,
+        "PROBE": 3,
+        "WORKED_EXAMPLE": 10
+      }
+    },
+    {
+      "scenario_id": "knowledge-06",
+      "profile_id": "k_tree_paths",
+      "turns": 12,
+      "gain": 0.10535225639419185,
+      "post_score": 0.3235299316032083,
+      "dropout": true,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 6,
+      "teaching_share": 0.75,
+      "probe_share": 0.16666666666666666,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 1,
+        "EXPLAIN_CONCEPT": 1,
+        "PROBE": 2,
+        "WORKED_EXAMPLE": 8
+      }
+    },
+    {
+      "scenario_id": "knowledge-07",
+      "profile_id": "k_complement_slip",
+      "turns": 16,
+      "gain": 0.13972350462262245,
+      "post_score": 0.35992360498791093,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 5,
+      "teaching_share": 0.75,
+      "probe_share": 0.25,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 7,
+        "PROBE": 4,
+        "WORKED_EXAMPLE": 5
+      }
+    },
+    {
+      "scenario_id": "knowledge-08",
+      "profile_id": "k_event_vs_outcome",
+      "turns": 7,
+      "gain": 0.23864395877028913,
+      "post_score": 0.3313854342202649,
+      "dropout": true,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 6,
+      "teaching_share": 0.5714285714285714,
+      "probe_share": 0.42857142857142855,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 3,
+        "PROBE": 3,
+        "WORKED_EXAMPLE": 1
+      }
+    },
+    {
+      "scenario_id": "knowledge-09",
+      "profile_id": "k_strong_but_reverses",
+      "turns": 16,
+      "gain": 0.2634724835487612,
+      "post_score": 0.5687025205444878,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 2,
+      "teaching_share": 0.9375,
+      "probe_share": 0.0625,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 1,
+        "PROBE": 1,
+        "WORKED_EXAMPLE": 14
+      }
+    },
+    {
+      "scenario_id": "knowledge-01",
+      "profile_id": "k_missing_basics",
+      "turns": 16,
+      "gain": 0.026469212808010678,
+      "post_score": 0.18022588064683243,
+      "dropout": false,
+      "had_misconception": false,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.875,
+      "probe_share": 0.125,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 2,
+        "PROBE": 2,
+        "WORKED_EXAMPLE": 12
+      }
+    },
+    {
+      "scenario_id": "knowledge-02",
+      "profile_id": "k_already_knows",
+      "turns": 16,
+      "gain": 0.0005849363439640598,
+      "post_score": 0.5736490508688084,
+      "dropout": false,
+      "had_misconception": false,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.75,
+      "probe_share": 0.25,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 4,
+        "PROBE": 4,
+        "WORKED_EXAMPLE": 8
+      }
+    },
+    {
+      "scenario_id": "knowledge-03",
+      "profile_id": "k_reverses_conditionals",
+      "turns": 4,
+      "gain": 0.0,
+      "post_score": 0.1978477575309962,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.0,
+      "probe_share": 0.5,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 2,
+        "PROBE": 2
+      }
+    },
+    {
+      "scenario_id": "knowledge-04",
+      "profile_id": "k_wrong_denominator",
+      "turns": 16,
+      "gain": 0.04923781923596915,
+      "post_score": 0.35513157324590333,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 1,
+      "teaching_share": 0.75,
+      "probe_share": 0.25,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 4,
+        "PROBE": 4,
+        "WORKED_EXAMPLE": 8
+      }
+    },
+    {
+      "scenario_id": "knowledge-05",
+      "profile_id": "k_assumes_independence",
+      "turns": 16,
+      "gain": 0.006414432645412499,
+      "post_score": 0.2299909210456148,
+      "dropout": true,
+      "had_misconception": true,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.875,
+      "probe_share": 0.125,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 2,
+        "PROBE": 2,
+        "WORKED_EXAMPLE": 12
+      }
+    },
+    {
+      "scenario_id": "knowledge-06",
+      "profile_id": "k_tree_paths",
+      "turns": 7,
+      "gain": 0.13268768175042045,
+      "post_score": 0.330766558715266,
+      "dropout": true,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 1,
+      "teaching_share": 0.42857142857142855,
+      "probe_share": 0.42857142857142855,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 1,
+        "EXPLAIN_CONCEPT": 3,
+        "PROBE": 3
+      }
+    },
+    {
+      "scenario_id": "knowledge-07",
+      "profile_id": "k_complement_slip",
+      "turns": 16,
+      "gain": 0.1261655793942898,
+      "post_score": 0.3345507815895847,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 5,
+      "teaching_share": 0.75,
+      "probe_share": 0.25,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 4,
+        "PROBE": 4,
+        "WORKED_EXAMPLE": 8
+      }
+    },
+    {
+      "scenario_id": "knowledge-08",
+      "profile_id": "k_event_vs_outcome",
+      "turns": 16,
+      "gain": 0.2405952165714358,
+      "post_score": 0.31306170276733214,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 1,
+      "teaching_share": 0.6875,
+      "probe_share": 0.3125,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 5,
+        "PROBE": 5,
+        "WORKED_EXAMPLE": 6
+      }
+    },
+    {
+      "scenario_id": "knowledge-09",
+      "profile_id": "k_strong_but_reverses",
+      "turns": 16,
+      "gain": 0.24010972356337834,
+      "post_score": 0.5512201598920903,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 3,
+      "teaching_share": 0.9375,
+      "probe_share": 0.0625,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 1,
+        "PROBE": 1,
+        "WORKED_EXAMPLE": 14
+      }
+    },
+    {
+      "scenario_id": "knowledge-01",
+      "profile_id": "k_missing_basics",
+      "turns": 16,
+      "gain": 0.025671764108435247,
+      "post_score": 0.17018354355207224,
+      "dropout": false,
+      "had_misconception": false,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.875,
+      "probe_share": 0.125,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 2,
+        "PROBE": 2,
+        "WORKED_EXAMPLE": 12
+      }
+    },
+    {
+      "scenario_id": "knowledge-02",
+      "profile_id": "k_already_knows",
+      "turns": 16,
+      "gain": 0.0009397264636573643,
+      "post_score": 0.6733580277796223,
+      "dropout": false,
+      "had_misconception": false,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.375,
+      "probe_share": 0.3125,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 5,
+        "EXPLAIN_CONCEPT": 6,
+        "PROBE": 5
+      }
+    },
+    {
+      "scenario_id": "knowledge-03",
+      "profile_id": "k_reverses_conditionals",
+      "turns": 16,
+      "gain": 0.14799298789272483,
+      "post_score": 0.3452257288271201,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 2,
+      "teaching_share": 0.9375,
+      "probe_share": 0.0625,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 1,
+        "PROBE": 1,
+        "WORKED_EXAMPLE": 14
+      }
+    },
+    {
+      "scenario_id": "knowledge-04",
+      "profile_id": "k_wrong_denominator",
+      "turns": 16,
+      "gain": 0.04562238430186072,
+      "post_score": 0.370835516809591,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 3,
+      "teaching_share": 0.75,
+      "probe_share": 0.25,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 4,
+        "PROBE": 4,
+        "WORKED_EXAMPLE": 8
+      }
+    },
+    {
+      "scenario_id": "knowledge-05",
+      "profile_id": "k_assumes_independence",
+      "turns": 16,
+      "gain": 0.104447548032022,
+      "post_score": 0.31305705939849016,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 3,
+      "teaching_share": 0.75,
+      "probe_share": 0.1875,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 1,
+        "EXPLAIN_CONCEPT": 2,
+        "PROBE": 3,
+        "WORKED_EXAMPLE": 10
+      }
+    },
+    {
+      "scenario_id": "knowledge-06",
+      "profile_id": "k_tree_paths",
+      "turns": 12,
+      "gain": 0.004112244970647355,
+      "post_score": 0.21797553535170533,
+      "dropout": true,
+      "had_misconception": true,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.25,
+      "probe_share": 0.4166666666666667,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 4,
+        "EXPLAIN_CONCEPT": 3,
+        "PROBE": 5
+      }
+    },
+    {
+      "scenario_id": "knowledge-07",
+      "profile_id": "k_complement_slip",
+      "turns": 16,
+      "gain": 0.10635732597946884,
+      "post_score": 0.3275665000323976,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 3,
+      "teaching_share": 0.75,
+      "probe_share": 0.25,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 4,
+        "PROBE": 4,
+        "WORKED_EXAMPLE": 8
+      }
+    },
+    {
+      "scenario_id": "knowledge-08",
+      "profile_id": "k_event_vs_outcome",
+      "turns": 16,
+      "gain": 0.2303797343604978,
+      "post_score": 0.3054506973029043,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 8,
+      "teaching_share": 0.75,
+      "probe_share": 0.25,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 4,
+        "PROBE": 4,
+        "WORKED_EXAMPLE": 8
+      }
+    },
+    {
+      "scenario_id": "knowledge-09",
+      "profile_id": "k_strong_but_reverses",
+      "turns": 16,
+      "gain": 0.2770458957157334,
+      "post_score": 0.5925395251691745,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 2,
+      "teaching_share": 0.9375,
+      "probe_share": 0.0625,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 1,
+        "PROBE": 1,
+        "WORKED_EXAMPLE": 14
+      }
+    },
+    {
+      "scenario_id": "knowledge-01",
+      "profile_id": "k_missing_basics",
+      "turns": 16,
+      "gain": 0.023641800912755195,
+      "post_score": 0.1953346098973123,
+      "dropout": false,
+      "had_misconception": false,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.875,
+      "probe_share": 0.125,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 2,
+        "PROBE": 2,
+        "WORKED_EXAMPLE": 12
+      }
+    },
+    {
+      "scenario_id": "knowledge-02",
+      "profile_id": "k_already_knows",
+      "turns": 16,
+      "gain": 0.0006045894867588997,
+      "post_score": 0.6656953694565773,
+      "dropout": false,
+      "had_misconception": false,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.75,
+      "probe_share": 0.1875,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 1,
+        "EXPLAIN_CONCEPT": 2,
+        "PROBE": 3,
+        "WORKED_EXAMPLE": 10
+      }
+    },
+    {
+      "scenario_id": "knowledge-03",
+      "profile_id": "k_reverses_conditionals",
+      "turns": 16,
+      "gain": 0.1440758872386507,
+      "post_score": 0.3425245947401165,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 1,
+      "teaching_share": 0.9375,
+      "probe_share": 0.0625,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 1,
+        "PROBE": 1,
+        "WORKED_EXAMPLE": 14
+      }
+    },
+    {
+      "scenario_id": "knowledge-04",
+      "profile_id": "k_wrong_denominator",
+      "turns": 16,
+      "gain": 0.05216481412466001,
+      "post_score": 0.3006953748352412,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 5,
+      "teaching_share": 0.375,
+      "probe_share": 0.3125,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 5,
+        "EXPLAIN_CONCEPT": 6,
+        "PROBE": 5
+      }
+    },
+    {
+      "scenario_id": "knowledge-05",
+      "profile_id": "k_assumes_independence",
+      "turns": 16,
+      "gain": 0.0073590010704728814,
+      "post_score": 0.21490150971955485,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.75,
+      "probe_share": 0.1875,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 1,
+        "EXPLAIN_CONCEPT": 2,
+        "PROBE": 3,
+        "WORKED_EXAMPLE": 10
+      }
+    },
+    {
+      "scenario_id": "knowledge-06",
+      "profile_id": "k_tree_paths",
+      "turns": 5,
+      "gain": 0.0013749229279735042,
+      "post_score": 0.18671501899915774,
+      "dropout": true,
+      "had_misconception": true,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.2,
+      "probe_share": 0.6,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 1,
+        "EXPLAIN_CONCEPT": 1,
+        "PROBE": 3
+      }
+    },
+    {
+      "scenario_id": "knowledge-07",
+      "profile_id": "k_complement_slip",
+      "turns": 16,
+      "gain": 0.11345499959202496,
+      "post_score": 0.3623667598131058,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 9,
+      "teaching_share": 0.75,
+      "probe_share": 0.25,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 4,
+        "PROBE": 4,
+        "WORKED_EXAMPLE": 8
+      }
+    },
+    {
+      "scenario_id": "knowledge-08",
+      "profile_id": "k_event_vs_outcome",
+      "turns": 16,
+      "gain": 0.2513602063236311,
+      "post_score": 0.343688691124975,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 1,
+      "teaching_share": 0.75,
+      "probe_share": 0.25,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 4,
+        "PROBE": 4,
+        "WORKED_EXAMPLE": 8
+      }
+    },
+    {
+      "scenario_id": "knowledge-09",
+      "profile_id": "k_strong_but_reverses",
+      "turns": 16,
+      "gain": 0.2667991564691314,
+      "post_score": 0.5839499992793169,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 2,
+      "teaching_share": 0.9375,
+      "probe_share": 0.0625,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 1,
+        "PROBE": 1,
+        "WORKED_EXAMPLE": 14
+      }
+    },
+    {
+      "scenario_id": "knowledge-01",
+      "profile_id": "k_missing_basics",
+      "turns": 16,
+      "gain": 0.032556846908860765,
+      "post_score": 0.20903046719894552,
+      "dropout": false,
+      "had_misconception": false,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.8125,
+      "probe_share": 0.1875,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 3,
+        "PROBE": 3,
+        "WORKED_EXAMPLE": 10
+      }
+    },
+    {
+      "scenario_id": "knowledge-02",
+      "profile_id": "k_already_knows",
+      "turns": 5,
+      "gain": 8.22286018595797e-05,
+      "post_score": 0.6814632347773739,
+      "dropout": false,
+      "had_misconception": false,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.2,
+      "probe_share": 0.6,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 1,
+        "EXPLAIN_CONCEPT": 1,
+        "PROBE": 3
+      }
+    },
+    {
+      "scenario_id": "knowledge-03",
+      "profile_id": "k_reverses_conditionals",
+      "turns": 16,
+      "gain": 0.1220017484345163,
+      "post_score": 0.28877093340202303,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 1,
+      "teaching_share": 0.9375,
+      "probe_share": 0.0625,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 1,
+        "PROBE": 1,
+        "WORKED_EXAMPLE": 14
+      }
+    },
+    {
+      "scenario_id": "knowledge-04",
+      "profile_id": "k_wrong_denominator",
+      "turns": 16,
+      "gain": 0.04339200466041371,
+      "post_score": 0.3190465753250218,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 1,
+      "teaching_share": 0.75,
+      "probe_share": 0.1875,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 1,
+        "EXPLAIN_CONCEPT": 2,
+        "PROBE": 3,
+        "WORKED_EXAMPLE": 10
+      }
+    },
+    {
+      "scenario_id": "knowledge-05",
+      "profile_id": "k_assumes_independence",
+      "turns": 9,
+      "gain": 0.09457746643022857,
+      "post_score": 0.30208628498394957,
+      "dropout": true,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 7,
+      "teaching_share": 0.3333333333333333,
+      "probe_share": 0.4444444444444444,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 2,
+        "EXPLAIN_CONCEPT": 3,
+        "PROBE": 4
+      }
+    },
+    {
+      "scenario_id": "knowledge-06",
+      "profile_id": "k_tree_paths",
+      "turns": 16,
+      "gain": 0.00987185333073215,
+      "post_score": 0.19500914240090597,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.5,
+      "probe_share": 0.375,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 2,
+        "EXPLAIN_CONCEPT": 4,
+        "PROBE": 6,
+        "WORKED_EXAMPLE": 4
+      }
+    },
+    {
+      "scenario_id": "knowledge-07",
+      "profile_id": "k_complement_slip",
+      "turns": 16,
+      "gain": 0.12718865654309405,
+      "post_score": 0.326063605494187,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 8,
+      "teaching_share": 0.6875,
+      "probe_share": 0.25,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 1,
+        "EXPLAIN_CONCEPT": 6,
+        "PROBE": 4,
+        "WORKED_EXAMPLE": 5
+      }
+    },
+    {
+      "scenario_id": "knowledge-08",
+      "profile_id": "k_event_vs_outcome",
+      "turns": 16,
+      "gain": 0.234092014689845,
+      "post_score": 0.3164029025201641,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 1,
+      "teaching_share": 0.75,
+      "probe_share": 0.25,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 4,
+        "PROBE": 4,
+        "WORKED_EXAMPLE": 8
+      }
+    },
+    {
+      "scenario_id": "knowledge-09",
+      "profile_id": "k_strong_but_reverses",
+      "turns": 16,
+      "gain": 0.252797945858731,
+      "post_score": 0.5292223770725992,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 4,
+      "teaching_share": 0.9375,
+      "probe_share": 0.0625,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 2,
+        "PROBE": 1,
+        "WORKED_EXAMPLE": 13
+      }
+    },
+    {
+      "scenario_id": "knowledge-01",
+      "profile_id": "k_missing_basics",
+      "turns": 16,
+      "gain": 0.03969558740225465,
+      "post_score": 0.20411593717525586,
+      "dropout": false,
+      "had_misconception": false,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.75,
+      "probe_share": 0.25,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 4,
+        "PROBE": 4,
+        "WORKED_EXAMPLE": 8
+      }
+    },
+    {
+      "scenario_id": "knowledge-02",
+      "profile_id": "k_already_knows",
+      "turns": 16,
+      "gain": 0.0008951237444914106,
+      "post_score": 0.688831951278431,
+      "dropout": false,
+      "had_misconception": false,
+      "misconception_fixed": false,
+      "turn_fixed": null,
+      "teaching_share": 0.6875,
+      "probe_share": 0.1875,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 2,
+        "EXPLAIN_CONCEPT": 3,
+        "PROBE": 3,
+        "WORKED_EXAMPLE": 8
+      }
+    },
+    {
+      "scenario_id": "knowledge-03",
+      "profile_id": "k_reverses_conditionals",
+      "turns": 16,
+      "gain": 0.1598525715413745,
+      "post_score": 0.33778086320027734,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 1,
+      "teaching_share": 0.9375,
+      "probe_share": 0.0625,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 1,
+        "PROBE": 1,
+        "WORKED_EXAMPLE": 14
+      }
+    },
+    {
+      "scenario_id": "knowledge-04",
+      "profile_id": "k_wrong_denominator",
+      "turns": 16,
+      "gain": 0.037660599012193735,
+      "post_score": 0.28694030672350296,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 1,
+      "teaching_share": 0.75,
+      "probe_share": 0.1875,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 1,
+        "EXPLAIN_CONCEPT": 2,
+        "PROBE": 3,
+        "WORKED_EXAMPLE": 10
+      }
+    },
+    {
+      "scenario_id": "knowledge-05",
+      "profile_id": "k_assumes_independence",
+      "turns": 16,
+      "gain": 0.09615336537071759,
+      "post_score": 0.29521109790971245,
+      "dropout": true,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 6,
+      "teaching_share": 0.9375,
+      "probe_share": 0.0625,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 1,
+        "PROBE": 1,
+        "WORKED_EXAMPLE": 14
+      }
+    },
+    {
+      "scenario_id": "knowledge-06",
+      "profile_id": "k_tree_paths",
+      "turns": 16,
+      "gain": 0.13411901205741356,
+      "post_score": 0.3465119531255381,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 3,
+      "teaching_share": 0.6875,
+      "probe_share": 0.1875,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "CHECK_MASTERY": 2,
+        "EXPLAIN_CONCEPT": 3,
+        "HINT": 1,
+        "PROBE": 3,
+        "WORKED_EXAMPLE": 7
+      }
+    },
+    {
+      "scenario_id": "knowledge-07",
+      "profile_id": "k_complement_slip",
+      "turns": 16,
+      "gain": 0.11447831670234568,
+      "post_score": 0.31730697447448303,
+      "dropout": false,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 8,
+      "teaching_share": 0.8125,
+      "probe_share": 0.1875,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 13,
+        "PROBE": 3
+      }
+    },
+    {
+      "scenario_id": "knowledge-08",
+      "profile_id": "k_event_vs_outcome",
+      "turns": 12,
+      "gain": 0.2568335904824449,
+      "post_score": 0.35470250720953017,
+      "dropout": true,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 5,
+      "teaching_share": 0.75,
+      "probe_share": 0.25,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 3,
+        "PROBE": 3,
+        "WORKED_EXAMPLE": 6
+      }
+    },
+    {
+      "scenario_id": "knowledge-09",
+      "profile_id": "k_strong_but_reverses",
+      "turns": 14,
+      "gain": 0.25226980852233066,
+      "post_score": 0.5669968105754638,
+      "dropout": true,
+      "had_misconception": true,
+      "misconception_fixed": true,
+      "turn_fixed": 2,
+      "teaching_share": 0.9285714285714286,
+      "probe_share": 0.07142857142857142,
+      "reviewed_prerequisite": false,
+      "moves": {
+        "EXPLAIN_CONCEPT": 1,
+        "PROBE": 1,
+        "WORKED_EXAMPLE": 12
+      }
+    }
+  ]
+}
