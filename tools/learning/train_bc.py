@@ -98,7 +98,7 @@ def main() -> None:
         episodes=episodes,
         split="train",
         seed=seed,
-        strategist_name="rules",
+        strategist_name=config.get("teacher", "rules"),
         run_id=f"{config['run_name']}-seed{seed}",
         simulator_config=simulator_config,
     )
@@ -143,6 +143,7 @@ def main() -> None:
         "seed": seed,
         "init": "scratch",
         "policy": "behavior_cloning",
+        "teacher": config.get("teacher", "rules"),
         "simulator_config": simulator_config,
     }
     save_checkpoint(model, run_dir / "bc.pt", metadata)

@@ -12,10 +12,15 @@ import matplotlib.pyplot as plt  # noqa: E402
 
 RESULTS = Path("evaluation/learning/results/knowledge_v1")
 ARMS = [
-    ("qwen3p8_27b_base", "Base Qwen 3.8 27B", "#c98b5b"),
-    ("strategist_bc", "Our trained Strategist", "#4f8a6e"),
+    ("qwen3p8_27b_base", "Base Qwen\n3.8 27B", "#c98b5b"),
+    ("strategist_bc", "Old trained\nStrategist", "#4f8a6e"),
+    ("strategist_ppo_reteach_02", "Strategist\n+ PPO (RL)", "#3d7a5a"),
+    ("strategist_bc_gpt_distill", "Strategist\ntrained on gpt", "#1f5c3f"),
+    ("rules_fastready", "Probe-first\nrules", "#7fb08f"),
+    ("rules_known_aware", "Known-aware\nrules", "#2f6b4f"),
     ("gpt_6_1_sol", "gpt-6.1-sol", "#5b7fc9"),
     ("gpt_6_astra", "gpt-6-astra", "#8a6fc9"),
+    ("nemotron_lightning_3p5_30b", "Nemotron\nLightning 30B", "#b5a24a"),
 ]
 TYPES = [
     "missing_basics", "already_knows", "reverses_conditionals", "wrong_denominator",
@@ -73,7 +78,7 @@ def bar(ax, arms, values, title, fmt="{:.3f}", ylabel=""):
                     ha="center", va="bottom", fontsize=9)
     ax.set_title(title, fontsize=11)
     ax.set_ylabel(ylabel)
-    ax.tick_params(axis="x", labelsize=8, rotation=12)
+    ax.tick_params(axis="x", labelsize=8, rotation=0)
     ax.spines[["top", "right"]].set_visible(False)
 
 
@@ -101,7 +106,7 @@ def main():
         ("fallback_rate", "Turns where the model reply was unusable", "{:.0%}",
          "share of calls"),
     ]
-    fig, axes = plt.subplots(2, 3, figsize=(15, 8))
+    fig, axes = plt.subplots(2, 3, figsize=(22, 9))
     for ax, (k, title, fmt, yl) in zip(axes.flat, panels, strict=True):
         bar(ax, arms, [rows[a[0]][k] for a in arms], title, fmt, yl)
     fig.suptitle("Hidden-knowledge test set: 9 learner types x 6 sessions (simulated, not human data)")
@@ -113,7 +118,7 @@ def main():
         ("fixed_by_type", "Wrong idea fixed by learner type", "fixed_by_type.png"),
     ]:
         types = [t for t in TYPES if all(t in rows[a[0]][metric] for a in arms)]
-        fig, ax = plt.subplots(figsize=(14, 5))
+        fig, ax = plt.subplots(figsize=(20, 5.5))
         width = 0.8 / max(1, len(arms))
         for i, (key, label, color) in enumerate(arms):
             xs = [j + i * width for j in range(len(types))]
@@ -131,7 +136,7 @@ def main():
         ("seconds_per_session", "Wall time per session (16 run in parallel)", "{:.1f}s", "seconds"),
         ("calls", "Model calls", "{:.0f}", "calls"),
     ]
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4.5))
+    fig, axes = plt.subplots(1, 3, figsize=(22, 5))
     for ax, (k, title, fmt, yl) in zip(axes.flat, cost_panels, strict=True):
         vals = [rows[a[0]][k] if rows[a[0]][k] is not None else float("nan") for a in arms]
         bar(ax, arms, vals, title, fmt, yl)

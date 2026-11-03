@@ -84,7 +84,7 @@ def policy_from_name(
     llm_base_url_override: str | None = None,
     dry_run: bool = False,
 ):
-    if name in {"rules", "random", "always_hint", "always_worked_example"}:
+    if name in {"rules", "rules_fastready", "random", "always_hint", "always_worked_example"}:
         return None, name
     if name.startswith("checkpoint:"):
         checkpoint = name.split(":", 1)[1]
