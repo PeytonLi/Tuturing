@@ -16,18 +16,18 @@ Tuturing tracks what each student knows and believes after every reply: mastery 
 
 These results come from a hidden-knowledge test with 9 learner types and 6 sessions each, 54 sessions in total. Each learner type secretly lacks basics, already knows the material, or holds one specific wrong idea, and the tutor has to infer which from the student's answers. Only the planner is swapped between arms. All students are simulated: these are one-seed simulator results, not measured human learning.
 
-| Score | Base Qwen 3.8 27B | Our planner + RL | gpt-6.1-sol | gpt-6-astra |
-|---|---|---|---|---|
-| Learning gain (higher is better) | 0.110 | **0.119** | 0.104 | 0.112 |
-| Hidden wrong ideas fixed | 68% | 79% | 79% | **83%** |
-| Turn the fix happened (lower is better) | 6.9 | 4.6 | 5.0 | **4.4** |
-| Re-teaching a student who already knows it (lower is better) | 43% | 46% | **18%** | 23% |
-| Simulated quits (lower is better) | 19% | **15%** | 19% | 22% |
-| Unusable replies | 7% | **0%** | 0% | 0% |
-| Cost for 54 sessions | $6.10 | **$0** | $1.51 | $7.66 |
-| Time per session | 28 s | **0.2 s** | 1.7 s | 2.1 s |
+| Score | Base Qwen 3.8 27B | Our planner + RL | Our planner trained on gpt | gpt-6.1-sol | gpt-6-astra |
+|---|---|---|---|---|---|
+| Learning gain (higher is better) | 0.110 | **0.119** | 0.100 | 0.104 | 0.112 |
+| Hidden wrong ideas fixed | 68% | 79% | 76% | 79% | **83%** |
+| Turn the fix happened (lower is better) | 6.9 | 4.6 | 4.6 | 5.0 | **4.4** |
+| Re-teaching a student who already knows it (lower is better) | 43% | 46% | **9%** | 18% | 23% |
+| Simulated quits (lower is better) | 19% | **15%** | 26% | 19% | 22% |
+| Unusable replies | 7% | **0%** | **0%** | 0% | 0% |
+| Cost for 54 sessions | $6.10 | **$0** | **$0** (plus $8.90 once to train) | $1.51 | $7.66 |
+| Time per session | 28 s | **0.2 s** | **0.2 s** | 1.7 s | 2.1 s |
 
-Compared with base Qwen 3.8, our planner wins on every score except re-teaching, and it matches or beats gpt-6.1-sol on everything except re-teaching. A version trained on gpt-6.1-sol's choices cuts re-teaching to 9%, but it gains less and has more quits.
+Compared with base Qwen 3.8, our planner + RL wins on every score except re-teaching, and it matches or beats gpt-6.1-sol on everything except re-teaching. The version trained on gpt-6.1-sol's choices learned from 5,495 of gpt's teaching decisions on 400 practice sessions, at a one-time cost of $8.90. It re-teaches less than any other arm (9%, versus 18% for gpt-6.1-sol), but it gains less and has more quits.
 
 | | |
 |---|---|
